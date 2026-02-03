@@ -1,0 +1,125 @@
+import sys
+import os
+import json
+from pathlib import Path
+from dotenv import load_dotenv
+
+# --- IMPORT FACTORY ---
+from llm_factory import LLMFactory
+
+# --- CONFIGURATION ---
+load_dotenv()
+# Point to the new Golden Master Spec
+SPEC_FILE_NAME = "spec_lesson_script_leveler_vC3.txt" 
+
+# --- AI CALL FUNCTION (UPDATED) ---
+def call_ai_to_level_script(llm_manager, spec_content, original_json_content):
+    """
+    Calls the AI to level up the script.
+    FIXED: Uses 'generate_completion' and removes 'temperature' to match LLMFactory.
+    """
+    # 1. Extract Persona Context
+    meta = original_json_content.get("metadata", {})
+    persona = meta.get("learner_persona", "a professional learner")
+    level = meta.get("level", "L4")
+    
+    # 2. Build the Context Injection String
+    context_injection = f"""
+    --- DYNAMIC CONTEXT INJECTION ---
+    TARGET LEARNER: {persona}
+    TARGET LEVEL: {level}
+    INSTRUCTION: You must adapt the content specifically for this persona. 
+    If the content is too academic, rewrite it to be applied/managerial.
+    If the content is too simple, increase the professional vocabulary.
+    ---------------------------------
+    """
+
+    # 3. Merge with the Spec File
+    if not spec_content:
+        print("[WARN] Spec content is empty. Using internal fallback.")
+        base_prompt = """
+        You are an expert Instructional Designer. 
+        Task: Expand the 'content_flow' of this JSON to 500 words per section.
+        CRITICAL: Do not remove 'cross_curricular_embedding' or 'weekly_glossary'.
+        Output RAW JSON only.
+        """
+        full_prompt = context_injection + "\n" + base_prompt
+    else:
+        full_prompt = context_injection + "\n" + spec_content
+
+    # 4. Prepare the Input
+    user_message = json.dumps(original_json_content, indent=2)
+
+    # 5. Call the Factory (FIXED METHOD NAME & ARGUMENTS)
+    try:
+        # FACTORY MATCH: uses 'prompt' (not user_prompt) and 'generate_completion'
+        response = llm_manager.generate_completion(
+            prompt=user_message,
+            system_prompt=full_prompt
+        )
+        return response
+    except Exception as e:
+        print(f"Error calling AI Leveler: {e}")
+        return None
+
+# --- MAIN ORCHESTRATOR ---
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: python lesson_script_leveler_vC3.py <path_to_lessonscript.json>")
+        sys.exit(1)
+
+    original_file_path = Path(sys.argv[1])
+    # Ensure we look for the spec in the same directory as the script or strict relative path
+    spec_file_path = Path(__file__).parent / SPEC_FILE_NAME
+
+    if not original_file_path.exists():
+        print(f"Error: Original file not found at {original_file_path}")
+        sys.exit(1)
+        
+    # [UPDATED] Robust Spec Loading
+    spec_content = ""
+    if spec_file_path.exists():
+        try:
+            with open(spec_file_path, "r", encoding="utf-8") as f:
+                spec_content = f.read()
+        except Exception as e:
+            print(f"Error reading spec file: {e}")
+            sys.exit(1)
+    else:
+        print(f"[WARN] Spec file not found at {spec_file_path}. The script will use the internal fallback.")
+
+    print(f"--- Leveling script: {original_file_path.name} ---")
+
+    # 1. Load JSON
+    try:
+        with open(original_file_path, "r", encoding="utf-8") as f:
+            original_json_content = json.load(f)
+    except Exception as e:
+        print(f"Error reading JSON file: {e}")
+        sys.exit(1)
+
+    # 2. Init Factory (Matches Catalyst logic)
+    try:
+        llm_manager = LLMFactory()
+    except Exception as e:
+        print(f"Error initializing LLM Factory: {e}")
+        sys.exit(1)
+
+    # 3. Process
+    leveled_json_str = call_ai_to_level_script(llm_manager, spec_content, original_json_content)
+
+    if leveled_json_str:
+        output_file_path = original_file_path.with_name(
+            original_file_path.stem + "_Leveled.json"
+        )
+        try:
+            with open(output_file_path, "w", encoding="utf-8") as f:
+                f.write(leveled_json_str)
+            print(f"    -> Success! Leveled script saved to: {output_file_path.name}")
+        except Exception as e:
+            print(f"Error saving leveled JSON file: {e}")
+    else:
+        print("    -> Error: Failed to generate leveled content. No file was saved.")
+
+if __name__ == "__main__":
+    main()
