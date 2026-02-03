@@ -1,125 +1,753 @@
-import sys
-import os
-import json
-from pathlib import Path
-from dotenv import load_dotenv
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Daniel Boyland">
+  <meta name="copyright" content="Forged Frameworks">
+  <meta name="portfolio" content="https://forgedframeworks.co.uk/">
+  <meta name="version" content="6.0 (Enhanced Keyboard Nav)">
+  <meta name="creation-date" content="February 2026">
+  <meta name="description" content="Gamified assessment tool for System vs Symptom Fixes. Features randomized question bank, liquid physics engine, keyboard accessibility, and print optimization.">
+  <meta name="functional-spec" content="Question Pool: 50 | Selection: 10 | Physics: Liquid Fill/Drain | Output: PDF Print Ready">
 
-# --- IMPORT FACTORY ---
-from llm_factory import LLMFactory
+  <title>Knowledge Chest Preparation</title>
+  <style>
+    :root {
+      --primary: #7b2cbf; /* Deep Purple */
+      --primary-light: #9d4edd;
+      --bg-gradient: linear-gradient(135deg, #f8f0fc 0%, #e8dff5 100%);
+      --surface: #ffffff;
+      --text: #333;
+      --text-light: #666;
+      --success: #2e7d32;
+      --error: #c62828;
+      --border-radius: 16px;
+      --shadow: 0 10px 30px rgba(0,0,0,0.08);
+      --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
 
-# --- CONFIGURATION ---
-load_dotenv()
-# Point to the new Golden Master Spec
-SPEC_FILE_NAME = "spec_lesson_script_leveler_vC3.txt" 
+    * { box-sizing: border-box; }
 
-# --- AI CALL FUNCTION (UPDATED) ---
-def call_ai_to_level_script(llm_manager, spec_content, original_json_content):
-    """
-    Calls the AI to level up the script.
-    FIXED: Uses 'generate_completion' and removes 'temperature' to match LLMFactory.
-    """
-    # 1. Extract Persona Context
-    meta = original_json_content.get("metadata", {})
-    persona = meta.get("learner_persona", "a professional learner")
-    level = meta.get("level", "L4")
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: var(--font-main);
+      background: var(--bg-gradient);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* --- MAIN CONTAINER --- */
+    .app-container {
+      width: 100%;
+      max-width: 900px;
+      background: var(--surface);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 650px;
+      position: relative;
+    }
+
+    /* --- HEADER --- */
+    header {
+      padding: 20px 40px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255,255,255,0.9);
+    }
+    .brand { font-weight: 800; color: var(--primary); font-size: 1.2rem; letter-spacing: -0.5px; }
+    .progress-track {
+      flex-grow: 1;
+      margin: 0 30px;
+      height: 8px;
+      background: #eee;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+    .timer { font-family: monospace; font-weight: 600; color: var(--text-light); }
+
+    /* --- CONTENT AREAS --- */
+    .view-section {
+      padding: 40px;
+      flex-grow: 1;
+      display: none;
+      flex-direction: column;
+      animation: fadeIn 0.4s ease;
+    }
+    .view-section.active { display: flex; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* --- INTRO VIEW --- */
+    .intro-content { text-align: center; margin: auto; max-width: 650px; }
+    .intro-title { font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem; }
+    .intro-text { font-size: 1.2rem; color: #555; line-height: 1.8; margin-bottom: 40px; text-align: left; }
+    .btn-primary {
+      background: var(--primary); color: white; border: none; padding: 15px 40px;
+      font-size: 1.1rem; border-radius: 50px; cursor: pointer; font-weight: 600;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 15px rgba(123, 44, 191, 0.3);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(123, 44, 191, 0.4); }
+
+    /* --- QUESTION VIEW --- */
+    .question-header { font-size: 0.9rem; text-transform: uppercase; color: var(--text-light); font-weight: 700; margin-bottom: 10px; }
+    .question-text { font-size: 1.6rem; font-weight: 600; line-height: 1.4; margin-bottom: 30px; }
     
-    # 2. Build the Context Injection String
-    context_injection = f"""
-    --- DYNAMIC CONTEXT INJECTION ---
-    TARGET LEARNER: {persona}
-    TARGET LEVEL: {level}
-    INSTRUCTION: You must adapt the content specifically for this persona. 
-    If the content is too academic, rewrite it to be applied/managerial.
-    If the content is too simple, increase the professional vocabulary.
-    ---------------------------------
-    """
+    .options-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+    .option-card {
+      padding: 20px; border: 2px solid #eee; border-radius: 12px;
+      cursor: pointer; transition: all 0.2s; font-size: 1.1rem;
+      display: flex; align-items: center; position: relative;
+    }
+    .option-card:hover { border-color: var(--primary-light); background: #faf5ff; }
+    .option-card.selected { border-color: var(--primary); background: #f3e5f5; color: var(--primary); font-weight: 600; }
+    
+    /* Keyboard Shortcut Hint inside card */
+    .key-hint {
+      position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+      font-size: 0.8rem; color: #aaa; font-weight: bold; border: 1px solid #ddd;
+      padding: 2px 6px; border-radius: 4px; display: none;
+    }
+    .option-card:hover .key-hint { display: block; }
+    
+    .option-marker {
+      width: 24px; height: 24px; border: 2px solid #ccc; border-radius: 50%; margin-right: 15px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .option-card.selected .option-marker { border-color: var(--primary); background: var(--primary); }
+    .option-card.selected .option-marker::after { content: "✔"; color: white; font-size: 14px; }
 
-    # 3. Merge with the Spec File
-    if not spec_content:
-        print("[WARN] Spec content is empty. Using internal fallback.")
-        base_prompt = """
-        You are an expert Instructional Designer. 
-        Task: Expand the 'content_flow' of this JSON to 500 words per section.
-        CRITICAL: Do not remove 'cross_curricular_embedding' or 'weekly_glossary'.
-        Output RAW JSON only.
-        """
-        full_prompt = context_injection + "\n" + base_prompt
-    else:
-        full_prompt = context_injection + "\n" + spec_content
+    /* --- REVIEW VIEW --- */
+    .review-list { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+    .review-item {
+      background: #f9f9f9; padding: 15px; border-radius: 8px; border-left: 4px solid #ddd;
+      cursor: pointer; transition: background 0.2s, box-shadow 0.2s;
+      display: flex; flex-direction: column; justify-content: flex-start;
+      position: relative;
+    }
+    .review-item:hover { background: #eee; }
+    /* Keyboard Focus State for Review Items */
+    .review-item.key-focused {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(123, 44, 191, 0.3);
+      background: white;
+      transform: scale(1.02);
+      z-index: 2;
+    }
+    .review-item.filled { border-left-color: var(--primary); }
+    .review-q-num { font-size: 0.8rem; font-weight: 700; color: #888; margin-bottom: 5px; }
+    .review-q-text { 
+      font-weight: 600; margin-bottom: 5px; 
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .review-ans { font-size: 0.9rem; color: var(--primary); line-height: 1.3; }
+    .review-warning { color: var(--error); font-size: 0.9rem; font-weight: bold; }
 
-    # 4. Prepare the Input
-    user_message = json.dumps(original_json_content, indent=2)
+    /* --- FOOTER NAV --- */
+    .footer-nav {
+      padding: 20px 40px; background: #fafafa; border-top: 1px solid #eee;
+      display: flex; flex-direction: column; 
+    }
+    .nav-buttons { display: flex; justify-content: space-between; margin-bottom: 10px; }
+    .btn-nav {
+      background: white; border: 1px solid #ddd; padding: 10px 25px; border-radius: 30px;
+      font-weight: 600; color: #555; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-nav:hover { background: #eee; }
+    .btn-nav:disabled { opacity: 0.5; cursor: not-allowed; }
+    
+    /* Keyboard Hints Bar */
+    .keyboard-hints {
+      font-size: 0.75rem; color: #999; text-align: center; text-transform: uppercase; letter-spacing: 1px;
+      padding-top: 10px; border-top: 1px dashed #eee; display: flex; justify-content: center; gap: 20px;
+    }
+    .keyboard-hints span b { color: #555; background: #eee; padding: 2px 6px; border-radius: 4px; }
 
-    # 5. Call the Factory (FIXED METHOD NAME & ARGUMENTS)
-    try:
-        # FACTORY MATCH: uses 'prompt' (not user_prompt) and 'generate_completion'
-        response = llm_manager.generate_completion(
-            prompt=user_message,
-            system_prompt=full_prompt
-        )
-        return response
-    except Exception as e:
-        print(f"Error calling AI Leveler: {e}")
-        return None
+    .btn-outline {
+        background: transparent; border: 2px solid var(--primary); color: var(--primary);
+        padding: 15px 40px; font-size: 1.1rem; border-radius: 50px; cursor: pointer; font-weight: 600;
+        margin-top: 15px; width: 100%; transition: all 0.2s;
+    }
+    .btn-outline:hover { background: #f3e5f5; }
 
-# --- MAIN ORCHESTRATOR ---
-def main():
-    if len(sys.argv) != 2:
-        print("Usage: python lesson_script_leveler_vC3.py <path_to_lessonscript.json>")
-        sys.exit(1)
+    /* --- PROCESSING / DIGITAL AVATAR --- */
+    .processing-overlay {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: white; z-index: 100;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.5s;
+    }
+    .processing-overlay.active { opacity: 1; pointer-events: all; }
+    
+    .avatar-container {
+      width: 150px; height: 150px; position: relative;
+      margin-bottom: 30px;
+    }
+    .avatar-circle {
+      width: 100%; height: 100%; border-radius: 50%;
+      background: #f3e5f5; border: 4px solid white;
+      box-shadow: 0 0 30px rgba(123, 44, 191, 0.2);
+      position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .liquid-wave {
+      position: absolute; bottom: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: var(--primary);
+      border-radius: 40%;
+      animation: spin 6s linear infinite;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    
+    .status-text {
+      font-size: 1.2rem; font-weight: 700; color: var(--primary); letter-spacing: 1px;
+      text-transform: uppercase; animation: pulse 1s infinite alternate;
+    }
+    @keyframes pulse { from { opacity: 0.6; } to { opacity: 1; } }
 
-    original_file_path = Path(sys.argv[1])
-    # Ensure we look for the spec in the same directory as the script or strict relative path
-    spec_file_path = Path(__file__).parent / SPEC_FILE_NAME
+    /* --- RESULTS VIEW --- */
+    .results-header { text-align: center; margin-bottom: 30px; }
+    .score-badge {
+      font-size: 4rem; font-weight: 800; color: var(--primary);
+      background: #f3e5f5; width: 120px; height: 120px; border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      margin-bottom: 10px; box-shadow: 0 10px 20px rgba(123, 44, 191, 0.15);
+    }
+    .feedback-container {
+      max-height: 400px; overflow-y: auto; padding-right: 10px;
+    }
+    .feedback-container::-webkit-scrollbar { width: 8px; }
+    .feedback-container::-webkit-scrollbar-thumb { background-color: #ddd; border-radius: 4px; }
+    
+    .feedback-card {
+      border: 1px solid #eee; border-radius: 8px; padding: 20px; margin-bottom: 15px;
+      border-left: 5px solid #ccc;
+      page-break-inside: avoid;
+    }
+    .feedback-card.correct { border-left-color: var(--success); background: #e8f5e9; }
+    .feedback-card.incorrect { border-left-color: var(--error); background: #ffebee; }
+    .feedback-label { font-weight: 800; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 5px; }
+    .feedback-card.correct .feedback-label { color: var(--success); }
+    .feedback-card.incorrect .feedback-label { color: var(--error); }
+    
+    .result-actions { display: flex; gap: 10px; flex-direction: column; margin-top: 20px; }
 
-    if not original_file_path.exists():
-        print(f"Error: Original file not found at {original_file_path}")
-        sys.exit(1)
-        
-    # [UPDATED] Robust Spec Loading
-    spec_content = ""
-    if spec_file_path.exists():
-        try:
-            with open(spec_file_path, "r", encoding="utf-8") as f:
-                spec_content = f.read()
-        except Exception as e:
-            print(f"Error reading spec file: {e}")
-            sys.exit(1)
-    else:
-        print(f"[WARN] Spec file not found at {spec_file_path}. The script will use the internal fallback.")
+    /* --- PRINT STYLES --- */
+    @media print {
+      body { background: white; padding: 0; display: block; }
+      .app-container { box-shadow: none; max-width: 100%; border-radius: 0; min-height: auto; }
+      #app-header, #app-footer, .btn-primary, .btn-outline, .result-actions, #view-intro, #view-quiz, #view-review { display: none !important; }
+      #view-results { display: block !important; }
+      .feedback-container { max-height: none; overflow: visible; }
+      .feedback-card { border: 1px solid #ccc; background-color: white !important; color: black; }
+      .score-badge { border: 2px solid #333; color: #333; background: none; }
+    }
+  </style>
+</head>
+<body>
 
-    print(f"--- Leveling script: {original_file_path.name} ---")
+<div class="app-container">
+  
+  <header id="app-header" style="display:none;">
+    <div class="brand">Knowledge Chest</div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-bar"></div>
+    </div>
+    <div class="timer" id="question-tracker">1 / 10</div>
+  </header>
 
-    # 1. Load JSON
-    try:
-        with open(original_file_path, "r", encoding="utf-8") as f:
-            original_json_content = json.load(f)
-    except Exception as e:
-        print(f"Error reading JSON file: {e}")
-        sys.exit(1)
+  <div class="view-section active" id="view-intro">
+    <div class="intro-content">
+      <h1 class="intro-title">Knowledge Chest Preparation</h1>
+      <div class="intro-text">
+        <p>You will be presented with <strong>10 random scenarios</strong> from the question bank.</p>
+        <p>Your goal is to identify the Gold Standard <strong>System Fix</strong> rather than a temporary Symptom Fix.</p>
+        <p>Select your answers, review them on the summary board, and submit for instant feedback.</p>
+      </div>
+      <button class="btn-primary" onclick="App.startQuiz()">Begin Assessment</button>
+    </div>
+  </div>
 
-    # 2. Init Factory (Matches Catalyst logic)
-    try:
-        llm_manager = LLMFactory()
-    except Exception as e:
-        print(f"Error initializing LLM Factory: {e}")
-        sys.exit(1)
+  <div class="view-section" id="view-quiz">
+    <div class="question-header" id="quiz-category">Category: Data Integrity</div>
+    <div class="question-text" id="quiz-question">Question text goes here...</div>
+    <div class="options-grid" id="quiz-options">
+      </div>
+  </div>
 
-    # 3. Process
-    leveled_json_str = call_ai_to_level_script(llm_manager, spec_content, original_json_content)
+  <div class="view-section" id="view-review">
+    <h2 style="color:var(--primary); margin-top:0;">Review Your Answers</h2>
+    <p style="margin-bottom:20px;">Review your selections below. Click any item to correct it.</p>
+    <div class="review-list" id="review-grid">
+      </div>
+  </div>
 
-    if leveled_json_str:
-        output_file_path = original_file_path.with_name(
-            original_file_path.stem + "_Leveled.json"
-        )
-        try:
-            with open(output_file_path, "w", encoding="utf-8") as f:
-                f.write(leveled_json_str)
-            print(f"    -> Success! Leveled script saved to: {output_file_path.name}")
-        except Exception as e:
-            print(f"Error saving leveled JSON file: {e}")
-    else:
-        print("    -> Error: Failed to generate leveled content. No file was saved.")
+  <div class="view-section" id="view-results">
+    <div class="results-header">
+      <div class="score-badge" id="final-score">8/10</div>
+      <h2 id="final-msg" style="margin-top:10px;">Assessment Complete</h2>
+      <p>Print this page for your learning records.</p>
+    </div>
+    <div class="feedback-container" id="feedback-list">
+      </div>
+    <div class="result-actions">
+        <button class="btn-primary" onclick="window.print()">🖨️ Print Results to PDF</button>
+        <button class="btn-outline" onclick="App.retakeQuiz()">↻ Retake Assessment (New Questions)</button>
+    </div>
+  </div>
 
-if __name__ == "__main__":
-    main()
+  <div class="footer-nav" id="app-footer" style="display:none;">
+    <div class="nav-buttons">
+      <button class="btn-nav" id="btn-prev" onclick="App.prevQuestion()">Back</button>
+      <button class="btn-primary" id="btn-next" onclick="App.nextQuestion()">Next</button>
+    </div>
+    <div class="keyboard-hints" id="nav-hints">
+      </div>
+  </div>
+
+  <div class="processing-overlay" id="processing-view">
+    <div class="avatar-container">
+      <div class="avatar-circle">
+        <div class="liquid-wave" id="avatar-liquid"></div>
+        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" style="position:relative; z-index:10;">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+        </svg>
+      </div>
+    </div>
+    <div class="status-text" id="status-text">Initializing...</div>
+  </div>
+
+</div>
+
+<script>
+/**
+ * QUESTION BANK (Simulated)
+ */
+const RAW_BANK = [
+  {
+    id: 1,
+    category: "Equipment Management",
+    text: "Three analytical balances were found to be past their scheduled internal performance check date (UKAS non-conformity). What is the System Fix?",
+    options: [
+      "Immediately perform the overdue performance checks and update the logbook.",
+      "Discipline the analyst responsible for missing the checks.",
+      "Revise SOP to require shared ownership and configure LIMS to send weekly automated team alerts.",
+      "Place 'Out of Service' stickers on the balances until checked."
+    ],
+    correct: 2,
+    feedback: "Automated alerts and shared ownership remove reliance on single human memory (System Fix)."
+  },
+  {
+    id: 2,
+    category: "Data Integrity (ALCOA+)",
+    text: "Audit trail shows a technician deleted a raw data file and replaced it with a re-processed version. Action?",
+    options: [
+      "Confront the technician and tell them to stick to the original file.",
+      "Launch a full deviation investigation, quarantine batch, and conduct culture training on ALCOA+.",
+      "Accept the re-processed file if the results are within specification.",
+      "Restrict the technician's access for one week."
+    ],
+    correct: 1,
+    feedback: "Deletion of raw data is a critical breach. Investigation and culture change are required, not just a warning."
+  },
+  {
+    id: 3,
+    category: "Process Efficiency",
+    text: "Manual transcription errors are causing OOS results in the wet chemistry lab.",
+    options: [
+      "Implement a 'Four-Eyes' (second person verification) step for all transcriptions.",
+      "Initiate a project to interface instruments with LIMS for automatic data capture.",
+      "Retrain staff on how to copy numbers carefully.",
+      "Use a calculator with a printout tape."
+    ],
+    correct: 1,
+    feedback: "Digital integration (LIMS) eliminates the error source entirely. 'Four-eyes' is a weak control."
+  },
+  {
+    id: 4,
+    category: "OOS Investigation",
+    text: "An OOS result occurred. The analyst re-tested immediately without a plan to 'confirm' the result.",
+    options: [
+      "Accept the passing re-test results and discard the OOS.",
+      "Halt release. Initiate a Phase 1 Lab Investigation to determine root cause before any re-testing.",
+      "Average the OOS and the new result to see if it passes.",
+      "Update the SOP to allow immediate re-testing."
+    ],
+    correct: 1,
+    feedback: "Testing into compliance is forbidden. A formal investigation must precede any new data generation."
+  },
+  {
+    id: 5,
+    category: "Documentation",
+    text: "SOPs are physically printed and often go missing or are outdated in the lab.",
+    options: [
+      "Appoint a 'Document Librarian' to organize the folders daily.",
+      "Print more copies and place them in every room.",
+      "Implement a digital Document Management System (DMS) with tablets in the lab.",
+      "Laminate the current versions so they last longer."
+    ],
+    correct: 2,
+    feedback: "A digital DMS ensures the 'Current' version is always the only version available."
+  }
+];
+
+// GENERATE 50 QUESTIONS (Simulated via loop)
+const QUESTION_BANK = [];
+for(let i=0; i<10; i++) {
+  RAW_BANK.forEach((q, idx) => {
+    let clone = JSON.parse(JSON.stringify(q));
+    clone.id = i * 5 + idx + 1; 
+    QUESTION_BANK.push(clone);
+  });
+}
+
+const App = {
+  questions: [], 
+  userAnswers: {}, 
+  currentIndex: 0,
+  reviewMode: false,
+  reviewCursor: 0, // NEW: Tracks focus on review grid (0-9)
+  currentView: 'intro',
+  
+  // DOM Elements
+  ui: {
+    header: document.getElementById('app-header'),
+    footer: document.getElementById('app-footer'),
+    navHints: document.getElementById('nav-hints'),
+    progressBar: document.getElementById('progress-bar'),
+    tracker: document.getElementById('question-tracker'),
+    views: {
+      intro: document.getElementById('view-intro'),
+      quiz: document.getElementById('view-quiz'),
+      review: document.getElementById('view-review'),
+      results: document.getElementById('view-results'),
+      processing: document.getElementById('view-processing')
+    },
+    quiz: {
+      category: document.getElementById('quiz-category'),
+      question: document.getElementById('quiz-question'),
+      options: document.getElementById('quiz-options')
+    },
+    reviewGrid: document.getElementById('review-grid'),
+    avatarLiquid: document.getElementById('avatar-liquid'),
+    statusText: document.getElementById('status-text'),
+    btnNext: document.getElementById('btn-next'),
+    btnPrev: document.getElementById('btn-prev')
+  },
+
+  startQuiz: function() {
+    // RANDOMIZATION ASSURANCE:
+    // This creates a fresh copy of the bank, shuffles it using Fisher-Yates, 
+    // and THEN takes the top 10.
+    this.questions = this.shuffleArray([...QUESTION_BANK]).slice(0, 10);
+    this.userAnswers = {};
+    this.currentIndex = 0;
+    this.reviewMode = false;
+    this.reviewCursor = 0;
+
+    this.ui.header.style.display = 'flex';
+    this.ui.footer.style.display = 'flex';
+    this.switchView('quiz');
+    this.renderQuestion();
+  },
+
+  renderQuestion: function() {
+    const q = this.questions[this.currentIndex];
+    
+    // Header & Progress
+    this.ui.tracker.innerText = `${this.currentIndex + 1} / ${this.questions.length}`;
+    const progress = ((this.currentIndex + 1) / this.questions.length) * 100;
+    this.ui.progressBar.style.width = `${progress}%`;
+
+    // Content
+    this.ui.quiz.category.innerText = `Category: ${q.category}`;
+    this.ui.quiz.question.innerText = q.text;
+    this.ui.quiz.options.innerHTML = '';
+
+    // Options
+    q.options.forEach((opt, idx) => {
+      const el = document.createElement('div');
+      el.className = `option-card ${this.userAnswers[q.id] === idx ? 'selected' : ''}`;
+      el.onclick = () => this.selectOption(q.id, idx);
+      
+      const keyMap = ['1','2','3','4'];
+      const hint = `<span class="key-hint">${keyMap[idx]}</span>`;
+      el.innerHTML = `<div class="option-marker"></div>${opt} ${hint}`;
+      this.ui.quiz.options.appendChild(el);
+    });
+
+    // NAVIGATION LOGIC
+    this.ui.btnPrev.disabled = this.currentIndex === 0;
+    
+    if (this.reviewMode) {
+      this.ui.btnNext.innerText = "Return to Review Board";
+      this.ui.btnNext.onclick = () => this.showReview();
+    } else {
+      this.ui.btnNext.onclick = () => this.nextQuestion();
+      if (this.currentIndex === this.questions.length - 1) {
+        this.ui.btnNext.innerText = "Review Answers";
+      } else {
+        this.ui.btnNext.innerText = "Next";
+      }
+    }
+  },
+
+  selectOption: function(qId, optionIdx) {
+    this.userAnswers[qId] = optionIdx;
+    this.renderQuestion(); 
+  },
+
+  nextQuestion: function() {
+    if (this.currentIndex < this.questions.length - 1) {
+      this.currentIndex++;
+      this.renderQuestion();
+    } else {
+      this.showReview();
+    }
+  },
+
+  prevQuestion: function() {
+    if (this.currentIndex > 0) {
+      this.currentIndex--;
+      this.renderQuestion();
+    }
+  },
+
+  jumpToQuestion: function(index) {
+    this.currentIndex = index;
+    this.reviewMode = true; 
+    this.switchView('quiz');
+    this.renderQuestion();
+  },
+
+  showReview: function() {
+    this.reviewMode = true;
+    this.ui.reviewGrid.innerHTML = '';
+    
+    this.questions.forEach((q, idx) => {
+      const selectedIdx = this.userAnswers[q.id];
+      const hasAnswer = selectedIdx !== undefined;
+      
+      const item = document.createElement('div');
+      // Highlight the focused item
+      const isFocused = idx === this.reviewCursor;
+      item.className = `review-item ${hasAnswer ? 'filled' : ''} ${isFocused ? 'key-focused' : ''}`;
+      item.onclick = () => this.jumpToQuestion(idx);
+      
+      let answerText = hasAnswer ? q.options[selectedIdx] : "<span class='review-warning'>Not Answered</span>";
+      
+      item.innerHTML = `
+        <div class="review-q-num">Question ${idx + 1}</div>
+        <div class="review-q-text">${q.text}</div>
+        <div class="review-ans">${answerText}</div>
+      `;
+      this.ui.reviewGrid.appendChild(item);
+    });
+
+    this.ui.btnNext.innerText = "Submit Assessment";
+    this.ui.btnNext.onclick = () => this.processResults();
+    this.switchView('review');
+  },
+
+  processResults: function() {
+    const answeredCount = Object.keys(this.userAnswers).length;
+    if (answeredCount < 10) {
+      if(!confirm(`You have only answered ${answeredCount}/10 questions. Submit anyway?`)) return;
+    }
+
+    // Animation: Fill UP
+    this.animateProcessing(
+      'fill', 
+      ["Uploading Responses...", "Analyzing Logic...", "Comparing to Gold Standard...", "Finalizing Score..."],
+      () => this.calculateAndShowResults()
+    );
+  },
+
+  retakeQuiz: function() {
+    this.ui.header.style.display = 'none';
+    this.ui.footer.style.display = 'none';
+    
+    // Animation: Drain DOWN
+    this.animateProcessing(
+      'drain',
+      ["Flushing Data...", "Randomizing Question Bank...", "Resetting Scenarios...", "Ready."],
+      () => {
+        this.reviewMode = false;
+        this.switchView('intro');
+      }
+    );
+  },
+
+  animateProcessing: function(mode, steps, callback) {
+    document.getElementById('processing-view').classList.add('active');
+    this.ui.footer.style.display = 'none';
+    
+    const liquid = this.ui.avatarLiquid;
+    liquid.style.transition = 'none';
+
+    if (mode === 'fill') {
+      liquid.style.bottom = "-50%";
+      void liquid.offsetWidth; 
+      liquid.style.transition = 'bottom 3.5s ease-in-out';
+      liquid.style.bottom = "150%"; 
+    } else {
+      liquid.style.bottom = "150%";
+      void liquid.offsetWidth;
+      liquid.style.transition = 'bottom 3.5s ease-in-out';
+      liquid.style.bottom = "-50%";
+    }
+
+    let step = 0;
+    this.ui.statusText.innerText = steps[0];
+
+    const interval = setInterval(() => {
+      step++;
+      if (step < steps.length) {
+        this.ui.statusText.innerText = steps[step];
+      } else {
+        clearInterval(interval);
+        document.getElementById('processing-view').classList.remove('active');
+        callback();
+      }
+    }, 800);
+  },
+
+  calculateAndShowResults: function() {
+    let score = 0;
+    const list = document.getElementById('feedback-list');
+    list.innerHTML = '';
+
+    this.questions.forEach((q, idx) => {
+      const userIdx = this.userAnswers[q.id];
+      const isCorrect = userIdx === q.correct;
+      if (isCorrect) score++;
+
+      const card = document.createElement('div');
+      card.className = `feedback-card ${isCorrect ? 'correct' : 'incorrect'}`;
+      
+      const label = isCorrect ? "✅ Correct System Fix" : "❌ Symptom Fix / Incorrect";
+      const userText = userIdx !== undefined ? q.options[userIdx] : "No Answer";
+      
+      card.innerHTML = `
+        <div class="feedback-label">${label}</div>
+        <div style="font-weight:600; margin-bottom:5px;">Q${idx+1}: ${q.text}</div>
+        <div style="font-size:0.9rem; margin-bottom:10px; color:#555;">Your Answer: ${userText}</div>
+        <div style="font-size:0.9rem; font-style:italic; border-top:1px solid rgba(0,0,0,0.1); padding-top:10px;">
+          <strong>Feedback:</strong> ${q.feedback}
+        </div>
+      `;
+      list.appendChild(card);
+    });
+
+    document.getElementById('final-score').innerText = `${score}/10`;
+    const msg = document.getElementById('final-msg');
+    
+    if (score === 10) msg.innerText = "Perfect System Thinking!";
+    else if (score > 7) msg.innerText = "Good Analysis.";
+    else msg.innerText = "Review of Fundamentals Required.";
+
+    this.switchView('results');
+  },
+
+  switchView: function(viewName) {
+    this.currentView = viewName;
+    
+    // Update Keyboard Hints based on View
+    const hints = this.ui.navHints;
+    if (viewName === 'quiz') {
+      hints.innerHTML = `<span><b>1-4</b> Select</span> <span><b>Enter</b> Next</span> <span><b>⌫</b> Back</span>`;
+    } else if (viewName === 'review') {
+      hints.innerHTML = `<span><b>Arrows</b> Navigate</span> <span><b>Enter</b> Edit Question</span> <span><b>S</b> Submit</span>`;
+    } else {
+      hints.innerHTML = '';
+    }
+
+    document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+    document.getElementById(`view-${viewName}`).classList.add('active');
+  },
+
+  // FISHER-YATES SHUFFLE (Standard Randomization)
+  shuffleArray: function(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+};
+
+/**
+ * KEYBOARD LISTENERS
+ */
+document.addEventListener('keydown', (e) => {
+  const key = e.key;
+
+  // 1. QUIZ MODE CONTROLS
+  if (App.currentView === 'quiz') {
+    if (['1', '2', '3', '4'].includes(key)) {
+      const idx = parseInt(key) - 1;
+      if (App.questions[App.currentIndex].options.length > idx) {
+        App.selectOption(App.questions[App.currentIndex].id, idx);
+      }
+    }
+    else if (key === 'Enter') {
+      e.preventDefault();
+      // If in reviewMode (fixing a question), enter goes back to grid
+      if (App.reviewMode && App.ui.btnNext.innerText.includes("Return")) {
+        App.showReview();
+      } else {
+        document.getElementById('btn-next').click();
+      }
+    }
+    else if (key === 'Backspace' || key === 'ArrowLeft') {
+      document.getElementById('btn-prev').click();
+    }
+  }
+
+  // 2. REVIEW BOARD CONTROLS (New)
+  else if (App.currentView === 'review') {
+    if (key === 'ArrowRight' || key === 'ArrowDown') {
+      e.preventDefault();
+      App.reviewCursor = (App.reviewCursor + 1) % App.questions.length;
+      App.showReview(); // Re-render to update focus class
+    }
+    else if (key === 'ArrowLeft' || key === 'ArrowUp') {
+      e.preventDefault();
+      App.reviewCursor = (App.reviewCursor - 1 + App.questions.length) % App.questions.length;
+      App.showReview(); // Re-render
+    }
+    else if (key === 'Enter') {
+      e.preventDefault();
+      App.jumpToQuestion(App.reviewCursor);
+    }
+    else if (key.toLowerCase() === 's') {
+      // Shortcut to Submit
+      App.processResults();
+    }
+  }
+});
+</script>
+
+</body>
+</html>
