@@ -1,0 +1,910 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Learning Pathway | Applied Chemical Sciences</title>
+  <meta name="color-scheme" content="dark" />
+
+  <style>
+    :root{
+      /* Chemical Sciences Theme: Blues and Oranges */
+      --bg0: #020815;
+      --bg1: #051024;
+
+      --text: #e5e7eb;
+      --muted: #cbd5e1;
+
+      --glass: rgba(5, 16, 36, 0.65);
+      --glass2: rgba(5, 16, 36, 0.75);
+      --glassBorder: rgba(255,255,255,0.12);
+      --shadow: 0 18px 75px rgba(0,0,0,0.65);
+      --radius: 18px;
+
+      --nodeGlow: rgba(255, 140, 0, 0.92);
+      --nodeCore: rgba(0, 150, 255, 0.90);
+
+      /* Card fade timings */
+      --activeFadeIn: 1100ms;
+      --activeFadeOut: 380ms;
+      --miniFadeIn: 900ms;
+      --miniFadeOut: 420ms;
+    }
+
+    *{ box-sizing:border-box; }
+    html, body { height: 100%; margin: 0; padding: 0; }
+
+    body{
+      overflow:hidden;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 800px at 20% 10%, rgba(255,140,0,0.10), transparent 60%),
+        radial-gradient(1100px 700px at 80% 20%, rgba(0, 220, 255, 0.08), transparent 62%),
+        radial-gradient(900px 650px at 60% 90%, rgba(0,150,255,0.12), transparent 55%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+    }
+
+    canvas{
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display:block;
+    }
+
+    .stage{
+      position: fixed;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    /* UI Controls */
+    .controls-left {
+      position: fixed;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 10;
+      pointer-events: auto;
+    }
+    .controls-right {
+      position: fixed;
+      right: 20px;
+      top: 20px;
+      z-index: 10;
+      pointer-events: auto;
+    }
+    .btn-control {
+      background: rgba(5, 16, 36, 0.75);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      text-align: left;
+    }
+    .btn-control:hover {
+      background: rgba(0, 150, 255, 0.4);
+      border-color: rgba(255, 140, 0, 0.6);
+      transform: translateX(4px);
+    }
+    .controls-right .btn-control:hover {
+      transform: translateY(2px);
+    }
+    .btn-resume {
+      margin-top: 12px;
+      background: rgba(255, 140, 0, 0.2);
+      border-color: rgba(255, 140, 0, 0.5);
+      text-align: center;
+    }
+    .btn-resume:hover {
+      background: rgba(255, 140, 0, 0.4);
+      transform: scale(1.02);
+    }
+
+    .headerCard{
+      position: absolute;
+      left: 50%;
+      top: calc(24px + env(safe-area-inset-top));
+      transform: translateX(-50%);
+      width: min(920px, calc(100% - 42px));
+      border-radius: var(--radius);
+      background: var(--glass2);
+      border: 1px solid var(--glassBorder);
+      box-shadow: 0 18px 80px rgba(0,0,0,0.55);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      padding: 16px 22px;
+      opacity: 0;
+      transition: opacity 900ms ease;
+      text-align: center;
+    }
+    .headerCard.show{ opacity: 1; }
+
+    .headerTitle{
+      margin: 0;
+      font-weight: 900;
+      letter-spacing: 0.3px;
+      font-size: clamp(20px, 2.5vw, 28px);
+      background: linear-gradient(90deg, #ff8c00, #00dcff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .headerSub{
+      margin: 6px 0 0 0;
+      color: rgba(226, 232, 240, 0.85);
+      line-height: 1.45;
+      font-size: clamp(14px, 1.6vw, 16px);
+      font-weight: 500;
+    }
+
+    .activeCard{
+      position: absolute;
+      width: min(580px, calc(100% - 52px));
+      border-radius: var(--radius);
+      background: var(--glass);
+      border: 1px solid var(--glassBorder);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      padding: 22px;
+
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.985);
+      text-align: center;
+      overflow: hidden;
+      z-index: 5;
+
+      transition:
+        opacity var(--activeFadeIn) ease,
+        transform var(--activeFadeIn) ease,
+        left 600ms cubic-bezier(0.25, 1, 0.5, 1),
+        top 600ms cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .activeCard.show{
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .activeCard.fadeOut{
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.985);
+      transition:
+        opacity var(--activeFadeOut) ease,
+        transform var(--activeFadeOut) ease,
+        left 600ms ease,
+        top 600ms ease;
+    }
+    .activeCard::after{
+      content:"";
+      position:absolute;
+      left: 0; right: 0; top: 0; bottom: 0;
+      pointer-events:none;
+      border-top: 3px solid rgba(255,255,255,0.20);
+      border-bottom: 3px solid rgba(255,255,255,0.20);
+      border-radius: var(--radius);
+      box-shadow:
+        inset 0 1px 0 rgba(255,140,0,0.15),
+        inset 0 -1px 0 rgba(255,140,0,0.15);
+    }
+
+    .row{
+      display:flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items:center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .iconWrap{
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: rgba(2,6,23,0.55);
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+      display:grid;
+      place-items:center;
+      color: rgba(255,180,100,0.95);
+    }
+
+    .title{
+      margin: 0;
+      font-size: clamp(20px, 2.2vw, 24px);
+      letter-spacing: 0.2px;
+      line-height: 1.2;
+    }
+
+    .meta{
+      margin: 0;
+      color: rgba(203,213,225,0.9);
+      line-height: 1.55;
+      font-size: 15px;
+      max-width: 62ch;
+    }
+
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      margin-top: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(2,6,23,0.6);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(229,231,235,0.95);
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      font-size: 13px;
+      width: fit-content;
+    }
+
+    .dot{
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: rgba(0,150,255,0.95);
+      box-shadow: 0 0 16px rgba(255,140,0,0.6);
+    }
+
+    .miniCard{
+      position: absolute;
+      width: 220px;
+      border-radius: 14px;
+      background: rgba(5, 16, 36, 0.75);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 18px 70px rgba(0,0,0,0.6);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      padding: 14px 16px;
+      text-align: center;
+      z-index: 4;
+
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.94);
+      transition:
+        opacity var(--miniFadeIn) ease,
+        transform var(--miniFadeIn) ease,
+        left 520ms ease,
+        top 520ms ease;
+    }
+    .miniCard.show{
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .miniCard.fadeOut{
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.94);
+      transition:
+        opacity var(--miniFadeOut) ease,
+        transform var(--miniFadeOut) ease,
+        left 520ms ease,
+        top 520ms ease;
+    }
+    .miniTitle{
+      margin: 0;
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: 0.2px;
+      color: #fff;
+    }
+
+    @media (max-width: 980px){
+      .miniCard{ width: 185px; padding: 12px; }
+      .miniTitle{ font-size: 14px; }
+      .controls-left { left: 10px; }
+    }
+    @media (max-width: 720px){
+      .miniCard{ width: 165px; }
+      .headerSub{ display:none; }
+      .controls-left { top: auto; bottom: 20px; flex-direction: row; flex-wrap: wrap; width: calc(100% - 20px); transform: none; justify-content: center; }
+      .btn-resume { margin-top: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .activeCard, .miniCard, .headerCard { transition: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="net" aria-hidden="true"></canvas>
+
+  <div class="stage" id="stage" aria-hidden="true">
+    
+    <div class="controls-left">
+      <button class="btn-control" onclick="setStaticView('L4')">Summarise Level 4</button>
+      <button class="btn-control" onclick="setStaticView('L5')">Summarise Level 5</button>
+      <button class="btn-control" onclick="setStaticView('L6')">Summarise Level 6</button>
+      <button class="btn-control" onclick="setStaticView('ALL')">Summarise All Levels</button>
+      <button class="btn-control btn-resume" onclick="resumeAuto()">Resume Pathway</button>
+    </div>
+
+    <div class="controls-right">
+      <button class="btn-control" id="btnBgAnim" onclick="toggleBgAnim()">Disable Animation</button>
+    </div>
+
+    <div class="headerCard" id="headerCard">
+      <h1 class="headerTitle" id="hTitle">Applied Chemical Sciences Programme Journey</h1>
+      <p class="headerSub" id="hSub">Levels 4, 5, and 6 connecting into a single scientific pathway.</p>
+    </div>
+
+    <div class="activeCard" id="activeCard">
+      <div class="row">
+        <div class="iconWrap" id="activeIcon"></div>
+        <h2 class="title" id="activeTitle"></h2>
+        <p class="meta" id="activeMeta"></p>
+        <div class="tag"><span class="dot"></span><span id="activeTag"></span></div>
+      </div>
+    </div>
+    
+    <div id="miniCardContainer"></div>
+  </div>
+
+  <script>
+    (() => {
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // State variables for UI Controls
+      let mode = 'auto'; 
+      let animBg = true;
+
+      window.setStaticView = function(view) {
+        mode = view;
+        const activeCard = document.getElementById('activeCard');
+        if(activeCard) {
+            activeCard.classList.remove('show', 'fadeOut');
+        }
+      };
+
+      window.resumeAuto = function() {
+        mode = 'auto';
+      };
+
+      window.toggleBgAnim = function() {
+        animBg = !animBg;
+        const btn = document.getElementById('btnBgAnim');
+        if(btn) {
+            btn.textContent = animBg ? "Disable Background Animation" : "Enable Background Animation";
+        }
+      };
+
+      const modules = [
+        // Level 4 (Index 0-4)
+        { tag:"TAC4101", title:"Organic Chemistry", meta:"An introduction to the fundamental principles of organic chemistry, including the structure and properties of organic compounds, as well as the reactions and mechanisms that occur in organic chemistry.", icon:"shield" },
+        { tag:"TAC4102", title:"Inorganic Chemistry", meta:"An introduction to the fundamental principles of inorganic chemistry, including the groups of the periodic table, as well as the reactions and mechanisms that occur in inorganic chemistry.", icon:"digital" },
+        { tag:"TFM4101", title:"Mathematics and Data Analysis", meta:"A module that provides a toolkit of mathematical and statistical skills that can be applied across various scientific disciplines.", icon:"data" },
+        { tag:"TFM4102", title:"Lab Practice", meta:"A module focused on the principles of laboratory practice, which will include online instructional videos and self-paced learning to support development of problem-solving, scientific inquiry, collaboration, safe working practices and report writing.", icon:"quality" },
+        { tag:"TFM4103", title:"Reflective Project", meta:"An on-going project that runs for the entirety of Level 4, this module uses reflective practice models to guide you in setting quality professional development goals, monitoring continuous improvement and upholding high standards of professional conduct and behaviours in the workplace.", icon:"plan" },
+        // Level 5 (Index 5-10)
+        { tag:"TFM5101", title:"Project Management", meta:"An introduction to the principles and practices of project management, this module will equip you with the tools and techniques required to plan, schedule, allocate resources and communicate effectively in collaborative projects.", icon:"plan" },
+        { tag:"TAC5101", title:"Organic Chemical Characterisation", meta:"An exploration of the techniques used to identify and quantify the chemical structure and composition of organic compounds.", icon:"shield" },
+        { tag:"TAC5102", title:"Physical and Inorganic Spectroscopy", meta:"An exploration of the fundamental principles of spectroscopy and its role in characterising the properties of materials, including inorganic compounds and biomolecules.", icon:"data" },
+        { tag:"Level 5 Optional", title:"Level 5 Optional Module", meta:"Select either Pharmacology or Polymer Science.", icon:"digital" },
+        { tag:"TAC5103", title:"Lab Practice for Chemical Sciences", meta:"A module focused on practical laboratory skills in the field of Chemical Sciences, which will include online instructional videos and laboratory simulations to support development of experiment design, data interpretation and analysis...", icon:"quality" },
+        { tag:"TFM5102", title:"Workplace Project", meta:"An on-going project that runs for the entirety of Level 5, this module uses reflective practice models to guide you in planning and monitoring laboratory-based investigations to contribute to improvements in the workplace.", icon:"people" },
+        // Level 6 (Index 11-15)
+        { tag:"TAC6101", title:"Organic Synthesis", meta:"An exploration of the principles and techniques of organic synthesis, including retrosynthetic analysis, reaction mechanisms, and functional group interconversions.", icon:"shield" },
+        { tag:"TAC6102", title:"Frontier Topics in Chemistry", meta:"An examination of the latest and emerging areas of research in chemistry, including nanotechnology, materials chemistry, green chemistry, and catalysis.", icon:"data" },
+        { tag:"Level 6 Optional", title:"Level 6 Optional Module", meta:"Choose from Green Science, Chemical Technologies, or Forensic Science.", icon:"digital" },
+        { tag:"TFM6101", title:"Responsible Research and Innovation", meta:"A deep exploration of the principles and practices of responsible research and innovation, fostering a sense of global citizenship and social responsibility.", icon:"people" },
+        { tag:"TFM6102", title:"Company Research Project", meta:"In this final module, you will spend six months autonomously planning, developing and implementing a scientific project to add value to your company.", icon:"cap" }
+      ];
+
+      function svg(name){
+        const common = `fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"`;
+        switch(name){
+          case "shield": return `<svg width="26" height="26" viewBox="0 0 24 24" ${common}><path d="M12 2l8 4v6c0 5-3.4 9.4-8 10-4.6-.6-8-5-8-10V6l8-4z"></path><path d="M9 12l2 2 4-5"></path></svg>`;
+          case "plan": return `<svg width="26" height="26" viewBox="0 0 24 24" ${common}><rect x="4" y="3" width="16" height="18" rx="2"></rect><path d="M8 7h8M8 11h8M8 15h5"></path><path d="M15 15l2 2 3-4"></path></svg>`;
+          case "people": return `<svg width="26" height="26" viewBox="0 0 24 24" ${common}><path d="M16 11a4 4 0 1 0-8 0"></path><path d="M12 15c-4 0-7 2-7 5"></path><path d="M12 15c4 0 7 2 7 5"></path><path d="M18 8a3 3 0 1 1 0 6"></path></svg>`;
+          case "quality": return `<svg width="26" height="26" viewBox="0 0 24 24" ${common}><path d="M6 3h12v6H6z"></path><path d="M8 9v12"></path><path d="M16 9v12"></path><path d="M6 21h12"></path><path d="M10 14l2 2 4-5"></path></svg>`;
+          case "data": return `<svg width="26" height="26" viewBox="0 0 24 24" ${common}><path d="M4 19V5"></path><path d="M20 19V5"></path><path d="M4 19h16"></path><path d="M7 15l3-3 3 2 4-5"></path><path d="M17 9h2"></path></svg>`;
+          case "digital": return `<svg width="26" height="26" viewBox="0 0 24 24" ${common}><rect x="4" y="4" width="16" height="12" rx="2"></rect><path d="M8 20h8"></path><path d="M12 16v4"></path><path d="M8 8h.01M12 8h.01M16 8h.01"></path></svg>`;
+          case "cap": default: return `<svg width="26" height="26" viewBox="0 0 24 24" ${common}><path d="M22 10L12 5 2 10l10 5 10-5z"></path><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"></path><path d="M22 10v6"></path></svg>`;
+        }
+      }
+
+      const miniContainer = document.getElementById('miniCardContainer');
+      const minis = [];
+      modules.forEach((m, i) => {
+        const d = document.createElement('div');
+        d.className = 'miniCard';
+        d.id = 'm' + i;
+        d.innerHTML = `<p class="miniTitle">${m.title}</p>`;
+        miniContainer.appendChild(d);
+        minis.push(d);
+      });
+
+      const headerCard = document.getElementById('headerCard');
+      const hTitle = document.getElementById('hTitle');
+      const hSub = document.getElementById('hSub');
+      const activeCard = document.getElementById('activeCard');
+      const activeIcon = document.getElementById('activeIcon');
+      const activeTitle = document.getElementById('activeTitle');
+      const activeMeta = document.getElementById('activeMeta');
+      const activeTag = document.getElementById('activeTag');
+
+      const canvas = document.getElementById('net');
+      const ctx = canvas.getContext('2d', { alpha:true });
+
+      let w=0,h=0,dpr=1;
+      function resize(){
+        dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+        w = Math.floor(window.innerWidth);
+        h = Math.floor(window.innerHeight);
+        canvas.width = Math.floor(w*dpr);
+        canvas.height = Math.floor(h*dpr);
+        canvas.style.width = w+'px';
+        canvas.style.height = h+'px';
+        ctx.setTransform(dpr,0,0,dpr,0,0);
+      }
+      window.addEventListener('resize', resize, { passive:true });
+      resize();
+
+      function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+      function lerp(a,b,t){ return a + (b-a)*t; }
+      function easeInOutCubic(t){ return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2; }
+
+      const moleculeCount = clamp(Math.round((w*h)/30000), 10, 25);
+      const molecules = [];
+      const formulas = ["H₂O", "CO₂", "C₆H₆", "CH₄", "NH₃", "O₂", "N₂", "NaCl"];
+      for(let i=0;i<moleculeCount;i++){
+        molecules.push({ 
+          x: Math.random()*w, 
+          y: Math.random()*h, 
+          r: Math.random()*25 + 15, 
+          vx: (Math.random()*2-1)*0.08, 
+          vy: (Math.random()*2-1)*0.08,
+          rot: Math.random()*Math.PI*2,
+          vrot: (Math.random()*2-1)*0.005,
+          type: Math.random() > 0.4 ? 'hex' : 'text',
+          text: formulas[Math.floor(Math.random()*formulas.length)]
+        });
+      }
+
+      function pathwayLayout(){
+        const marginX = w * 0.25;
+        const spanX = w * 0.50;
+        const baseY = h * 0.20;
+        const rowH = Math.min(h * 0.28, 300);
+        const layout = [];
+
+        // L4 (0-4) Left to Right
+        for(let i=0; i<5; i++){
+          layout.push({ x: marginX + spanX * (i/4), y: baseY + Math.sin(i*1.2)*45 });
+        }
+        // L5 (5-10) Right to Left
+        for(let i=0; i<6; i++){
+          layout.push({ x: marginX + spanX * (1 - i/5), y: baseY + rowH + Math.sin(i*1.5)*45 });
+        }
+        // L6 (11-15) Left to Right
+        for(let i=0; i<5; i++){
+          layout.push({ x: marginX + spanX * (i/4), y: baseY + rowH*2 + Math.sin(i*1.2)*45 });
+        }
+        return layout;
+      }
+      let nodes = pathwayLayout();
+
+      function calcBounds(start, end) {
+        let minX=Infinity, maxX=-Infinity, minY=Infinity, maxY=-Infinity;
+        for(let i=start; i<=end; i++){
+          if(nodes[i].x < minX) minX = nodes[i].x;
+          if(nodes[i].x > maxX) maxX = nodes[i].x;
+          if(nodes[i].y < minY) minY = nodes[i].y;
+          if(nodes[i].y > maxY) maxY = nodes[i].y;
+        }
+        return { 
+          cx: (minX + maxX)/2, 
+          cy: (minY + maxY)/2, 
+          spanX: Math.max(100, maxX - minX), 
+          spanY: Math.max(100, maxY - minY) 
+        };
+      }
+
+      let cam = { x: w*0.5, y: h*0.5, z: 1 };
+      const ZOOM_IN = 1.6;
+
+      function applyCamera(){
+        ctx.setTransform(dpr,0,0,dpr,0,0);
+        ctx.translate(w*0.5, h*0.5);
+        ctx.scale(cam.z, cam.z);
+        ctx.translate(-cam.x, -cam.y);
+      }
+
+      function toScreen(pt){
+        return { x: (pt.x - cam.x) * cam.z + (w*0.5), y: (pt.y - cam.y) * cam.z + (h*0.5) };
+      }
+
+      const timeline = [];
+      let tTotal = 0;
+      function addPhase(kind, duration, props={}) {
+        timeline.push({ kind, t0: tTotal, t1: tTotal + duration, ...props });
+        tTotal += duration;
+      }
+
+      function buildTimeline() {
+        const buildLevel = (levelNum, startIdx, endIdx) => {
+          for(let i=startIdx; i<=endIdx; i++) {
+            if(i > startIdx) addPhase("travel", 1000, { i, from: i-1 });
+            addPhase("hold", 3400, { i });
+            addPhase("fadeOut", 400, { i });
+            addPhase("gap", 200, { i }); 
+          }
+          addPhase("camMoveLevel", 1400, { level: levelNum, startIdx, endIdx });
+          addPhase("overviewLevel", 4500, { level: levelNum, startIdx, endIdx });
+          addPhase("overviewFadeOut", 500, { startIdx, endIdx });
+        };
+
+        buildLevel(4, 0, 4);
+        addPhase("travel", 1200, { i: 5, from: 4 }); 
+        buildLevel(5, 5, 10);
+        addPhase("travel", 1200, { i: 11, from: 10 }); 
+        buildLevel(6, 11, 15);
+        
+        addPhase("camMoveAll", 1800);
+        addPhase("overviewAll", 7000);
+        addPhase("overviewFadeOutAll", 600);
+        addPhase("pause", 1000);
+      }
+      buildTimeline();
+      const CYCLE_MS = tTotal;
+
+      let lastTime = performance.now();
+      let virtualTime = 0;
+      let bgTime = 0;
+
+      function drawChemBackground(nowT){
+        ctx.lineCap = "round";
+        
+        // Flowing chemical gradients / fluid streams
+        for(let j=0; j<3; j++) {
+          ctx.beginPath();
+          for(let x=-50; x<w+50; x+=40){
+            const y = h*(0.2 + j*0.3) + Math.sin(x*0.002 + nowT*0.0003 + j)*80 + Math.cos(x*0.005 - nowT*0.0001)*30;
+            if(x===-50) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+          }
+          ctx.strokeStyle = `rgba(0, 150, 255, 0.05)`;
+          ctx.lineWidth = 40 + j*10;
+          ctx.stroke();
+        }
+
+        ctx.font = "bold 18px monospace";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        for(let i = 0; i < molecules.length; i++) {
+          const m = molecules[i];
+          if (animBg) {
+             m.x += m.vx; m.y += m.vy; m.rot += m.vrot;
+          }
+          if(m.x < -100) m.x = w+100; if(m.x > w+100) m.x = -100;
+          if(m.y < -100) m.y = h+100; if(m.y > h+100) m.y = -100;
+
+          ctx.save();
+          ctx.translate(m.x, m.y);
+          ctx.rotate(m.rot);
+
+          if (m.type === 'hex') {
+            // Draw hexagon (benzene ring style)
+            ctx.beginPath();
+            for(let a=0; a<=6; a++) {
+              const angle = a * Math.PI / 3;
+              const hx = Math.cos(angle) * m.r;
+              const hy = Math.sin(angle) * m.r;
+              if(a===0) ctx.moveTo(hx, hy); else ctx.lineTo(hx, hy);
+            }
+            ctx.strokeStyle = `rgba(0, 220, 255, 0.2)`;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Inner circle for delocalised electrons
+            ctx.beginPath();
+            ctx.arc(0, 0, m.r * 0.6, 0, Math.PI*2);
+            ctx.strokeStyle = `rgba(255, 140, 0, 0.15)`;
+            ctx.stroke();
+          } else {
+            // Draw formula text
+            ctx.fillStyle = `rgba(255, 140, 0, 0.25)`;
+            ctx.fillText(m.text, 0, 0);
+          }
+
+          // Draw molecular bonds to nearby particles
+          for(let j=i+1; j<molecules.length; j++){
+            const m2 = molecules[j];
+            const dx = (m2.x - m.x);
+            const dy = (m2.y - m.y);
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist < 150) {
+              ctx.restore(); 
+              ctx.beginPath();
+              ctx.moveTo(m.x, m.y);
+              ctx.lineTo(m2.x, m2.y);
+              ctx.strokeStyle = `rgba(0, 150, 255, ${0.1 * (1 - dist/150)})`;
+              ctx.lineWidth = 1.5;
+              ctx.stroke();
+              ctx.save();
+              ctx.translate(m.x, m.y);
+              ctx.rotate(m.rot);
+            }
+          }
+          ctx.restore();
+        }
+      }
+
+      function drawPathway(seg, t, focusIndex, overview){
+        ctx.lineWidth = 2.5;
+        for(let i=0;i<nodes.length-1;i++){
+          const a = nodes[i], b = nodes[i+1];
+          const alpha = overview ? 0.35 : 0.12;
+          ctx.strokeStyle = `rgba(0,150,255,${alpha})`;
+          ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+        }
+
+        if(seg.kind === "travel"){
+          const from = nodes[seg.from];
+          const to = nodes[seg.i];
+          const travel01 = easeInOutCubic((t - seg.t0) / (seg.t1 - seg.t0));
+          ctx.strokeStyle = `rgba(255,140,0,0.5)`;
+          ctx.lineWidth = 3.5;
+          ctx.beginPath(); ctx.moveTo(from.x, from.y); ctx.lineTo(to.x, to.y); ctx.stroke();
+          
+          const x = lerp(from.x, to.x, travel01);
+          const y = lerp(from.y, to.y, travel01);
+          
+          ctx.fillStyle = `rgba(255,140,0,0.95)`;
+          ctx.beginPath(); ctx.arc(x,y, 4, 0, Math.PI*2); ctx.fill();
+          ctx.fillStyle = `rgba(0,150,255,0.3)`;
+          ctx.beginPath(); ctx.arc(x,y, 24, 0, Math.PI*2); ctx.fill();
+        }
+
+        for(let i=0;i<nodes.length;i++){
+          const n = nodes[i];
+          const isFocus = i === focusIndex;
+          const pulse = 0.6 + 0.4*Math.sin(performance.now()/260 + i*0.9);
+          
+          let intensity = 0.33 + (isFocus ? 0.55 : 0.08);
+          if(overview) intensity = 0.65;
+          if((seg.kind === "hold" || seg.kind === "fadeOut") && seg.i === i){
+            intensity = Math.min(1, intensity + 0.3);
+          }
+          
+          ctx.fillStyle = `rgba(0,150,255,${0.15 * intensity})`;
+          ctx.beginPath(); ctx.arc(n.x,n.y, 20 + 10*pulse*intensity, 0, Math.PI*2); ctx.fill();
+          
+          ctx.fillStyle = `rgba(255,140,0,${0.95 * intensity})`;
+          ctx.beginPath(); ctx.arc(n.x,n.y, 4, 0, Math.PI*2); ctx.fill();
+        }
+      }
+
+      function showActiveCard(i, screenPt){
+        activeIcon.innerHTML = svg(modules[i].icon);
+        activeTitle.textContent = modules[i].title;
+        activeMeta.textContent = modules[i].meta;
+        activeTag.textContent = modules[i].tag;
+        
+        const isLevel5 = (i >= 5 && i <= 10);
+        const dy = isLevel5 ? 180 : -180; 
+        
+        activeCard.style.left = screenPt.x + 'px';
+        activeCard.style.top  = (screenPt.y + dy) + 'px';
+        activeCard.classList.remove('fadeOut');
+        activeCard.classList.add('show');
+      }
+
+      function setMiniState(state, startIdx=0, endIdx=15){
+        minis.forEach((m, i) => {
+          if(i >= startIdx && i <= endIdx){
+            if(state === "in"){
+              m.classList.remove('fadeOut');
+              m.classList.add('show');
+            } else if(state === "out"){
+              m.classList.add('fadeOut');
+              m.classList.remove('show');
+            } else {
+              m.classList.remove('fadeOut', 'show');
+            }
+          } else {
+            m.classList.remove('fadeOut', 'show');
+          }
+        });
+      }
+
+      function placeMiniCards(startIdx=0, endIdx=15){
+        for(let i=startIdx; i<=endIdx; i++){
+          const p = toScreen(nodes[i]);
+          const m = minis[i];
+          let dy = 0;
+          if (i <= 4) { dy = -85; } 
+          else if (i <= 10) { dy = -85; } 
+          else { dy = 85; }
+
+          m.style.left = p.x + 'px';
+          m.style.top  = (p.y + dy) + 'px';
+        }
+      }
+
+      let lastCycle = -1;
+
+      function tick(now){
+        let dt = now - lastTime;
+        if (dt > 100) dt = 16; 
+        lastTime = now;
+
+        if (mode === 'auto') {
+          virtualTime += dt;
+        }
+        if (animBg) {
+          bgTime += dt;
+        }
+
+        nodes = pathwayLayout();
+        const t = virtualTime % CYCLE_MS;
+        const cycle = Math.floor(virtualTime / CYCLE_MS);
+        
+        if(mode === 'auto' && cycle !== lastCycle){
+          lastCycle = cycle;
+          activeCard.classList.remove('fadeOut', 'show');
+          headerCard.classList.remove('show');
+          setMiniState("off");
+        }
+
+        let focusIndex = -1;
+        let target = nodes[0];
+        let targetZ = ZOOM_IN;
+        let overview = false;
+
+        let seg = timeline.find(s => t >= s.t0 && t < s.t1) || timeline[timeline.length-1];
+
+        if (mode === 'auto') {
+            if(seg.kind === "travel"){
+              focusIndex = seg.i;
+              const from = nodes[seg.from];
+              const to = nodes[seg.i];
+              const tt = easeInOutCubic((t - seg.t0) / (seg.t1 - seg.t0));
+              target = { x: lerp(from.x,to.x,tt), y: lerp(from.y,to.y,tt) };
+            } 
+            else if(seg.kind === "hold" || seg.kind === "fadeOut" || seg.kind === "gap"){
+              focusIndex = seg.i;
+              target = nodes[seg.i];
+            } 
+            else if(seg.kind === "camMoveLevel"){
+              const b = calcBounds(seg.startIdx, seg.endIdx);
+              const tt = easeInOutCubic((t - seg.t0) / (seg.t1 - seg.t0));
+              const prevTarget = nodes[seg.endIdx]; 
+              target = { x: lerp(prevTarget.x, b.cx, tt), y: lerp(prevTarget.y, b.cy, tt) };
+              const levelZ = clamp((w * 0.75) / b.spanX, 0.6, 1.2);
+              targetZ = lerp(ZOOM_IN, levelZ, tt);
+            }
+            else if(seg.kind === "overviewLevel" || seg.kind === "overviewFadeOut"){
+              const b = calcBounds(seg.startIdx, seg.endIdx);
+              target = { x: b.cx, y: b.cy };
+              targetZ = clamp((w * 0.75) / b.spanX, 0.6, 1.2);
+              overview = true;
+            }
+            else if(seg.kind === "camMoveAll"){
+              const b = calcBounds(0, 15);
+              const prevB = calcBounds(11, 15);
+              const tt = easeInOutCubic((t - seg.t0) / (seg.t1 - seg.t0));
+              target = { x: lerp(prevB.cx, b.cx, tt), y: lerp(prevB.cy, b.cy, tt) };
+              const prevZ = clamp((w * 0.75) / prevB.spanX, 0.6, 1.2);
+              const allZ = clamp(Math.min((w * 0.85) / b.spanX, (h * 0.75) / b.spanY), 0.3, 0.9);
+              targetZ = lerp(prevZ, allZ, tt);
+            }
+            else if(seg.kind === "overviewAll" || seg.kind === "overviewFadeOutAll" || seg.kind === "pause"){
+              const b = calcBounds(0, 15);
+              target = { x: b.cx, y: b.cy };
+              targetZ = clamp(Math.min((w * 0.85) / b.spanX, (h * 0.75) / b.spanY), 0.3, 0.9);
+              overview = true;
+            }
+        } else {
+            overview = true;
+            let b;
+            if (mode === 'L4') {
+              b = calcBounds(0, 4);
+              targetZ = clamp((w * 0.75) / b.spanX, 0.6, 1.2);
+              placeMiniCards(0, 4);
+              setMiniState("in", 0, 4);
+              hTitle.textContent = "Applied Chemical Sciences: Level 4 Summary";
+              hSub.textContent = "Modules completed for this phase of the programme.";
+            } else if (mode === 'L5') {
+              b = calcBounds(5, 10);
+              targetZ = clamp((w * 0.75) / b.spanX, 0.6, 1.2);
+              placeMiniCards(5, 10);
+              setMiniState("in", 5, 10);
+              hTitle.textContent = "Applied Chemical Sciences: Level 5 Summary";
+              hSub.textContent = "Modules completed for this phase of the programme.";
+            } else if (mode === 'L6') {
+              b = calcBounds(11, 15);
+              targetZ = clamp((w * 0.75) / b.spanX, 0.6, 1.2);
+              placeMiniCards(11, 15);
+              setMiniState("in", 11, 15);
+              hTitle.textContent = "Applied Chemical Sciences: Level 6 Summary";
+              hSub.textContent = "Modules completed for this phase of the programme.";
+            } else if (mode === 'ALL') {
+              b = calcBounds(0, 15);
+              targetZ = clamp(Math.min((w * 0.85) / b.spanX, (h * 0.75) / b.spanY), 0.3, 0.9);
+              placeMiniCards(0, 15);
+              setMiniState("in", 0, 15);
+              hTitle.textContent = "Applied Chemical Sciences Programme Journey";
+              hSub.textContent = "The complete scientific pathway mapping all modules.";
+            }
+            target = { x: b.cx, y: b.cy };
+            headerCard.classList.add('show');
+        }
+
+        let smoothing = prefersReducedMotion ? 1 : 0.12;
+        if (mode === 'auto') {
+            if(seg.kind === "hold" || seg.kind === "fadeOut") smoothing = prefersReducedMotion ? 1 : 0.22;
+            if(seg.kind.includes("overview")) smoothing = 1; 
+        }
+
+        cam.x = lerp(cam.x, target.x, smoothing);
+        cam.y = lerp(cam.y, target.y, smoothing);
+        cam.z = lerp(cam.z, targetZ, smoothing);
+
+        ctx.setTransform(dpr,0,0,dpr,0,0);
+        ctx.clearRect(0,0,w,h);
+        drawChemBackground(bgTime);
+
+        applyCamera();
+        drawPathway(seg, t, focusIndex, overview);
+
+        const nodeScreen = (focusIndex >= 0) ? toScreen(nodes[focusIndex]) : {x:0, y:0};
+
+        if (mode === 'auto') {
+            if(seg.kind === "hold"){
+              showActiveCard(seg.i, nodeScreen);
+            } else if(seg.kind === "fadeOut"){
+              activeCard.classList.add('fadeOut');
+              activeCard.classList.remove('show');
+            } else if(seg.kind === "gap" || seg.kind === "travel"){
+              activeCard.classList.remove('fadeOut', 'show');
+            }
+
+            if(seg.kind === "overviewLevel"){
+              hTitle.textContent = `Applied Chemical Sciences: Level ${seg.level} Summary`;
+              hSub.textContent = "Modules completed for this phase of the programme.";
+              headerCard.classList.add('show');
+              placeMiniCards(seg.startIdx, seg.endIdx);
+              setMiniState("in", seg.startIdx, seg.endIdx);
+            } else if(seg.kind === "overviewFadeOut"){
+              headerCard.classList.remove('show');
+              placeMiniCards(seg.startIdx, seg.endIdx);
+              setMiniState("out", seg.startIdx, seg.endIdx);
+            }
+
+            if(seg.kind === "overviewAll"){
+              hTitle.textContent = "Applied Chemical Sciences Programme Journey";
+              hSub.textContent = "The complete scientific pathway mapping all modules.";
+              headerCard.classList.add('show');
+              placeMiniCards(0, 15);
+              setMiniState("in", 0, 15);
+            } else if(seg.kind === "overviewFadeOutAll"){
+              headerCard.classList.remove('show');
+              placeMiniCards(0, 15);
+              setMiniState("out", 0, 15);
+            } else if(seg.kind === "pause"){
+              setMiniState("off");
+            }
+        }
+
+        requestAnimationFrame(tick);
+      }
+
+      requestAnimationFrame(tick);
+    })();
+  </script>
+</body>
+</html>
