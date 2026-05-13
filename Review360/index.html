@@ -12,7 +12,6 @@
             --light-purple: #691eda; 
             --pastel-purple-bg: #f2effc;
             --pastel-purple-border: #ece6f9; 
-            --coral-accent: #f08838; 
             --status-prep: #d97706; 
             --status-pub: #059669;  
             --white: #ffffff; 
@@ -29,13 +28,12 @@
             margin: 0; 
             padding: 0; 
             color: var(--text-main); 
-            background-color: transparent;
+            background-color: #f8fafc;
         }
 
         #library-wrapper { 
             width: 100%; 
             min-height: 100vh;
-            background-color: #f8fafc;
             padding: 40px 20px; 
             position: relative;
             z-index: 1;
@@ -75,26 +73,34 @@
             z-index: 100;
         }
 
-        #backBtn {
-            display: none;
-            background: var(--deep-purple);
-            color: var(--white);
-            border: none;
-            padding: 18px 25px;
-            border-radius: var(--radius-lg);
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: var(--directional-shadow);
-            transition: background 0.3s, transform 0.2s;
-            white-space: nowrap;
+        #breadcrumbs {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto 20px auto;
+            font-weight: 600;
+            color: var(--deep-purple);
         }
 
-        #backBtn:hover {
-            background: var(--light-purple);
-            transform: translateY(-2px);
+        .breadcrumb-item {
+            cursor: pointer;
+            padding: 8px 16px;
+            background: var(--white);
+            border-radius: var(--radius-sm);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: background 0.2s;
         }
         
+        .breadcrumb-item:hover {
+            background: var(--pastel-purple-bg);
+        }
+
+        .breadcrumb-separator {
+            color: var(--text-muted);
+        }
+
         input[type="text"] { 
             width: 100%; 
             padding: 18px 25px; 
@@ -112,14 +118,6 @@
             box-shadow: var(--heavy-shadow);
         }
 
-        .view-title {
-            max-width: 1200px;
-            margin: 0 auto 20px auto;
-            color: var(--deep-purple);
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
         .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -131,6 +129,7 @@
         .trigger-card {
             background: var(--white);
             border: 2px solid var(--pastel-purple-border);
+            border-top: 6px solid var(--theme-color, var(--deep-purple));
             border-radius: var(--radius-lg);
             padding: 30px 25px;
             cursor: pointer;
@@ -141,23 +140,28 @@
             text-decoration: none;
             align-items: center; 
             text-align: center;  
-            position: relative; /* Essential for tooltips */
+            position: relative; 
         }
 
         .trigger-card:hover { 
             transform: translate(-5px, -5px); 
             box-shadow: var(--heavy-shadow); 
-            border-color: var(--light-purple); 
+            border-color: var(--theme-color, var(--light-purple)); 
         }
 
         .trigger-icon {
             margin-bottom: 20px;
             padding: 20px;
-            background: var(--pastel-purple-bg);
+            background: var(--white);
+            border: 2px solid var(--theme-color, var(--deep-purple));
             border-radius: 50%;
             display: inline-flex;
             align-items: center;
             justify-content: center;
+        }
+        
+        .trigger-icon svg {
+            stroke: var(--theme-color, var(--deep-purple));
         }
 
         .trigger-title { 
@@ -188,19 +192,19 @@
         }
 
         .tag { 
-            background: var(--pastel-purple-bg); 
+            background: var(--white); 
             padding: 6px 10px; 
             border-radius: var(--radius-sm); 
             font-size: 12px; 
             font-weight: 700; 
-            color: var(--deep-purple);
+            color: var(--text-main);
             border: 1px solid var(--pastel-purple-border);
         }
         
         .tag-programme { 
-            background: var(--white); 
-            color: var(--coral-accent); 
-            border-color: rgba(240, 136, 56, 0.3);
+            background: var(--theme-color, var(--deep-purple)); 
+            color: var(--white); 
+            border-color: transparent;
             width: 100%;
             margin-bottom: 5px;
         }
@@ -226,7 +230,7 @@
             border-radius: var(--radius-sm);
             font-size: 0.9rem;
             width: max-content;
-            max-width: 280px;
+            max-width: 320px;
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
@@ -286,11 +290,10 @@
     </header>
 
     <div class="controls-container">
-        <button id="backBtn" onclick="showProgrammes()">← Back</button>
         <input type="text" id="searchInput" placeholder="Search by programme, title, or code...">
     </div>
 
-    <div id="viewTitle" class="view-title">Programme Overview</div>
+    <div id="breadcrumbs"></div>
     <div id="linksContainer" class="card-grid"></div>
 
 </div>
@@ -298,20 +301,34 @@
 <script>
     // SVG Icons map for different disciplines
     const icons = {
-        "lab": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--coral-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>`,
-        "chem": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--coral-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H15M10 3V10L5 19H19L14 10V3"></path></svg>`,
-        "bio": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--coral-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="6"></circle><path d="M12 2v4m0 12v4m10-10h-4M6 12H2m15.5-7.5l-2.8 2.8M7.3 16.7l-2.8 2.8m15.5 0l-2.8-2.8M7.3 7.3L4.5 4.5"></path></svg>`,
-        "process": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--coral-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>`,
-        "polymer": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--coral-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>`,
-        "asbestos": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--coral-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`,
-        "math": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--coral-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><line x1="16" y1="10" x2="16" y2="10.01"></line><line x1="12" y1="10" x2="12" y2="10.01"></line><line x1="8" y1="10" x2="8" y2="10.01"></line><line x1="12" y1="14" x2="12" y2="14.01"></line><line x1="8" y1="14" x2="8" y2="14.01"></line><line x1="12" y1="18" x2="12" y2="18.01"></line><line x1="8" y1="18" x2="8" y2="18.01"></line></svg>`,
-        "materials": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--coral-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>`
+        "lab": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>`,
+        "chem": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H15M10 3V10L5 19H19L14 10V3"></path></svg>`,
+        "bio": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="6"></circle><path d="M12 2v4m0 12v4m10-10h-4M6 12H2m15.5-7.5l-2.8 2.8M7.3 16.7l-2.8 2.8m15.5 0l-2.8-2.8M7.3 7.3L4.5 4.5"></path></svg>`,
+        "process": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>`,
+        "polymer": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>`,
+        "asbestos": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`,
+        "math": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><line x1="16" y1="10" x2="16" y2="10.01"></line><line x1="12" y1="10" x2="12" y2="10.01"></line><line x1="8" y1="10" x2="8" y2="10.01"></line><line x1="12" y1="14" x2="12" y2="14.01"></line><line x1="8" y1="14" x2="8" y2="14.01"></line><line x1="12" y1="18" x2="12" y2="18.01"></line><line x1="8" y1="18" x2="8" y2="18.01"></line></svg>`,
+        "materials": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>`,
+        "folder": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`
     };
 
-    // Full Module Database structured under clear HE Levels
+    // Specific colours mapped to each discipline
+    const themeColours = {
+        "Level 6 HE": "#4f46e5", 
+        "Level 6 HE Applied Biosciences": "#16a34a",
+        "Level 6 HE Applied Chemical Sciences": "#0284c7",
+        "Level 6 HE Applied Material Sciences": "#ea580c",
+        "Level 6 HE Foundational Modules": "#9333ea",
+        "Level 5 Laboratory Management": "#0d9488",
+        "Level 3 Process Industry Manufacturing Technician": "#e11d48",
+        "Level 3 Polymer Processing Technician": "#0891b2",
+        "Level 3 Asbestos Analyst": "#475569"
+    };
+
+    // Data structured with a "path" array for multi-tier nesting
     const modulesData = [
         { 
-            programme: "Level 6 HE: Applied Biosciences", 
+            path: ["Level 6 HE", "Level 6 HE Applied Biosciences"], 
             iconKey: "bio",
             title: "Infection and Immunity", 
             code: "TAB5202", 
@@ -321,7 +338,7 @@
             url: "https://360.articulate.com/review/content/700a1860-77bc-417c-bf1d-991068072d5d/review" 
         },
         { 
-            programme: "Level 6 HE: Applied Chemical Sciences", 
+            path: ["Level 6 HE", "Level 6 HE Applied Chemical Sciences"], 
             iconKey: "chem",
             title: "Frontier Topics in Chemistry", 
             code: "TAC6102", 
@@ -331,7 +348,7 @@
             url: "https://360.articulate.com/review/content/a12c8fb2-438a-43da-afb1-28850eabbe42/review" 
         },
         { 
-            programme: "Level 6 HE: Applied HE Pathways", 
+            path: ["Level 6 HE", "Level 6 HE Foundational Modules"], 
             iconKey: "math",
             title: "Mathematics & Data Analysis", 
             code: "TFM4101", 
@@ -341,17 +358,7 @@
             url: "https://360.articulate.com/review/content/865590da-ecb2-4370-af88-d54b07ed5235/review" 
         },
         { 
-            programme: "Level 5: Laboratory Management", 
-            iconKey: "lab",
-            title: "Digital transformation & Innovation in Lab Management", 
-            code: "TLM5106", 
-            version: "v0",
-            publishDate: "110226",
-            updatedDate: "May 13, 2026",
-            url: "https://360.articulate.com/review/content/04701a2d-9381-4345-ae4a-4126bf40af60/review" 
-        },
-        { 
-            programme: "Level 5: Applied Material Sciences", 
+            path: ["Level 6 HE", "Level 6 HE Applied Material Sciences"], 
             iconKey: "materials",
             title: "Laboratory Practice for Materials", 
             code: "TAM5103", 
@@ -361,7 +368,17 @@
             url: "https://360.articulate.com/review/content/9a159375-2662-42de-8eef-aa0d690cc49c/review" 
         },
         { 
-            programme: "Level 3: Process Industry Manufacturing Technician", 
+            path: ["Level 5 Laboratory Management"], 
+            iconKey: "lab",
+            title: "Digital transformation & Innovation in Lab Management", 
+            code: "TLM5106", 
+            version: "v0",
+            publishDate: "110226",
+            updatedDate: "May 13, 2026",
+            url: "https://360.articulate.com/review/content/04701a2d-9381-4345-ae4a-4126bf40af60/review" 
+        },
+        { 
+            path: ["Level 3 Process Industry Manufacturing Technician"], 
             iconKey: "process",
             title: "Process Safety: Navigating Risks with Confidence", 
             code: "TPIMT3101", 
@@ -371,7 +388,7 @@
             url: "https://360.articulate.com/review/content/6aef3c13-cd19-4afe-86e0-44d315eb3821/review" 
         },
         { 
-            programme: "Level 3: Polymer Processing Technician", 
+            path: ["Level 3 Polymer Processing Technician"], 
             iconKey: "polymer",
             title: "Polymer Science and Processing ITM", 
             code: "TPPT3201", 
@@ -381,7 +398,7 @@
             url: "https://360.articulate.com/review/content/16cf0ed8-ceda-4c81-9690-3161a60c2097/review" 
         },
         { 
-            programme: "Level 3: Asbestos Analyst", 
+            path: ["Level 3 Asbestos Analyst"], 
             iconKey: "asbestos",
             title: "Working with Data in Asbestos", 
             code: "TAA3102", 
@@ -392,22 +409,11 @@
         }
     ];
 
-    // Extract unique programmes
-    const uniqueProgrammes = [...new Set(modulesData.map(item => item.programme))].map(prog => {
-        const sampleModule = modulesData.find(m => m.programme === prog);
-        return {
-            title: prog,
-            iconKey: sampleModule.iconKey,
-            count: modulesData.filter(m => m.programme === prog).length
-        };
-    });
-
+    let currentNavPath = [];
     const searchInput = document.getElementById('searchInput');
     const linksContainer = document.getElementById('linksContainer');
-    const backBtn = document.getElementById('backBtn');
-    const viewTitle = document.getElementById('viewTitle');
+    const breadcrumbsContainer = document.getElementById('breadcrumbs');
 
-    // Utility: Determine if Published or Pre-publish
     function getStatusTag(version) {
         if (!version) return '';
         if (version.toLowerCase().startsWith('v0')) {
@@ -416,51 +422,160 @@
         return `<span class="tag tag-status-pub">Published (LMS)</span>`;
     }
 
-    // Render Programme Level
-    function showProgrammes() {
-        backBtn.style.display = 'none';
-        searchInput.value = '';
-        viewTitle.innerText = "Programme Overview";
+    // Navigation and Rendering Logic
+    function renderView() {
         linksContainer.innerHTML = '';
+        renderBreadcrumbs();
         
-        uniqueProgrammes.forEach(prog => {
-            const card = document.createElement('div');
-            card.className = 'trigger-card';
-            card.onclick = () => showModulesForProgramme(prog.title);
-            
-            // Build the hover tooltip list
-            const containedModules = modulesData.filter(m => m.programme === prog.title);
-            const listHTML = containedModules.map(m => `<li><strong>${m.code}</strong><br>${m.title}</li>`).join('');
+        const depth = currentNavPath.length;
+        
+        // Find all modules that belong in the current path
+        const relevantModules = modulesData.filter(m => {
+            for (let i = 0; i < depth; i++) {
+                if (m.path[i] !== currentNavPath[i]) return false;
+            }
+            return true;
+        });
 
-            card.innerHTML = `
-                <div class="trigger-icon">${icons[prog.iconKey]}</div>
-                <h2 class="trigger-title">${prog.title}</h2>
-                <div class="meta-container">
-                    <span class="tag tag-programme">${prog.count} Module${prog.count > 1 ? 's' : ''}</span>
-                </div>
-                <div class="module-tooltip">
-                    <strong>Modules included:</strong>
-                    <ul>${listHTML}</ul>
-                </div>
-            `;
+        // Determine what to display (folders or direct modules)
+        const itemsToRender = new Map();
+
+        relevantModules.forEach(m => {
+            if (m.path.length > depth) {
+                // It's a folder/sub-category
+                const folderName = m.path[depth];
+                if (!itemsToRender.has(folderName)) {
+                    itemsToRender.set(folderName, {
+                        type: 'folder',
+                        title: folderName,
+                        iconKey: m.path.length === 2 && depth === 1 ? m.iconKey : 'folder', // Use specific icon if it's the final subfolder
+                        theme: themeColours[folderName] || "var(--deep-purple)",
+                        modulesInside: []
+                    });
+                }
+                itemsToRender.get(folderName).modulesInside.push(m);
+            } else {
+                // It's a direct module link
+                itemsToRender.set(m.code, {
+                    type: 'module',
+                    data: m,
+                    theme: themeColours[m.path[depth - 1]] || "var(--deep-purple)"
+                });
+            }
+        });
+
+        // Generate HTML
+        itemsToRender.forEach(item => {
+            const card = document.createElement(item.type === 'folder' ? 'div' : 'a');
+            card.className = 'trigger-card';
+            card.style.setProperty('--theme-color', item.theme);
+            
+            // Apply a very light background tint based on the theme colour
+            card.style.background = `color-mix(in srgb, ${item.theme} 4%, white)`;
+
+            if (item.type === 'folder') {
+                card.onclick = () => {
+                    currentNavPath.push(item.title);
+                    renderView();
+                };
+                
+                // Build hover tooltip for folders
+                const listHTML = item.modulesInside.map(m => `<li><strong>${m.code}</strong><br>${m.title}</li>`).join('');
+                const moduleCount = item.modulesInside.length;
+
+                card.innerHTML = `
+                    <div class="trigger-icon">${icons[item.iconKey] || icons.folder}</div>
+                    <h2 class="trigger-title">${item.title}</h2>
+                    <div class="meta-container">
+                        <span class="tag tag-programme">${moduleCount} Module${moduleCount > 1 ? 's' : ''}</span>
+                    </div>
+                    <div class="module-tooltip">
+                        <strong>Modules included:</strong>
+                        <ul>${listHTML}</ul>
+                    </div>
+                `;
+            } else {
+                const link = item.data;
+                card.href = link.url;
+                card.target = "_blank";
+                
+                let publishDateStr = link.publishDate ? ` | Pub: ${link.publishDate}` : '';
+                
+                card.innerHTML = `
+                    <div class="trigger-icon">${icons[link.iconKey]}</div>
+                    <h2 class="trigger-title">${link.title}</h2>
+                    <div class="meta-container">
+                        <span class="tag tag-programme">${link.path[link.path.length - 1]}</span>
+                        <div class="meta-row">
+                            <span class="tag">Code: ${link.code}</span>
+                            ${link.version ? `<span class="tag">Ver: ${link.version}</span>` : ''}
+                            ${getStatusTag(link.version)}
+                        </div>
+                        <div class="date-text">Last Updated: ${link.updatedDate}${publishDateStr}</div>
+                    </div>
+                `;
+            }
             linksContainer.appendChild(card);
         });
     }
 
-    // Render Module Level
-    function renderModules(modulesToRender, specificProgramme = null) {
+    function renderBreadcrumbs() {
+        breadcrumbsContainer.innerHTML = '';
+        
+        const homeBtn = document.createElement('div');
+        homeBtn.className = 'breadcrumb-item';
+        homeBtn.innerText = '🏠 Home';
+        homeBtn.onclick = () => { currentNavPath = []; renderView(); };
+        breadcrumbsContainer.appendChild(homeBtn);
+
+        currentNavPath.forEach((pathName, index) => {
+            const sep = document.createElement('span');
+            sep.className = 'breadcrumb-separator';
+            sep.innerText = '›';
+            breadcrumbsContainer.appendChild(sep);
+
+            const crumb = document.createElement('div');
+            crumb.className = 'breadcrumb-item';
+            crumb.innerText = pathName;
+            crumb.onclick = () => {
+                currentNavPath = currentNavPath.slice(0, index + 1);
+                renderView();
+            };
+            breadcrumbsContainer.appendChild(crumb);
+        });
+    }
+
+    // Search Logic (Flattened View)
+    searchInput.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        
+        if (term === '') {
+            renderView();
+            return;
+        }
+
+        breadcrumbsContainer.innerHTML = `<div class="breadcrumb-item">🔍 Search Results for "${e.target.value}"</div>`;
         linksContainer.innerHTML = '';
         
-        if (modulesToRender.length === 0) {
+        const filtered = modulesData.filter(l => 
+            l.path.some(p => p.toLowerCase().includes(term)) ||
+            l.title.toLowerCase().includes(term) ||
+            l.code.toLowerCase().includes(term)
+        );
+
+        if (filtered.length === 0) {
             linksContainer.innerHTML = '<div class="empty-state">No matching modules found.</div>';
             return;
         }
 
-        modulesToRender.forEach(link => {
+        filtered.forEach(link => {
             const card = document.createElement('a');
             card.className = 'trigger-card';
             card.href = link.url;
             card.target = "_blank";
+            const theme = themeColours[link.path[link.path.length - 1]] || "var(--deep-purple)";
+            card.style.setProperty('--theme-color', theme);
+            card.style.background = `color-mix(in srgb, ${theme} 4%, white)`;
             
             let publishDateStr = link.publishDate ? ` | Pub: ${link.publishDate}` : '';
             
@@ -468,7 +583,7 @@
                 <div class="trigger-icon">${icons[link.iconKey]}</div>
                 <h2 class="trigger-title">${link.title}</h2>
                 <div class="meta-container">
-                    ${specificProgramme ? '' : `<span class="tag tag-programme">${link.programme}</span>`}
+                    <span class="tag tag-programme">${link.path[link.path.length - 1]}</span>
                     <div class="meta-row">
                         <span class="tag">Code: ${link.code}</span>
                         ${link.version ? `<span class="tag">Ver: ${link.version}</span>` : ''}
@@ -479,38 +594,10 @@
             `;
             linksContainer.appendChild(card);
         });
-    }
-
-    function showModulesForProgramme(programmeName) {
-        backBtn.style.display = 'block';
-        searchInput.value = '';
-        viewTitle.innerText = `Modules: ${programmeName}`;
-        const filtered = modulesData.filter(m => m.programme === programmeName);
-        renderModules(filtered, programmeName);
-    }
-
-    // Search Logic
-    searchInput.addEventListener('input', (e) => {
-        const term = e.target.value.toLowerCase();
-        
-        if (term === '') {
-            showProgrammes();
-            return;
-        }
-
-        backBtn.style.display = 'none';
-        viewTitle.innerText = "Search Results";
-        
-        const filtered = modulesData.filter(l => 
-            l.programme.toLowerCase().includes(term) ||
-            l.title.toLowerCase().includes(term) ||
-            l.code.toLowerCase().includes(term)
-        );
-        renderModules(filtered, null);
     });
 
     // Initialize
-    showProgrammes();
+    renderView();
 </script>
 </body>
 </html>
