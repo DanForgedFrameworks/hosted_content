@@ -29,6 +29,7 @@
             padding: 0; 
             color: var(--text-main); 
             background-color: #f8fafc;
+            overflow-x: hidden; /* Prevents scroll if tooltips overflow slightly */
         }
 
         #library-wrapper { 
@@ -37,7 +38,6 @@
             padding: 40px 20px; 
             position: relative;
             z-index: 1;
-            overflow: hidden; 
         }
 
         .digital-bg {
@@ -203,7 +203,7 @@
         
         .tag-programme { 
             background: var(--theme-color, var(--deep-purple)); 
-            color: var(--white); 
+            color: var(--text-main); 
             border-color: transparent;
             width: 100%;
             margin-bottom: 5px;
@@ -218,12 +218,12 @@
             font-style: italic;
         }
 
-        /* Hover Tooltip Styling */
+        /* Hover Tooltip Styling - Moved to Right Side */
         .module-tooltip {
             position: absolute;
-            bottom: calc(100% + 15px);
-            left: 50%;
-            transform: translateX(-50%) translateY(10px);
+            top: 50%;
+            left: calc(100% + 15px);
+            transform: translateY(-50%) translateX(10px);
             background: #1a202c;
             color: var(--white);
             padding: 15px 20px;
@@ -243,18 +243,18 @@
         .module-tooltip::after {
             content: '';
             position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -8px;
+            top: 50%;
+            right: 100%;
+            margin-top: -8px;
             border-width: 8px;
             border-style: solid;
-            border-color: #1a202c transparent transparent transparent;
+            border-color: transparent #1a202c transparent transparent;
         }
 
         .trigger-card:hover .module-tooltip {
             opacity: 1;
             visibility: visible;
-            transform: translateX(-50%) translateY(0);
+            transform: translateY(-50%) translateX(0);
         }
 
         .module-tooltip ul {
@@ -277,6 +277,12 @@
             font-weight: 600;
         }
 
+        /* Responsive adjustment for right-aligned tooltip on small screens */
+        @media (max-width: 1000px) {
+            .module-tooltip {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -299,30 +305,51 @@
 </div>
 
 <script>
-    // SVG Icons map for different disciplines
+    // SVG Icons map for different disciplines and folders
     const icons = {
-        "lab": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>`,
-        "chem": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H15M10 3V10L5 19H19L14 10V3"></path></svg>`,
+        // Folders
+        "he": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>`,
+        "management": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>`,
+        "factory": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4H2z"></path></svg>`,
+        "polymer_prog": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>`,
+        "asbestos_prog": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18h8"></path><path d="M3 22h18"></path><path d="M14 22a7 7 0 1 0 0-14h-1"></path><path d="M9 14h2"></path><path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"></path><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"></path></svg>`,
+        "folder": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`,
+        
+        // Modules
         "bio": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="6"></circle><path d="M12 2v4m0 12v4m10-10h-4M6 12H2m15.5-7.5l-2.8 2.8M7.3 16.7l-2.8 2.8m15.5 0l-2.8-2.8M7.3 7.3L4.5 4.5"></path></svg>`,
-        "process": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>`,
-        "polymer": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>`,
-        "asbestos": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`,
+        "chem": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H15M10 3V10L5 19H19L14 10V3"></path></svg>`,
         "math": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><line x1="16" y1="10" x2="16" y2="10.01"></line><line x1="12" y1="10" x2="12" y2="10.01"></line><line x1="8" y1="10" x2="8" y2="10.01"></line><line x1="12" y1="14" x2="12" y2="14.01"></line><line x1="8" y1="14" x2="8" y2="14.01"></line><line x1="12" y1="18" x2="12" y2="18.01"></line><line x1="8" y1="18" x2="8" y2="18.01"></line></svg>`,
         "materials": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>`,
-        "folder": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`
+        "digital": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>`,
+        "safety": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6-8 10-8 10z"></path></svg>`,
+        "network": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>`,
+        "data": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>`
     };
 
-    // Specific colours mapped to each discipline
+    // Specific Pastel colours mapped to each discipline
     const themeColours = {
-        "Level 6 HE": "#4f46e5", 
-        "Level 6 HE Applied Biosciences": "#16a34a",
-        "Level 6 HE Applied Chemical Sciences": "#0284c7",
-        "Level 6 HE Applied Material Sciences": "#ea580c",
-        "Level 6 HE Foundational Modules": "#9333ea",
-        "Level 5 Laboratory Management": "#0d9488",
-        "Level 3 Process Industry Manufacturing Technician": "#e11d48",
-        "Level 3 Polymer Processing Technician": "#0891b2",
-        "Level 3 Asbestos Analyst": "#475569"
+        "Level 6 HE": "#a78bfa", // Pastel violet
+        "Level 6 HE Applied Biosciences": "#34d399", // Pastel green
+        "Level 6 HE Applied Chemical Sciences": "#60a5fa", // Pastel blue
+        "Level 6 HE Applied Material Sciences": "#fb923c", // Pastel orange
+        "Level 6 HE Foundational Modules": "#d8b4fe", // Pastel purple
+        "Level 5 Laboratory Management": "#2dd4bf", // Pastel teal
+        "Level 3 Process Industry Manufacturing Technician": "#fb7185", // Pastel rose
+        "Level 3 Polymer Processing Technician": "#22d3ee", // Pastel cyan
+        "Level 3 Asbestos Analyst": "#94a3b8" // Pastel slate
+    };
+
+    // Mapping for specific front-page folder icons
+    const folderIcons = {
+        "Level 6 HE": "he",
+        "Level 6 HE Applied Biosciences": "bio",
+        "Level 6 HE Applied Chemical Sciences": "chem",
+        "Level 6 HE Applied Material Sciences": "materials",
+        "Level 6 HE Foundational Modules": "math",
+        "Level 5 Laboratory Management": "management",
+        "Level 3 Process Industry Manufacturing Technician": "factory",
+        "Level 3 Polymer Processing Technician": "polymer_prog",
+        "Level 3 Asbestos Analyst": "asbestos_prog"
     };
 
     // Data structured with a "path" array for multi-tier nesting
@@ -369,7 +396,7 @@
         },
         { 
             path: ["Level 5 Laboratory Management"], 
-            iconKey: "lab",
+            iconKey: "digital",
             title: "Digital transformation & Innovation in Lab Management", 
             code: "TLM5106", 
             version: "v0",
@@ -379,7 +406,7 @@
         },
         { 
             path: ["Level 3 Process Industry Manufacturing Technician"], 
-            iconKey: "process",
+            iconKey: "safety",
             title: "Process Safety: Navigating Risks with Confidence", 
             code: "TPIMT3101", 
             version: "v1",
@@ -389,7 +416,7 @@
         },
         { 
             path: ["Level 3 Polymer Processing Technician"], 
-            iconKey: "polymer",
+            iconKey: "network",
             title: "Polymer Science and Processing ITM", 
             code: "TPPT3201", 
             version: "v0.1",
@@ -399,7 +426,7 @@
         },
         { 
             path: ["Level 3 Asbestos Analyst"], 
-            iconKey: "asbestos",
+            iconKey: "data",
             title: "Working with Data in Asbestos", 
             code: "TAA3102", 
             version: "v0",
@@ -429,7 +456,6 @@
         
         const depth = currentNavPath.length;
         
-        // Find all modules that belong in the current path
         const relevantModules = modulesData.filter(m => {
             for (let i = 0; i < depth; i++) {
                 if (m.path[i] !== currentNavPath[i]) return false;
@@ -437,25 +463,22 @@
             return true;
         });
 
-        // Determine what to display (folders or direct modules)
         const itemsToRender = new Map();
 
         relevantModules.forEach(m => {
             if (m.path.length > depth) {
-                // It's a folder/sub-category
                 const folderName = m.path[depth];
                 if (!itemsToRender.has(folderName)) {
                     itemsToRender.set(folderName, {
                         type: 'folder',
                         title: folderName,
-                        iconKey: m.path.length === 2 && depth === 1 ? m.iconKey : 'folder', // Use specific icon if it's the final subfolder
+                        iconKey: folderIcons[folderName] || 'folder',
                         theme: themeColours[folderName] || "var(--deep-purple)",
                         modulesInside: []
                     });
                 }
                 itemsToRender.get(folderName).modulesInside.push(m);
             } else {
-                // It's a direct module link
                 itemsToRender.set(m.code, {
                     type: 'module',
                     data: m,
@@ -464,14 +487,13 @@
             }
         });
 
-        // Generate HTML
         itemsToRender.forEach(item => {
             const card = document.createElement(item.type === 'folder' ? 'div' : 'a');
             card.className = 'trigger-card';
             card.style.setProperty('--theme-color', item.theme);
             
-            // Apply a very light background tint based on the theme colour
-            card.style.background = `color-mix(in srgb, ${item.theme} 4%, white)`;
+            // Light background tint based on pastel theme colour
+            card.style.background = `color-mix(in srgb, ${item.theme} 8%, white)`;
 
             if (item.type === 'folder') {
                 card.onclick = () => {
@@ -479,7 +501,6 @@
                     renderView();
                 };
                 
-                // Build hover tooltip for folders
                 const listHTML = item.modulesInside.map(m => `<li><strong>${m.code}</strong><br>${m.title}</li>`).join('');
                 const moduleCount = item.modulesInside.length;
 
@@ -505,7 +526,7 @@
                     <div class="trigger-icon">${icons[link.iconKey]}</div>
                     <h2 class="trigger-title">${link.title}</h2>
                     <div class="meta-container">
-                        <span class="tag tag-programme">${link.path[link.path.length - 1]}</span>
+                        <span class="tag tag-programme" style="color: #ffffff;">${link.path[link.path.length - 1]}</span>
                         <div class="meta-row">
                             <span class="tag">Code: ${link.code}</span>
                             ${link.version ? `<span class="tag">Ver: ${link.version}</span>` : ''}
@@ -545,7 +566,7 @@
         });
     }
 
-    // Search Logic (Flattened View)
+    // Search Logic
     searchInput.addEventListener('input', (e) => {
         const term = e.target.value.toLowerCase();
         
@@ -575,7 +596,7 @@
             card.target = "_blank";
             const theme = themeColours[link.path[link.path.length - 1]] || "var(--deep-purple)";
             card.style.setProperty('--theme-color', theme);
-            card.style.background = `color-mix(in srgb, ${theme} 4%, white)`;
+            card.style.background = `color-mix(in srgb, ${theme} 8%, white)`;
             
             let publishDateStr = link.publishDate ? ` | Pub: ${link.publishDate}` : '';
             
@@ -583,7 +604,7 @@
                 <div class="trigger-icon">${icons[link.iconKey]}</div>
                 <h2 class="trigger-title">${link.title}</h2>
                 <div class="meta-container">
-                    <span class="tag tag-programme">${link.path[link.path.length - 1]}</span>
+                    <span class="tag tag-programme" style="color: #ffffff;">${link.path[link.path.length - 1]}</span>
                     <div class="meta-row">
                         <span class="tag">Code: ${link.code}</span>
                         ${link.version ? `<span class="tag">Ver: ${link.version}</span>` : ''}
