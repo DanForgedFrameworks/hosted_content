@@ -29,7 +29,7 @@
             padding: 0; 
             color: var(--text-main); 
             background-color: #f8fafc;
-            overflow-x: hidden; /* Prevents scroll if tooltips overflow slightly */
+            overflow-x: hidden;
         }
 
         #library-wrapper { 
@@ -58,9 +58,22 @@
             100% { transform: translate(45px, 45px); }
         }
 
-        .main-header { text-align: center; margin-bottom: 30px; }
+        .main-header { text-align: center; margin-bottom: 20px; }
         h1 { color: var(--deep-purple); margin: 0 0 5px 0; font-size: 2.2rem; font-weight: 800; }
         .subtitle { color: var(--text-muted); font-size: 1.1rem; }
+
+        .nav-tip {
+            text-align: center;
+            background: var(--white);
+            color: var(--text-muted);
+            padding: 12px 20px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--pastel-purple-border);
+            max-width: 700px;
+            margin: 0 auto 30px auto;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
 
         .controls-container {
             max-width: 1200px;
@@ -141,12 +154,15 @@
             align-items: center; 
             text-align: center;  
             position: relative; 
+            z-index: 1;
         }
 
+        /* The z-index here ensures the hovered card and its tooltip always sit above sibling cards */
         .trigger-card:hover { 
             transform: translate(-5px, -5px); 
             box-shadow: var(--heavy-shadow); 
             border-color: var(--theme-color, var(--light-purple)); 
+            z-index: 10; 
         }
 
         .trigger-icon {
@@ -218,7 +234,6 @@
             font-style: italic;
         }
 
-        /* Hover Tooltip Styling - Moved to Right Side */
         .module-tooltip {
             position: absolute;
             top: 50%;
@@ -234,10 +249,8 @@
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
             pointer-events: none;
-            z-index: 1000;
-            text-align: left;
         }
 
         .module-tooltip::after {
@@ -277,7 +290,6 @@
             font-weight: 600;
         }
 
-        /* Responsive adjustment for right-aligned tooltip on small screens */
         @media (max-width: 1000px) {
             .module-tooltip {
                 display: none;
@@ -295,6 +307,10 @@
         <p class="subtitle">Select a programme or search to access module review links.</p>
     </header>
 
+    <div class="nav-tip">
+        💡 <strong>Quick Tip:</strong> Click a folder to explore the modules inside. Hover over a folder to preview its contents, or use the search bar to jump straight to a specific module code or title.
+    </div>
+
     <div class="controls-container">
         <input type="text" id="searchInput" placeholder="Search by programme, title, or code...">
     </div>
@@ -305,17 +321,14 @@
 </div>
 
 <script>
-    // SVG Icons map for different disciplines and folders
     const icons = {
-        // Folders
         "he": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>`,
         "management": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>`,
         "factory": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4H2z"></path></svg>`,
         "polymer_prog": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>`,
         "asbestos_prog": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18h8"></path><path d="M3 22h18"></path><path d="M14 22a7 7 0 1 0 0-14h-1"></path><path d="M9 14h2"></path><path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"></path><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"></path></svg>`,
         "folder": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`,
-        
-        // Modules
+        "lab": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.31"></path><path d="M14 9.3V1.99"></path><path d="M8.5 2h7"></path><path d="M14 9.3a6.5 6.5 0 1 1-4 0"></path><path d="M5.5 16.5h13"></path></svg>`,
         "bio": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="6"></circle><path d="M12 2v4m0 12v4m10-10h-4M6 12H2m15.5-7.5l-2.8 2.8M7.3 16.7l-2.8 2.8m15.5 0l-2.8-2.8M7.3 7.3L4.5 4.5"></path></svg>`,
         "chem": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H15M10 3V10L5 19H19L14 10V3"></path></svg>`,
         "math": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><line x1="16" y1="10" x2="16" y2="10.01"></line><line x1="12" y1="10" x2="12" y2="10.01"></line><line x1="8" y1="10" x2="8" y2="10.01"></line><line x1="12" y1="14" x2="12" y2="14.01"></line><line x1="8" y1="14" x2="8" y2="14.01"></line><line x1="12" y1="18" x2="12" y2="18.01"></line><line x1="8" y1="18" x2="8" y2="18.01"></line></svg>`,
@@ -326,20 +339,20 @@
         "data": `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>`
     };
 
-    // Specific Pastel colours mapped to each discipline
     const themeColours = {
-        "Level 6 HE": "#a78bfa", // Pastel violet
-        "Level 6 HE Applied Biosciences": "#34d399", // Pastel green
-        "Level 6 HE Applied Chemical Sciences": "#60a5fa", // Pastel blue
-        "Level 6 HE Applied Material Sciences": "#fb923c", // Pastel orange
-        "Level 6 HE Foundational Modules": "#d8b4fe", // Pastel purple
-        "Level 5 Laboratory Management": "#2dd4bf", // Pastel teal
-        "Level 3 Process Industry Manufacturing Technician": "#fb7185", // Pastel rose
-        "Level 3 Polymer Processing Technician": "#22d3ee", // Pastel cyan
-        "Level 3 Asbestos Analyst": "#94a3b8" // Pastel slate
+        "Level 6 HE": "#a78bfa", 
+        "Level 6 HE Applied Biosciences": "#34d399", 
+        "Level 6 HE Applied Chemical Sciences": "#60a5fa", 
+        "Level 6 HE Applied Material Sciences": "#fb923c", 
+        "Level 6 HE Foundational Modules": "#d8b4fe", 
+        "Level 5 Laboratory Management": "#2dd4bf", 
+        "Level 3 Manufacturing": "#fb7185", 
+        "Level 3 Process Industry Manufacturing Technician": "#f43f5e", 
+        "Level 3 Polymer Processing Technician": "#06b6d4", 
+        "Level 3 Lab Tech": "#94a3b8", 
+        "Level 3 Asbestos Analyst": "#64748b" 
     };
 
-    // Mapping for specific front-page folder icons
     const folderIcons = {
         "Level 6 HE": "he",
         "Level 6 HE Applied Biosciences": "bio",
@@ -347,12 +360,13 @@
         "Level 6 HE Applied Material Sciences": "materials",
         "Level 6 HE Foundational Modules": "math",
         "Level 5 Laboratory Management": "management",
+        "Level 3 Manufacturing": "factory",
         "Level 3 Process Industry Manufacturing Technician": "factory",
         "Level 3 Polymer Processing Technician": "polymer_prog",
+        "Level 3 Lab Tech": "lab",
         "Level 3 Asbestos Analyst": "asbestos_prog"
     };
 
-    // Data structured with a "path" array for multi-tier nesting
     const modulesData = [
         { 
             path: ["Level 6 HE", "Level 6 HE Applied Biosciences"], 
@@ -405,7 +419,7 @@
             url: "https://360.articulate.com/review/content/04701a2d-9381-4345-ae4a-4126bf40af60/review" 
         },
         { 
-            path: ["Level 3 Process Industry Manufacturing Technician"], 
+            path: ["Level 3 Manufacturing", "Level 3 Process Industry Manufacturing Technician"], 
             iconKey: "safety",
             title: "Process Safety: Navigating Risks with Confidence", 
             code: "TPIMT3101", 
@@ -415,7 +429,7 @@
             url: "https://360.articulate.com/review/content/6aef3c13-cd19-4afe-86e0-44d315eb3821/review" 
         },
         { 
-            path: ["Level 3 Polymer Processing Technician"], 
+            path: ["Level 3 Manufacturing", "Level 3 Polymer Processing Technician"], 
             iconKey: "network",
             title: "Polymer Science and Processing ITM", 
             code: "TPPT3201", 
@@ -425,7 +439,7 @@
             url: "https://360.articulate.com/review/content/16cf0ed8-ceda-4c81-9690-3161a60c2097/review" 
         },
         { 
-            path: ["Level 3 Asbestos Analyst"], 
+            path: ["Level 3 Lab Tech", "Level 3 Asbestos Analyst"], 
             iconKey: "data",
             title: "Working with Data in Asbestos", 
             code: "TAA3102", 
@@ -449,7 +463,6 @@
         return `<span class="tag tag-status-pub">Published (LMS)</span>`;
     }
 
-    // Navigation and Rendering Logic
     function renderView() {
         linksContainer.innerHTML = '';
         renderBreadcrumbs();
@@ -491,8 +504,6 @@
             const card = document.createElement(item.type === 'folder' ? 'div' : 'a');
             card.className = 'trigger-card';
             card.style.setProperty('--theme-color', item.theme);
-            
-            // Light background tint based on pastel theme colour
             card.style.background = `color-mix(in srgb, ${item.theme} 8%, white)`;
 
             if (item.type === 'folder') {
@@ -508,7 +519,7 @@
                     <div class="trigger-icon">${icons[item.iconKey] || icons.folder}</div>
                     <h2 class="trigger-title">${item.title}</h2>
                     <div class="meta-container">
-                        <span class="tag tag-programme">${moduleCount} Module${moduleCount > 1 ? 's' : ''}</span>
+                        <span class="tag tag-programme" style="color: #ffffff;">${moduleCount} Module${moduleCount > 1 ? 's' : ''}</span>
                     </div>
                     <div class="module-tooltip">
                         <strong>Modules included:</strong>
@@ -566,7 +577,6 @@
         });
     }
 
-    // Search Logic
     searchInput.addEventListener('input', (e) => {
         const term = e.target.value.toLowerCase();
         
@@ -617,7 +627,6 @@
         });
     });
 
-    // Initialize
     renderView();
 </script>
 </body>
