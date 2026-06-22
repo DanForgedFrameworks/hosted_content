@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Only Cells — Interactive Case MM260615</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== ONLY CELLS — INTERACTIVE CASE WIDGET · Phase 1 concept prototype ===== */
+html,body{ margin:0; padding:0; }
+body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2c5c 0%, #101c40 55%, #0b1430 100%); }
+.oc-bg{ position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+.oc-proto{ position:fixed; top:10px; left:12px; z-index:90; font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+  background:rgba(0,0,0,.5); color:var(--oc-teal-bright,#34C6B0); border:1px solid #2E9E8F; border-radius:999px; padding:4px 10px; font-weight:600; pointer-events:none; }
+
+.oc-case{
+  --oc-navy:#16234D; --oc-navy-deep:#0F1A3A; --oc-teal:#2E9E8F; --oc-teal-bright:#34C6B0;
+  --oc-bg:#3f3f3f; --oc-surface:#3A3A3A; --oc-surface-2:#2E2E2E; --oc-text:#FFFFFF; --oc-text-muted:#C9C9C9;
+  --oc-lilac:#C9B8E8; --oc-correct:#34C6B0; --oc-incorrect:#E0736B;
+  --oc-dur-micro:150ms; --oc-dur-state:300ms; --oc-dur-reveal:700ms;
+  --oc-ease-std:cubic-bezier(0.4,0,0.2,1); --oc-ease-out:cubic-bezier(0.25,1,0.5,1); --oc-ease-spring:cubic-bezier(0.34,1.56,0.64,1);
+  --oc-radius:14px; --oc-radius-sm:8px;
+  --oc-font-head:"Poppins","Montserrat",system-ui,sans-serif; --oc-font-body:"Inter",system-ui,-apple-system,sans-serif;
+  box-sizing:border-box; font-family:var(--oc-font-body); color:var(--oc-text); background:var(--oc-bg);
+  line-height:1.6; position:relative; z-index:1; max-width:1200px; margin:24px auto; border-radius:18px; overflow:hidden;
+  box-shadow:0 24px 60px rgba(0,0,0,.45); -webkit-font-smoothing:antialiased;
+}
+.oc-case *, .oc-case *::before, .oc-case *::after{ box-sizing:border-box; }
+.oc-case h1,.oc-case h2,.oc-case h3{ font-family:var(--oc-font-head); margin:0; line-height:1.25; }
+.oc-case p{ margin:0 0 0.6em; }
+.oc-case button{ font-family:inherit; }
+
+.oc-top{ position:relative; z-index:2; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  padding:18px 22px; background:var(--oc-navy-deep); border-bottom:1px solid rgba(255,255,255,.08); }
+.oc-brandline{ display:flex; flex-direction:column; }
+.oc-brandline .t{ font-family:var(--oc-font-head); font-weight:600; font-size:15px; }
+.oc-brandline .s{ font-size:12px; color:var(--oc-text-muted); }
+.oc-topright{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.oc-bgbtn{ border:1px solid rgba(255,255,255,.2); background:var(--oc-surface-2); color:var(--oc-teal-bright); cursor:pointer; font-size:12px; font-weight:600; border-radius:999px; padding:7px 14px;
+  transition:transform var(--oc-dur-micro) var(--oc-ease-std), background var(--oc-dur-state); }
+.oc-bgbtn[aria-pressed="false"]{ color:var(--oc-text-muted); }
+.oc-bgbtn:hover{ background:#444; } .oc-bgbtn:active{ transform:scale(.95); }
+.oc-modes{ display:inline-flex; background:var(--oc-surface-2); border-radius:999px; padding:4px; }
+.oc-modes button{ border:0; background:transparent; color:var(--oc-text-muted); padding:8px 16px; border-radius:999px; cursor:pointer; font-weight:600; font-size:13px;
+  transition:background var(--oc-dur-state) var(--oc-ease-std), color var(--oc-dur-state), transform var(--oc-dur-micro); }
+.oc-modes button[aria-pressed="true"]{ background:var(--oc-teal); color:#fff; }
+.oc-modes button:hover:not([aria-pressed="true"]){ color:var(--oc-text); }
+.oc-modes button:active{ transform:scale(.95); }
+
+.oc-stage{ position:relative; z-index:2; padding:22px; min-height:360px; }
+.oc-stepper{ margin-bottom:18px; }
+.oc-rail{ position:relative; height:4px; background:var(--oc-surface-2); border-radius:999px; }
+.oc-rail__fill{ position:absolute; inset:0 auto 0 0; width:0%; background:var(--oc-teal); border-radius:999px; transition:width var(--oc-dur-reveal) var(--oc-ease-std); }
+.oc-steps{ display:flex; gap:6px; margin-top:12px; flex-wrap:wrap; }
+.oc-step{ display:inline-flex; align-items:center; gap:7px; background:var(--oc-surface); border:1px solid rgba(255,255,255,.08);
+  color:var(--oc-text-muted); border-radius:999px; padding:6px 12px; font-size:12px; cursor:pointer; transition:all var(--oc-dur-state) var(--oc-ease-std); }
+.oc-step .n{ width:20px; height:20px; border-radius:50%; display:grid; place-items:center; background:var(--oc-surface-2); font-weight:700; font-size:11px; }
+.oc-step[aria-current="true"]{ border-color:var(--oc-teal); color:var(--oc-text); }
+.oc-step[aria-current="true"] .n{ background:var(--oc-teal); color:#fff; }
+.oc-step.done .n{ background:var(--oc-teal-bright); color:var(--oc-navy-deep); }
+.oc-step:active{ transform:scale(.96); }
+
+.oc-station{ background:var(--oc-surface); border:1px solid rgba(255,255,255,.07); border-radius:var(--oc-radius); padding:22px; }
+.oc-eyebrow{ color:var(--oc-teal-bright); font-size:12px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; }
+.oc-station h2{ font-size:clamp(20px,3.2vw,28px); margin:4px 0 10px; }
+.oc-station h3{ font-size:18px; }
+.oc-narrate{ color:var(--oc-text-muted); max-width:62ch; }
+.oc-scaffold{ display:inline-block; font-size:11px; padding:2px 9px; border-radius:999px; border:1px solid rgba(255,255,255,.15); color:var(--oc-text-muted); margin-bottom:10px; }
+.oc-enter{ opacity:0; transform:translateY(18px); }
+.oc-enter.in{ opacity:1; transform:none; transition:opacity var(--oc-dur-reveal) var(--oc-ease-out), transform var(--oc-dur-reveal) var(--oc-ease-out); }
+
+.oc-fbc{ display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; margin:16px 0; }
+.oc-fbc .cell{ background:var(--oc-surface-2); border-radius:var(--oc-radius-sm); padding:14px; border-left:3px solid var(--oc-teal); }
+.oc-fbc .cell.low{ border-left-color:var(--oc-incorrect); } .oc-fbc .cell.plain{ border-left-color:rgba(255,255,255,.2); }
+.oc-fbc .lab{ font-size:12px; color:var(--oc-text-muted); }
+.oc-fbc .val{ font-family:var(--oc-font-head); font-size:30px; font-weight:700; }
+.oc-fbc .unit{ font-size:12px; color:var(--oc-text-muted); }
+.oc-fbc .ref{ font-size:11px; color:var(--oc-text-muted); margin-top:3px; }
+.oc-fbc .flag{ font-size:11px; margin-top:4px; } .oc-fbc .flag.low{ color:var(--oc-incorrect); } .oc-fbc .flag.normal{ color:var(--oc-teal-bright); }
+.oc-callout{ background:rgba(46,158,143,.12); border:1px solid var(--oc-teal); border-radius:var(--oc-radius-sm); padding:14px; margin:14px 0; }
+.oc-callout .h{ font-weight:600; color:var(--oc-teal-bright); margin-bottom:4px; }
+.oc-callout ul{ margin:6px 0 0; padding-left:18px; } .oc-callout li{ margin:2px 0; }
+.oc-callout.pop{ animation:oc-pop var(--oc-dur-reveal) var(--oc-ease-spring); }
+@keyframes oc-pop{ 0%{transform:scale(.96);opacity:0;} 100%{transform:scale(1);opacity:1;} }
+
+/* roll-down reveal panel — slowed ease-out */
+.oc-reveal-panel{ max-height:0; opacity:0; overflow:hidden; transition:max-height 950ms var(--oc-ease-out), opacity 760ms var(--oc-ease-out); }
+.oc-reveal-panel.show{ max-height:720px; opacity:1; }
+
+.oc-ticks{ display:grid; gap:8px; margin:14px 0; }
+.oc-tick{ display:flex; align-items:center; gap:10px; background:var(--oc-surface-2); border:1px solid rgba(255,255,255,.1); border-radius:10px; padding:10px 14px; cursor:pointer; transition:border-color var(--oc-dur-state), transform var(--oc-dur-micro); }
+.oc-tick input{ width:18px; height:18px; accent-color:var(--oc-teal); }
+.oc-tick[aria-checked="true"]{ border-color:var(--oc-teal); } .oc-tick:active{ transform:scale(.99); }
+
+.oc-media{ margin:16px 0; text-align:center; }
+.oc-framewrap{ display:grid; grid-template-columns:1fr; gap:12px; justify-items:center; }
+@media (min-width:620px){ .oc-framewrap.with-panel{ grid-template-columns:1fr 300px; align-items:start; justify-items:center; } }
+.oc-figure{ position:relative; display:inline-block; max-width:100%; border-radius:var(--oc-radius-sm); overflow:hidden; background:var(--oc-surface-2); touch-action:none; outline:none; line-height:0; }
+.oc-figure:focus-visible{ box-shadow:0 0 0 3px rgba(52,198,176,.6); }
+.oc-figure img{ display:block; max-width:100%; height:auto; user-select:none; -webkit-user-drag:none; }
+.oc-figure.focuspull img{ filter:blur(14px); transform:scale(1.06); }
+.oc-figure.focuspull.sharp img{ filter:none; transform:none; transition:filter 900ms var(--oc-ease-std), transform 900ms var(--oc-ease-std); }
+.oc-figure.annotate-on{ cursor:crosshair; }
+.oc-imgfallback{ display:grid; place-items:center; min-height:220px; color:var(--oc-text-muted); font-size:13px; text-align:center; padding:20px; background:linear-gradient(135deg,var(--oc-surface),var(--oc-surface-2)); }
+.oc-figcap{ font-size:12px; color:var(--oc-text-muted); margin-top:8px; letter-spacing:.04em; }
+
+.oc-loupe{ position:absolute; width:min(40vw,200px); aspect-ratio:1; pointer-events:none;
+  clip-path:polygon(25% 4%,75% 4%,98% 50%,75% 96%,25% 96%,2% 50%); background-repeat:no-repeat; box-shadow:0 8px 24px rgba(0,0,0,.45); display:none; z-index:20; }
+.oc-loupe::after{ content:""; position:absolute; inset:0; clip-path:inherit; box-shadow:inset 0 0 0 3px var(--oc-teal); }
+.oc-figure.loupe-on:not(.annotate-on) .oc-loupe{ display:block; }
+.oc-frame{ position:absolute; width:90px; aspect-ratio:1; border:2px solid var(--oc-teal-bright); background:rgba(52,198,176,.10); border-radius:6px; cursor:grab; display:none; z-index:20; touch-action:none; }
+.oc-frame:active{ cursor:grabbing; }
+.oc-figure.frame-on:not(.annotate-on) .oc-frame{ display:block; }
+.oc-zoompanel{ display:none; background:var(--oc-surface-2); border:1px solid var(--oc-teal); border-radius:var(--oc-radius-sm); width:300px; max-width:100%; aspect-ratio:1; background-repeat:no-repeat; }
+.oc-zoompanel.show{ display:block; }
+
+.oc-magtools{ display:flex; gap:10px; align-items:center; margin-top:10px; font-size:12px; color:var(--oc-text-muted); flex-wrap:wrap; justify-content:center; }
+.oc-magcontrols{ display:inline-flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:center; }
+.oc-magcontrols[hidden]{ display:none; }
+.oc-seg{ display:inline-flex; background:var(--oc-surface-2); border-radius:999px; padding:3px; }
+.oc-seg button{ border:0; background:transparent; color:var(--oc-text-muted); padding:5px 12px; border-radius:999px; cursor:pointer; font-size:12px; transition:transform var(--oc-dur-micro); }
+.oc-seg button[aria-pressed="true"]{ background:var(--oc-teal); color:#fff; } .oc-seg button:active{ transform:scale(.94); }
+.oc-zoomctl{ display:inline-flex; align-items:center; gap:6px; }
+.oc-zoomctl button{ width:26px; height:26px; border-radius:50%; border:1px solid rgba(255,255,255,.2); background:var(--oc-surface-2); color:var(--oc-text); cursor:pointer; font-weight:700; transition:transform var(--oc-dur-micro); }
+.oc-zoomctl button:active{ transform:scale(.88); }
+.oc-hint{ font-size:11px; color:var(--oc-text-muted); opacity:.85; }
+.oc-annobtn{ border:1px solid var(--oc-lilac); background:transparent; color:var(--oc-lilac); border-radius:999px; padding:5px 14px; cursor:pointer; font-size:12px; transition:transform var(--oc-dur-micro), background var(--oc-dur-state); }
+.oc-annobtn[aria-pressed="true"]{ background:var(--oc-lilac); color:var(--oc-navy-deep); } .oc-annobtn:active{ transform:scale(.95); }
+.oc-markbanner{ background:rgba(201,184,232,.15); border:1px solid var(--oc-lilac); color:var(--oc-text); border-radius:8px; padding:9px 12px; font-size:13px; margin-top:10px; text-align:left; }
+
+.oc-pin{ position:absolute; transform:translate(-50%,-50%); min-width:28px; height:28px; padding:0 5px; border-radius:14px; border:2px solid #fff; color:#fff; font-weight:700; font-size:11px; display:grid; place-items:center; z-index:25; pointer-events:none; white-space:nowrap; }
+.oc-pin.user{ background:rgba(201,184,232,.75); box-shadow:0 0 0 2px var(--oc-lilac); }
+.oc-figure.annotate-on .oc-pin.user{ pointer-events:auto; cursor:grab; }
+.oc-pin.sme{ background:rgba(46,158,143,.7); box-shadow:0 0 0 2px var(--oc-teal); cursor:pointer; pointer-events:auto; }
+.oc-hotnote{ position:absolute; z-index:26; background:var(--oc-navy-deep); border:1px solid var(--oc-teal); color:var(--oc-text); padding:8px 10px; border-radius:8px; font-size:12px; max-width:220px; transform:translate(-50%,8px); display:none; text-align:left; }
+.oc-hotnote.show{ display:block; }
+.oc-annolist{ margin-top:12px; display:grid; gap:8px; text-align:left; }
+.oc-annorow{ display:flex; gap:8px; align-items:center; background:var(--oc-surface-2); border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:8px 10px; }
+.oc-annorow .num{ min-width:38px; height:22px; padding:0 8px; flex:0 0 auto; border-radius:11px; background:var(--oc-lilac); color:var(--oc-navy-deep); font-weight:700; display:grid; place-items:center; font-size:12px; }
+.oc-annorow input{ flex:1; background:var(--oc-surface); border:1px solid rgba(255,255,255,.15); color:var(--oc-text); border-radius:6px; padding:6px 8px; font:inherit; font-size:13px; }
+.oc-annorow button{ border:0; background:transparent; color:var(--oc-incorrect); cursor:pointer; font-size:18px; line-height:1; }
+
+.oc-thumbs{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; justify-content:center; }
+.oc-thumbs button{ position:relative; border:2px solid transparent; border-radius:8px; overflow:hidden; padding:0; cursor:pointer; background:var(--oc-surface-2); line-height:0; transition:transform var(--oc-dur-micro) var(--oc-ease-out), box-shadow var(--oc-dur-micro) var(--oc-ease-out); }
+.oc-thumbs button:hover{ transform:scale(1.04); box-shadow:0 6px 16px rgba(0,0,0,.4); } .oc-thumbs button:active{ transform:scale(.97); }
+.oc-thumbs button[aria-pressed="true"]{ border-color:var(--oc-teal); }
+.oc-thumbs img{ width:84px; height:64px; object-fit:cover; display:block; }
+.oc-thumbs .rn{ position:absolute; top:2px; left:2px; background:rgba(15,26,58,.8); color:#fff; font-size:10px; font-weight:700; padding:1px 5px; border-radius:6px; }
+
+.oc-videowrap{ width:25%; min-width:240px; max-width:100%; margin:0 auto; transition:width var(--oc-dur-state) var(--oc-ease-std); }
+.oc-videowrap.large{ width:100%; }
+.oc-video{ width:100%; border-radius:var(--oc-radius-sm); background:#000; display:block; }
+.oc-playhint{ font-size:13px; color:var(--oc-teal-bright); margin:8px 0; }
+
+.oc-reflect{ margin-top:18px; background:var(--oc-surface-2); border:1px solid rgba(255,255,255,.08); border-radius:var(--oc-radius-sm); padding:16px; text-align:left; }
+.oc-reflect label{ display:block; font-weight:600; margin-bottom:8px; }
+.oc-reflect textarea{ width:100%; min-height:90px; resize:vertical; border-radius:8px; border:1px solid rgba(255,255,255,.15); background:var(--oc-surface); color:var(--oc-text); padding:10px; font:inherit; }
+.oc-reflect textarea:focus{ outline:none; border-color:var(--oc-teal); box-shadow:0 0 0 3px rgba(52,198,176,.25); }
+.oc-conf{ display:flex; gap:8px; align-items:center; margin-top:10px; font-size:13px; color:var(--oc-text-muted); flex-wrap:wrap; }
+.oc-conf .chips{ display:inline-flex; gap:6px; }
+.oc-conf .chips button{ border:1px solid rgba(255,255,255,.15); background:transparent; color:var(--oc-text-muted); border-radius:999px; padding:5px 12px; cursor:pointer; font-size:12px; transition:transform var(--oc-dur-micro), background var(--oc-dur-state); }
+.oc-conf .chips button[aria-pressed="true"]{ background:var(--oc-lilac); color:var(--oc-navy-deep); border-color:var(--oc-lilac); }
+.oc-conf .chips button:hover{ border-color:var(--oc-lilac); } .oc-conf .chips button:active{ transform:scale(.92); }
+
+.oc-recap{ margin:6px 0 14px; text-align:left; }
+.oc-recap__h{ font-size:13px; color:var(--oc-lilac); font-weight:600; margin-bottom:10px; text-transform:uppercase; letter-spacing:.08em; }
+.oc-acc{ background:var(--oc-surface); border:1px solid rgba(201,184,232,.35); border-left:4px solid var(--oc-lilac); border-radius:8px; margin-bottom:8px; box-shadow:0 2px 8px rgba(0,0,0,.18); transition:border-color var(--oc-dur-state), background var(--oc-dur-state); }
+.oc-acc[open]{ border-color:var(--oc-lilac); background:rgba(201,184,232,.12); }
+.oc-acc summary{ cursor:pointer; padding:12px 14px; font-weight:600; font-size:14px; list-style:none; display:flex; justify-content:space-between; align-items:center; transition:background var(--oc-dur-micro); }
+.oc-acc summary:hover{ background:rgba(255,255,255,.04); } .oc-acc summary:active{ transform:scale(.995); }
+.oc-acc summary::after{ content:"⌄"; color:var(--oc-text-muted); }
+.oc-acc[open] summary::after{ content:"⌃"; color:var(--oc-lilac); }
+.oc-acc summary::-webkit-details-marker{ display:none; }
+.oc-acc[open] .oc-acc__b{ animation:oc-acc-open 280ms var(--oc-ease-out); }
+@keyframes oc-acc-open{ from{ opacity:0; transform:translateY(-6px);} to{ opacity:1; transform:none;} }
+.oc-acc__b{ padding:0 12px 11px; color:var(--oc-text-muted); white-space:pre-wrap; font-size:14px; }
+
+.oc-nav{ display:flex; justify-content:space-between; gap:10px; margin-top:18px; flex-wrap:wrap; position:relative; z-index:2; }
+.oc-navright{ display:flex; gap:10px; flex-wrap:wrap; margin-left:auto; }
+.oc-btn{ display:inline-flex; align-items:center; gap:8px; border:1px solid transparent; border-radius:10px; padding:11px 20px; font-weight:600; cursor:pointer; font-size:14px;
+  transition:transform var(--oc-dur-micro) var(--oc-ease-std), background var(--oc-dur-state) var(--oc-ease-std), filter var(--oc-dur-micro); }
+.oc-btn:hover{ transform:translateY(-2px); } .oc-btn:active{ transform:translateY(0) scale(.97); filter:brightness(.93); }
+.oc-btn--primary{ background:var(--oc-teal); color:#fff; } .oc-btn--primary:hover{ background:var(--oc-teal-bright); }
+.oc-btn--ghost{ background:transparent; color:var(--oc-text); border-color:rgba(255,255,255,.25); } .oc-btn--ghost:hover{ background:rgba(255,255,255,.08); }
+.oc-btn[disabled]{ opacity:.45; cursor:not-allowed; transform:none; }
+.oc-btn:focus-visible{ outline:none; box-shadow:0 0 0 3px rgba(52,198,176,.5); }
+
+.oc-options{ display:grid; gap:10px; margin:16px 0; text-align:left; }
+.oc-opt{ text-align:left; background:var(--oc-surface-2); border:1px solid rgba(255,255,255,.12); color:var(--oc-text); border-radius:10px; padding:14px 16px; cursor:pointer; font-size:15px;
+  transition:border-color var(--oc-dur-state), background var(--oc-dur-state), transform var(--oc-dur-micro); }
+.oc-opt:hover{ transform:translateY(-1px); border-color:var(--oc-teal); } .oc-opt:active{ transform:scale(.99); }
+.oc-opt[aria-pressed="true"]{ border-color:var(--oc-teal); box-shadow:0 0 0 2px rgba(46,158,143,.4); }
+.oc-opt.correct{ border-color:var(--oc-correct); background:rgba(52,198,176,.14); }
+.oc-opt.incorrect{ border-color:var(--oc-incorrect); background:rgba(224,115,107,.14); }
+.oc-feedback{ margin-top:16px; border-radius:var(--oc-radius-sm); padding:16px; display:none; text-align:left; }
+.oc-feedback.show{ display:block; }
+.oc-feedback.ok{ background:rgba(52,198,176,.12); border:1px solid var(--oc-correct); }
+.oc-feedback.no{ background:rgba(224,115,107,.12); border:1px solid var(--oc-incorrect); }
+.oc-score{ font-family:var(--oc-font-head); font-size:34px; font-weight:700; }
+
+.oc-scan{ position:absolute; inset:0; pointer-events:none; z-index:40; opacity:0; }
+.oc-scan.run{ opacity:1; }
+.oc-scan .bar{ position:absolute; left:0; right:0; height:3px; top:0; background:var(--oc-teal-bright); box-shadow:0 0 16px 4px rgba(52,198,176,.6); }
+.oc-scan .lbl{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:var(--oc-teal-bright); font-family:var(--oc-font-head); letter-spacing:.18em; text-transform:uppercase; font-size:13px; opacity:0; }
+.oc-scan.run .bar{ animation:oc-scan-move 700ms var(--oc-ease-std) forwards; }
+.oc-scan.up.run .bar{ animation:oc-scan-up 700ms var(--oc-ease-std) forwards; }
+.oc-scan.run .lbl{ animation:oc-scan-lbl 700ms ease forwards; }
+@keyframes oc-scan-move{ 0%{top:0;} 100%{top:100%;} }
+@keyframes oc-scan-up{ 0%{top:100%;} 100%{top:0;} }
+@keyframes oc-scan-lbl{ 0%,100%{opacity:0;} 40%,70%{opacity:1;} }
+/* reset cleanse — bottom-to-top lilac sweep that fully covers, then reveals Station 1 */
+.oc-wipe{ position:absolute; inset:0; z-index:66; pointer-events:none; background:linear-gradient(0deg,#C9B8E8 0%,#C9B8E8 72%,rgba(201,184,232,.5) 100%); transform:translateY(100%); }
+.oc-wipe.run{ animation:oc-wipe-up 760ms var(--oc-ease-std) forwards; }
+@keyframes oc-wipe-up{ 0%{ transform:translateY(100%);} 45%{ transform:translateY(0);} 58%{ transform:translateY(0);} 100%{ transform:translateY(-100%);} }
+
+/* compact landing (shown until Begin) */
+.oc-landing{ display:none; background:var(--oc-navy-deep); padding:34px 24px 40px; text-align:center; }
+.oc-case.is-landing .oc-stage{ display:none; }
+.oc-case.is-landing .oc-landing{ display:block; }
+.oc-landing__logo{ max-width:200px; height:auto; margin:0 auto 14px; display:block; }
+.oc-landing__word{ font-family:var(--oc-font-head); font-weight:700; font-size:26px; color:#fff; margin-bottom:14px; }
+.oc-landing .eye{ color:var(--oc-teal-bright); letter-spacing:.16em; text-transform:uppercase; font-size:12px; font-weight:600; }
+.oc-landing h1{ font-size:clamp(24px,5vw,38px); margin-top:4px; }
+.oc-landing .credit{ color:var(--oc-text-muted); font-size:13px; margin-top:6px; }
+.oc-landing__attr{ font-size:12px; color:var(--oc-text-muted); margin-top:18px; }
+.oc-landing__attr a{ color:var(--oc-teal-bright); text-decoration:none; } .oc-landing__attr a:hover{ text-decoration:underline; }
+/* teal cleanse on Begin, with drifting cell/microscope/droplet/flagellate glyphs */
+.oc-launch{ position:absolute; inset:0; z-index:68; pointer-events:none; overflow:hidden; background:linear-gradient(0deg,#2E9E8F 0%,#2E9E8F 70%,rgba(46,158,143,.55) 100%); transform:translateY(100%); }
+.oc-launch.run{ animation:oc-launch-up 840ms var(--oc-ease-std) forwards; }
+@keyframes oc-launch-up{ 0%{ transform:translateY(100%);} 42%{ transform:translateY(0);} 56%{ transform:translateY(0);} 100%{ transform:translateY(-100%);} }
+.oc-launch__glyphs{ position:absolute; inset:0; }
+.oc-launch__glyphs span{ position:absolute; transform:translate(-50%,-50%); }
+.oc-launch__glyphs svg{ width:34px; height:34px; color:rgba(255,255,255,.9); opacity:0; }
+.oc-launch.run .oc-launch__glyphs svg{ animation:oc-glyph 840ms ease forwards; }
+@keyframes oc-glyph{ 0%{ opacity:0; transform:translateY(22px) scale(.8);} 38%,60%{ opacity:.95; transform:translateY(0) scale(1);} 100%{ opacity:0; transform:translateY(-26px) scale(.9);} }
+
+.oc-modal{ position:absolute; inset:0; z-index:70; background:rgba(0,0,0,.5); display:none; place-items:center; padding:20px; backdrop-filter:blur(2px); }
+.oc-modal.show{ display:grid; }
+.oc-modal__card{ background:var(--oc-surface); border:1px solid var(--oc-teal); border-radius:var(--oc-radius); padding:22px; max-width:420px; width:100%; animation:oc-pop 280ms var(--oc-ease-spring); }
+.oc-modal__card h3{ font-size:18px; margin-bottom:8px; }
+.oc-modal__card p{ color:var(--oc-text-muted); }
+.oc-modal__row{ display:flex; gap:10px; justify-content:flex-end; margin-top:16px; flex-wrap:wrap; }
+
+.oc-tools{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+.oc-donecard{ text-align:center; padding:10px 0 4px; }
+
+/* "How this works" help panel + minimised chip */
+.oc-help{ margin-top:16px; background:var(--oc-navy-deep); border:1px solid var(--oc-teal); border-radius:var(--oc-radius-sm); overflow:hidden; }
+.oc-help[hidden]{ display:none; }
+.oc-help__head{ display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 14px; background:rgba(46,158,143,.18); }
+.oc-help__head span{ font-weight:700; color:var(--oc-teal-bright); font-size:13px; letter-spacing:.04em; }
+.oc-help__min{ border:1px solid rgba(255,255,255,.25); background:transparent; color:var(--oc-text); border-radius:999px; padding:4px 12px; cursor:pointer; font-size:12px; transition:transform var(--oc-dur-micro), background var(--oc-dur-state); }
+.oc-help__min:hover{ background:rgba(255,255,255,.08); } .oc-help__min:active{ transform:scale(.95); }
+.oc-help__body{ padding:14px; color:var(--oc-text-muted); font-size:14px; text-align:left; }
+.oc-help__body ul{ margin:6px 0 0; padding-left:18px; } .oc-help__body li{ margin:4px 0; }
+.oc-helpchip{ position:fixed; bottom:16px; right:16px; z-index:50; width:46px; height:46px; border-radius:50%; border:2px solid var(--oc-teal-bright); background:var(--oc-navy-deep); color:var(--oc-teal-bright); font-size:20px; font-weight:700; cursor:pointer; box-shadow:0 8px 22px rgba(0,0,0,.5); transition:transform var(--oc-dur-micro); }
+.oc-helpchip[hidden]{ display:none; }
+.oc-helpchip:hover{ transform:scale(1.08); } .oc-helpchip:active{ transform:scale(.94); }
+
+@media (prefers-reduced-motion: reduce){
+  .oc-case *{ animation:none !important; transition:none !important; }
+  .oc-enter{ opacity:1; transform:none; }
+  .oc-figure.focuspull img{ filter:none; transform:none; }
+  .oc-reveal-panel{ max-height:none; }
+}
+
+@media print{
+  html,body{ margin:0; padding:0; background:#fff; }
+  body > *:not(#oc-print){ display:none !important; }
+  #oc-print{ display:block !important; }
+  @page{ margin:14mm; }
+}
+#oc-print{ display:none; color:#111; background:#fff; }
+.ocp{ font-family:"Inter",system-ui,sans-serif; padding:26px; max-width:900px; margin:0 auto; }
+.ocp h1{ font-family:"Poppins",sans-serif; color:#16234D; font-size:22px; margin:0; }
+.ocp .sub{ color:#16234D; font-weight:600; letter-spacing:.04em; text-transform:uppercase; font-size:11px; }
+.ocp .meta{ color:#555; font-size:12px; margin:4px 0 14px; }
+.ocp hr{ border:0; border-top:2px solid #2E9E8F; margin:10px 0 16px; }
+.ocp h2{ font-size:14px; color:#16234D; margin:16px 0 8px; }
+.ocp .imgrow{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:12px; }
+.ocp .figpin{ position:relative; display:inline-block; }
+.ocp .figpin img{ width:240px; max-width:44vw; border-radius:6px; border:1px solid #ddd; display:block; }
+.ocp .figpin .cap{ font-size:11px; color:#555; margin-top:3px; }
+.ocp .ppin{ position:absolute; transform:translate(-50%,-50%); min-width:22px; height:22px; padding:0 4px; border-radius:11px; background:#C9B8E8; border:2px solid #16234D; color:#16234D; font-weight:700; font-size:10px; display:grid; place-items:center; white-space:nowrap; }
+.ocp .qa{ border:1px solid #e2e2e2; border-radius:8px; padding:12px 14px; margin-bottom:10px; page-break-inside:avoid; }
+.ocp .qa .q{ font-weight:700; color:#16234D; margin-bottom:4px; }
+.ocp .qa .you{ margin:4px 0; }
+.ocp .qa .exp{ background:#f0faf8; border-left:3px solid #2E9E8F; padding:8px 10px; border-radius:4px; font-size:14px; }
+.ocp .badge{ display:inline-block; border-radius:999px; padding:3px 12px; font-size:12px; font-weight:700; }
+.ocp .badge.ok{ background:#dff5f0; color:#1c7a6b; } .ocp .badge.no{ background:#fbe3e1; color:#a23c34; }
+.ocp .decl{ margin-top:18px; font-size:12px; color:#555; border-top:1px dashed #bbb; padding-top:10px; }
+</style>
+</head>
+<body>
+
+<canvas class="oc-bg" id="ocBg" aria-hidden="true"></canvas>
+<span class="oc-proto">Concept prototype</span>
+
+<div class="oc-case" id="ocRoot" data-mode="learn">
+  <div class="oc-top">
+    <div class="oc-brandline">
+      <span class="t">Morphology Monday — Interactive Case</span>
+      <span class="s" id="ocCredit">Case MM260615</span>
+    </div>
+    <div class="oc-topright">
+      <button class="oc-bgbtn" id="ocBgToggle" aria-pressed="true">✦ Background: On</button>
+      <div class="oc-modes" role="group" aria-label="Mode">
+        <button id="ocModeLearn" aria-pressed="true">Learn</button>
+        <button id="ocModeAssess" aria-pressed="false">Assess (CPD)</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="oc-landing" id="ocLanding">
+    <img class="oc-landing__logo" id="ocLogo" src="https://onlycells.co.uk/wp-content/uploads/Only-Cells-Logo.png" alt="Only Cells" onerror="this.outerHTML='<div class=&quot;oc-landing__word&quot;>Only Cells</div>'">
+    <div class="eye">Morphology Monday · Interactive Case</div>
+    <h1 id="ocLandTitle">MM260615</h1>
+    <div class="credit" id="ocLandCredit"></div>
+    <p class="oc-narrate" style="margin:12px auto 0; max-width:44ch">A guided, interactive blood-film case — explore the film, reason it through, then check yourself.</p>
+    <div style="margin-top:18px"><button class="oc-btn oc-btn--primary" id="ocBegin">Begin case</button></div>
+    <div style="margin-top:14px"><button class="oc-bgbtn" id="ocBgToggleIntro" aria-pressed="true">✦ Background: On</button></div>
+    <div class="oc-landing__attr">An <strong>Only Cells</strong> resource · <a href="https://onlycells.co.uk/" target="_blank" rel="noopener">onlycells.co.uk</a></div>
+  </div>
+
+  <div class="oc-stage">
+    <div class="oc-stepper">
+      <div class="oc-rail"><div class="oc-rail__fill" id="ocRailFill"></div></div>
+      <div class="oc-steps" id="ocSteps"></div>
+    </div>
+    <div id="ocContent" aria-live="polite"></div>
+    <div class="oc-help" id="ocHelp" hidden>
+      <div class="oc-help__head"><span>How this works</span><button class="oc-help__min" id="ocHelpMin">Minimise ✕</button></div>
+      <div class="oc-help__body" id="ocHelpBody"></div>
+    </div>
+    <div class="oc-nav">
+      <button class="oc-btn oc-btn--ghost" id="ocBack">‹ Back</button>
+      <div class="oc-navright">
+        <button class="oc-btn oc-btn--ghost" id="ocReset">Reset</button>
+        <button class="oc-btn oc-btn--primary" id="ocNext">Next ›</button>
+      </div>
+    </div>
+    <div class="oc-scan" id="ocScan" aria-hidden="true"><div class="bar"></div><div class="lbl">Analysing</div></div>
+  </div>
+
+  <div class="oc-wipe" id="ocWipe" aria-hidden="true"></div>
+  <button class="oc-helpchip" id="ocHelpChip" title="How this works" aria-label="How this works" hidden>?</button>
+
+  <div class="oc-launch" id="ocLaunch" aria-hidden="true"><div class="oc-launch__glyphs" id="ocLaunchGlyphs"></div></div>
+
+  <div class="oc-modal" id="ocModal" role="dialog" aria-modal="true" aria-labelledby="ocModalTitle">
+    <div class="oc-modal__card">
+      <h3 id="ocModalTitle">Reset this page?</h3>
+      <p id="ocModalBody">This will clear all your work for this case.</p>
+      <div class="oc-modal__row">
+        <button class="oc-btn oc-btn--ghost" id="ocModalCancel">Cancel</button>
+        <button class="oc-btn oc-btn--primary" id="ocModalOk">Yes, reset</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="oc-print"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ===== CASE CONFIG — content separate from code (spec §3). CONFIRM = SME sign-off ===== */
+const CASE = {
+  id:"MM260615", title:"Trypanosoma spp.", credit:"Case shared by Cha Wei Lee",
+  history:"52-year-old presented to ED with unexplained fever.",
+  fbc:[
+    { label:"WBC", value:4.99, unit:"x10⁹/L", flag:"normal", ref:"4.0–11.0" },
+    { label:"Hb", value:124, unit:"g/L", flag:"low", ref:"130–170" },
+    { label:"Platelets", value:58, unit:"x10⁹/L", flag:"low", ref:"150–400" }
+  ],
+  analyserFlag:"Abnormal platelet distribution — wet prep performed to check for EDTA-induced clumping.",
+  media:{ base:"assets/",
+    stills:[ { src:"film-01-1024x768.webp", hires:"" }, { src:"film-02-1024x768.webp", hires:"" }, { src:"film-03-1024x768.webp", hires:"" } ],
+    videos:[ { src:"wet-prep-marked.mp4", label:"Wet preparation" }, { src:"film-clip.mp4", label:"Blood film" } ] },
+  notable:[
+    { id:"plt", text:"Thrombocytopenia — low platelets (58)", correct:true },
+    { id:"hb", text:"Anaemia — low haemoglobin (124)", correct:true },
+    { id:"fever", text:"Unexplained fever in the history", correct:true },
+    { id:"wbc", text:"Leucocytosis — raised white cells", correct:false },
+    { id:"neut", text:"Neutrophilia", correct:false },
+    { id:"blast", text:"Blast cells flagged by the analyser", correct:false }
+  ],
+  hotspots:[ { image:0, x:42, y:55, label:"I-1", note:"Curved, flagellated trypomastigote between red cells. (CONFIRM position)" } ],
+  wetprepNotable:[
+    "Motile, flagellated organisms swimming in the plasma between the red cells",
+    "Active, directional movement — not the passive look of clumped platelets"
+  ],
+  diagnosis:{ answer:"Trypanosoma spp.",
+    options:[ "Trypanosoma spp.", "Microfilariae", "Babesia", "Platelet clumps (artefact)", "Borrelia (relapsing fever)" ],
+    explanation:"Fever + thrombocytopenia + motile flagellated organisms on wet prep; trypomastigotes confirmed on film." },
+  model:{
+    presentation:[ "Thrombocytopenia — the low platelet count is the headline", "A low Hb (anaemia) as well", "Both against an unexplained fever" ],
+    flag:[ "Examine a wet preparation / blood film", "Distinguish true thrombocytopenia from EDTA-induced platelet clumping", "Look for anything else on the film" ],
+    wetprep:[ "Motile, flagellated organisms moving in the plasma between the red cells", "Not the static appearance of clumped platelets" ],
+    film:[ "Extracellular trypomastigotes", "Curved body with an undulating membrane", "A single flagellum" ],
+    reasoning:[ "Fever + low platelets + motile flagellates", "Points to Trypanosoma spp., not platelet clumps" ]
+  }
+};
+
+const LEARN_STATIONS=[
+  { id:"presentation", title:"Presentation", scaffold:"Modelled" },
+  { id:"flag", title:"Analyser flag", scaffold:"Guided" },
+  { id:"wetprep", title:"Wet prep", scaffold:"Guided → exploratory" },
+  { id:"film", title:"Blood film", scaffold:"Released" },
+  { id:"reasoning", title:"Reasoning", scaffold:"Fully released" },
+  { id:"reveal", title:"Reveal", scaffold:"Consolidate" }
+];
+const ASSESS_STATIONS=[
+  { id:"a-case", title:"Case & diagnosis", scaffold:"Review · annotate · commit" },
+  { id:"a-result", title:"Result", scaffold:"CPD record" }
+];
+
+const $ = (s,r=document)=> r.querySelector(s);
+const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const finePointer = ()=> window.matchMedia('(pointer:fine)').matches;
+const STORE_KEY="oc-case-"+CASE.id, STORE_VER=6;
+const imgUrl=(m)=> CASE.media.base+m;
+const hiresUrl=(s)=> s.hires ? CASE.media.base+s.hires : imgUrl(s.src);
+const CONF=["Unsure","Fairly sure","Confident"];
+const ROMAN=["I","II","III","IV","V","VI"];
+const roman=(i)=> ROMAN[i]||String(i+1);
+const clamp=(v,a,b)=> Math.max(a,Math.min(b,v));
+function escapeHtml(s){ return (s||"").replace(/[&<>"']/g,c=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c])); }
+function emptyAnno(){ return CASE.media.stills.map(()=>[]); }
+
+let state=loadState();
+function freshState(){ return { ver:STORE_VER, mode:"learn", step:0, maxStep:0,
+  reflections:{}, confidence:{}, ticks:{}, committed:{},
+  annotations:{ film:emptyAnno(), assess:emptyAnno() }, further:{},
+  magStyle:null, hexZoom:3, bgAnim:true, helpMin:false, assess:{ committed:false, choice:null, correct:null, order:null } }; }
+function loadState(){ try{ const s=JSON.parse(localStorage.getItem(STORE_KEY)); if(s&&s.ver===STORE_VER) return s; }catch(e){} return freshState(); }
+function saveState(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){} }
+function annoFor(key,idx){ state.annotations[key]=state.annotations[key]||emptyAnno(); state.annotations[key][idx]=state.annotations[key][idx]||[]; return state.annotations[key][idx]; }
+
+const root=$("#ocRoot"), content=$("#ocContent"), stepsEl=$("#ocSteps"), railFill=$("#ocRailFill"),
+  btnNext=$("#ocNext"), btnBack=$("#ocBack"), btnReset=$("#ocReset"),
+  modeLearn=$("#ocModeLearn"), modeAssess=$("#ocModeAssess"), scan=$("#ocScan"), wipe=$("#ocWipe"),
+  launchEl=$("#ocLaunch"), modal=$("#ocModal");
+
+$("#ocCredit").textContent="Case "+CASE.id+" · "+CASE.credit;
+$("#ocLandTitle").textContent="Morphology Monday | "+CASE.id;
+$("#ocLandCredit").textContent=CASE.credit;
+
+function stations(){ return state.mode==="learn" ? LEARN_STATIONS : ASSESS_STATIONS; }
+
+/* ===== render ===== */
+function renderCore(){
+  const list=stations();
+  state.step=clamp(state.step,0,list.length-1); state.maxStep=Math.max(state.maxStep||0,state.step);
+  stepsEl.innerHTML="";
+  list.forEach((st,i)=>{ const b=document.createElement("button"); b.className="oc-step"+(i<state.step?" done":"");
+    if(i===state.step) b.setAttribute("aria-current","true"); b.innerHTML='<span class="n">'+(i+1)+'</span>'+st.title;
+    b.addEventListener("click",()=>{ if(i<=state.maxStep){ state.step=i; saveState(); render(); }}); stepsEl.appendChild(b); });
+  railFill.style.width=(list.length<2?100:(state.step/(list.length-1))*100)+"%";
+  content.innerHTML="";
+  const st=list[state.step]; const node=(state.mode==="learn")?renderLearn(st):renderAssess(st); content.appendChild(node);
+  const card=node.querySelector(".oc-station")||node; card.classList.add("oc-enter");
+  requestAnimationFrame(()=> requestAnimationFrame(()=> card.classList.add("in")));
+  btnBack.style.display = state.step===0 ? "none" : "";
+  const last=state.step===list.length-1; btnNext.style.display=last?"none":"";
+  if(state.mode==="assess" && st.id==="a-case" && !state.assess.committed) btnNext.style.display="none";
+  btnReset.textContent=(state.mode==="assess"&&state.assess.committed)?"Reset (locked)":"Reset";
+  resize();
+}
+function render(){ renderCore(); const n=content.firstChild; if(n&&n._after) n._after(); renderHelp(); }
+
+/* "How this works" help — draft copy (CONFIRM wording); per mode */
+const HELP={
+  learn:["Work through the <strong>stations</strong> left to right using <strong>Next</strong>.","Explore each image with the <strong>magnifier</strong> (scroll, +/− or keyboard to zoom) and drop your own <strong>markers</strong>.","Write what you notice, then <strong>Commit</strong> to reveal what experienced eyes look for.","Your reasoning and annotations are compiled into a downloadable <strong>summary</strong> at the end."],
+  assess:["Review the <strong>case</strong>, the <strong>wet prep</strong> and the <strong>film</strong>, and add any <strong>annotations</strong>.","Comment on the blood count, then commit a single <strong>diagnosis</strong>.","Submission is <strong>recorded as CPD evidence</strong> and can't be changed.","You'll get a scored <strong>result</strong> and a downloadable <strong>CPD record</strong>."]
+};
+function renderHelp(){ const body=$("#ocHelpBody"), panel=$("#ocHelp"), chip=$("#ocHelpChip");
+  if(root.classList.contains("is-landing")){ panel.hidden=true; chip.hidden=true; return; }
+  body.innerHTML='<ul>'+(HELP[state.mode]||[]).map(t=>'<li>'+t+'</li>').join("")+'</ul>';
+  const min=!!state.helpMin; panel.hidden=min; chip.hidden=!min; resize(); }
+$("#ocHelpMin").addEventListener("click",()=>{ state.helpMin=true; saveState(); renderHelp(); });
+$("#ocHelpChip").addEventListener("click",()=>{ state.helpMin=false; saveState(); renderHelp(); });
+function stationShell(st,inner){ const w=document.createElement("div");
+  w.innerHTML='<div class="oc-station"><span class="oc-scaffold">'+st.scaffold+'</span><div class="oc-eyebrow">Station '+(state.step+1)+'</div><h2>'+st.title+'</h2>'+inner+'</div>'; return w; }
+
+/* ---- LEARN ---- */
+function renderLearn(st){
+  let node;
+  if(st.id==="presentation"){
+    node=stationShell(st,
+      '<p class="oc-narrate">'+CASE.history+'</p><div class="oc-fbc" id="ocFbc"></div>'+
+      '<p class="oc-narrate"><strong>Tick anything that looks off here.</strong></p>'+tickBlock("presentation")+
+      noteBox("presentationNote","Add any other observations on the blood count (free text).")+
+      modelBlock("presentation")+commitBtn("presentation"));
+    node._after=()=> buildFBC($("#ocFbc",node),true,true,true);
+  } else if(st.id==="flag"){
+    node=stationShell(st,
+      '<div class="oc-callout"><div class="h">Analyser flag</div>'+CASE.analyserFlag+'</div>'+
+      '<p class="oc-narrate">The BMS didn\'t just dismiss the platelet flag — they made a wet prep. <strong>What would you do next, and why?</strong></p>'+
+      reflectBlock("flag","Predict the next step the lab should take.","flag"));
+  } else if(st.id==="wetprep"){
+    node=stationShell(st,
+      '<p class="oc-narrate">This is the <strong>wet preparation</strong>. Play the clip and watch the plasma <em>between</em> the red cells — what\'s moving?</p>'+
+      '<div class="oc-playhint">▶ Play the video, then commit your response below to see what to look for.</div>'+
+      videoHTML(0)+
+      reflectBlock("wetprep","Describe the movement you saw in the wet prep.","wetprep"));
+    node._after=()=> wireVideoSize(node);
+  } else if(st.id==="film"){
+    node=stationShell(st,
+      '<p class="oc-narrate">Examine the film. Use the magnifier, then <strong>add your own markers</strong> on anything notable and summarise your observation.</p>'+
+      figureHTML(0,{annotate:true, annoKey:"film"})+
+      reflectBlock("film","Summarise your observation in your own words.","film"));
+    node._after=()=>{ wireFigure(node,0,"film",{}); };
+  } else if(st.id==="reasoning"){
+    node=stationShell(st, priorRecapHTML()+
+      '<p class="oc-narrate"><strong>What\'s your working diagnosis, and what\'s your evidence?</strong> Commit your reasoning before any reveal.</p>'+
+      reflectBlock("reasoning","Your working diagnosis + the evidence for it.","reasoning"));
+  } else if(st.id==="reveal"){
+    node=stationShell(st,
+      '<div class="oc-callout pop"><div class="h">The published answer</div><strong style="font-size:20px">'+CASE.diagnosis.answer+'</strong><p style="margin-top:6px">'+CASE.diagnosis.explanation+'</p></div>'+
+      '<div style="margin:10px 0"><button class="oc-btn oc-btn--ghost" id="ocAnno">Show published annotations</button></div>'+
+      figureHTML(0,{annotate:false, annoKey:"film", magOff:true})+
+      '<div class="oc-donecard"><p class="oc-narrate" style="margin:14px auto 0">Your responses, annotations and the expected answers are compiled into a full summary. Download it as your record.</p></div>'+
+      '<div class="oc-tools" style="justify-content:center"><button class="oc-btn oc-btn--primary" id="ocPdf">Download full case summary (PDF)</button><button class="oc-btn oc-btn--ghost" id="ocTxt">Plain text</button></div>');
+    node._after=()=>{ wireFigure(node,0,"film",{readOnly:true, magOff:true});
+      const anno=$("#ocAnno",node); let on=false;
+      anno.addEventListener("click",()=>{ on=!on; toggleHotspots(node,on); anno.textContent=on?"Hide published annotations":"Show published annotations"; });
+      $("#ocPdf",node).addEventListener("click",()=> printSummary("learn"));
+      $("#ocTxt",node).addEventListener("click",()=> download(CASE.id+"_reasoning-journey.txt", summaryText("learn"))); };
+  }
+  return node;
+}
+
+/* ---- ASSESS (Diagnose merged under the case) ---- */
+function renderAssess(st){
+  let node;
+  if(st.id==="a-case"){
+    const committed=state.assess.committed;
+    node=stationShell(st,
+      '<p class="oc-narrate">'+CASE.history+'</p><div class="oc-fbc" id="ocFbc"></div>'+
+      noteBox("assessFbc","Comment on the blood count — is anything outside the normal range?")+
+      '<div class="oc-callout"><div class="h">Analyser flag</div>'+CASE.analyserFlag+'</div>'+
+      '<p class="oc-narrate">Review the <strong>wet prep</strong> and the <strong>film</strong>, add your annotations, then commit a diagnosis below. This is a logged CPD activity.</p>'+
+      videoHTML(0)+ figureHTML(0,{annotate:true, annoKey:"assess"})+
+      '<h3 style="margin:20px 0 6px">Your diagnosis</h3><p class="oc-narrate">Select the single most likely diagnosis.</p>'+
+      '<div class="oc-options" id="ocOptions"></div>'+
+      '<div class="oc-reflect"><label>Any further observations? (optional)</label><textarea id="ocFurther" placeholder="Add anything else that supports your diagnosis…">'+escapeHtml(state.further["assess"]||"")+'</textarea></div>'+
+      (committed?'':'<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocSubmit" disabled>Submit diagnosis</button></div>')+
+      '<div class="oc-feedback" id="ocFeedback"></div>');
+    node._after=()=>{ buildFBC($("#ocFbc",node),false,false,false); wireVideoSize(node); wireFigure(node,0,"assess",{}); wireAssessCommit(node); };
+  } else if(st.id==="a-result"){
+    node=stationShell(st,'<div id="ocResultBox"></div><div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocPdf">Download CPD record (PDF)</button><button class="oc-btn oc-btn--ghost" id="ocTxt">Plain text</button></div>');
+    node._after=()=>{ buildResult($("#ocResultBox",node)); $("#ocPdf",node).addEventListener("click",()=> printSummary("cpd")); $("#ocTxt",node).addEventListener("click",()=> download(CASE.id+"_CPD-record.txt", summaryText("cpd"))); }
+  }
+  return node;
+}
+
+/* ===== components ===== */
+function tickBlock(key){ const chosen=state.ticks[key]||{};
+  const items=CASE.notable.map(n=>'<label class="oc-tick" data-id="'+n.id+'" aria-checked="'+(!!chosen[n.id])+'"><input type="checkbox" '+(chosen[n.id]?'checked':'')+'> '+escapeHtml(n.text)+'</label>').join("");
+  return '<div class="oc-ticks" data-tickkey="'+key+'">'+items+'</div><div class="oc-conf"><span>How sure are you?</span><span class="chips" data-confkey="'+key+'">'+confChips(key)+'</span></div>'; }
+function confChips(key){ const c=state.confidence[key]||null; return [1,2,3].map(n=>'<button data-c="'+n+'" aria-pressed="'+(c===n)+'">'+CONF[n-1]+'</button>').join(""); }
+function noteBox(key,label){ return '<div class="oc-reflect" data-key="'+key+'"><label>'+label+'</label><textarea placeholder="Type here… (saved automatically)">'+escapeHtml(state.reflections[key]||"")+'</textarea></div>'; }
+function modelBlock(key){ const done=state.committed&&state.committed[key]; const arr=CASE.model[key]||[];
+  return '<div class="oc-reveal-panel'+(done?' show':'')+'" id="ocModel-'+key+'"><div class="oc-callout"><div class="h">What experienced eyes look for</div><ul>'+arr.map(b=>'<li>'+escapeHtml(b)+'</li>').join("")+'</ul></div></div>'; }
+function commitBtn(key){ const done=state.committed&&state.committed[key];
+  return '<div class="oc-tools"><button class="oc-btn oc-btn--primary oc-commit" data-commit="'+key+'"'+(done?' disabled':'')+'>'+(done?'Committed ✓':'Commit response &amp; see expected')+'</button></div>'; }
+function reflectBlock(key,prompt,modelKey){
+  return '<div class="oc-reflect" data-key="'+key+'"'+(modelKey?' data-model="'+modelKey+'"':'')+'><label>'+prompt+'</label>'+
+    '<textarea placeholder="Type your thoughts… (saved automatically)">'+escapeHtml(state.reflections[key]||"")+'</textarea>'+
+    '<div class="oc-conf"><span>How sure are you?</span><span class="chips" data-confkey="'+key+'">'+confChips(key)+'</span></div></div>'+
+    (modelKey?modelBlock(key):'')+(modelKey?commitBtn(key):''); }
+function priorRecapHTML(){
+  const items=[["presentation","Presentation"],["flag","Analyser flag"],["wetprep","Wet prep"],["film","Blood film"]];
+  let html='<div class="oc-recap"><div class="oc-recap__h">Your responses so far — review before you decide</div>';
+  items.forEach(([k,label])=>{ let ans=(k==="presentation")?responseFor("presentation"):(state.reflections[k]||"");
+    if(k==="film"){ const an=[]; (state.annotations.film||[]).forEach((a,ii)=> (a||[]).forEach((p,i)=> an.push(roman(ii)+"-"+(i+1)+" "+(p.note||"(no note)")))); ans=[ans,an.join("; ")].filter(Boolean).join("  •  "); }
+    const body=ans?escapeHtml(ans):'<span style="color:var(--oc-text-muted)">Nothing captured.</span>';
+    html+='<details class="oc-acc"><summary>'+label+'</summary><div class="oc-acc__b">'+body+'</div></details>'; });
+  return html+'</div>'; }
+
+function buildFBC(host,animate,showRanges,showFlags){ if(!host) return; host.innerHTML="";
+  CASE.fbc.forEach(f=>{ const c=document.createElement("div"); c.className="cell"+(showFlags&&f.flag==="low"?" low":(showFlags?"":" plain"));
+    c.innerHTML='<div class="lab">'+f.label+'</div><div class="val" data-target="'+f.value+'">'+(animate&&!reduceMotion?"0":f.value)+'</div><div class="unit">'+f.unit+'</div>'+(showRanges?'<div class="ref">Ref '+f.ref+'</div>':'')+(showFlags?'<div class="flag '+f.flag+'">'+(f.flag==="low"?"▼ low":"normal")+'</div>':''); host.appendChild(c); });
+  if(animate&&!reduceMotion) host.querySelectorAll(".val").forEach((el,i)=> countUp(el,parseFloat(el.dataset.target),900,i*120)); }
+function countUp(el,target,dur,delay){ const dec=(target%1!==0)?2:0; setTimeout(()=>{ const t0=performance.now();
+  (function tick(now){ const p=Math.min(1,(now-t0)/dur); const e=1-Math.pow(2,-10*p); el.textContent=(target*e).toFixed(dec); if(p<1) requestAnimationFrame(tick); else el.textContent=target.toFixed(dec); })(performance.now()); }, delay); }
+
+function videoHTML(idx){ const v=CASE.media.videos[idx];
+  return '<div class="oc-media"><div class="oc-videowrap" id="ocVidWrap"><video class="oc-video" id="ocVid" controls preload="metadata" playsinline onerror="this.outerHTML=\'<div class=&quot;oc-imgfallback&quot;>Video preview unavailable here.<br>(Live file: '+v.src+')</div>\'"><source src="'+imgUrl(v.src)+'" type="video/mp4"></video></div>'+
+    '<div class="oc-magtools"><button class="oc-annobtn" id="ocVidSize">Enlarge video</button><span class="oc-hint">'+v.label+' · enhanced zoom/pan player is phase two</span></div></div>'; }
+function wireVideoSize(node){ const sz=$("#ocVidSize",node), wrap=$("#ocVidWrap",node); if(!sz||!wrap) return;
+  sz.addEventListener("click",()=>{ const big=wrap.classList.toggle("large"); sz.textContent=big?"Shrink video":"Enlarge video"; resize(); }); }
+
+/* ---- figure: magnifier + per-image annotations (add/drag/delete), Roman-numeral labels ---- */
+function figureHTML(idx,opts){ opts=opts||{};
+  const still=CASE.media.stills[idx];
+  const thumbs=CASE.media.stills.map((s,i)=>'<button data-i="'+i+'" aria-pressed="'+(i===idx)+'"><span class="rn">'+roman(i)+'</span><img src="'+imgUrl(s.src)+'" alt="Image '+roman(i)+'" onerror="this.style.opacity=.3"></button>').join("");
+  const annoBtn=opts.annotate?'<button class="oc-annobtn" id="ocAnnoBtn" aria-pressed="false">✎ Add / adjust markers</button>':'';
+  const controls='<span class="oc-seg" id="ocMagSeg"><button data-m="hex">Hexagon</button><button data-m="frame">Frame + panel</button></span>'+
+    '<span class="oc-zoomctl">zoom <button id="ocZoomDown" title="Zoom out">−</button><span id="ocZoomVal">3.0×</span><button id="ocZoomUp" title="Zoom in">+</button></span>'+
+    '<span class="oc-hint">scroll · + / − · keyboard</span>'+annoBtn;
+  const tools=opts.magOff?'<button class="oc-annobtn" id="ocEnableZoom">🔍 Enable zoom to review the image</button><span class="oc-magcontrols" id="ocMagControls" hidden>'+controls+'</span>':'<span class="oc-magcontrols">'+controls+'</span>';
+  return '<div class="oc-media"><div class="oc-framewrap"><div class="oc-figure focuspull" data-idx="'+idx+'" data-annokey="'+(opts.annoKey||"")+'" tabindex="0" aria-label="Blood film image — scroll or +/- to zoom">'+
+    '<img src="'+imgUrl(still.src)+'" alt="Blood film image '+roman(idx)+'" onerror="this.outerHTML=\'<div class=&quot;oc-imgfallback&quot;>Image preview unavailable here.<br>(Live file: '+still.src+')</div>\'"><div class="oc-loupe"></div><div class="oc-frame"></div></div><div class="oc-zoompanel"></div></div>'+
+    '<div class="oc-figcap" id="ocFigCap">Image '+roman(idx)+' of '+roman(CASE.media.stills.length-1)+'</div>'+
+    (opts.annotate?'<div class="oc-markbanner" id="ocMarkBanner" hidden>Marker mode is on — <strong>tap the image</strong> to drop a marker, or <strong>drag</strong> a marker to move it. Remove with × below. Markers are saved per image and labelled '+roman(idx)+'-1, '+roman(idx)+'-2…</div>':'')+
+    '<div class="oc-magtools">'+tools+'</div><div class="oc-annolist" id="ocAnnoList"></div><div class="oc-thumbs" id="ocThumbs">'+thumbs+'</div></div>'; }
+
+function wireFigure(node,idx,annoKey,opts){ opts=opts||{}; const readOnly=opts.readOnly, magOff=opts.magOff;
+  const figure=node.querySelector(".oc-figure"); if(!figure) return;
+  if(!reduceMotion) setTimeout(()=> figure.classList.add("sharp"),120); else figure.classList.add("sharp");
+  const img=figure.querySelector("img"), loupe=figure.querySelector(".oc-loupe"), frame=figure.querySelector(".oc-frame"), panel=node.querySelector(".oc-zoompanel"), wrap=node.querySelector(".oc-framewrap"), cap=$("#ocFigCap",node);
+  let curIdx=idx, hexZoom=state.hexZoom||3, annotateMode=false, lastX=null, lastY=null, dragPin=null;
+  let style=magOff?"none":(state.magStyle||(finePointer()?"hex":"frame"));
+  const zoomVal=$("#ocZoomVal",node); const setZoomLabel=()=>{ if(zoomVal) zoomVal.textContent=hexZoom.toFixed(1)+"×"; }; setZoomLabel();
+  const hires=()=> hiresUrl(CASE.media.stills[curIdx]);
+  const arr=()=> annoFor(annoKey,curIdx);
+
+  function applyStyle(){ const isHex=style==="hex", isFrame=style==="frame";
+    figure.classList.toggle("loupe-on",isHex); figure.classList.toggle("frame-on",isFrame);
+    if(!isHex) updateLoupe(null);
+    wrap.classList.toggle("with-panel", isFrame&&!annotateMode); panel.classList.toggle("show", isFrame&&!annotateMode);
+    const seg=$("#ocMagSeg",node); if(seg) seg.querySelectorAll("button").forEach(b=> b.setAttribute("aria-pressed", b.dataset.m===style));
+    if(isFrame&&!annotateMode) positionFrameInit(); }
+  function updateLoupe(x,y){ if(style!=="hex"||x==null){ loupe.style.display="none"; return; } const r=img.getBoundingClientRect();
+    if(x<0||y<0||x>r.width||y>r.height){ loupe.style.display="none"; return; } loupe.style.display="block"; const L=loupe.offsetWidth;
+    loupe.style.backgroundImage="url('"+hires()+"')"; loupe.style.backgroundSize=(r.width*hexZoom)+"px "+(r.height*hexZoom)+"px";
+    loupe.style.left=(x-L/2)+"px"; loupe.style.top=(y-L/2)+"px"; loupe.style.backgroundPosition=(-(x*hexZoom-L/2))+"px "+(-(y*hexZoom-L/2))+"px"; lastX=x; lastY=y; }
+  function applyZoom(z){ hexZoom=clamp(z,2,5); state.hexZoom=hexZoom; saveState(); setZoomLabel(); if(style==="hex"){ const r=img.getBoundingClientRect(); updateLoupe(lastX!=null?lastX:r.width/2, lastY!=null?lastY:r.height/2); } }
+
+  const seg=$("#ocMagSeg",node); if(seg) seg.querySelectorAll("button").forEach(b=> b.addEventListener("click",()=>{ style=b.dataset.m; state.magStyle=style; saveState(); applyStyle(); }));
+  const zUp=$("#ocZoomUp",node), zDn=$("#ocZoomDown",node);
+  if(zUp) zUp.addEventListener("click",()=> applyZoom(hexZoom+0.5)); if(zDn) zDn.addEventListener("click",()=> applyZoom(hexZoom-0.5));
+  const enable=$("#ocEnableZoom",node);
+  if(enable) enable.addEventListener("click",()=>{ if(style==="none"){ style=finePointer()?"hex":"frame"; state.magStyle=style; const mc=$("#ocMagControls",node); if(mc) mc.hidden=false; enable.textContent="Disable zoom"; } else { style="none"; const mc=$("#ocMagControls",node); if(mc) mc.hidden=true; enable.textContent="🔍 Enable zoom to review the image"; } applyStyle(); });
+
+  figure.addEventListener("pointermove",(e)=>{ if(dragPin!=null){ const r=img.getBoundingClientRect(); const a=arr()[dragPin]; if(a){ a.x=+clamp(((e.clientX-r.left)/r.width)*100,0,100).toFixed(1); a.y=+clamp(((e.clientY-r.top)/r.height)*100,0,100).toFixed(1); const el=figure.querySelector('.oc-pin.user[data-i="'+dragPin+'"]'); if(el){ el.style.left=a.x+"%"; el.style.top=a.y+"%"; } } return; }
+    if(style!=="hex"||annotateMode) return; const r=img.getBoundingClientRect(); updateLoupe(e.clientX-r.left, e.clientY-r.top); });
+  figure.addEventListener("pointerleave",()=>{ if(style==="hex") updateLoupe(null); });
+  figure.addEventListener("wheel",(e)=>{ if(style!=="hex"||annotateMode) return; e.preventDefault(); applyZoom(hexZoom+(e.deltaY<0?0.25:-0.25)); },{passive:false});
+  figure.addEventListener("keydown",(e)=>{ if(style!=="hex") return; if(e.key==="+"||e.key==="="){ applyZoom(hexZoom+0.5); e.preventDefault(); } else if(e.key==="-"||e.key==="_"){ applyZoom(hexZoom-0.5); e.preventDefault(); } });
+
+  let dragging=false;
+  function positionFrameInit(){ const r=img.getBoundingClientRect(); frame.style.left=Math.max(0,(r.width-frame.offsetWidth)/2)+"px"; frame.style.top=Math.max(0,(r.height-frame.offsetHeight)/2)+"px"; paintPanel(); }
+  function paintPanel(){ const r=img.getBoundingClientRect(); const fx=parseFloat(frame.style.left||0), fy=parseFloat(frame.style.top||0); const sc=panel.clientWidth/frame.offsetWidth; panel.style.backgroundImage="url('"+hires()+"')"; panel.style.backgroundSize=(r.width*sc)+"px "+(r.height*sc)+"px"; panel.style.backgroundPosition=(-(fx*sc))+"px "+(-(fy*sc))+"px"; }
+  frame.addEventListener("pointerdown",(e)=>{ if(annotateMode) return; dragging=true; frame.setPointerCapture(e.pointerId); });
+  frame.addEventListener("pointerup",()=> dragging=false);
+  frame.addEventListener("pointermove",(e)=>{ if(!dragging) return; const r=img.getBoundingClientRect(); let x=clamp(e.clientX-r.left-frame.offsetWidth/2,0,r.width-frame.offsetWidth), y=clamp(e.clientY-r.top-frame.offsetHeight/2,0,r.height-frame.offsetHeight); frame.style.left=x+"px"; frame.style.top=y+"px"; paintPanel(); });
+
+  const annoBtn=$("#ocAnnoBtn",node), banner=$("#ocMarkBanner",node);
+  if(annoBtn) annoBtn.addEventListener("click",()=>{ annotateMode=!annotateMode; annoBtn.setAttribute("aria-pressed",annotateMode); annoBtn.textContent=annotateMode?"✓ Done with markers":"✎ Add / adjust markers"; figure.classList.toggle("annotate-on",annotateMode); if(banner) banner.hidden=!annotateMode; if(annotateMode) updateLoupe(null); applyStyle(); });
+  figure.addEventListener("pointerdown",(e)=>{ if(!annotateMode||readOnly) return;
+    const pinEl=e.target.closest(".oc-pin.user"); if(pinEl){ dragPin=+pinEl.dataset.i; figure.setPointerCapture(e.pointerId); e.preventDefault(); return; }
+    const r=img.getBoundingClientRect(); const x=((e.clientX-r.left)/r.width)*100, y=((e.clientY-r.top)/r.height)*100; if(x<0||y<0||x>100||y>100) return;
+    arr().push({ x:+x.toFixed(1), y:+y.toFixed(1), note:"" }); saveState(); renderPins(); renderAnnoList(); resize(); });
+  figure.addEventListener("pointerup",()=>{ if(dragPin!=null){ dragPin=null; saveState(); } });
+
+  function renderPins(){ figure.querySelectorAll(".oc-pin.user").forEach(p=> p.remove());
+    arr().forEach((a,i)=>{ const p=document.createElement("div"); p.className="oc-pin user"; p.dataset.i=i; p.style.left=a.x+"%"; p.style.top=a.y+"%"; p.textContent=roman(curIdx)+"-"+(i+1); figure.appendChild(p); }); }
+  function renderAnnoList(){ const list=$("#ocAnnoList",node); if(!list) return; list.innerHTML=""; const a=arr();
+    a.forEach((it,i)=>{ const row=document.createElement("div"); row.className="oc-annorow";
+      row.innerHTML='<span class="num">'+roman(curIdx)+'-'+(i+1)+'</span><input value="'+escapeHtml(it.note)+'" placeholder="What did you spot here?" '+(readOnly?"disabled":"")+'>'+(readOnly?'':'<button title="Remove" data-rm="'+i+'">×</button>'); list.appendChild(row);
+      if(!readOnly){ row.querySelector("input").addEventListener("input",(e)=>{ it.note=e.target.value; saveState(); }); row.querySelector("[data-rm]").addEventListener("click",()=>{ a.splice(i,1); saveState(); renderPins(); renderAnnoList(); resize(); }); } }); }
+  renderPins(); renderAnnoList();
+
+  const thumbs=$("#ocThumbs",node);
+  if(thumbs) thumbs.querySelectorAll("button").forEach(b=> b.addEventListener("click",()=>{ curIdx=+b.dataset.i;
+    figure.classList.remove("sharp");
+    img.onload=function(){ if(!reduceMotion) setTimeout(()=> figure.classList.add("sharp"),30); else figure.classList.add("sharp"); img.onload=null; };
+    img.src=imgUrl(CASE.media.stills[curIdx].src);
+    if(cap) cap.textContent="Image "+roman(curIdx)+" of "+roman(CASE.media.stills.length-1);
+    thumbs.querySelectorAll("button").forEach(x=> x.setAttribute("aria-pressed", x===b));
+    renderPins(); renderAnnoList(); if(style==="frame"&&!annotateMode) paintPanel(); resize(); }));
+
+  applyStyle();
+}
+
+function toggleHotspots(node,on){ const figure=node.querySelector(".oc-figure"); if(!figure) return;
+  figure.querySelectorAll(".oc-pin.sme,.oc-hotnote").forEach(e=> e.remove()); if(!on) return;
+  CASE.hotspots.forEach(h=>{ const pt=document.createElement("button"); pt.className="oc-pin sme"; pt.style.left=h.x+"%"; pt.style.top=h.y+"%"; pt.textContent=h.label;
+    const note=document.createElement("div"); note.className="oc-hotnote"; note.style.left=h.x+"%"; note.style.top=h.y+"%"; note.textContent=h.note;
+    pt.addEventListener("click",()=> note.classList.toggle("show")); figure.appendChild(pt); figure.appendChild(note); }); }
+
+/* ---- assess ---- */
+function shuffledOrder(){ if(state.assess.order) return state.assess.order; const idx=CASE.diagnosis.options.map((_,i)=>i);
+  for(let i=idx.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [idx[i],idx[j]]=[idx[j],idx[i]]; } state.assess.order=idx; saveState(); return idx; }
+function wireAssessCommit(node){ const optWrap=$("#ocOptions",node), order=shuffledOrder(), submit=$("#ocSubmit",node), fb=$("#ocFeedback",node), further=$("#ocFurther",node);
+  if(!optWrap) return;
+  if(further) further.addEventListener("input",(e)=>{ state.further["assess"]=e.target.value; saveState(); });
+  let pick=state.assess.committed?state.assess.choice:null;
+  order.forEach(oi=>{ const b=document.createElement("button"); b.className="oc-opt"; b.textContent=CASE.diagnosis.options[oi]; b.dataset.oi=oi; optWrap.appendChild(b);
+    if(!state.assess.committed) b.addEventListener("click",()=>{ pick=oi; optWrap.querySelectorAll(".oc-opt").forEach(x=> x.setAttribute("aria-pressed", x===b)); if(submit) submit.disabled=false; }); });
+  if(state.assess.committed){ paintCommitted(optWrap,fb); if(further) further.disabled=true; return; }
+  if(submit) submit.addEventListener("click",()=>{ if(pick==null) return; openModal("Submit your diagnosis?","This is a CPD activity. Once submitted it's recorded and can't be changed. Anything else to add first?","Submit",()=> commitDiagnosis(pick),"Return"); }); }
+function commitDiagnosis(oi){ state.assess.committed=true; state.assess.choice=oi; state.assess.correct=(CASE.diagnosis.options[oi]===CASE.diagnosis.answer); state.maxStep=Math.max(state.maxStep,state.step+1); saveState(); runScan(()=> render()); }
+function paintCommitted(optWrap,fb){ const answerIdx=CASE.diagnosis.options.indexOf(CASE.diagnosis.answer);
+  optWrap.querySelectorAll(".oc-opt").forEach(x=>{ const oi=+x.dataset.oi; x.style.cursor="default"; if(oi===answerIdx) x.classList.add("correct"); if(oi===state.assess.choice&&!state.assess.correct) x.classList.add("incorrect"); });
+  fb.className="oc-feedback show "+(state.assess.correct?"ok":"no"); fb.innerHTML='<strong>'+(state.assess.correct?"Correct":"Not quite")+'.</strong> The diagnosis is <strong>'+CASE.diagnosis.answer+'</strong>.<p style="margin-top:6px">'+CASE.diagnosis.explanation+'</p><p style="margin-top:6px;color:var(--oc-text-muted)">Continue to your CPD record →</p>'; }
+function buildResult(host){ const ok=state.assess.correct; host.innerHTML='<div class="oc-feedback show '+(ok?"ok":"no")+'"><div class="oc-score">'+(ok?"100%":"0%")+'</div><p>Your answer: <strong>'+(state.assess.choice!=null?CASE.diagnosis.options[state.assess.choice]:"—")+'</strong></p><p>Correct answer: <strong>'+CASE.diagnosis.answer+'</strong></p><p style="margin-top:6px">'+CASE.diagnosis.explanation+'</p></div><p style="color:var(--oc-text-muted);margin-top:10px">Export this as your CPD evidence — includes all images with your annotations, the blood-count comment and further observations.</p>'; }
+
+/* ---- export ---- */
+const JOURNEY=[["presentation","What looked notable","presentation"],["flag","Predicted next step","flag"],["wetprep","Wet prep observation","wetprep"],["film","Film observation","film"],["reasoning","Working diagnosis + evidence","reasoning"]];
+function ticksText(key){ const chosen=state.ticks[key]||{}; const p=CASE.notable.filter(n=>chosen[n.id]); return p.length?p.map(n=>n.text).join("; "):""; }
+function responseFor(key){ if(key==="presentation"){ const t=ticksText("presentation"), n=state.reflections["presentationNote"]||""; return [t&&("Ticked: "+t),n].filter(Boolean).join(" — ")||"(none)"; } return state.reflections[key]||"(none)"; }
+function annoKeyFor(kind){ return kind==="cpd"?"assess":"film"; }
+function buildPrintDOM(kind){ const p=$("#oc-print"); p.innerHTML=""; const wrap=document.createElement("div"); wrap.className="ocp";
+  wrap.innerHTML='<div class="sub">Only Cells · Morphology Monday '+CASE.id+'</div><h1>'+(kind==="cpd"?"CPD Assessment Record":"Learning Reflection Summary")+'</h1><div class="meta">'+CASE.credit+' · generated '+new Date().toLocaleString()+'</div><hr>';
+  const key=annoKeyFor(kind); const imgs=state.annotations[key]||emptyAnno();
+  const gallery=document.createElement("div"); gallery.innerHTML='<h2>Images &amp; your annotations</h2>'; const row=document.createElement("div"); row.className="imgrow";
+  CASE.media.stills.forEach((s,ii)=>{ const figp=document.createElement("div"); figp.className="figpin"; const im=document.createElement("img"); im.src=imgUrl(s.src); im.alt="Image "+roman(ii); figp.appendChild(im);
+    (imgs[ii]||[]).forEach((a,i)=>{ const pin=document.createElement("div"); pin.className="ppin"; pin.style.left=a.x+"%"; pin.style.top=a.y+"%"; pin.textContent=roman(ii)+"-"+(i+1); figp.appendChild(pin); });
+    const cap=document.createElement("div"); cap.className="cap"; cap.textContent="Image "+roman(ii)+((imgs[ii]&&imgs[ii].length)?"":" — no markers"); figp.appendChild(cap); row.appendChild(figp); });
+  gallery.appendChild(row);
+  const notes=document.createElement("div"); let any=false; let nh='<div class="qa"><div class="q">Marker notes</div>';
+  imgs.forEach((a,ii)=>{ if(a&&a.length){ any=true; nh+='<div class="you"><strong>Image '+roman(ii)+':</strong><ul style="margin:4px 0 0; padding-left:18px">'+a.map((pp,i)=>'<li>'+roman(ii)+'-'+(i+1)+' — '+escapeHtml(pp.note||"(no note)")+'</li>').join("")+'</ul></div>'; } });
+  nh+= any?'':'<div class="you">No markers added.</div>'; nh+='</div>'; notes.innerHTML=nh; gallery.appendChild(notes); wrap.appendChild(gallery);
+  if(kind==="cpd"){ const ok=state.assess.correct;
+    wrap.insertAdjacentHTML("beforeend",(state.reflections["assessFbc"]?'<div class="qa"><div class="q">Comment on the blood count</div><div class="you">'+escapeHtml(state.reflections["assessFbc"])+'</div></div>':'')+
+      '<div class="qa"><div class="q">Diagnosis submitted</div><div class="you">'+(state.assess.choice!=null?escapeHtml(CASE.diagnosis.options[state.assess.choice]):"—")+'</div><p><span class="badge '+(ok?"ok":"no")+'">'+(ok?"CORRECT · 100%":"INCORRECT · 0%")+'</span></p><div class="exp"><strong>Correct answer:</strong> '+escapeHtml(CASE.diagnosis.answer)+'<br>'+escapeHtml(CASE.diagnosis.explanation)+'</div></div>'+
+      (state.further["assess"]?'<div class="qa"><div class="q">Further observations</div><div class="you">'+escapeHtml(state.further["assess"])+'</div></div>':'')+
+      '<div class="decl">Declaration: I confirm this assessment was completed by me as a CPD activity.</div>');
+  } else { wrap.insertAdjacentHTML("beforeend",'<h2>Your reasoning vs expected</h2>');
+    JOURNEY.forEach(([k,label,mk])=>{ const conf=state.confidence[k]?(" · "+CONF[state.confidence[k]-1]):""; const exp=(CASE.model[mk]||[]).join("; ");
+      wrap.insertAdjacentHTML("beforeend",'<div class="qa"><div class="q">'+label+conf+'</div><div class="you"><strong>Your response:</strong> '+escapeHtml(responseFor(k))+'</div><div class="exp"><strong>Expected:</strong> '+escapeHtml(exp)+'</div></div>'); });
+    wrap.insertAdjacentHTML("beforeend",'<div class="qa"><div class="q">Published answer</div><div class="exp">'+escapeHtml(CASE.diagnosis.answer)+' — '+escapeHtml(CASE.diagnosis.explanation)+'</div></div>'); }
+  wrap.insertAdjacentHTML("beforeend",'<div class="decl">An Only Cells educational resource · <strong>onlycells.co.uk</strong> · '+escapeHtml(CASE.credit)+'</div>');
+  p.appendChild(wrap); }
+function printSummary(kind){ buildPrintDOM(kind); window.print(); }
+function summaryText(kind){ const L=[]; L.push("ONLY CELLS — Morphology Monday "+CASE.id); L.push(kind==="cpd"?"CPD ASSESSMENT RECORD":"LEARNING REFLECTION SUMMARY");
+  L.push("Generated: "+new Date().toLocaleString()); L.push("Case: "+CASE.credit); L.push("".padEnd(48,"-"));
+  const key=annoKeyFor(kind); (state.annotations[key]||emptyAnno()).forEach((a,ii)=>{ if(a&&a.length) L.push("Image "+roman(ii)+" markers: "+a.map((p,i)=>roman(ii)+"-"+(i+1)+" "+(p.note||"(no note)")).join(" | ")); });
+  if(kind==="cpd"){ if(state.reflections["assessFbc"]) L.push("Blood-count comment: "+state.reflections["assessFbc"]);
+    L.push(""); L.push("Diagnosis submitted: "+(state.assess.choice!=null?CASE.diagnosis.options[state.assess.choice]:"—")); L.push("Correct answer: "+CASE.diagnosis.answer); L.push("Outcome: "+(state.assess.correct?"CORRECT (100%)":"INCORRECT (0%)"));
+    if(state.further["assess"]) L.push("Further observations: "+state.further["assess"]); L.push(""); L.push("Explanation: "+CASE.diagnosis.explanation); L.push(""); L.push("Declaration: completed by me as a CPD activity.");
+  } else { JOURNEY.forEach(([k,label,mk])=>{ L.push(""); L.push("• "+label+(state.confidence[k]?" ["+CONF[state.confidence[k]-1]+"]":"")); L.push("  Your response: "+responseFor(k)); const exp=(CASE.model[mk]||[]).join("; "); if(exp) L.push("  Expected: "+exp); }); L.push(""); L.push("Published answer: "+CASE.diagnosis.answer); }
+  return L.join("\n"); }
+function download(filename,text){ const blob=new Blob([text],{type:"text/plain;charset=utf-8"}); const url=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download=filename; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=> URL.revokeObjectURL(url),1500); }
+
+/* ---- transitions ---- */
+function runScan(done,reverse){ if(reduceMotion){ done&&done(); return; } scan.classList.toggle("up",!!reverse); scan.classList.add("run"); setTimeout(()=>{ scan.classList.remove("run"); scan.classList.remove("up"); done&&done(); },700); }
+function runWipe(done){ if(reduceMotion){ done&&done(); return; } wipe.classList.add("run"); setTimeout(()=>{ if(done) done(); },360); setTimeout(()=>{ wipe.classList.remove("run"); },780); }
+
+/* ---- delegated inputs ---- */
+content.addEventListener("input",(e)=>{ const block=e.target.closest(".oc-reflect"); if(block&&e.target.tagName==="TEXTAREA"&&block.dataset.key){ state.reflections[block.dataset.key]=e.target.value; saveState(); } });
+content.addEventListener("change",(e)=>{ const tick=e.target.closest(".oc-tick"); if(tick&&e.target.type==="checkbox"){ const wrap=tick.closest(".oc-ticks"); const key=wrap.dataset.tickkey, id=tick.dataset.id; state.ticks[key]=state.ticks[key]||{}; state.ticks[key][id]=e.target.checked; tick.setAttribute("aria-checked",e.target.checked); saveState(); } });
+content.addEventListener("click",(e)=>{
+  const cb=e.target.closest(".oc-commit");
+  if(cb){ const key=cb.dataset.commit; openModal("Anything else to add?","Take a moment — is there anything else you'd like to capture before you see the expert view? You can keep working, or continue.","Continue",
+      ()=>{ const m=$("#ocModel-"+key); if(m) m.classList.add("show"); state.committed=state.committed||{}; state.committed[key]=true; saveState(); cb.disabled=true; cb.textContent="Committed ✓"; resize(); },"Return"); return; }
+  const chip=e.target.closest(".oc-conf .chips button"); if(!chip) return;
+  const key=chip.parentElement.dataset.confkey; chip.parentElement.querySelectorAll("button").forEach(b=> b.setAttribute("aria-pressed", b===chip)); state.confidence[key]=+chip.dataset.c; saveState(); });
+
+/* ---- nav: Next top→bottom scan, Back bottom→top ---- */
+function advance(dir){ state.step+=dir; state.maxStep=Math.max(state.maxStep,state.step); saveState(); runScan(()=> render(), dir<0); }
+function go(dir){ const list=stations(); const target=state.step+dir; if(target<0||target>list.length-1) return; advance(dir); }
+btnNext.addEventListener("click",()=> go(1)); btnBack.addEventListener("click",()=> go(-1));
+
+function setMode(m){ state.mode=m; state.step=0; state.maxStep=0; saveState(); root.dataset.mode=m; modeLearn.setAttribute("aria-pressed",m==="learn"); modeAssess.setAttribute("aria-pressed",m==="assess"); render(); }
+modeLearn.addEventListener("click",()=> setMode("learn")); modeAssess.addEventListener("click",()=> setMode("assess"));
+
+btnReset.addEventListener("click",()=>{ if(state.mode==="assess"&&state.assess.committed){ openModal("Locked","Your CPD diagnosis has been submitted and recorded, so this attempt can't be reset.",null,null); return; }
+  openModal("Reset this page?","This will clear all your reflections, annotations and progress, and return you to Station 1. This can't be undone.","Reset this page",
+    ()=>{ runWipe(()=>{ const mode=state.mode, bg=state.bgAnim, hm=state.helpMin; state=freshState(); state.mode=mode; state.bgAnim=bg; state.helpMin=hm; saveState(); render(); }); },"Cancel"); });
+
+/* ---- modal ---- */
+let modalOk=null;
+function openModal(title,body,okLabel,onOk,cancelLabel){ $("#ocModalTitle").textContent=title; $("#ocModalBody").textContent=body;
+  const ok=$("#ocModalOk"), cancel=$("#ocModalCancel"); modalOk=onOk; cancel.textContent=cancelLabel||"Cancel";
+  if(okLabel){ ok.style.display=""; ok.textContent=okLabel; } else ok.style.display="none"; modal.classList.add("show"); resize(); }
+function closeModal(){ modal.classList.remove("show"); modalOk=null; resize(); }
+$("#ocModalCancel").addEventListener("click", closeModal);
+$("#ocModalOk").addEventListener("click",()=>{ const fn=modalOk; closeModal(); if(fn) fn(); });
+
+/* ---- landing → teal cleanse → interactive ---- */
+function runLaunch(){ if(reduceMotion){ root.classList.remove("is-landing"); render(); resize(); return; }
+  launchEl.classList.add("run"); setTimeout(()=>{ root.classList.remove("is-landing"); render(); },380); setTimeout(()=>{ launchEl.classList.remove("run"); resize(); },860); }
+$("#ocBegin").addEventListener("click", runLaunch);
+(function buildGlyphs(){ const g=$("#ocLaunchGlyphs"); if(!g) return;
+  const I={ cell:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3.4" fill="currentColor" opacity=".5"/></svg>',
+    drop:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg>',
+    lens:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="10" r="6"/><path d="M15 15l5 5" stroke-linecap="round"/></svg>',
+    tryp:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="9" cy="10" rx="4" ry="2.6" fill="currentColor" opacity=".45"/><path d="M13 11c3 1 4 4 7 4" stroke-linecap="round"/></svg>' };
+  const seq=[I.cell,I.drop,I.lens,I.tryp,I.cell,I.tryp,I.drop,I.lens,I.cell,I.tryp];
+  const POS=[[12,72],[26,42],[40,80],[54,32],[66,66],[78,48],[88,74],[20,20],[60,14],[34,56]];
+  POS.forEach((p,i)=>{ const s=document.createElement("span"); s.style.left=p[0]+"%"; s.style.top=p[1]+"%"; s.innerHTML=seq[i]; const svg=s.querySelector("svg"); if(svg) svg.style.animationDelay=(i*42)+"ms"; g.appendChild(s); }); })();
+
+/* ---- auto-resize iframe (spec §6.2) ---- */
+function resize(){ const h=root.scrollHeight; if(window.parent&&window.parent!==window) window.parent.postMessage({ type:"oc-resize", id:CASE.id, height:h }, "*"); }
+if("ResizeObserver" in window) new ResizeObserver(()=> resize()).observe(root);
+window.addEventListener("resize", resize); window.addEventListener("orientationchange", resize); window.addEventListener("load", resize);
+
+/* ---- full-page animated background (cells); toggleable, off = gradient only ---- */
+const bg=(function(){ const cv=$("#ocBg"); const ctx=cv.getContext("2d"); let w=0,h=0,parts=[],raf=null,running=false; const tints=["46,158,143","52,198,176","201,184,232"];
+  function seed(){ w=cv.width=window.innerWidth; h=cv.height=window.innerHeight; parts=[]; const n=Math.max(18,Math.min(40,Math.floor(w/45)));
+    for(let i=0;i<n;i++) parts.push({ x:Math.random()*w, y:Math.random()*h, r:6+Math.random()*22, s:0.12+Math.random()*0.32, t:tints[i%tints.length], a:0.04+Math.random()*0.07 }); }
+  function frame(){ ctx.clearRect(0,0,w,h); for(const p of parts){ ctx.beginPath(); ctx.fillStyle="rgba("+p.t+","+p.a+")"; ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill(); p.y-=p.s; if(p.y<-p.r){ p.y=h+p.r; p.x=Math.random()*w; } } }
+  function loop(){ frame(); if(running) raf=requestAnimationFrame(loop); }
+  function clear(){ ctx&&ctx.clearRect(0,0,w,h); }
+  function start(){ if(running) return; if(state.bgAnim===false) return; if(!parts.length) seed(); if(reduceMotion){ frame(); return; } running=true; loop(); }
+  function stop(){ running=false; if(raf) cancelAnimationFrame(raf); raf=null; clear(); }
+  window.__ocBg={ start, stop };
+  window.addEventListener("resize",()=>{ seed(); if(reduceMotion&&state.bgAnim!==false) frame(); });
+  document.addEventListener("visibilitychange",()=>{ document.hidden?stop():(state.bgAnim!==false&&start()); });
+  return { start, stop };
+})();
+function setBg(on){ state.bgAnim=on; saveState(); ["#ocBgToggle","#ocBgToggleIntro"].forEach(sel=>{ const b=$(sel); if(b){ b.setAttribute("aria-pressed",on); b.textContent="✦ Background: "+(on?"On":"Off"); } }); on?bg.start():bg.stop(); }
+$("#ocBgToggle").addEventListener("click",()=> setBg(state.bgAnim===false));
+$("#ocBgToggleIntro").addEventListener("click",()=> setBg(state.bgAnim===false));
+
+/* ---- boot ---- */
+modeLearn.setAttribute("aria-pressed", state.mode==="learn"); modeAssess.setAttribute("aria-pressed", state.mode==="assess"); root.dataset.mode=state.mode;
+root.classList.add("is-landing"); setBg(state.bgAnim!==false); resize();
+})();
+</script>
+</body>
+</html>
