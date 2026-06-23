@@ -98,12 +98,12 @@ body{
 
 /* ---------- grid + cards ---------- */
 .tmh-grid{
-  display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,340px));
-  justify-content:center;
+  display:flex; flex-wrap:wrap; justify-content:center; align-items:stretch;
   gap:20px; max-width:1180px; margin:0 auto;
 }
 .tmh-card{
   position:relative; cursor:pointer;
+  flex:0 1 320px;
   background:var(--tm-panel);
   border:1px solid var(--tm-line);
   border-top:5px solid var(--theme,var(--tm-accent));
@@ -127,6 +127,7 @@ body{
 .tmh-icon svg{ width:26px; height:26px; }
 .tmh-card__title{ font-size:15.5px; font-weight:600; line-height:1.4; margin:0; color:var(--tm-ink); }
 .tmh-card__meta{ font-size:12.5px; color:var(--tm-muted); margin-top:auto; }
+.tmh-card__cue{ margin-top:4px; font-size:12.5px; font-weight:600; color:var(--theme,var(--tm-accent)); }
 .tmh-tag{
   align-self:flex-start;
   font-size:11px; font-weight:700; letter-spacing:.02em;
@@ -239,7 +240,7 @@ body{
 
 /* ---------- mobile ---------- */
 @media (max-width:540px){
-  .tmh-grid{ grid-template-columns:1fr; }
+  .tmh-card{ flex-basis:100%; }
   .tmh-modal__panel{ padding:22px 18px 20px; }
   .tmh-url{ flex-direction:column; align-items:stretch; }
   .tmh-url__actions .tmh-btn{ flex:1 1 auto; justify-content:center; }
@@ -444,12 +445,11 @@ const REFERENCES = [
     const go=()=>{ inCategory=cat; render(); };
     card.onclick=go;
     card.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } };
-    const list=items.map(r=>'<li><strong>'+esc(r.code)+'</strong><br>'+esc(r.title)+'</li>').join('');
     card.innerHTML =
       '<div class="tmh-icon">'+(ICONS[FICON[cat]]||ICONS.article)+'</div>'+
       '<h3 class="tmh-card__title">'+esc(cat)+'</h3>'+
       '<span class="tmh-tag tmh-tag--count">'+items.length+' reference'+(items.length>1?'s':'')+'</span>'+
-      '<div class="tmh-tooltip"><div class="tmh-tooltip__h">References included</div><ul>'+list+'</ul></div>';
+      '<span class="tmh-card__cue">View references &rarr;</span>';
     return card;
   }
 
