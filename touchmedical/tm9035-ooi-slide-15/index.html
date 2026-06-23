@@ -10,53 +10,52 @@
     @font-face { font-family: "Poppins"; src: url("assets/poppins-700.ttf") format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
     :root { --teal: #0098be; --navy: #222f55; --pale: #d9eff8; --mist: #f8f8f8; --neutral: #c6d3e2; --pink: #e2abb5; --green: #90cbae; --good: #287d5c; --bad: #b64457; }
     * { box-sizing: border-box; }
-    body { margin: 0; min-height: 100vh; background: #f2f2f2; color: var(--navy); font-family: "Poppins", Arial, sans-serif; }
-    .slide { width: min(100% - 24px, 1280px); margin: 12px auto; overflow: hidden; background: #fff; box-shadow: 0 7px 24px rgba(34,47,85,0.20); }
+    html, body { height: 100%; }
+    body { margin: 0; background: var(--teal); color: #fff; font-family: "Poppins", Arial, sans-serif; overflow: hidden; }
 
-    /* Question band */
-    .question-band { background: var(--pale); padding: clamp(12px, 1.8vw, 20px) clamp(14px, 3vw, 28px) 12px; display: flex; justify-content: center; }
-    .question { display: grid; grid-template-columns: 50px minmax(0, 1fr); gap: 12px; align-items: center; width: min(100%, 920px); padding: 8px 16px; border: 3px solid var(--teal); border-radius: 18px; background: rgba(255,255,255,0.22); color: var(--teal); }
-    .question-icon { width: 50px; height: 50px; display: grid; place-items: center; border: 3px solid var(--teal); border-radius: 50%; font-size: 2rem; font-weight: 600; line-height: 1; }
-    .question p { margin: 0; font-size: clamp(1rem, 1.9vw, 1.35rem); line-height: 1.22; font-weight: 700; text-align: center; }
+    /* Height-first frame: chrome (question) fixed, body scales to fill the rest */
+    .slide { height: 100%; width: 100%; margin: 0; display: flex; flex-direction: column; overflow: hidden; background: var(--teal); }
+    .question-band { flex: 0 0 auto; padding: clamp(10px, 1.5vw, 16px) clamp(14px, 3vw, 28px) clamp(6px, 1vw, 10px); display: flex; justify-content: center; }
+    .question { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 12px; align-items: center; width: min(100%, 940px); padding: 8px 16px; border: 3px solid #fff; border-radius: 18px; background: rgba(255,255,255,0.12); color: #fff; }
+    .question-icon { width: 48px; height: 48px; display: grid; place-items: center; border: 3px solid #fff; border-radius: 50%; font-size: 1.9rem; font-weight: 600; line-height: 1; }
+    .question p { margin: 0; font-size: clamp(1rem, 1.85vw, 1.3rem); line-height: 1.2; font-weight: 700; text-align: center; color: #fff; }
 
-    /* Answers — neutral until answered (no answer is pre-revealed) */
-    .answers-wrap { padding: clamp(26px, 4vw, 50px) clamp(16px, 2.5vw, 28px); background: var(--pale); }
-    .answers { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(12px, 2vw, 22px); align-items: stretch; }
-    .answer { display: flex; align-items: center; justify-content: center; text-align: center; min-height: clamp(130px, 15vw, 180px); padding: 18px 16px; border: 0; border-radius: 18px; background: var(--neutral); color: var(--navy); font: inherit; font-size: clamp(1.05rem, 1.9vw, 1.35rem); font-weight: 700; line-height: 1.22; cursor: pointer; box-shadow: 0 8px 18px rgba(34,47,85,0.12); transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease; }
-    .answer:hover:not(:disabled) { transform: translateY(-6px); box-shadow: 0 14px 23px rgba(34,47,85,0.20); }
+    .stage { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: center; padding: clamp(10px, 1.8vw, 22px) clamp(14px, 2.5vw, 30px); }
+
+    /* Answers — neutral cards until answered (no answer pre-revealed) */
+    .answers { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(12px, 1.9vw, 22px); align-items: stretch; }
+    .answer { display: flex; align-items: center; justify-content: center; text-align: center; min-height: clamp(120px, 13vw, 168px); padding: 16px 15px; border: 0; border-radius: 18px; background: var(--neutral); color: var(--navy); font: inherit; font-size: clamp(1rem, 1.8vw, 1.3rem); font-weight: 700; line-height: 1.2; cursor: pointer; box-shadow: 0 8px 18px rgba(0,0,0,0.16); transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease; }
+    .answer:hover:not(:disabled) { transform: translateY(-6px); box-shadow: 0 14px 24px rgba(0,0,0,0.24); }
     .answer:active:not(:disabled) { transform: translateY(1px) scale(0.985); }
-    .answer:focus-visible { outline: 4px solid var(--navy); outline-offset: 4px; }
+    .answer:focus-visible { outline: 4px solid #fff; outline-offset: 4px; }
     .answer.is-correct { background: var(--green); color: #080808; animation: celebrate 620ms cubic-bezier(.22, 1.35, .36, 1) both; }
     .answer.is-incorrect { background: var(--pink); color: #080808; animation: shake 570ms ease both; }
     .answer:disabled { cursor: default; }
 
-    /* Answered state: hide the question cards, show the side-by-side result stage */
-    .slide.is-answered .answers-wrap { display: none; }
+    .slide.is-answered .answers { display: none; }
 
-    .reveal { display: none; padding: clamp(18px, 2.6vw, 30px) clamp(18px, 3.2vw, 44px) clamp(20px, 3vw, 34px); background: #fff; }
+    /* Reveal: correct card (left) + data table (right), side by side */
+    .reveal { display: none; width: 100%; }
     .slide.is-answered .reveal { display: block; }
-    /* Visibility is driven by the .is-answered class (CSS) — the fade is decoration only, never gating the data */
-    .result-line { margin: 0 0 clamp(12px, 1.6vw, 18px); text-align: center; font-size: clamp(1rem, 1.8vw, 1.25rem); font-weight: 700; }
-    .result-line.is-correct { color: var(--good); }
-    .result-line.is-incorrect { color: var(--bad); }
+    .result-line { margin: 0 0 clamp(10px, 1.4vw, 16px); text-align: center; font-size: clamp(1rem, 1.7vw, 1.2rem); font-weight: 700; color: #fff; }
 
-    /* Correct card (left) + data table (right), side by side to fit short/wide slides */
-    .reveal-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: clamp(16px, 2.4vw, 30px); align-items: stretch; max-width: 1160px; margin: 0 auto; }
-    .answer-final { display: flex; align-items: center; justify-content: center; text-align: center; padding: clamp(18px, 2.4vw, 30px); border-radius: 18px; background: var(--green); color: #080808; font-size: clamp(1.1rem, 1.9vw, 1.55rem); font-weight: 700; line-height: 1.25; box-shadow: 0 12px 26px rgba(40,125,92,0.26); }
+    .reveal-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: clamp(16px, 2.2vw, 28px); align-items: stretch; max-width: 1180px; margin: 0 auto; }
+    .answer-final { display: flex; align-items: center; justify-content: center; text-align: center; padding: clamp(16px, 2.2vw, 28px); border-radius: 18px; background: var(--green); color: #080808; font-size: clamp(1.05rem, 1.8vw, 1.5rem); font-weight: 700; line-height: 1.22; box-shadow: 0 12px 26px rgba(0,0,0,0.22); }
     .data-table-wrap { display: flex; flex-direction: column; justify-content: center; }
-    .data-table-caption { margin: 0 0 8px; text-align: center; color: var(--navy); font-size: clamp(.9rem, 1.5vw, 1.1rem); font-weight: 700; }
-    .data-table { width: 100%; border-collapse: collapse; font-size: clamp(.8rem, 1.45vw, 1rem); border: 1px solid #d7dde8; border-radius: 12px; overflow: hidden; }
-    .data-table th, .data-table td { padding: clamp(8px, 1.1vw, 13px) clamp(8px, 1vw, 14px); border: 1px solid #d7dde8; text-align: center; vertical-align: middle; line-height: 1.3; }
+    .data-table-caption { margin: 0 0 8px; text-align: center; color: #fff; font-size: clamp(.88rem, 1.4vw, 1.05rem); font-weight: 700; }
+    .data-table { width: 100%; border-collapse: collapse; font-size: clamp(.78rem, 1.4vw, .98rem); background: #fff; border: 1px solid #cdd5e0; border-radius: 12px; overflow: hidden; box-shadow: 0 12px 26px rgba(0,0,0,0.20); }
+    .data-table th, .data-table td { padding: clamp(7px, 1vw, 12px) clamp(8px, 1vw, 14px); border: 1px solid #d7dde8; text-align: center; vertical-align: middle; line-height: 1.3; }
     .data-table thead th { color: #fff; background: var(--navy); font-weight: 700; }
     .data-table thead th .nline { display: block; font-weight: 600; font-size: .88em; opacity: .92; margin-top: 2px; }
     .data-table tbody th { text-align: left; font-weight: 700; color: var(--navy); background: var(--mist); white-space: nowrap; }
+    .data-table tbody td { color: #151515; }
     .data-table .col-naive { background: rgba(226,171,181,0.20); }
     .data-table .col-prev { background: rgba(144,203,174,0.22); }
     .data-table thead .col-naive { background: #b5707e; }
     .data-table thead .col-prev { background: #4f9b78; }
 
-    .data-summary { margin: clamp(16px, 2.2vw, 26px) auto 0; max-width: 1040px; text-align: center; font-size: clamp(1.05rem, 1.9vw, 1.4rem); line-height: 1.35; font-weight: 600; color: var(--navy); }
-    .data-summary strong { color: var(--teal); }
+    .data-summary { margin: clamp(14px, 2vw, 24px) auto 0; max-width: 1080px; text-align: center; font-size: clamp(1rem, 1.75vw, 1.32rem); line-height: 1.32; font-weight: 600; color: #fff; }
+    .data-summary strong { color: #fff; font-weight: 700; }
 
     .slide.is-answered .result-line { animation: revealUp 320ms ease both; }
     .slide.is-answered .reveal-grid { animation: revealUp 400ms ease 110ms both; }
@@ -65,21 +64,19 @@
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
     @keyframes revealUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes celebrate { 0% { transform: scale(1); } 45% { transform: scale(1.05) translateY(-6px); box-shadow: 0 18px 30px rgba(40,125,92,.34); } 100% { transform: scale(1); } }
+    @keyframes celebrate { 0% { transform: scale(1); } 45% { transform: scale(1.05) translateY(-6px); box-shadow: 0 18px 30px rgba(0,0,0,.30); } 100% { transform: scale(1); } }
     @keyframes shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-10px); } 40% { transform: translateX(9px); } 60% { transform: translateX(-6px); } 80% { transform: translateX(4px); } }
 
     @media (max-width: 760px) {
+      html, body { height: auto; }
+      body { overflow: auto; }
+      .slide { height: auto; }
       .reveal-grid { grid-template-columns: minmax(0, 1fr); }
       .answers { grid-template-columns: minmax(0, 1fr); gap: 14px; }
-      .answer { min-height: 92px; font-size: 1.12rem; }
-    }
-    @media (max-width: 640px) {
-      .slide { width: 100%; margin: 0; box-shadow: none; }
-      .question { grid-template-columns: 40px minmax(0, 1fr); border-radius: 15px; padding: 8px 12px; }
+      .answer { min-height: 88px; font-size: 1.1rem; }
+      .question { grid-template-columns: 40px minmax(0, 1fr); }
       .question-icon { width: 40px; height: 40px; font-size: 1.6rem; }
-      .answers-wrap { padding: 16px; }
-      .reveal { padding: 18px 14px 22px; }
-      .data-table th, .data-table td { padding: 8px; }
+      .stage { padding: 16px 14px 22px; }
     }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
   </style>
@@ -90,43 +87,45 @@
       <div class="question"><span class="question-icon" aria-hidden="true">?</span><p id="question-text">After &#8805;3 years of follow-up, what was the ORR in treatment-na&iuml;ve and in previously treated patients with <em>MET</em>ex14 skipping NSCLC?</p></div>
     </section>
 
-    <section class="answers-wrap" aria-label="Answer options">
-      <div class="answers" role="group" aria-describedby="selection-status">
-        <button class="answer" type="button" data-correct="true">Treatment-na&iuml;ve patients had a higher ORR than previously treated patients</button>
-        <button class="answer" type="button" data-correct="false">Previously treated patients had a higher ORR than treatment-na&iuml;ve patients</button>
-        <button class="answer" type="button" data-correct="false">Both treatment groups had similar ORR</button>
-      </div>
-    </section>
-
-    <section class="reveal" id="reveal" aria-live="polite" aria-atomic="true">
-      <p class="result-line" id="result-line"></p>
-      <div class="reveal-grid">
-        <div class="answer-final">Treatment-na&iuml;ve patients had a higher ORR than previously treated patients</div>
-        <div class="data-table-wrap">
-          <p class="data-table-caption">Detailed data table &mdash; Long-term ORR (VISION study)</p>
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th scope="col">Parameter</th>
-                <th scope="col">Overall<span class="nline">(N=313)</span></th>
-                <th scope="col" class="col-naive">Treatment-na&iuml;ve<span class="nline">(n=164)</span></th>
-                <th scope="col" class="col-prev">Previously treated<span class="nline">(n=149)</span></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">ORR, % (95% CI)</th>
-                <td>51.8 (46.1, 57.4)</td>
-                <td class="col-naive">57.9 (50.0, 65.6)</td>
-                <td class="col-prev">45.0 (36.8, 53.3)</td>
-              </tr>
-            </tbody>
-          </table>
+    <div class="stage">
+      <section class="answers-wrap" aria-label="Answer options">
+        <div class="answers" role="group" aria-describedby="selection-status">
+          <button class="answer" type="button" data-correct="true">Treatment-na&iuml;ve patients had a higher ORR than previously treated patients</button>
+          <button class="answer" type="button" data-correct="false">Previously treated patients had a higher ORR than treatment-na&iuml;ve patients</button>
+          <button class="answer" type="button" data-correct="false">Both treatment groups had similar ORR</button>
         </div>
-      </div>
-      <p class="data-summary" id="data-summary">ORR (95% CI) was <strong>57.9% (50.0, 65.6)</strong> in treatment-na&iuml;ve patients (n=164) and <strong>45.0 (36.8, 53.3)</strong> in previously treated patients (n=149).</p>
-      <p class="sr-only" id="selection-status"></p>
-    </section>
+      </section>
+
+      <section class="reveal" id="reveal" aria-live="polite" aria-atomic="true">
+        <p class="result-line" id="result-line"></p>
+        <div class="reveal-grid">
+          <div class="answer-final">Treatment-na&iuml;ve patients had a higher ORR than previously treated patients</div>
+          <div class="data-table-wrap">
+            <p class="data-table-caption">Detailed data table &mdash; Long-term ORR (VISION study)</p>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th scope="col">Parameter</th>
+                  <th scope="col">Overall<span class="nline">(N=313)</span></th>
+                  <th scope="col" class="col-naive">Treatment-na&iuml;ve<span class="nline">(n=164)</span></th>
+                  <th scope="col" class="col-prev">Previously treated<span class="nline">(n=149)</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">ORR, % (95% CI)</th>
+                  <td>51.8 (46.1, 57.4)</td>
+                  <td class="col-naive">57.9 (50.0, 65.6)</td>
+                  <td class="col-prev">45.0 (36.8, 53.3)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <p class="data-summary" id="data-summary">ORR (95% CI) was <strong>57.9% (50.0, 65.6)</strong> in treatment-na&iuml;ve patients (n=164) and <strong>45.0 (36.8, 53.3)</strong> in previously treated patients (n=149).</p>
+        <p class="sr-only" id="selection-status"></p>
+      </section>
+    </div>
   </main>
 
   <script>
@@ -142,11 +141,9 @@
         slide.classList.add('is-answered');
         if (correct) {
           resultLine.textContent = 'Correct';
-          resultLine.className = 'result-line is-correct';
           status.textContent = 'Correct. The correct answer, data summary and detailed data table are shown.';
         } else {
           resultLine.textContent = 'Not quite — here is the correct answer.';
-          resultLine.className = 'result-line is-incorrect';
           status.textContent = 'Not quite. The correct answer, data summary and detailed data table are now shown.';
         }
       }

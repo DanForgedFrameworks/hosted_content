@@ -6,9 +6,9 @@
 <title>Characteristics of patients with METex14 skipping NSCLC in VISION</title>
 <style>
 /* ============================================================
-   TOUCH MEDICAL — TM9035 SLIDE 12
+   TOUCH MEDICAL — TM9035 SLIDE 12  (rev: fit-to-embed-box 1370x700)
    Patient-characteristics carousel (VISION METex14 skipping NSCLC).
-   Self-contained. No external runtime dependencies (Visme/Rise safe).
+   Self-contained. No external runtime dependencies.
    Brand: Poppins (bundled), teal #0098be, navy #222f55.
    ============================================================ */
 @font-face { font-family:"Poppins"; src:url("assets/poppins-400.ttf") format("truetype"); font-weight:400; font-style:normal; font-display:swap; }
@@ -21,177 +21,137 @@
   --muted:#56608a; --faint:#8a91b0;
   --pale:#d9eff8; --mist:#f4f7f9; --line:#e3e8ee;
   --backdrop:rgba(16,26,38,.68);
-  /* categorical blue scale (largest -> smallest) */
   --c1:#222f55; --c2:#0098be; --c3:#4f9fc4; --c4:#86bdd8; --c5:#b9d8e8;
   --font:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  --radius:18px;
 }
 *{ box-sizing:border-box; }
-html,body{ margin:0; padding:0; }
-body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+html,body{ height:100%; margin:0; }
+body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--font); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
 
-.slide{
-  width:min(100% - 32px,1180px); margin:20px auto; background:#fff;
-  border-radius:var(--radius); overflow:hidden; box-shadow:0 7px 24px rgba(34,47,85,.18);
-}
+/* ---------- height-first frame ---------- */
+.frame{ height:100%; display:flex; flex-direction:column; overflow:hidden; background:#fff; }
 
-/* ---------- slim caption band ---------- */
-.cap{
-  display:flex; flex-wrap:wrap; align-items:center; gap:10px 18px;
-  padding:clamp(14px,2.2vw,20px) clamp(16px,3vw,28px);
-  background:var(--pale);
-}
-.cap__text{ flex:1 1 320px; min-width:0; }
-.cap__title{ margin:0; font-size:clamp(1rem,2.1vw,1.32rem); font-weight:700; line-height:1.22; color:var(--navy); }
-.cap__title em{ font-style:italic; }
-.cap__sub{ margin:3px 0 0; font-size:clamp(.78rem,1.5vw,.9rem); font-weight:500; color:var(--muted); }
-.cap__progress{
-  flex:0 0 auto; display:inline-flex; align-items:center; gap:9px;
-  padding:7px 14px; border:2px solid var(--teal); border-radius:999px;
-  background:rgba(255,255,255,.55); color:var(--teal); font-weight:700; font-size:.82rem; white-space:nowrap;
-}
-.cap__progress b{ font-variant-numeric:tabular-nums; }
-.cap__progress::before{
-  content:""; width:10px; height:10px; border-radius:50%; background:var(--teal);
-  box-shadow:0 0 0 4px rgba(0,152,190,.18);
-}
+/* banner (chrome) — larger, centred, with one nav prompt */
+.banner{ flex:0 0 auto; text-align:center; padding:clamp(12px,2.2vh,22px) clamp(16px,3vw,40px) clamp(10px,1.6vh,16px); background:var(--pale); }
+.banner__title{ margin:0; font-size:clamp(1.1rem,2.3vw,1.6rem); font-weight:700; line-height:1.18; color:var(--navy); }
+.banner__title em{ font-style:italic; }
+.banner__prompt{ margin:6px 0 0; font-size:clamp(.82rem,1.45vw,1rem); font-weight:500; color:var(--muted); }
 
-/* ---------- icon tab rail ---------- */
-.rail{
-  display:flex; gap:clamp(6px,1.3vw,12px); padding:clamp(12px,2vw,18px) clamp(12px,3vw,24px) 4px;
-  overflow-x:auto; scrollbar-width:thin; -webkit-overflow-scrolling:touch;
-}
-.rail__tab{
-  flex:1 0 auto; display:flex; flex-direction:column; align-items:center; gap:6px;
-  min-width:78px; padding:10px 8px; border:2px solid var(--line); border-radius:14px;
-  background:#fff; color:var(--navy); font:inherit; font-size:.66rem; font-weight:700;
-  letter-spacing:.02em; text-transform:uppercase; cursor:pointer; position:relative;
-  transition:border-color .18s ease, background .18s ease, transform .18s ease, box-shadow .18s ease;
-}
-.rail__tab svg{ width:30px; height:30px; color:var(--navy); transition:color .18s ease; }
+/* icon tab rail (chrome) */
+.rail{ flex:0 0 auto; display:flex; justify-content:center; gap:clamp(6px,1vw,12px); padding:clamp(8px,1.4vh,14px) clamp(10px,2vw,22px); overflow-x:auto; scrollbar-width:thin; -webkit-overflow-scrolling:touch; }
+.rail__tab{ flex:0 0 auto; display:flex; flex-direction:column; align-items:center; gap:5px; min-width:84px; padding:8px 8px; border:2px solid var(--line); border-radius:13px; background:#fff; color:var(--navy); font:inherit; font-size:.64rem; font-weight:700; letter-spacing:.02em; text-transform:uppercase; cursor:pointer; position:relative; transition:border-color .18s ease, background .18s ease, transform .18s ease, box-shadow .18s ease; }
+.rail__tab svg{ width:clamp(24px,2.4vw,30px); height:clamp(24px,2.4vw,30px); color:var(--navy); transition:color .18s ease; }
 .rail__tab:hover{ border-color:var(--teal); transform:translateY(-2px); box-shadow:0 8px 16px rgba(34,47,85,.10); }
 .rail__tab:focus-visible{ outline:3px solid var(--navy); outline-offset:2px; }
 .rail__tab[aria-selected="true"]{ border-color:var(--teal); background:var(--pale); }
 .rail__tab[aria-selected="true"] svg{ color:var(--teal); }
-.rail__tab .seen{
-  position:absolute; top:6px; right:6px; width:14px; height:14px; border-radius:50%;
-  background:var(--teal); color:#fff; display:none; align-items:center; justify-content:center; font-size:9px;
-}
+.rail__tab .seen{ position:absolute; top:5px; right:5px; width:14px; height:14px; border-radius:50%; background:var(--teal); color:#fff; display:none; align-items:center; justify-content:center; font-size:9px; }
 .rail__tab.is-seen .seen{ display:inline-flex; }
 
-/* ---------- carousel ---------- */
-.viewport{ overflow:hidden; padding:clamp(6px,1.6vw,14px) clamp(12px,3vw,24px) 0; }
-.track{ display:flex; transition:transform .42s cubic-bezier(.4,0,.2,1); }
-.panel{ flex:0 0 100%; min-width:0; padding:clamp(10px,2vw,18px) 4px; }
+/* stage (body) — flexes to fill leftover height; visual scales into it */
+.stage{ flex:1 1 auto; min-height:0; overflow:hidden; }
+.viewport{ height:100%; overflow:hidden; }
+.track{ display:flex; height:100%; transition:transform .42s cubic-bezier(.4,0,.2,1); }
+.panel{ flex:0 0 100%; height:100%; min-width:0; display:flex; flex-direction:column; padding:clamp(8px,1.6vh,16px) clamp(16px,3vw,40px); }
+.panel__head{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:clamp(6px,1.2vh,12px); }
+.panel__icon{ flex:0 0 auto; width:clamp(40px,4.4vw,52px); height:clamp(40px,4.4vw,52px); display:grid; place-items:center; border:3px solid var(--teal); border-radius:50%; color:var(--teal); }
+.panel__icon svg{ width:56%; height:56%; }
+.panel__title{ margin:0; font-size:clamp(1.05rem,2.1vw,1.45rem); font-weight:700; }
+.panel__visual{ flex:1 1 auto; min-height:0; display:flex; align-items:center; justify-content:center; gap:clamp(18px,3.5vw,52px); }
+/* hover/focus callout — a small panel anchored right under the data point */
+.callout{ position:fixed; z-index:35; pointer-events:none; transform:translateX(-50%); max-width:260px; padding:9px 13px; border-radius:10px; background:var(--navy); color:#fff; font-size:clamp(.8rem,1.4vw,.9rem); line-height:1.3; box-shadow:0 10px 24px rgba(16,26,38,.34); visibility:hidden; opacity:0; transition:opacity .12s ease; }
+.callout.is-on{ visibility:visible; opacity:1; }
+.callout strong{ font-weight:700; font-variant-numeric:tabular-nums; }
+.callout__lab{ display:block; margin-top:2px; font-size:.78rem; font-weight:600; color:#bfe1f0; }
+.callout::after{ content:""; position:absolute; left:50%; transform:translateX(-50%); border:7px solid transparent; }
+.callout:not(.is-above)::after{ bottom:100%; border-bottom-color:var(--navy); }
+.callout.is-above::after{ top:100%; border-top-color:var(--navy); }
 
-.panel__head{ display:flex; align-items:center; gap:16px; margin-bottom:clamp(12px,2vw,20px); }
-.panel__icon{
-  flex:0 0 auto; width:clamp(54px,8vw,72px); height:clamp(54px,8vw,72px);
-  display:grid; place-items:center; border:3px solid var(--teal); border-radius:50%; color:var(--teal);
-}
-.panel__icon svg{ width:58%; height:58%; }
-.panel__title{ margin:0; font-size:clamp(1.15rem,2.6vw,1.7rem); font-weight:700; letter-spacing:.01em; }
-.panel__kicker{ margin:2px 0 0; font-size:.8rem; font-weight:600; color:var(--muted); }
+/* ---------- split bar (sex) ---------- */
+.split{ width:min(100%,760px); display:flex; height:clamp(64px,12vh,104px); border-radius:14px; overflow:hidden; box-shadow:inset 0 0 0 1px rgba(34,47,85,.06); }
+.split__seg{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; color:#fff; border:0; font:inherit; cursor:pointer; padding:6px; min-width:0; text-align:center; transition:filter .16s ease; }
+.split__seg:hover,.split__seg:focus-visible{ filter:brightness(1.07); outline:none; }
+.split__seg:focus-visible{ box-shadow:inset 0 0 0 3px rgba(255,255,255,.9); }
+.split__pct{ font-size:clamp(1.2rem,2.6vw,1.7rem); font-weight:700; line-height:1; }
+.split__lab{ font-size:clamp(.72rem,1.4vw,.9rem); font-weight:600; opacity:.96; }
 
-.viz{ background:var(--mist); border:1px solid var(--line); border-radius:var(--radius); padding:clamp(16px,3vw,26px); }
-
-/* stacked split bar (2-way) */
-.stack{ display:flex; height:clamp(56px,9vw,72px); border-radius:12px; overflow:hidden; box-shadow:inset 0 0 0 1px rgba(34,47,85,.06); }
-.stack__seg{
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
-  color:#fff; border:0; font:inherit; cursor:pointer; padding:4px; min-width:0; text-align:center;
-  transition:filter .16s ease;
-}
-.stack__seg:hover, .stack__seg:focus-visible{ filter:brightness(1.06); outline:none; }
-.stack__seg:focus-visible{ box-shadow:inset 0 0 0 3px rgba(255,255,255,.9); }
-.stack__pct{ font-size:clamp(1.05rem,2.4vw,1.5rem); font-weight:700; line-height:1; }
-.stack__lab{ font-size:clamp(.66rem,1.5vw,.84rem); font-weight:600; opacity:.95; }
-
-/* ranked horizontal bars */
-.bars{ display:flex; flex-direction:column; gap:clamp(10px,1.8vw,15px); }
-.bar{ display:block; border-radius:9px; cursor:pointer; }
+/* ---------- ranked bars (smoking, race, ecog) ---------- */
+.bars{ width:min(100%,760px); display:flex; flex-direction:column; gap:clamp(8px,1.8vh,16px); }
+.bar{ display:block; cursor:pointer; border-radius:9px; }
 .bar:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
-.bar__top{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-bottom:6px; }
-.bar__label{ font-size:clamp(.82rem,1.7vw,.98rem); font-weight:600; color:var(--navy); }
-.bar__val{ flex:0 0 auto; font-size:clamp(.82rem,1.7vw,.98rem); font-weight:700; color:var(--navy); font-variant-numeric:tabular-nums; }
-.bar__track{ position:relative; width:100%; height:clamp(22px,3.4vw,28px); background:#fff; border-radius:8px; box-shadow:inset 0 0 0 1px var(--line); overflow:hidden; }
-/* Fill is an explicit block with width baked inline (no transition/animation), so the bar
-   is ALWAYS rendered at its true width even if the embed is offscreen when first painted. */
+.bar__top{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-bottom:5px; }
+.bar__label{ font-size:clamp(.9rem,1.6vw,1rem); font-weight:600; color:var(--navy); }
+.bar__val{ flex:0 0 auto; font-size:clamp(.9rem,1.6vw,1rem); font-weight:700; color:var(--navy); font-variant-numeric:tabular-nums; }
+.bar__track{ position:relative; width:100%; height:clamp(20px,3vh,28px); background:#fff; border-radius:8px; box-shadow:inset 0 0 0 1px var(--line); overflow:hidden; }
 .bar__fill{ display:block; height:100%; min-width:3px; border-radius:7px; }
 .bar.is-zero .bar__fill{ min-width:0; }
 
-/* age stat */
-.stat{ text-align:center; }
-.stat__big{ font-size:clamp(2.8rem,9vw,4.4rem); font-weight:700; color:var(--teal); line-height:1; }
-.stat__big span{ font-size:.4em; font-weight:600; color:var(--muted); margin-left:6px; }
-.stat__cap{ margin:4px 0 22px; font-size:.92rem; font-weight:600; color:var(--muted); }
-.stat__range{ position:relative; height:10px; margin:34px 8px 8px; background:#fff; border-radius:999px; box-shadow:inset 0 0 0 1px var(--line); }
-.stat__range::before{ content:""; position:absolute; inset:0; border-radius:999px; background:linear-gradient(90deg,var(--c4),var(--c2)); opacity:.9; }
-.stat__marker{ position:absolute; top:50%; transform:translate(-50%,-50%); width:22px; height:22px; border-radius:50%; background:#fff; border:4px solid var(--navy); }
-.stat__ends{ display:flex; justify-content:space-between; margin:10px 4px 0; font-size:.78rem; font-weight:600; color:var(--muted); }
-.stat__ends b{ display:block; color:var(--navy); font-size:1.05rem; }
+/* ---------- donut (histology, line of treatment) ---------- */
+.donut-stack{ position:relative; height:92%; aspect-ratio:1; flex:0 0 auto; display:grid; place-items:center; }
+.donut-stack svg{ width:100%; height:100%; display:block; }
+.donut__seg{ cursor:pointer; transition:opacity .16s ease; }
+.donut__seg:hover,.donut__seg.is-active{ opacity:.82; }
+.donut__center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; pointer-events:none; padding:18%; }
+.donut__big{ font-size:clamp(1.3rem,3vw,2rem); font-weight:700; color:var(--navy); line-height:1; font-variant-numeric:tabular-nums; }
+.donut__sub{ margin-top:3px; font-size:clamp(.66rem,1.3vw,.82rem); font-weight:600; color:var(--muted); line-height:1.2; }
+.donut__lab{ margin-top:2px; font-size:clamp(.66rem,1.3vw,.82rem); font-weight:700; color:var(--teal); line-height:1.15; }
+.legend{ flex:0 1 auto; display:flex; flex-direction:column; gap:clamp(5px,1.2vh,10px); max-width:46%; }
+.legend__item{ display:flex; align-items:center; gap:9px; border:0; background:transparent; font:inherit; text-align:left; cursor:pointer; padding:3px 5px; border-radius:8px; color:var(--navy); transition:background .15s ease; }
+.legend__item:hover,.legend__item.is-active{ background:var(--mist); }
+.legend__item:focus-visible{ outline:3px solid var(--navy); outline-offset:2px; }
+.legend__sw{ flex:0 0 auto; width:14px; height:14px; border-radius:4px; }
+.legend__txt{ font-size:clamp(.76rem,1.4vw,.92rem); font-weight:600; }
+.legend__pct{ margin-left:auto; padding-left:10px; font-size:clamp(.76rem,1.4vw,.92rem); font-weight:700; font-variant-numeric:tabular-nums; }
 
-/* per-bar / per-seg detail line */
-.detail{
-  margin-top:clamp(12px,2vw,16px); min-height:24px;
-  display:flex; align-items:center; gap:9px;
-  font-size:clamp(.84rem,1.7vw,.98rem); color:var(--navy);
-}
-.detail__dot{ flex:0 0 auto; width:10px; height:10px; border-radius:50%; background:var(--teal); }
-.detail b{ font-variant-numeric:tabular-nums; }
-.detail em{ font-style:normal; color:var(--muted); }
-.viz .hint{ color:var(--faint); font-style:italic; }
+/* ---------- gauge (age) ---------- */
+.gauge{ width:min(100%,560px); display:flex; flex-direction:column; align-items:center; }
+.gauge svg{ width:100%; height:auto; display:block; overflow:visible; }
+.gauge__big{ margin-top:-6%; font-size:clamp(2rem,5vw,3.1rem); font-weight:700; color:var(--teal); line-height:1; }
+.gauge__big span{ font-size:.38em; font-weight:600; color:var(--muted); margin-left:6px; }
+.gauge__cap{ margin-top:4px; font-size:clamp(.82rem,1.5vw,.98rem); font-weight:600; color:var(--muted); }
+.gauge__ends{ width:min(100%,560px); display:flex; justify-content:space-between; margin-top:6px; font-size:clamp(.72rem,1.3vw,.86rem); font-weight:600; color:var(--muted); }
+.gauge__ends b{ display:block; color:var(--navy); font-size:1.1em; }
 
-.panel__note{ margin:14px 2px 0; font-size:.8rem; color:var(--muted); line-height:1.5; }
-.panel__note sup{ color:var(--teal); font-weight:700; }
-
-/* ---------- controls ---------- */
-.controls{ display:flex; align-items:center; justify-content:center; gap:clamp(14px,3vw,26px); padding:clamp(14px,2.4vw,22px) clamp(12px,3vw,24px) clamp(18px,3vw,26px); }
-.nav-btn{
-  flex:0 0 auto; width:46px; height:46px; border-radius:50%; border:2px solid var(--teal);
-  background:#fff; color:var(--teal); cursor:pointer; display:grid; place-items:center;
-  transition:background .16s ease, color .16s ease, transform .12s ease;
-}
-.nav-btn svg{ width:20px; height:20px; }
+/* ---------- controls (chrome): chevrons + progress + dots ---------- */
+.controls{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:clamp(10px,2vw,20px); padding:clamp(8px,1.6vh,14px) clamp(12px,3vw,24px); }
+.nav-btn{ flex:0 0 auto; width:42px; height:42px; border-radius:50%; border:2px solid var(--teal); background:#fff; color:var(--teal); cursor:pointer; display:grid; place-items:center; transition:background .16s ease,color .16s ease,transform .12s ease; }
+.nav-btn svg{ width:19px; height:19px; }
 .nav-btn:hover:not(:disabled){ background:var(--teal); color:#fff; }
 .nav-btn:active:not(:disabled){ transform:scale(.94); }
 .nav-btn:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
 .nav-btn:disabled{ opacity:.4; cursor:default; }
-.dots{ display:flex; gap:9px; }
-.dot{ width:11px; height:11px; border-radius:50%; border:0; background:#c7d2de; cursor:pointer; padding:0; transition:transform .16s ease, background .16s ease; }
+.progress{ flex:0 0 auto; font-size:clamp(.8rem,1.5vw,.95rem); font-weight:700; color:var(--teal); white-space:nowrap; font-variant-numeric:tabular-nums; }
+.dots{ display:flex; gap:8px; }
+.dot{ width:10px; height:10px; border-radius:50%; border:0; background:#c7d2de; cursor:pointer; padding:0; transition:transform .16s ease, background .16s ease; }
 .dot[aria-current="true"]{ background:var(--teal); transform:scale(1.25); }
 .dot:hover{ background:var(--teal-strong); }
 .dot:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
 
-/* ---------- citation reveal (appears when all 7 explored) ---------- */
-.cite-bar{
-  display:none; align-items:center; gap:14px; flex-wrap:wrap;
-  margin:0 clamp(12px,3vw,24px) clamp(18px,3vw,24px);
-  padding:16px clamp(16px,3vw,22px); border:2px solid var(--teal); border-radius:var(--radius);
-  background:var(--pale);
-}
-/* Slide only — opacity stays 1 so the citation is ALWAYS visible even if the entrance
-   animation is throttled/paused (e.g. embed briefly offscreen). */
-.cite-bar.is-shown{ display:flex; animation:riseIn .45s ease; }
-@keyframes riseIn{ from{ transform:translateY(12px); } to{ transform:none; } }
-.cite-bar__check{ flex:0 0 auto; width:34px; height:34px; border-radius:50%; background:var(--teal); color:#fff; display:grid; place-items:center; }
-.cite-bar__text{ flex:1 1 320px; min-width:0; font-size:.86rem; line-height:1.45; color:var(--navy); }
-.cite-bar__text b{ font-weight:700; }
-.cite-bar__ref{ display:block; margin-top:3px; color:var(--muted); }
-.cite-bar__ref sup{ color:var(--teal); font-weight:700; }
-.cite-src{
-  flex:0 0 auto; display:inline-flex; align-items:center; gap:7px;
-  min-height:44px; padding:10px 18px; border:2px solid var(--teal); border-radius:10px;
-  background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.86rem; cursor:pointer;
-  transition:filter .15s ease;
-}
+/* ---------- completion citation (centred overlay) ---------- */
+.cite-modal{ position:fixed; inset:0; z-index:40; display:none; align-items:center; justify-content:center; padding:clamp(12px,4vw,40px); background:var(--backdrop); }
+.cite-modal.is-open{ display:flex; }
+.cite-card{ width:min(680px,100%); max-height:calc(100% - 24px); overflow:auto; background:#fff; border-radius:16px; box-shadow:0 24px 60px rgba(16,26,38,.4); padding:clamp(18px,3vw,26px); animation:rise .22s ease both; }
+.cite-card__check{ width:38px; height:38px; border-radius:50%; background:var(--teal); color:#fff; display:grid; place-items:center; margin-bottom:12px; }
+.cite-card__eyebrow{ margin:0 0 4px; font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--teal); }
+.cite-card__title{ margin:0 0 8px; font-size:clamp(1.05rem,2vw,1.25rem); font-weight:700; color:var(--navy); }
+.cite-card__body{ margin:0; font-size:.92rem; line-height:1.5; color:var(--navy); }
+.cite-card__ref{ display:block; margin-top:10px; padding-top:10px; border-top:1px solid var(--line); font-size:.85rem; line-height:1.5; color:var(--muted); }
+.cite-card__ref sup{ color:var(--teal); font-weight:700; }
+.cite-card__actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+.cite-src{ flex:0 0 auto; display:inline-flex; align-items:center; gap:7px; min-height:44px; padding:10px 18px; border:2px solid var(--teal); border-radius:10px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.88rem; cursor:pointer; transition:filter .15s ease; }
 .cite-src:hover{ filter:brightness(.95); }
-.cite-src:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+.cite-dismiss{ flex:0 0 auto; min-height:44px; padding:10px 18px; border:2px solid var(--teal); border-radius:10px; background:#fff; color:var(--teal); font:inherit; font-weight:700; font-size:.88rem; cursor:pointer; }
+.cite-src:focus-visible,.cite-dismiss:focus-visible,.cite-pill:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
 
-/* ---------- D16 external-link interstitial (Tiro launch behaviour, TM skin) ---------- */
+/* persistent reopen pill (after completion) */
+.cite-pill{ position:absolute; right:14px; bottom:12px; z-index:5; display:none; align-items:center; gap:7px; padding:7px 14px; border:0; border-radius:999px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.78rem; cursor:pointer; box-shadow:0 3px 10px rgba(16,26,38,.22); }
+.cite-pill.is-shown{ display:inline-flex; }
+.cite-pill:hover{ background:var(--teal-strong); }
+
+/* ---------- D16 external-link interstitial ---------- */
 .inter{ position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center; padding:clamp(12px,4vw,40px); background:var(--backdrop); }
 .inter.is-open{ display:flex; }
-.inter__panel{ width:min(460px,100%); max-height:calc(100% - 24px); overflow:auto; background:#fff; border-radius:var(--radius); box-shadow:0 24px 60px rgba(16,26,38,.4); padding:22px; animation:rise .2s ease both; }
+.inter__panel{ width:min(460px,100%); max-height:calc(100% - 24px); overflow:auto; background:#fff; border-radius:16px; box-shadow:0 24px 60px rgba(16,26,38,.4); padding:22px; animation:rise .2s ease both; }
 .inter__title{ font-size:1.05rem; font-weight:700; margin:0 0 8px; color:var(--navy); }
 .inter__p{ font-size:.82rem; line-height:1.5; color:var(--muted); margin:0 0 10px; }
 .inter__p strong{ color:var(--navy); font-weight:600; }
@@ -208,15 +168,22 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 .inter__btn:hover:not(:disabled){ filter:brightness(.96); }
 
 .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
-
 @keyframes rise{ from{ opacity:0; transform:translateY(10px) scale(.99);} to{ opacity:1; transform:none; } }
 @keyframes prep{ 0%,100%{ transform:scale(.6); opacity:.4; } 50%{ transform:scale(1); opacity:1; } }
 
-@media (max-width:680px){
-  .slide{ width:100%; margin:0; border-radius:0; box-shadow:none; }
-  .bar__label{ font-size:.86rem; }
-  .cite-bar__text{ flex-basis:100%; }
-  .cite-src{ width:100%; justify-content:center; }
+/* ---------- phone view (<760px): drop the fixed-height rule, allow scroll ---------- */
+@media (max-width:760px){
+  html,body{ height:auto; }
+  body{ overflow:auto; }
+  .frame{ height:auto; min-height:100%; }
+  .stage{ overflow:visible; }
+  .viewport{ height:auto; }
+  .track{ height:auto; }
+  .panel{ height:auto; }
+  .panel__visual{ flex-direction:column; }
+  .legend{ max-width:100%; width:min(100%,420px); }
+  .donut-stack{ width:min(78vw,320px); height:auto; }
+  .cite-pill{ position:fixed; }
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
@@ -224,49 +191,56 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 </style>
 </head>
 <body>
-<main class="slide" aria-roledescription="carousel" aria-label="Characteristics of patients with METex14 skipping NSCLC in VISION">
+<main class="frame" aria-roledescription="carousel" aria-label="Characteristics of patients with METex14 skipping NSCLC in VISION">
 
-  <div class="cap">
-    <div class="cap__text">
-      <h1 class="cap__title">Characteristics of patients with <em>MET</em>ex14 skipping NSCLC in VISION</h1>
-      <p class="cap__sub">Select each characteristic to explore. Hover or focus a value for the full figure.</p>
-    </div>
-    <div class="cap__progress" aria-hidden="true"><span><b id="progNum">0</b> / 7 explored</span></div>
-  </div>
+  <header class="banner">
+    <h1 class="banner__title">Characteristics of patients with <em>MET</em>ex14 skipping NSCLC in VISION</h1>
+    <p class="banner__prompt">Select an icon below or use the arrows to explore each characteristic — hover or focus any value for the full figure.</p>
+  </header>
 
   <div class="rail" role="tablist" aria-label="Patient characteristics" id="rail"></div>
 
-  <div class="viewport">
-    <div class="track" id="track"></div>
+  <div class="stage">
+    <div class="viewport"><div class="track" id="track"></div></div>
+    <button class="cite-pill" id="citePill" type="button" aria-haspopup="dialog">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Source
+    </button>
   </div>
 
   <div class="controls">
     <button class="nav-btn" id="prev" type="button" aria-label="Previous characteristic">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
+    <span class="progress" aria-hidden="true"><b id="progNum">0</b> / 7 explored</span>
     <div class="dots" id="dots" role="group" aria-label="Choose a characteristic"></div>
     <button class="nav-btn" id="next" type="button" aria-label="Next characteristic">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
     </button>
   </div>
 
-  <div class="cite-bar" id="citeBar" role="region" aria-label="Source citation">
-    <span class="cite-bar__check" aria-hidden="true">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-    </span>
-    <div class="cite-bar__text">
-      <b>All seven characteristics explored.</b> Data are for the 313 patients with <em>MET</em>ex14 skipping NSCLC in the Phase&nbsp;2 VISION trial.
-      <span class="cite-bar__ref">Mazieres J, Paik PK, Garassino MC, et al. Tepotinib treatment in patients with <em>MET</em> exon&nbsp;14-skipping NSCLC: long-term follow-up of the VISION phase&nbsp;2 nonrandomized clinical trial. <em>JAMA Oncol.</em> 2023;9(9):1260–6.<sup>&nbsp;9</sup></span>
-    </div>
-    <button class="cite-src" id="citeSrc" type="button" data-url="https://doi.org/10.1001/jamaoncol.2023.1962" data-ref="Mazieres J, et al. JAMA Oncol. 2023;9(9):1260–6">
-      View source <span aria-hidden="true">↗</span>
-    </button>
-  </div>
-
   <p class="sr-only" id="live" aria-live="polite" aria-atomic="true"></p>
 </main>
 
-<!-- D16 EXTERNAL-LINK INTERSTITIAL (Tiro launch behaviour, Touch Medical skin) -->
+<div class="callout" id="callout" role="status" aria-hidden="true"></div>
+
+<!-- completion citation (centred overlay) -->
+<div class="cite-modal" id="citeModal" role="dialog" aria-modal="true" aria-labelledby="citeTitle" hidden>
+  <div class="cite-card" role="document">
+    <span class="cite-card__check" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+    <p class="cite-card__eyebrow">All seven characteristics explored</p>
+    <h2 class="cite-card__title" id="citeTitle">Source</h2>
+    <p class="cite-card__body">Data are for the 313 patients with <em>MET</em>ex14 skipping NSCLC in the Phase&nbsp;2 VISION trial.
+      <span class="cite-card__ref">Mazieres J, Paik PK, Garassino MC, et al. Tepotinib treatment in patients with <em>MET</em> exon&nbsp;14-skipping NSCLC: long-term follow-up of the VISION phase&nbsp;2 nonrandomized clinical trial. <em>JAMA Oncol.</em> 2023;9(9):1260–6.<sup>&nbsp;9</sup></span>
+    </p>
+    <div class="cite-card__actions">
+      <button class="cite-src" id="citeSrc" type="button" data-url="https://doi.org/10.1001/jamaoncol.2023.1962" data-ref="Mazieres J, et al. JAMA Oncol. 2023;9(9):1260–6">View source <span aria-hidden="true">↗</span></button>
+      <button class="cite-dismiss" id="citeDismiss" type="button">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- D16 external-link interstitial -->
 <div class="inter" id="inter" role="dialog" aria-modal="true" aria-labelledby="interTitle" aria-describedby="interReason" hidden>
   <div class="inter__panel" role="document">
     <h2 class="inter__title" id="interTitle">You are leaving this activity</h2>
@@ -287,7 +261,6 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 (function(){
   "use strict";
 
-  /* ---------- ICONS (inline, inherit currentColor) ---------- */
   const ICON = {
     sex:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="17" cy="16" r="8"/><path d="M17 24v15M11 33h12"/><circle cx="31" cy="32" r="8"/><path d="M37 26l8-8M39 18h6v6"/></svg>',
     smoking:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="28" width="30" height="8" rx="1.5"/><path d="M16 28v8M26 28v8"/><path d="M40 36h2M40 30h2"/><path d="M30 22c4-2 2-6 0-8M37 22c4-2 2-7 0-9"/></svg>',
@@ -298,10 +271,9 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
     line:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="13" y="14" width="22" height="27" rx="3"/><path d="M16 14v-3a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v3"/><path d="M24 21v10M19 26h10"/></svg>'
   };
 
-  /* ---------- DATA (verbatim from supplied VISION slide; N = 313) ---------- */
   const N = 313;
   const CHARS = [
-    { id:'sex', tab:'Sex', label:'Sex', type:'stack',
+    { id:'sex', tab:'Sex', label:'Sex', type:'split',
       items:[ {label:'Female', n:159, pct:'50.8'}, {label:'Male', n:154, pct:'49.2'} ] },
     { id:'smoking', tab:'Smoking', label:'Smoking history', type:'bars',
       items:[ {label:'No smoking history', n:154, pct:'49.2'}, {label:'History of smoking', n:149, pct:'47.6'} ] },
@@ -309,11 +281,11 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
       items:[ {label:'White', n:195, pct:'62.3'}, {label:'Asian', n:106, pct:'33.9'}, {label:'Black / African American', n:3, pct:'1.0'} ] },
     { id:'ecog', tab:'ECOG PS', label:'ECOG performance status', type:'bars',
       items:[ {label:'ECOG PS 1', n:231, pct:'73.8'}, {label:'ECOG PS 0', n:81, pct:'25.9'} ] },
-    { id:'age', tab:'Age', label:'Age', type:'stat',
+    { id:'age', tab:'Age', label:'Age', type:'gauge',
       stat:{ value:'72.0', unit:'years', cap:'Median age', min:41, max:94 } },
-    { id:'histology', tab:'Histology', label:'Histology', type:'bars',
+    { id:'histology', tab:'Histology', label:'Histology', type:'donut',
       items:[ {label:'Adenocarcinoma', n:252, pct:'80.5'}, {label:'Squamous', n:28, pct:'8.9'}, {label:'Sarcomatoid', n:10, pct:'3.2'}, {label:'NOS', n:1, pct:'0.3'}, {label:'Neuroendocrine carcinoma', n:0, pct:'0'} ] },
-    { id:'line', tab:'Treatment', label:'Line of treatment', type:'stack',
+    { id:'line', tab:'Treatment', label:'Line of treatment', type:'donut',
       items:[ {label:'Treatment-naïve', n:164, pct:'52.4'}, {label:'Previously treated', n:149, pct:'47.6'} ] }
   ];
   const SEG = ['var(--c1)','var(--c2)','var(--c3)','var(--c4)','var(--c5)'];
@@ -325,78 +297,93 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
   const prev = document.getElementById('prev');
   const next = document.getElementById('next');
   const progNum = document.getElementById('progNum');
-  const citeBar = document.getElementById('citeBar');
   const live = document.getElementById('live');
+  const citePill = document.getElementById('citePill');
+  const citeModal = document.getElementById('citeModal');
 
   function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-  function fig(it){ return it.n+' of '+N+' ('+it.pct+'%) '+it.label; }
+  function dataAttrs(it){ return 'data-n="'+it.n+'" data-pct="'+it.pct+'" data-label="'+esc(it.label)+'"'; }
+  function ariaFig(it){ return 'aria-label="'+it.n+' of '+N+' ('+it.pct+'%) '+esc(it.label)+'"'; }
 
-  /* ---------- build viz per characteristic ---------- */
+  /* ---------- viz builders ---------- */
   function vizHTML(c){
-    if(c.type==='stat'){
-      const s=c.stat, pos=((s.min<0?0:(parseFloat(s.value)-s.min))/(s.max-s.min)*100);
-      return '<div class="viz"><div class="stat">'+
-        '<div class="stat__big">'+esc(s.value)+'<span>'+esc(s.unit)+'</span></div>'+
-        '<div class="stat__cap">'+esc(s.cap)+'</div>'+
-        '<div class="stat__range" role="img" aria-label="Median age '+esc(s.value)+' years; range '+s.min+' to '+s.max+'">'+
-          '<span class="stat__marker" style="left:'+pos.toFixed(1)+'%"></span></div>'+
-        '<div class="stat__ends"><span>Youngest<b>'+s.min+'</b></span><span>Oldest<b>'+s.max+'</b></span></div>'+
-      '</div><p class="detail"><span class="detail__dot"></span><span>Median age <b>'+esc(s.value)+'</b> years <em>(range '+s.min+'&ndash;'+s.max+')</em></span></p></div>';
-    }
-    if(c.type==='stack'){
+    if(c.type==='split'){
       const segs=c.items.map((it,i)=>
-        '<button class="stack__seg" type="button" style="flex:'+it.pct+' 1 0;background:'+SEG[i]+'" '+
-        'data-fig="'+esc(fig(it))+'" aria-label="'+esc(fig(it))+'">'+
-        '<span class="stack__pct">'+it.pct+'%</span><span class="stack__lab">'+esc(it.label)+'</span></button>'
+        '<button class="split__seg" type="button" style="flex:'+it.pct+' 1 0;background:'+SEG[i]+'" '+dataAttrs(it)+' '+ariaFig(it)+'>'+
+        '<span class="split__pct">'+it.pct+'%</span><span class="split__lab">'+esc(it.label)+'</span></button>'
       ).join('');
-      return '<div class="viz"><div class="stack">'+segs+'</div>'+detailLine(c)+'</div>';
+      return '<div class="panel__visual"><div class="split">'+segs+'</div></div>';
     }
-    // bars — fill width = the TRUE percentage of N (not scaled to the max), so the bar
-    // length is an honest read of the proportion.
-    const rows=c.items.map((it,i)=>{
-      const w=Math.min(100,parseFloat(it.pct));
-      const zero=parseFloat(it.pct)===0;
-      return '<div class="bar'+(zero?' is-zero':'')+'" role="button" tabindex="0" data-fig="'+esc(fig(it))+'" aria-label="'+esc(fig(it))+'">'+
-        '<div class="bar__top"><span class="bar__label">'+esc(it.label)+'</span><span class="bar__val">'+it.pct+'%</span></div>'+
-        '<div class="bar__track">'+
-          '<span class="bar__fill" style="width:'+w.toFixed(1)+'%;background:'+SEG[Math.min(i,4)]+'"></span>'+
-        '</div></div>';
+    if(c.type==='bars'){
+      const rows=c.items.map((it,i)=>{
+        const w=Math.min(100,parseFloat(it.pct)), zero=parseFloat(it.pct)===0;
+        return '<div class="bar'+(zero?' is-zero':'')+'" role="button" tabindex="0" '+dataAttrs(it)+' '+ariaFig(it)+'>'+
+          '<div class="bar__top"><span class="bar__label">'+esc(it.label)+'</span><span class="bar__val">'+it.pct+'%</span></div>'+
+          '<div class="bar__track"><span class="bar__fill" style="width:'+w.toFixed(1)+'%;background:'+SEG[Math.min(i,4)]+'"></span></div>'+
+        '</div>';
+      }).join('');
+      return '<div class="panel__visual"><div class="bars">'+rows+'</div></div>';
+    }
+    if(c.type==='gauge'){
+      const s=c.stat, t=(parseFloat(s.value)-s.min)/(s.max-s.min);
+      const cx=50, cy=50, R=40, a=Math.PI*(1-t);
+      const mx=(cx+R*Math.cos(a)).toFixed(2), my=(cy-R*Math.sin(a)).toFixed(2);
+      const valArc='M10,50 A40,40 0 0 1 '+mx+','+my;
+      return '<div class="panel__visual"><div class="gauge">'+
+        '<svg viewBox="0 0 100 60" role="img" aria-label="Median age '+esc(s.value)+' years; range '+s.min+' to '+s.max+'">'+
+          '<path d="M10,50 A40,40 0 0 1 90,50" fill="none" stroke="#e3e8ee" stroke-width="9" stroke-linecap="round"/>'+
+          '<path d="'+valArc+'" fill="none" stroke="var(--teal)" stroke-width="9" stroke-linecap="round"/>'+
+          '<circle cx="'+mx+'" cy="'+my+'" r="6.5" fill="#fff" stroke="var(--navy)" stroke-width="4"/>'+
+        '</svg>'+
+        '<div class="gauge__big">'+esc(s.value)+'<span>'+esc(s.unit)+'</span></div>'+
+        '<div class="gauge__cap">'+esc(s.cap)+'</div>'+
+        '<div class="gauge__ends"><span>Youngest<b>'+s.min+'</b></span><span>Oldest<b>'+s.max+'</b></span></div>'+
+      '</div></div>';
+    }
+    // donut
+    let cum=0;
+    const segs=c.items.filter(it=>parseFloat(it.pct)>0).map((it)=>{
+      const idx=c.items.indexOf(it), p=parseFloat(it.pct);
+      const circle='<circle class="donut__seg" r="15.915" cx="21" cy="21" fill="none" stroke="'+SEG[Math.min(idx,4)]+'" stroke-width="6" '+
+        'stroke-dasharray="'+p+' '+(100-p)+'" stroke-dashoffset="'+(-cum)+'" '+dataAttrs(it)+' '+ariaFig(it)+' tabindex="0" role="button"></circle>';
+      cum+=p; return circle;
     }).join('');
-    return '<div class="viz"><div class="bars">'+rows+'</div>'+detailLine(c)+'</div>';
-  }
-  function detailLine(c){
-    const first=c.items[0];
-    return '<p class="detail" data-default="'+esc(fig(first))+'"><span class="detail__dot"></span>'+
-      '<span class="detail__txt"><span class="hint">Hover or focus a value for the full figure</span></span></p>';
+    const legend=c.items.map((it)=>{
+      const idx=c.items.indexOf(it);
+      return '<button class="legend__item" type="button" '+dataAttrs(it)+' '+ariaFig(it)+'>'+
+        '<span class="legend__sw" style="background:'+SEG[Math.min(idx,4)]+'"></span>'+
+        '<span class="legend__txt">'+esc(it.label)+'</span><span class="legend__pct">'+it.pct+'%</span></button>';
+    }).join('');
+    return '<div class="panel__visual">'+
+      '<div class="donut-stack">'+
+        '<svg viewBox="0 0 42 42" aria-hidden="true"><g transform="rotate(-90 21 21)">'+
+          '<circle r="15.915" cx="21" cy="21" fill="none" stroke="var(--mist)" stroke-width="6"></circle>'+segs+
+        '</g></svg>'+
+        '<div class="donut__center" data-reveal-center><div class="donut__big">'+N+'</div><div class="donut__sub">patients</div><div class="donut__lab">'+esc(c.label)+'</div></div>'+
+      '</div>'+
+      '<div class="legend">'+legend+'</div>'+
+    '</div>';
   }
 
   /* ---------- render ---------- */
   CHARS.forEach((c,i)=>{
     const tab=document.createElement('button');
-    tab.className='rail__tab'; tab.type='button'; tab.role='tab';
+    tab.className='rail__tab'; tab.type='button'; tab.setAttribute('role','tab');
     tab.id='tab-'+c.id; tab.setAttribute('aria-controls','panel-'+c.id);
-    tab.setAttribute('aria-selected', i===0?'true':'false');
-    tab.tabIndex = i===0?0:-1;
-    tab.dataset.index=i;
+    tab.setAttribute('aria-selected', i===0?'true':'false'); tab.tabIndex=i===0?0:-1; tab.dataset.index=i;
     tab.innerHTML=ICON[c.id]+'<span>'+esc(c.tab)+'</span><span class="seen" aria-hidden="true">&#10003;</span>';
     rail.appendChild(tab);
 
     const panel=document.createElement('section');
-    panel.className='panel'; panel.id='panel-'+c.id; panel.role='tabpanel';
-    panel.setAttribute('aria-labelledby','tab-'+c.id);
-    panel.setAttribute('aria-roledescription','slide');
+    panel.className='panel'; panel.id='panel-'+c.id; panel.setAttribute('role','tabpanel');
+    panel.setAttribute('aria-labelledby','tab-'+c.id); panel.setAttribute('aria-roledescription','slide');
     panel.setAttribute('aria-label',(i+1)+' of '+CHARS.length+': '+c.label);
-    panel.innerHTML=
-      '<div class="panel__head"><span class="panel__icon">'+ICON[c.id]+'</span>'+
-        '<div><h2 class="panel__title">'+esc(c.label)+'</h2>'+
-        '<p class="panel__kicker">'+(i+1)+' of '+CHARS.length+' &middot; VISION (N = '+N+')</p></div></div>'+
-      vizHTML(c);
+    panel.innerHTML='<div class="panel__head"><span class="panel__icon">'+ICON[c.id]+'</span><h2 class="panel__title">'+esc(c.label)+'</h2></div>'+vizHTML(c);
     track.appendChild(panel);
 
     const dot=document.createElement('button');
     dot.className='dot'; dot.type='button'; dot.dataset.index=i;
-    dot.setAttribute('aria-label','Go to '+c.label);
-    dot.setAttribute('aria-current', i===0?'true':'false');
+    dot.setAttribute('aria-label','Go to '+c.label); dot.setAttribute('aria-current', i===0?'true':'false');
     dots.appendChild(dot);
   });
 
@@ -404,28 +391,39 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
   const panels=Array.from(track.children);
   const dotEls=Array.from(dots.children);
   const visited=new Set();
-  let index=0, citeRevealed=false;
+  let index=0, citeShownOnce=false;
 
-  /* ---------- per-viz detail interaction ---------- */
-  function bindDetail(panel){
-    const detail=panel.querySelector('.detail');
-    const txt=panel.querySelector('.detail__txt');
-    if(!detail||!txt) return;
-    function showRaw(fig){ txt.innerHTML='<b>'+esc(fig)+'</b>'; }
-    function reset(){ txt.innerHTML='<span class="hint">Hover or focus a value for the full figure</span>'; }
-    panel.querySelectorAll('[data-fig]').forEach(el=>{
-      el.addEventListener('mouseenter',()=>showRaw(el.dataset.fig));
-      el.addEventListener('focus',()=>showRaw(el.dataset.fig));
-      el.addEventListener('mouseleave',reset);
-      el.addEventListener('blur',reset);
-      if(el.getAttribute('role')==='button'){
-        el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); showRaw(el.dataset.fig); } });
-        el.addEventListener('click',()=>showRaw(el.dataset.fig));
-      }
+  /* ---------- hover/focus callout (anchored under the data point) ---------- */
+  const callout=document.getElementById('callout');
+  function showCallout(el,d){
+    callout.innerHTML='<strong>'+esc(d.n)+' of '+N+'</strong> ('+esc(d.pct)+'%)<span class="callout__lab">'+esc(d.label)+'</span>';
+    callout.style.left='0px'; callout.style.top='0px'; callout.classList.remove('is-above');
+    const r=el.getBoundingClientRect(), cw=callout.offsetWidth, ch=callout.offsetHeight;
+    let top=r.bottom+11;
+    if(top+ch>window.innerHeight-6){ top=r.top-ch-11; callout.classList.add('is-above'); }
+    let left=Math.max(cw/2+6, Math.min(window.innerWidth-cw/2-6, r.left+r.width/2));
+    callout.style.left=left+'px'; callout.style.top=top+'px';
+    callout.classList.add('is-on');
+  }
+  function hideCallout(){ callout.classList.remove('is-on'); }
+
+  function revealOn(panel){
+    const items=Array.from(panel.querySelectorAll('[data-n]'));
+    if(!items.length) return;
+    items.forEach(el=>{
+      const d={ n:el.dataset.n, pct:el.dataset.pct, label:el.dataset.label };
+      const segPair=el.classList.contains('legend__item') ? panel.querySelector('.donut__seg[data-label="'+CSS.escape(d.label)+'"]') : (el.classList.contains('donut__seg') ? panel.querySelector('.legend__item[data-label="'+CSS.escape(d.label)+'"]') : null);
+      const enter=()=>{ showCallout(el,d); el.classList.add('is-active'); if(segPair) segPair.classList.add('is-active'); };
+      const leave=()=>{ hideCallout(); el.classList.remove('is-active'); if(segPair) segPair.classList.remove('is-active'); };
+      el.addEventListener('mouseenter',enter); el.addEventListener('focus',enter);
+      el.addEventListener('mouseleave',leave); el.addEventListener('blur',leave);
+      if(el.getAttribute('role')==='button'){ el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); enter(); } }); }
     });
   }
-  panels.forEach(bindDetail);
-
+  panels.forEach(revealOn);
+  // keep the callout glued to the right place if the frame is resized mid-hover
+  window.addEventListener('resize',hideCallout);
+  track.addEventListener('scroll',hideCallout,true);
 
   /* ---------- navigation ---------- */
   function goTo(i,focusTab){
@@ -434,82 +432,70 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
     tabs.forEach((t,n)=>{ const sel=n===index; t.setAttribute('aria-selected',sel?'true':'false'); t.tabIndex=sel?0:-1; });
     dotEls.forEach((d,n)=>d.setAttribute('aria-current',n===index?'true':'false'));
     panels.forEach((p,n)=>{ p.inert = n!==index; p.setAttribute('aria-hidden', n!==index?'true':'false'); });
-    prev.disabled = index===0;
-    next.disabled = index===CHARS.length-1;
+    prev.disabled = index===0; next.disabled = index===CHARS.length-1;
     if(focusTab) tabs[index].focus();
     markVisited(index);
   }
-
   function markVisited(i){
-    if(visited.has(i)) return;
-    visited.add(i);
-    tabs[i].classList.add('is-seen');
-    progNum.textContent=visited.size;
-    if(visited.size===CHARS.length && !citeRevealed){
-      citeRevealed=true;
-      citeBar.classList.add('is-shown');
-      try{ citeBar.scrollIntoView({block:'nearest', behavior:reduceMotion?'auto':'smooth'}); }catch(e){}
-      live.textContent='All seven characteristics explored. The VISION source citation is now available below the carousel.';
+    if(!visited.has(i)){
+      visited.add(i); tabs[i].classList.add('is-seen'); progNum.textContent=visited.size;
+    }
+    if(visited.size===CHARS.length && !citeShownOnce){
+      citeShownOnce=true; citePill.classList.add('is-shown');
+      live.textContent='All seven characteristics explored. Select the Source chip to view the citation.';
     } else {
       live.textContent=CHARS[i].label+' shown. '+visited.size+' of '+CHARS.length+' explored.';
     }
   }
-
   prev.addEventListener('click',()=>goTo(index-1));
   next.addEventListener('click',()=>goTo(index+1));
   dotEls.forEach(d=>d.addEventListener('click',()=>goTo(+d.dataset.index)));
   tabs.forEach(t=>t.addEventListener('click',()=>goTo(+t.dataset.index)));
-
-  // roving tab keyboard on the rail
   rail.addEventListener('keydown',e=>{
     let n=index;
     if(e.key==='ArrowRight'||e.key==='ArrowDown') n=Math.min(CHARS.length-1,index+1);
     else if(e.key==='ArrowLeft'||e.key==='ArrowUp') n=Math.max(0,index-1);
-    else if(e.key==='Home') n=0;
-    else if(e.key==='End') n=CHARS.length-1;
-    else return;
+    else if(e.key==='Home') n=0; else if(e.key==='End') n=CHARS.length-1; else return;
     e.preventDefault(); goTo(n,true);
   });
 
+  /* ---------- citation modal ---------- */
+  let citeLastFocus=null;
+  function openCite(){ citeLastFocus=document.activeElement; citeModal.hidden=false; citeModal.classList.add('is-open'); setTimeout(()=>document.getElementById('citeDismiss').focus(),30); }
+  function closeCite(){ citeModal.classList.remove('is-open'); citeModal.hidden=true; if(citeLastFocus&&citeLastFocus.focus){ try{ citeLastFocus.focus(); }catch(e){} } }
+  citePill.addEventListener('click',openCite);
+  document.getElementById('citeDismiss').addEventListener('click',closeCite);
+  citeModal.addEventListener('click',e=>{ if(e.target===citeModal) closeCite(); });
+
   /* ---------- D16 interstitial ---------- */
   const inter=document.getElementById('inter');
-  const iDest=document.getElementById('interDest');
-  const iOrg=document.getElementById('interOrg');
-  const iUrl=document.getElementById('interUrl');
-  const iStatus=document.getElementById('interStatus');
-  const iDots=inter.querySelector('.prep');
-  const iOpen=document.getElementById('interOpen');
-  const iCopy=document.getElementById('interCopy');
-  const iStay=document.getElementById('interStay');
+  const iDest=document.getElementById('interDest'), iOrg=document.getElementById('interOrg'), iUrl=document.getElementById('interUrl');
+  const iStatus=document.getElementById('interStatus'), iDots=inter.querySelector('.prep');
+  const iOpen=document.getElementById('interOpen'), iCopy=document.getElementById('interCopy'), iStay=document.getElementById('interStay');
   let pendingURL=null, interTrigger=null, launchTimer=null;
-
   function orgFromHost(h){ return ({'doi.org':'Publisher (resolved via doi.org)'})[h]||h; }
-
   function openInter(url,ref,trigger){
-    pendingURL=url; interTrigger=trigger;
-    let host=url; try{ host=new URL(url).hostname; }catch(e){}
+    pendingURL=url; interTrigger=trigger; let host=url; try{ host=new URL(url).hostname; }catch(e){}
     iDest.textContent=ref; iOrg.textContent=orgFromHost(host); iUrl.textContent=url;
-    if(iDots) iDots.style.display='';
-    iStatus.textContent='Preparing the link…'; iOpen.disabled=true;
+    if(iDots) iDots.style.display=''; iStatus.textContent='Preparing the link…'; iOpen.disabled=true;
     inter.hidden=false; inter.classList.add('is-open'); iStay.focus();
     if(launchTimer) clearTimeout(launchTimer);
     launchTimer=setTimeout(()=>{ if(iDots) iDots.style.display='none'; iStatus.textContent='Ready to open.'; iOpen.disabled=false; iOpen.focus(); }, reduceMotion?250:1300);
   }
   function closeInter(){ if(launchTimer) clearTimeout(launchTimer); inter.classList.remove('is-open'); inter.hidden=true; if(interTrigger&&interTrigger.focus){ try{ interTrigger.focus(); }catch(e){} } }
-
   document.getElementById('citeSrc').addEventListener('click',function(){ openInter(this.dataset.url,this.dataset.ref,this); });
   iOpen.addEventListener('click',()=>{ if(!pendingURL) return; window.open(pendingURL,'_blank','noopener,noreferrer'); iStatus.textContent='Link opened in a new tab. Nothing opened? Copy the link and open it manually.'; });
   iCopy.addEventListener('click',()=>{ if(!pendingURL) return; const ta=document.createElement('textarea'); ta.value=pendingURL; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select(); let ok=false; try{ ok=document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); iStatus.textContent=ok?'Link copied. Paste it into a fresh browser tab.':'Copying is unavailable. Select and copy the visible URL manually.'; });
   iStay.addEventListener('click',closeInter);
   inter.addEventListener('click',e=>{ if(e.target===inter) closeInter(); });
+
+  /* ---------- keyboard: interstitial > citation modal ---------- */
+  function trap(e,container){ const f=container.querySelectorAll('a[href],button:not([disabled])'); if(!f.length) return; const first=f[0],last=f[f.length-1]; if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); } else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); } }
   document.addEventListener('keydown',e=>{
-    if(inter.classList.contains('is-open')){
-      if(e.key==='Escape'){ e.preventDefault(); closeInter(); return; }
-      if(e.key==='Tab'){ const f=inter.querySelectorAll('button:not([disabled])'); if(!f.length) return; const first=f[0], last=f[f.length-1]; if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); } else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); } }
-    }
+    if(inter.classList.contains('is-open')){ if(e.key==='Escape'){ e.preventDefault(); closeInter(); return; } if(e.key==='Tab'){ trap(e,inter); } return; }
+    if(citeModal.classList.contains('is-open')){ if(e.key==='Escape'){ e.preventDefault(); closeCite(); return; } if(e.key==='Tab'){ trap(e,citeModal); } }
   },true);
 
-  /* ---------- init ---------- */
   goTo(0);
 })();
 </script>
