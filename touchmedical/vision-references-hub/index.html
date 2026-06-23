@@ -98,7 +98,8 @@ body{
 
 /* ---------- grid + cards ---------- */
 .tmh-grid{
-  display:grid; grid-template-columns:repeat(auto-fill, minmax(290px,1fr));
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,340px));
+  justify-content:center;
   gap:20px; max-width:1180px; margin:0 auto;
 }
 .tmh-card{
@@ -137,7 +138,7 @@ body{
 
 /* folder hover tooltip */
 .tmh-tooltip{
-  position:absolute; left:50%; bottom:calc(100% + 10px); transform:translateX(-50%) translateY(6px);
+  position:absolute; left:50%; top:calc(100% + 10px); transform:translateX(-50%) translateY(-6px);
   width:min(320px,86vw);
   background:var(--tm-ink); color:#fff;
   border-radius:12px; padding:14px 16px;
