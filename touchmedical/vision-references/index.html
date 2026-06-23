@@ -43,10 +43,11 @@
 }
 
 *{ box-sizing:border-box; }
-html,body{ margin:0; padding:0; background:transparent; }
+html,body{ margin:0; padding:0; background:transparent; height:100%; }
 body{
   font-family:var(--tm-font);
   color:var(--tm-ink);
+  overflow:hidden;                 /* fixed-frame embed: no scroll on desktop */
   -webkit-font-smoothing:antialiased;
   text-rendering:optimizeLegibility;
 }
@@ -99,50 +100,42 @@ body{
 .tm-overlay{
   position:fixed; inset:0;
   display:none;
-  align-items:flex-start;
+  align-items:center;
   justify-content:center;
   background:var(--tm-backdrop);
   -webkit-backdrop-filter:blur(2px);
   backdrop-filter:blur(2px);
-  padding:clamp(12px,4vw,48px);
-  overflow:auto;
-  z-index:2147483600;            /* max-ish: sit above embed chrome */
+  padding:clamp(10px,2vw,26px);
+  overflow:hidden;               /* fits the embed box: no scroll */
+  z-index:2147483600;
 }
 .tm-overlay.is-open{ display:flex; }
 
-/* When the overlay element itself is the fullscreen element */
-.tm-overlay:fullscreen{
-  background:var(--tm-backdrop);
-  padding:clamp(16px,5vh,56px);
-}
-.tm-overlay:-webkit-full-screen{
-  background:var(--tm-backdrop);
-  padding:clamp(16px,5vh,56px);
-}
-
 .tm-panel{
-  width:min(680px,100%);
+  width:min(1280px,100%); max-height:100%;
   margin:auto;
   background:var(--tm-panel);
   border-radius:var(--tm-radius);
   box-shadow:0 24px 60px rgba(16,26,38,.32);
   overflow:hidden;
+  display:flex; flex-direction:column;     /* height-first frame */
   animation:tm-rise .22s ease both;
 }
 @keyframes tm-rise{ from{ opacity:0; transform:translateY(10px) scale(.99);} to{opacity:1;transform:none;} }
 
 .tm-panel__head{
+  flex:0 0 auto;
   display:flex; align-items:flex-start; gap:16px;
-  padding:20px 22px 16px;
+  padding:14px 22px 12px;
   border-bottom:1px solid var(--tm-line);
 }
 .tm-panel__titles{ flex:1 1 auto; min-width:0; }
 .tm-panel__eyebrow{
-  font-size:11px; font-weight:700; letter-spacing:.10em; text-transform:uppercase;
-  color:var(--tm-accent); margin:0 0 4px;
+  font-size:10.5px; font-weight:700; letter-spacing:.10em; text-transform:uppercase;
+  color:var(--tm-accent); margin:0 0 3px;
 }
-.tm-panel__title{ font-size:18px; font-weight:700; margin:0; color:var(--tm-ink); }
-.tm-panel__sub{ font-size:12.5px; color:var(--tm-muted); margin:5px 0 0; }
+.tm-panel__title{ font-size:16px; font-weight:700; margin:0; color:var(--tm-ink); }
+.tm-panel__sub{ font-size:12px; color:var(--tm-muted); margin:3px 0 0; }
 
 .tm-close{
   flex:0 0 auto;
@@ -159,17 +152,23 @@ body{
 }
 
 .tm-panel__body{
-  padding:8px 22px 22px;
-  max-height:none;
+  flex:1 1 auto; min-height:0; overflow:hidden;
+  padding:14px 22px 16px;
+}
+.tm-stmts{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
+  align-content:start;
 }
 
-/* ---------- One statement block ---------- */
+/* ---------- One statement card ---------- */
 .tm-stmt{
-  padding:18px 0;
-  border-bottom:1px solid var(--tm-line);
+  border:1px solid var(--tm-line); border-radius:12px;
+  background:var(--tm-panel);
+  padding:12px 13px;
+  display:flex; flex-direction:column; gap:7px;
+  min-height:0;
 }
-.tm-stmt:last-child{ border-bottom:0; }
-.tm-stmt__head{ display:flex; align-items:baseline; gap:10px; margin:0 0 8px; }
+.tm-stmt__head{ display:flex; align-items:baseline; gap:8px; margin:0; }
 .tm-stmt__num{
   flex:0 0 auto;
   font-size:11px; font-weight:700;
@@ -177,57 +176,22 @@ body{
   background:var(--tm-tint);
   border:1px solid var(--tm-line);
   border-radius:6px;
-  padding:3px 8px;
-  letter-spacing:.04em;
-  white-space:nowrap;
+  padding:2px 7px;
+  letter-spacing:.04em; white-space:nowrap;
 }
-.tm-stmt__text{ margin:0; font-size:14.5px; line-height:1.55; color:var(--tm-ink); }
+.tm-stmt__text{ margin:0; font-size:13.5px; line-height:1.45; color:var(--tm-ink); }
 
-.tm-cites{
-  list-style:none; margin:12px 0 0; padding:0;
-  display:flex; flex-direction:column; gap:7px;
-}
-.tm-cite{
-  display:flex; align-items:flex-start; gap:9px;
-  font-size:13px; line-height:1.45; color:var(--tm-muted);
-}
-.tm-cite__dot{
-  flex:0 0 auto; margin-top:.5em;
-  width:5px;height:5px;border-radius:50%;
-  background:var(--tm-faint);
-}
-.tm-cite__txt{ flex:1 1 auto; }
-.tm-cite__ref{ display:block; color:var(--tm-ink); }
-.tm-cite__url{
-  display:block; margin-top:3px;
-  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
-  font-size:11px; line-height:1.45; color:var(--tm-muted);
-  word-break:break-all;
-}
-.tm-cite__acc{ color:var(--tm-faint); white-space:nowrap; }
-
-.tm-panel__foot{
-  padding:13px 22px;
-  border-top:1px solid var(--tm-line);
-  background:var(--tm-tint);
-  font-size:11.5px; color:var(--tm-faint);
-  display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
-}
-.tm-esc-hint{ display:none; }
-@media (hover:hover) and (min-width:520px){ .tm-esc-hint{ display:inline; } }
-
-/* ---------- Source action pill (inside the citation list) ---------- */
-.tm-src{
-  margin-top:8px;
-  display:inline-flex; align-items:center; gap:5px;
-  font-family:var(--tm-font); font-size:11.5px; font-weight:600;
+.tm-chips{ display:flex; flex-wrap:wrap; gap:6px; margin-top:2px; }
+.tm-chip{
+  display:inline-flex; align-items:center; gap:4px;
+  font-family:var(--tm-font); font-size:11px; font-weight:600;
   color:var(--tm-accent); background:var(--tm-tint);
-  border:1px solid color-mix(in srgb,var(--tm-accent) 30%, var(--tm-line));
-  border-radius:999px; padding:5px 11px; cursor:pointer;
+  border:1px solid color-mix(in srgb,var(--tm-accent) 28%, var(--tm-line));
+  border-radius:999px; padding:4px 9px; cursor:pointer;
   transition:background .15s ease, border-color .15s ease, color .15s ease;
   -webkit-tap-highlight-color:transparent;
 }
-.tm-src:hover,.tm-src:focus-visible{
+.tm-chip:hover,.tm-chip:focus-visible{
   background:var(--tm-accent); color:var(--tm-on-accent); border-color:var(--tm-accent); outline:none;
 }
 
@@ -274,17 +238,27 @@ body{
 .tm-inter__btn:disabled{ background:#c3c8d2; border-color:#c3c8d2; color:#fff; cursor:not-allowed; }
 .tm-inter__btn:hover:not(:disabled){ filter:brightness(.96); }
 
-/* ---------- Mobile ---------- */
+/* ---------- Responsive columns ---------- */
+@media (max-width:1024px){ .tm-stmts{ grid-template-columns:repeat(2,1fr); } }
+
+/* ---------- Phone: drop the fixed-frame rule, allow scrolling ---------- */
+@media (max-width:760px){
+  html,body{ height:auto; }
+  body{ overflow:auto; }
+  .tm-overlay{ overflow:auto; align-items:flex-start; }
+  .tm-panel{ max-height:none; }
+  .tm-panel__body{ overflow:visible; }
+  .tm-stmts{ grid-template-columns:1fr; }
+}
 @media (max-width:520px){
-  .tm-panel__head{ padding:16px 16px 13px; }
-  .tm-panel__body{ padding:6px 16px 18px; }
-  .tm-panel__foot{ padding:11px 16px; }
+  .tm-panel__head{ padding:14px 16px 11px; }
+  .tm-panel__body{ padding:12px 16px 16px; }
   .tm-stmt__text{ font-size:14px; }
 }
 
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion:reduce){
-  .tm-pill,.tm-close,.tm-src{ transition:none; }
+  .tm-pill,.tm-close,.tm-chip{ transition:none; }
   .tm-panel,.tm-inter__panel{ animation:none; }
   .tm-prep i{ animation:none; }
 }
@@ -318,10 +292,6 @@ body{
       <button class="tm-close" id="tmClose" type="button" aria-label="Close references">&times;</button>
     </header>
     <div class="tm-panel__body" id="tmBody"><!-- statements injected here --></div>
-    <footer class="tm-panel__foot">
-      <span>Touch Medical</span>
-      <span class="tm-esc-hint">Press <strong>Esc</strong> to close</span>
-    </footer>
   </div>
 </div>
 
@@ -355,52 +325,52 @@ const STATEMENTS = [
   {
     text: "Potentially actionable genomic alterations have been identified in approximately 35% of patients with NSCLC undergoing comprehensive genomic profiling, including in approximately 45% of lung adenocarcinomas. Early biomarker-guided treatment has been associated with improved survival.",
     cites: [
-      { ref: "Russo A, et al. 2026 J Thorac Oncol e-pub ahead of print. doi: 10.1016/j.jtho.2026.103695",
+      { short: "Russo 2026", ref: "Russo A, et al. 2026 J Thorac Oncol e-pub ahead of print. doi: 10.1016/j.jtho.2026.103695",
         url: "https://doi.org/10.1016/j.jtho.2026.103695" },
-      { ref: "Aggarwal C, et al. 2023 JCO Precis Oncol e2300191. doi: 10.1200/PO.23.00191",
+      { short: "Aggarwal 2023", ref: "Aggarwal C, et al. 2023 JCO Precis Oncol e2300191. doi: 10.1200/PO.23.00191",
         url: "https://doi.org/10.1200/PO.23.00191" }
     ]
   },
   {
     text: "The MET pathway is critical for normal physiological processes (e.g. cell growth, and tissue repair). Its dysregulation, most notably through METex14 skipping, but also via other MET alterations (MET amplification, MET fusions) can drive tumour cell proliferation, survival, invasion, and metastasis in NSCLC.",
     cites: [
-      { ref: "Drilon A, et al. 2017 J Thorac Oncol 12(1):15–26. doi: 10.1016/j.jtho.2016.10.014",
+      { short: "Drilon 2017", ref: "Drilon A, et al. 2017 J Thorac Oncol 12(1):15–26. doi: 10.1016/j.jtho.2016.10.014",
         url: "https://doi.org/10.1016/j.jtho.2016.10.014" }
     ]
   },
   {
     text: "Approximately 2–4% of patients with NSCLC harbour MET exon 14 (METex14) skipping, a primary oncogenic driver associated with a poor prognosis but sensitivity to targeted treatment with selective MET tyrosine kinase inhibitors (MET TKIs).",
     cites: [
-      { ref: "Russo A, et al. 2026 J Thorac Oncol e-pub ahead of print. doi: 10.1016/j.jtho.2026.103695",
+      { short: "Russo 2026", ref: "Russo A, et al. 2026 J Thorac Oncol e-pub ahead of print. doi: 10.1016/j.jtho.2026.103695",
         url: "https://doi.org/10.1016/j.jtho.2026.103695" },
-      { ref: "Awad MM, et al. 2016 J Clin Oncol 34(7):721–730. doi: 10.1200/JCO.2015.63.4600",
+      { short: "Awad 2016", ref: "Awad MM, et al. 2016 J Clin Oncol 34(7):721–730. doi: 10.1200/JCO.2015.63.4600",
         url: "https://doi.org/10.1200/JCO.2015.63.4600" },
-      { ref: "Drilon A, et al. 2017 J Thorac Oncol 12(1):15–26. doi: 10.1016/j.jtho.2016.10.014",
+      { short: "Drilon 2017", ref: "Drilon A, et al. 2017 J Thorac Oncol 12(1):15–26. doi: 10.1016/j.jtho.2016.10.014",
         url: "https://doi.org/10.1016/j.jtho.2016.10.014" },
-      { ref: "Remon J, et al. 2023 J Thorac Oncol 18(4):419–435. doi: 10.1016/j.jtho.2022.10.015",
+      { short: "Remon 2023", ref: "Remon J, et al. 2023 J Thorac Oncol 18(4):419–435. doi: 10.1016/j.jtho.2022.10.015",
         url: "https://doi.org/10.1016/j.jtho.2022.10.015" },
-      { ref: "Tong JH, et al. 2016 Clin Cancer Res 22(12):3048–3056. doi: 10.1158/1078-0432.CCR-15-2061",
+      { short: "Tong 2016", ref: "Tong JH, et al. 2016 Clin Cancer Res 22(12):3048–3056. doi: 10.1158/1078-0432.CCR-15-2061",
         url: "https://doi.org/10.1158/1078-0432.CCR-15-2061" }
     ]
   },
   {
     text: "Multiple MET TKIs, including tepotinib and capmatinib, are approved for targeted therapy of patients with advanced/metastatic METex14 skipping NSCLC and are recommended as targeted therapy options in key international guidelines, including those of ESMO.",
     cites: [
-      { ref: "US FDA. TEPMETKO (tepotinib) Prescribing Information. 2024.",
+      { short: "Tepotinib US PI", ref: "US FDA. TEPMETKO (tepotinib) Prescribing Information. 2024.",
         url: "https://www.emdserono.com/us-en/pi/tepmetko-pi.pdf",
         accessed: "23 June 2026" },
-      { ref: "TEPMETKO (tepotinib) approved in Japan for advanced NSCLC with METex14 skipping alterations. Merck KGaA; 25 March 2020.",
+      { short: "Tepotinib Japan", ref: "TEPMETKO (tepotinib) approved in Japan for advanced NSCLC with METex14 skipping alterations. Merck KGaA; 25 March 2020.",
         url: "https://www.merckgroup.com/en/news/tepotinib-25-03-2020.html",
         accessed: "23 June 2026" },
-      { ref: "US FDA. Tabrecta (capmatinib) Prescribing Information. 2024.",
+      { short: "Capmatinib US PI", ref: "US FDA. Tabrecta (capmatinib) Prescribing Information. 2024.",
         url: "https://www.novartis.com/us-en/sites/novartis_us/files/tabrecta.pdf",
         accessed: "23 June 2026" },
-      { ref: "European Medicines Agency. Tabrecta (capmatinib) Summary of Product Characteristics. 2025.",
+      { short: "Capmatinib EU SmPC", ref: "European Medicines Agency. Tabrecta (capmatinib) Summary of Product Characteristics. 2025.",
         url: "https://www.ema.europa.eu/en/documents/product-information/tabrecta-epar-product-information_en.pdf",
         accessed: "23 June 2026" },
-      { ref: "Hendriks LE, et al. Ann Oncol. 2023;34(4):339–357. doi: 10.1016/j.annonc.2022.12.009",
+      { short: "Hendriks 2023", ref: "Hendriks LE, et al. Ann Oncol. 2023;34(4):339–357. doi: 10.1016/j.annonc.2022.12.009",
         url: "https://doi.org/10.1016/j.annonc.2022.12.009" },
-      { ref: "ESMO Oncogene-Addicted Metastatic NSCLC Living Guideline, v1.3 – February 2026.",
+      { short: "ESMO guideline", ref: "ESMO Oncogene-Addicted Metastatic NSCLC Living Guideline, v1.3 – February 2026.",
         url: "https://www.esmo.org/guidelines/living-guidelines/esmo-living-guideline-oncogene-addicted-metastatic-non-small-cell-lung-cancer/management-of-advanced-and-metastatic-disease/ret-fusion-ntrk-her2-activating-mutations-her2-overexpression-met-ex14-skipping-mutation-c-met-or-kras-g12c-mutation/ret-ntrk-her2-exon-20-egfr-ex20ins",
         accessed: "23 June 2026" }
     ]
@@ -408,15 +378,15 @@ const STATEMENTS = [
   {
     text: "Tepotinib is an oral, once-daily, highly selective MET tyrosine kinase inhibitor approved in multiple countries (including the United States, Japan, and others) for the treatment of adult patients with advanced/metastatic NSCLC harbouring METex14 skipping. In the European Union, tepotinib is approved for patients who received prior treatment with immunotherapy and/or platinum-based chemotherapy.",
     cites: [
-      { ref: "Mazieres J, et al. 2023 JAMA Oncol 9(9):1260–1266. doi: 10.1001/jamaoncol.2023.1962",
+      { short: "Mazieres 2023", ref: "Mazieres J, et al. 2023 JAMA Oncol 9(9):1260–1266. doi: 10.1001/jamaoncol.2023.1962",
         url: "https://doi.org/10.1001/jamaoncol.2023.1962" },
-      { ref: "US FDA. TEPMETKO (tepotinib) Prescribing Information. 2024.",
+      { short: "Tepotinib US PI", ref: "US FDA. TEPMETKO (tepotinib) Prescribing Information. 2024.",
         url: "https://www.emdserono.com/us-en/pi/tepmetko-pi.pdf",
         accessed: "23 June 2026" },
-      { ref: "TEPMETKO (tepotinib) approved in Japan for advanced NSCLC with METex14 skipping alterations. Merck KGaA; 25 March 2020.",
+      { short: "Tepotinib Japan", ref: "TEPMETKO (tepotinib) approved in Japan for advanced NSCLC with METex14 skipping alterations. Merck KGaA; 25 March 2020.",
         url: "https://www.merckgroup.com/en/news/tepotinib-25-03-2020.html",
         accessed: "23 June 2026" },
-      { ref: "European Medicines Agency. TEPMETKO (tepotinib) Summary of Product Characteristics. 17 April 2026.",
+      { short: "Tepotinib EU SmPC", ref: "European Medicines Agency. TEPMETKO (tepotinib) Summary of Product Characteristics. 17 April 2026.",
         url: "https://www.ema.europa.eu/en/documents/product-information/tepmetko-epar-product-information_en.pdf",
         accessed: "23 June 2026" }
     ]
@@ -424,9 +394,9 @@ const STATEMENTS = [
   {
     text: "The Phase 2 VISION study, a single-arm, open-label trial, evaluated the efficacy and safety of tepotinib in patients with advanced NSCLC harbouring MET alterations. This e-learning module focuses on the 313 patients with METex14 skipping NSCLC (detected by liquid and/or tissue biopsy), in whom tepotinib demonstrated robust and durable efficacy, with long-term follow-up data now available at ≥3 years.",
     cites: [
-      { ref: "Paik PK, et al. 2020 N Engl J Med 383(10):931–943. doi: 10.1056/NEJMoa2004407",
+      { short: "Paik 2020", ref: "Paik PK, et al. 2020 N Engl J Med 383(10):931–943. doi: 10.1056/NEJMoa2004407",
         url: "https://doi.org/10.1056/NEJMoa2004407" },
-      { ref: "Mazieres J, et al. 2023 JAMA Oncol 9(9):1260–1266. doi: 10.1001/jamaoncol.2023.1962",
+      { short: "Mazieres 2023", ref: "Mazieres J, et al. 2023 JAMA Oncol 9(9):1260–1266. doi: 10.1001/jamaoncol.2023.1962",
         url: "https://doi.org/10.1001/jamaoncol.2023.1962" }
     ]
   }
@@ -480,32 +450,23 @@ const STATEMENTS = [
   }
 
   // ---- render statements ----
-  function citeHTML(c){
-    let out = '<span class="tm-cite__ref">'+esc(c.ref)+'</span>';
-    if(c.url){
-      out += '<span class="tm-cite__url">'+esc(c.url)+
-             (c.accessed ? ' <span class="tm-cite__acc">[Accessed '+esc(c.accessed)+']</span>' : '')+
-             '</span>'+
-             '<button class="tm-src" type="button" data-url="'+esc(c.url)+'" data-ref="'+esc(c.ref)+'">'+
-               'Open / copy link <span aria-hidden="true">↗</span>'+
-             '</button>';
-    }
-    return out;
+  // Each citation is a compact chip; full reference + URL + Open/Copy live in the launch dialog.
+  function chipHTML(c){
+    const label = c.short || c.ref;
+    return '<button class="tm-chip" type="button" data-url="'+esc(c.url)+'" data-ref="'+esc(c.ref)+'" '+
+           'aria-label="Open source: '+esc(c.ref)+'">'+esc(label)+' <span aria-hidden="true">↗</span></button>';
   }
 
-  body.innerHTML = STATEMENTS.map((s,i)=>{
-    const cites = s.cites.map(c =>
-      '<li class="tm-cite"><span class="tm-cite__dot" aria-hidden="true"></span>'+
-      '<span class="tm-cite__txt">'+citeHTML(c)+'</span></li>'
-    ).join('');
+  body.innerHTML = '<div class="tm-stmts">' + STATEMENTS.map((s,i)=>{
+    const chips = s.cites.map(chipHTML).join('');
     return '<section class="tm-stmt">'+
       '<div class="tm-stmt__head">'+
         '<span class="tm-stmt__num">'+(i+1)+'</span>'+
         '<p class="tm-stmt__text">'+esc(s.text)+'</p>'+
       '</div>'+
-      '<ul class="tm-cites">'+cites+'</ul>'+
+      '<div class="tm-chips">'+chips+'</div>'+
     '</section>';
-  }).join('');
+  }).join('') + '</div>';
 
   countEl.textContent = STATEMENTS.length;
 
@@ -582,9 +543,9 @@ const STATEMENTS = [
   iStay.addEventListener('click', closeInter);
   inter.addEventListener('click', e =>{ if(e.target === inter) closeInter(); });
 
-  // source action pills (event delegation)
+  // citation chips (event delegation) → launch interstitial
   body.addEventListener('click', e =>{
-    const btn = e.target.closest('.tm-src');
+    const btn = e.target.closest('.tm-chip');
     if(!btn) return;
     openInter(btn.getAttribute('data-url'), btn.getAttribute('data-ref'), btn);
   });
