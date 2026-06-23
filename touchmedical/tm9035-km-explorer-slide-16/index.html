@@ -47,16 +47,17 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
   background:var(--pale);
 }
 .cap__text{ flex:1 1 320px; min-width:0; }
-.cap__title{ margin:0; font-size:clamp(1.05rem,2.2vw,1.4rem); font-weight:700; line-height:1.2; color:var(--navy); }
+.cap__title{ margin:0; font-size:clamp(1.3rem,2.8vw,1.85rem); font-weight:700; line-height:1.14; color:var(--navy); letter-spacing:-.01em; }
 .cap__title em{ font-style:italic; }
 .cap__sub{ margin:3px 0 0; font-size:clamp(.78rem,1.5vw,.9rem); font-weight:500; color:var(--muted); }
 .cap__back{
   flex:0 0 auto; display:none; align-items:center; gap:8px;
   padding:8px 15px; border:2px solid var(--teal); border-radius:999px;
   background:rgba(255,255,255,.6); color:var(--teal); font:inherit; font-weight:700; font-size:.82rem; cursor:pointer;
-  transition:background .16s ease, color .16s ease;
+  transition:background .16s ease, color .16s ease, transform .14s ease;
 }
 .cap__back:hover{ background:var(--teal); color:#fff; }
+.cap__back:active{ transform:scale(.96); }
 .cap__back:focus-visible{ outline:3px solid var(--navy); outline-offset:2px; }
 .is-explorer .cap__back{ display:inline-flex; }
 
@@ -64,24 +65,27 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
    HUB
    ============================================================ */
 .hub{ flex:1 1 auto; min-height:0; overflow:auto; display:flex; flex-direction:column; justify-content:center; padding:clamp(14px,3vw,28px) clamp(16px,3vw,28px); }
-.hub__lead{ margin:0 0 clamp(14px,2.4vw,22px); font-size:clamp(.9rem,1.7vw,1rem); color:var(--muted); line-height:1.5; max-width:60ch; }
-.hub__grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(12px,2vw,20px); }
+.hub__lead{ margin:0 auto clamp(16px,2.4vw,24px); font-size:clamp(.92rem,1.7vw,1.05rem); color:var(--muted); line-height:1.55; max-width:64ch; text-align:center; }
+.hub__grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(12px,1.8vw,18px); width:100%; max-width:760px; margin:0 auto; }
 .card{
-  display:flex; flex-direction:column; text-align:left; gap:10px;
-  padding:clamp(16px,2.4vw,24px); border:2px solid var(--line); border-radius:var(--radius);
+  display:flex; flex-direction:column; text-align:left; gap:7px;
+  padding:clamp(13px,1.8vw,18px); border:2px solid var(--line); border-radius:16px;
   background:linear-gradient(180deg,#fff,var(--mist)); color:var(--navy); font:inherit; cursor:pointer;
-  transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease;
+  transition:border-color .18s ease, transform .16s cubic-bezier(.34,1.4,.5,1), box-shadow .18s ease;
 }
-.card:hover{ border-color:var(--teal); transform:translateY(-3px); box-shadow:0 12px 24px rgba(34,47,85,.12); }
+.card:hover{ border-color:var(--teal); transform:translateY(-4px); box-shadow:0 14px 26px rgba(34,47,85,.13); }
+.card:active{ transform:translateY(-1px) scale(.985); box-shadow:0 6px 14px rgba(34,47,85,.12); }
 .card:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
 .card.is-seen{ border-color:var(--teal); }
 .card__badge{
-  width:clamp(50px,7vw,64px); height:clamp(50px,7vw,64px); flex:0 0 auto;
-  display:grid; place-items:center; border-radius:14px; background:var(--pale); color:var(--teal);
+  width:clamp(42px,5vw,52px); height:clamp(42px,5vw,52px); flex:0 0 auto;
+  display:grid; place-items:center; border-radius:13px; background:var(--pale); color:var(--teal);
+  transition:transform .18s ease, background .18s ease;
 }
+.card:hover .card__badge{ transform:scale(1.06); background:#cfeaf6; }
 .card__badge svg{ width:58%; height:58%; }
-.card__abbr{ font-size:clamp(1.3rem,3vw,1.7rem); font-weight:700; letter-spacing:.01em; line-height:1; }
-.card__full{ font-size:clamp(.82rem,1.6vw,.95rem); font-weight:600; color:var(--muted); }
+.card__abbr{ font-size:clamp(1.1rem,2.3vw,1.4rem); font-weight:700; letter-spacing:.01em; line-height:1; }
+.card__full{ font-size:clamp(.8rem,1.5vw,.92rem); font-weight:600; color:var(--muted); }
 .card__cta{
   margin-top:auto; display:inline-flex; align-items:center; gap:6px;
   font-size:.84rem; font-weight:700; color:var(--teal);
@@ -93,6 +97,14 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 }
 .card.is-seen .card__seen{ display:inline-flex; }
 
+/* entrance choreography — staged fades/ease-ins (disabled by the reduced-motion block) */
+.cap{ animation:fadeUp .5s ease both; }
+.hub__lead{ animation:fadeUp .5s ease .08s both; }
+.hub__grid .card{ animation:fadeUp .5s ease both; }
+.hub__grid .card:nth-child(1){ animation-delay:.18s; }
+.hub__grid .card:nth-child(2){ animation-delay:.26s; }
+.hub__grid .card:nth-child(3){ animation-delay:.34s; }
+
 /* ============================================================
    EXPLORER
    ============================================================ */
@@ -100,14 +112,18 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 .is-explorer .hub{ display:none; }
 .is-explorer .explorer{ display:flex; flex-direction:column; flex:1 1 auto; min-height:0; }
 
-/* question bar */
+/* question callout panel */
 .qbar{
   flex:0 0 auto;
+  display:flex; align-items:center; gap:clamp(10px,1.4vw,14px);
   margin:clamp(8px,1.4vw,12px) clamp(14px,3vw,24px) 0;
-  padding:clamp(8px,1.3vw,12px) clamp(16px,2.6vw,24px);
-  border:2px solid var(--teal); border-radius:12px; background:var(--pale);
-  color:var(--navy); font-size:clamp(.8rem,1.5vw,.95rem); font-weight:600; line-height:1.3; text-align:center;
+  padding:clamp(10px,1.5vw,15px) clamp(15px,2.4vw,22px);
+  border:2px solid var(--teal); border-left-width:6px; border-radius:12px; background:var(--pale);
+  color:var(--navy); font-size:clamp(.92rem,1.6vw,1.1rem); font-weight:600; line-height:1.34; text-align:left;
 }
+.qbar__icon{ flex:0 0 auto; width:clamp(30px,4vw,38px); height:clamp(30px,4vw,38px); border-radius:50%; background:var(--teal); color:#fff; display:grid; place-items:center; }
+.qbar__icon svg{ width:56%; height:56%; }
+.qbar__text{ min-width:0; }
 .qbar em{ font-style:italic; }
 .qbar b{ color:var(--teal-strong); font-weight:700; }
 
@@ -149,10 +165,13 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 .hot--treated{ color:rgba(47,158,111,.5); }
 .hot:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
 .hot:hover::before, .hot:focus-visible::before{ animation:none; box-shadow:0 0 0 5px currentColor; }
+.hot:active::before{ animation:none; box-shadow:0 0 0 8px currentColor; }
 .hot.is-open::after{
   content:""; position:absolute; inset:14%; border-radius:50%;
   border:3px solid #fff; box-shadow:0 0 0 3px currentColor;
+  animation:hotpop .28s ease both;
 }
+@keyframes hotpop{ 0%{ transform:scale(.4); opacity:0; } 60%{ transform:scale(1.12); } 100%{ transform:scale(1); opacity:1; } }
 
 /* median bubbles */
 .bubble{
@@ -180,6 +199,8 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 .controls{ flex:0 0 auto; display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:12px; padding:clamp(8px,1.4vw,14px) clamp(14px,3vw,24px) clamp(10px,1.6vw,16px); }
 .controls__nav{ grid-column:2; display:flex; align-items:center; justify-content:center; gap:clamp(10px,2.2vw,20px); }
 .controls__table{ grid-column:3; justify-self:end; }
+.controls__hint{ grid-column:1; justify-self:start; display:flex; align-items:center; gap:7px; font-size:.78rem; font-weight:600; color:var(--muted); }
+.controls__hint svg{ width:16px; height:16px; flex:0 0 auto; color:var(--teal); }
 .nav-btn{
   flex:0 0 auto; width:46px; height:46px; border-radius:50%; border:2px solid var(--teal);
   background:#fff; color:var(--teal); cursor:pointer; display:grid; place-items:center;
@@ -194,10 +215,11 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 .dot{
   display:flex; align-items:center; gap:6px; padding:7px 13px; border-radius:999px; border:2px solid var(--line);
   background:#fff; color:var(--muted); cursor:pointer; font:inherit; font-weight:700; font-size:.78rem;
-  transition:border-color .16s ease, color .16s ease, background .16s ease;
+  transition:border-color .16s ease, color .16s ease, background .16s ease, transform .14s ease;
 }
 .dot[aria-current="true"]{ border-color:var(--teal); color:var(--teal); background:var(--pale); }
-.dot:hover{ border-color:var(--teal); }
+.dot:hover{ border-color:var(--teal); transform:translateY(-1px); }
+.dot:active{ transform:scale(.95); }
 .dot:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
 
 /* ---------- table reveal trigger ---------- */
@@ -206,15 +228,22 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
   position:relative; display:inline-flex; align-items:center; gap:9px;
   min-height:44px; padding:9px 18px; border:2px solid var(--teal); border-radius:11px;
   background:#fff; color:var(--teal); font:inherit; font-weight:700; font-size:clamp(.8rem,1.5vw,.92rem); cursor:pointer;
-  transition:background .16s ease, color .16s ease, box-shadow .16s ease, opacity .16s ease;
+  transition:background .16s ease, color .16s ease, box-shadow .16s ease, opacity .16s ease, transform .14s ease;
 }
 .reveal__btn svg{ width:17px; height:17px; flex:0 0 auto; }
 .reveal__btn[disabled]{ opacity:.5; cursor:not-allowed; border-style:dashed; }
-.reveal__btn:not([disabled]):hover{ background:var(--teal); color:#fff; }
+.reveal__btn:not([disabled]):hover{ background:var(--teal); color:#fff; transform:translateY(-1px); box-shadow:0 6px 14px rgba(0,152,190,.25); }
+.reveal__btn:not([disabled]):active{ transform:scale(.97); }
 .reveal__btn:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
 .reveal__btn.is-ready{ background:var(--teal); color:#fff; box-shadow:0 0 0 0 rgba(0,152,190,.5); animation:ready 1.8s ease-in-out 2; }
 @keyframes ready{ 0%,100%{ box-shadow:0 0 0 0 rgba(0,152,190,.45); } 50%{ box-shadow:0 0 0 10px rgba(0,152,190,0); } }
 .reveal__lock{ font-size:.74rem; font-weight:600; color:var(--faint); margin-left:2px; }
+/* viewed state — a tick replaces the table icon */
+.reveal__btn .tick{ display:none; align-items:center; }
+.reveal__btn.is-viewed{ background:var(--green-soft); border-color:var(--green); color:var(--green); border-style:solid; animation:none; }
+.reveal__btn.is-viewed:not([disabled]):hover{ background:var(--green); color:#fff; box-shadow:0 6px 14px rgba(47,158,111,.25); }
+.reveal__btn.is-viewed .reveal__ico{ display:none; }
+.reveal__btn.is-viewed .tick{ display:inline-flex; }
 
 /* ============================================================
    DATA TABLE MODAL
@@ -244,18 +273,21 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 .dtable .rowlabel{ text-align:left; font-weight:600; color:var(--muted); }
 .dtable__n{ display:block; font-size:.72rem; font-weight:600; color:var(--muted); }
 
-.modal__foot{ margin-top:16px; padding-top:14px; border-top:1px solid var(--line); font-size:.78rem; color:var(--muted); line-height:1.5; }
-.modal__foot p{ margin:0 0 8px; }
-.cite-row{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:10px; }
-.cite-row__txt{ flex:1 1 280px; min-width:0; font-size:.78rem; color:var(--muted); line-height:1.45; }
-.cite-row__txt em{ font-style:italic; }
+.modal__foot{ margin-top:14px; }
+.modal__note{ font-size:.74rem; color:var(--faint); line-height:1.5; margin:0 0 12px; }
+/* dedicated source panel — pulled out of the table to cut cognitive load */
+.source-panel{ border:1px solid var(--line); border-left:4px solid var(--teal); border-radius:12px; background:var(--mist); padding:13px 16px; }
+.source-panel__label{ font-size:.66rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--teal-strong); margin-bottom:6px; }
+.source-panel__cite{ margin:0 0 12px; font-size:.82rem; color:var(--navy); line-height:1.48; }
+.source-panel__cite em{ font-style:italic; }
 .cite-src{
-  flex:0 0 auto; display:inline-flex; align-items:center; gap:7px;
+  display:inline-flex; align-items:center; gap:7px;
   min-height:44px; padding:10px 18px; border:2px solid var(--teal); border-radius:10px;
   background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.84rem; cursor:pointer;
-  transition:filter .15s ease;
+  transition:filter .15s ease, transform .14s ease, box-shadow .16s ease;
 }
-.cite-src:hover{ filter:brightness(.95); }
+.cite-src:hover{ filter:brightness(.95); transform:translateY(-1px); box-shadow:0 6px 14px rgba(0,152,190,.25); }
+.cite-src:active{ transform:scale(.97); }
 .cite-src:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
 
 /* ---------- D16 external-link interstitial (Touch Medical skin) ---------- */
@@ -265,7 +297,7 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 .inter__title{ font-size:1.05rem; font-weight:700; margin:0 0 8px; color:var(--navy); }
 .inter__p{ font-size:.82rem; line-height:1.5; color:var(--muted); margin:0 0 10px; }
 .inter__p strong{ color:var(--navy); font-weight:600; }
-.inter__url{ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.72rem; line-height:1.45; color:var(--muted); background:var(--mist); border:1px solid var(--line); border-radius:8px; padding:9px 11px; word-break:break-all; }
+.inter__url{ font-family:var(--font); font-size:.72rem; line-height:1.45; color:var(--muted); background:var(--mist); border:1px solid var(--line); border-radius:8px; padding:9px 11px; word-break:break-all; }
 .inter__status{ margin-top:12px; display:flex; align-items:center; gap:9px; min-height:22px; font-size:.76rem; font-style:italic; color:var(--muted); }
 .prep{ display:inline-flex; gap:5px; }
 .prep i{ width:8px; height:8px; border-radius:50%; background:var(--teal); display:inline-block; animation:prep 1s infinite ease-in-out; }
@@ -281,6 +313,8 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 
 @keyframes rise{ from{ opacity:0; transform:translateY(10px) scale(.99);} to{ opacity:1; transform:none; } }
 @keyframes prep{ 0%,100%{ transform:scale(.6); opacity:.4; } 50%{ transform:scale(1); opacity:1; } }
+@keyframes fadeUp{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+@keyframes fadeZoom{ from{ opacity:0; transform:scale(.985); } to{ opacity:1; transform:none; } }
 
 /* On narrow screens the fixed-box constraint no longer applies: go width-first and
    allow the page to scroll, so nothing is cramped on a phone. */
@@ -298,6 +332,7 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
   .bubble.is-shown{ display:block; }
   .bubble__close{ display:none; }
   .controls{ grid-template-columns:1fr; gap:10px; }
+  .controls__hint{ grid-column:1; justify-self:center; }
   .controls__nav{ grid-column:1; }
   .controls__table{ grid-column:1; justify-self:center; }
   .reveal{ justify-content:center; }
@@ -332,13 +367,17 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 
   <!-- ============ EXPLORER ============ -->
   <section class="explorer" id="explorer" aria-label="Endpoint explorer" aria-live="off">
-    <p class="qbar" id="qbar"></p>
+    <div class="qbar" id="qbar">
+      <span class="qbar__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 1 1 3 2.45c-.55.16-.95.66-.95 1.25v.4"/><path d="M12 17h.01"/></svg></span>
+      <span class="qbar__text" id="qbarText"></span>
+    </div>
 
     <div class="stage">
       <p class="stage__hint">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v0M12 11v5"/></svg>
         Select the <span style="color:var(--pink)">&#9679;&nbsp;pink</span> and <span style="color:var(--green)">&#9679;&nbsp;green</span> markers on the curve to reveal each median.
       </p>
+      <div class="charea">
       <div class="chart" id="chart">
         <img class="chart__img" id="chartImg" alt="" />
         <button class="hot hot--treated" id="hotTreated" type="button" aria-pressed="false"></button>
@@ -353,9 +392,14 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
           <span id="bubbleTreatedTxt"></span>
         </div>
       </div>
+      </div>
     </div>
 
     <div class="controls">
+      <div class="controls__hint" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/><polyline points="9 18 3 12 9 6"/></svg>
+        Switch endpoint — OS · DOR · PFS
+      </div>
       <div class="controls__nav">
         <button class="nav-btn" id="prev" type="button" aria-label="Previous endpoint">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
@@ -367,7 +411,8 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
       </div>
       <div class="controls__table reveal">
         <button class="reveal__btn" id="tableBtn" type="button" disabled aria-describedby="tableLock">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 4v16M15 4v16"/></svg>
+          <svg class="reveal__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 4v16M15 4v16"/></svg>
+          <span class="tick" aria-hidden="true"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
           <span id="tableBtnLabel">View full data table</span>
           <span class="reveal__lock" id="tableLock">— reveal both medians to unlock</span>
         </button>
@@ -404,9 +449,10 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
     </table>
 
     <div class="modal__foot">
-      <p>CI, confidence interval. Median (95% CI) in months. Events are deaths (OS), progression/death (PFS) or loss of response (DOR). Data cut-off: 20&nbsp;May&nbsp;2024.</p>
-      <div class="cite-row">
-        <span class="cite-row__txt" id="citeTxt">Mazieres J, Veillon R, Cortot AB, et al. Tepotinib in patients with <em>MET</em>ex14 skipping NSCLC from the VISION study: &ge;3-year follow-up outcomes. <em>J Thorac Oncol.</em> 2025;20(3 Suppl 1):S59&ndash;S60 (poster 81P).</span>
+      <p class="modal__note">CI, confidence interval. Median (95% CI) in months. Events: deaths (OS), progression/death (PFS), loss of response (DOR). Data cut-off 20&nbsp;May&nbsp;2024.</p>
+      <div class="source-panel">
+        <div class="source-panel__label">Source — same for all three endpoints</div>
+        <p class="source-panel__cite" id="citeTxt">Mazieres J, Veillon R, Cortot AB, et al. Tepotinib in patients with <em>MET</em>ex14 skipping NSCLC from the VISION study: &ge;3-year follow-up outcomes. <em>J Thorac Oncol.</em> 2025;20(3 Suppl 1):S59&ndash;S60 (poster 81P).</p>
         <button class="cite-src" id="citeSrc" type="button" data-url="https://doi.org/10.1016/S1556-0864(25)00276-X" data-ref="Mazieres J, et al. J Thorac Oncol. 2025;20(3 Suppl 1):S59–S60">
           View source <span aria-hidden="true">&#8599;</span>
         </button>
@@ -474,7 +520,10 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
   function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
   const slide=$('slide'), hubGrid=$('hubGrid'), dots=$('dots'), live=$('live'), capSub=$('capSub');
-  const qbar=$('qbar'), chartImg=$('chartImg'), chart=$('chart');
+  const qbar=$('qbar'), qbarText=$('qbarText'), chartImg=$('chartImg'), chart=$('chart');
+  const controls=document.querySelector('.controls');
+  // replay a one-shot entrance animation (fade/ease) on demand; no-op under reduced motion
+  function replay(el,name,dur,delay){ if(reduceMotion||!el) return; el.style.animation='none'; void el.offsetWidth; el.style.animation=name+' '+dur+' ease '+(delay||'0s')+' both'; }
   const hotNaive=$('hotNaive'), hotTreated=$('hotTreated');
   const bubbleNaive=$('bubbleNaive'), bubbleTreated=$('bubbleTreated');
   const bubbleNaiveTxt=$('bubbleNaiveTxt'), bubbleTreatedTxt=$('bubbleTreatedTxt');
@@ -491,15 +540,18 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
     const ah=charea.clientHeight, aw=charea.clientWidth;
     if(!ah||!aw) return;
     const ratio=chartImg.naturalWidth/chartImg.naturalHeight;
-    let h=ah, w=h*ratio;
-    if(w>aw){ w=aw; h=w/ratio; }
+    // Reserve breathing room (top + bottom) so the chart never fills the whole row —
+    // the baked-in at-risk table then keeps clear of the nav controls below.
+    const vGap=Math.max(22, ah*0.07), hGap=Math.max(16, aw*0.03);
+    let h=ah-vGap, w=h*ratio;
+    if(w>aw-hGap){ w=aw-hGap; h=w/ratio; }
     chart.style.width=w.toFixed(1)+'px'; chart.style.height=h.toFixed(1)+'px';
   }
   chartImg.addEventListener('load', sizeChart);
   window.addEventListener('resize', sizeChart);
 
   // per-metric exploration state
-  const state = METRICS.map(()=>({ naive:false, treated:false }));
+  const state = METRICS.map(()=>({ naive:false, treated:false, tableViewed:false }));
   let index = 0, inExplorer = false;
 
   /* ---------- build hub ---------- */
@@ -532,11 +584,15 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
   }
 
   /* ---------- render a metric into the explorer ---------- */
-  function render(i){
+  function render(i, entrance){
     const mtr=METRICS[i];
-    qbar.innerHTML=questionFor(mtr);
+    qbarText.innerHTML=questionFor(mtr);
     chartImg.src=mtr.img; chartImg.alt=mtr.alt;
     requestAnimationFrame(sizeChart);
+    // fade/ease choreography: question panel -> chart (-> controls on first entry)
+    replay(qbarText,'fadeUp','.45s','0s');
+    replay(chart,'fadeZoom','.5s', entrance?'.12s':'.04s');
+    if(entrance) replay(controls,'fadeUp','.45s','.24s');
 
     // position hotspots
     place(hotNaive, mtr.hot.naive); place(hotTreated, mtr.hot.treated);
@@ -585,15 +641,21 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 
   /* ---------- table gate ---------- */
   function updateGate(){
-    const both = state[index].naive && state[index].treated;
-    tableBtn.disabled=!both;
-    if(both){
-      tableLock.textContent='';
-      tableBtnLabel.textContent='View full data table';
+    const st=state[index];
+    const both = st.naive && st.treated;
+    tableBtn.disabled = !(both || st.tableViewed);   // once viewed, stays openable
+    if(st.tableViewed){
+      tableBtn.classList.add('is-viewed'); tableBtn.classList.remove('is-ready'); delete tableBtn.dataset.ready;
+      tableBtnLabel.textContent='Data table viewed'; tableLock.textContent='';
+    } else if(both){
+      tableBtn.classList.remove('is-viewed');
+      tableLock.textContent=''; tableBtnLabel.textContent='View full data table';
       if(!tableBtn.dataset.ready){ tableBtn.classList.add('is-ready'); tableBtn.dataset.ready='1';
         live.textContent='Both medians revealed. The full data table is now available.'; }
     } else {
-      const left = (state[index].naive||state[index].treated) ? 'reveal the other median to unlock' : 'reveal both medians to unlock';
+      tableBtn.classList.remove('is-viewed');
+      tableBtnLabel.textContent='View full data table';
+      const left = (st.naive||st.treated) ? 'reveal the other median to unlock' : 'reveal both medians to unlock';
       tableLock.textContent='— '+left;
       tableBtn.classList.remove('is-ready'); delete tableBtn.dataset.ready;
     }
@@ -605,7 +667,7 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
   function enterExplorer(i){
     inExplorer=true; index=i;
     slide.classList.add('is-explorer');
-    render(i);
+    render(i, true);
     prev.focus({preventScroll:true});
   }
   function backToHub(){
@@ -658,6 +720,7 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
     modalReturn=document.activeElement;
     modal.hidden=false; modal.classList.add('is-open');
     modalClose.focus();
+    state[index].tableViewed=true; updateGate();
     live.textContent='Full '+mtr.abbr+' data table opened.';
   }
   function closeTable(){
