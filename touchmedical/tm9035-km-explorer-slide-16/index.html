@@ -105,6 +105,11 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 .hub__grid .card:nth-child(2){ animation-delay:.26s; }
 .hub__grid .card:nth-child(3){ animation-delay:.34s; }
 
+/* source reference — sits beneath the cards, unlocked only once all 3 explored */
+.hub__source{ width:100%; max-width:760px; margin:clamp(14px,2.2vw,22px) auto 0; }
+.hub__source-locked{ margin:0; display:flex; align-items:center; justify-content:center; gap:8px; text-align:center; font-size:.8rem; font-weight:600; color:var(--faint); padding:11px 14px; border:1px dashed var(--line); border-radius:12px; }
+.hub__source-locked svg{ width:15px; height:15px; flex:0 0 auto; }
+
 /* ============================================================
    EXPLORER
    ============================================================ */
@@ -363,6 +368,20 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
   <section class="hub" id="hub" aria-label="Choose an endpoint">
     <p class="hub__lead">After <b>&ge;3 years of follow-up</b>, the VISION study reported long-term efficacy in 313 patients with <em>MET</em>ex14 skipping NSCLC. Explore each Kaplan&ndash;Meier endpoint, reveal the treatment-na&iuml;ve and previously treated medians, then open the full data table.</p>
     <div class="hub__grid" id="hubGrid"></div>
+
+    <div class="hub__source" id="hubSource">
+      <p class="hub__source-locked" id="hubSourceLocked">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+        <span id="hubSourceLockedTxt">Explore all three endpoints to unlock the source reference.</span>
+      </p>
+      <div class="source-panel" id="hubSourcePanel" hidden>
+        <div class="source-panel__label">Source — same for all three endpoints</div>
+        <p class="source-panel__cite" id="citeTxt">Mazieres J, Veillon R, Cortot AB, et al. Tepotinib in patients with <em>MET</em>ex14 skipping NSCLC from the VISION study: &ge;3-year follow-up outcomes. <em>J Thorac Oncol.</em> 2025;20(3 Suppl 1):S59&ndash;S60 (poster 81P).</p>
+        <button class="cite-src" id="citeSrc" type="button" data-url="https://doi.org/10.1016/S1556-0864(25)00276-X" data-ref="Mazieres J, et al. J Thorac Oncol. 2025;20(3 Suppl 1):S59–S60">
+          View source <span aria-hidden="true">&#8599;</span>
+        </button>
+      </div>
+    </div>
   </section>
 
   <!-- ============ EXPLORER ============ -->
@@ -449,14 +468,7 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
     </table>
 
     <div class="modal__foot">
-      <p class="modal__note">CI, confidence interval. Median (95% CI) in months. Events: deaths (OS), progression/death (PFS), loss of response (DOR). Data cut-off 20&nbsp;May&nbsp;2024.</p>
-      <div class="source-panel">
-        <div class="source-panel__label">Source — same for all three endpoints</div>
-        <p class="source-panel__cite" id="citeTxt">Mazieres J, Veillon R, Cortot AB, et al. Tepotinib in patients with <em>MET</em>ex14 skipping NSCLC from the VISION study: &ge;3-year follow-up outcomes. <em>J Thorac Oncol.</em> 2025;20(3 Suppl 1):S59&ndash;S60 (poster 81P).</p>
-        <button class="cite-src" id="citeSrc" type="button" data-url="https://doi.org/10.1016/S1556-0864(25)00276-X" data-ref="Mazieres J, et al. J Thorac Oncol. 2025;20(3 Suppl 1):S59–S60">
-          View source <span aria-hidden="true">&#8599;</span>
-        </button>
-      </div>
+      <p class="modal__note">CI, confidence interval. Median (95% CI) in months. Events: deaths (OS), progression/death (PFS), loss of response (DOR). Data cut-off 20&nbsp;May&nbsp;2024. The source reference is available on the start screen once all three endpoints have been explored.</p>
     </div>
   </div>
 </div>
@@ -522,8 +534,30 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
   const slide=$('slide'), hubGrid=$('hubGrid'), dots=$('dots'), live=$('live'), capSub=$('capSub');
   const qbar=$('qbar'), qbarText=$('qbarText'), chartImg=$('chartImg'), chart=$('chart');
   const controls=document.querySelector('.controls');
+  const cap=document.querySelector('.cap'), hubLead=document.querySelector('.hub__lead');
+  const hubSourceLocked=$('hubSourceLocked'), hubSourceLockedTxt=$('hubSourceLockedTxt'), hubSourcePanel=$('hubSourcePanel');
   // replay a one-shot entrance animation (fade/ease) on demand; no-op under reduced motion
   function replay(el,name,dur,delay){ if(reduceMotion||!el) return; el.style.animation='none'; void el.offsetWidth; el.style.animation=name+' '+dur+' ease '+(delay||'0s')+' both'; }
+  // re-run the hub's staged entrance (cap -> lead -> cards -> source) each time it's shown
+  function replayHub(){
+    replay(cap,'fadeUp','.5s','0s');
+    replay(hubLead,'fadeUp','.5s','.08s');
+    cards.forEach((c,i)=>replay(c,'fadeUp','.5s',(0.16+i*0.08)+'s'));
+    if(!hubSourcePanel.hidden) replay(hubSourcePanel,'fadeUp','.5s',(0.16+cards.length*0.08)+'s');
+  }
+  // the source unlocks only once all endpoints are explored (both medians each)
+  function refreshHubSource(){
+    const n=state.filter(s=>s.naive&&s.treated).length, all=n===METRICS.length;
+    if(all){
+      hubSourceLocked.hidden=true;
+      if(hubSourcePanel.hidden){ hubSourcePanel.hidden=false; replay(hubSourcePanel,'fadeUp','.5s','0s'); }
+    } else {
+      hubSourcePanel.hidden=true; hubSourceLocked.hidden=false;
+      hubSourceLockedTxt.textContent = n===0
+        ? 'Explore all three endpoints to unlock the source reference.'
+        : n+' of '+METRICS.length+' endpoints explored — explore all three to unlock the source reference.';
+    }
+  }
   const hotNaive=$('hotNaive'), hotTreated=$('hotTreated');
   const bubbleNaive=$('bubbleNaive'), bubbleTreated=$('bubbleTreated');
   const bubbleNaiveTxt=$('bubbleNaiveTxt'), bubbleTreatedTxt=$('bubbleTreatedTxt');
@@ -661,11 +695,13 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
     }
     // mark card explored once both revealed
     if(both) cards[index].classList.add('is-seen');
+    refreshHubSource();
   }
 
   /* ---------- navigation ---------- */
   function enterExplorer(i){
     inExplorer=true; index=i;
+    replay(cap,'fadeUp','.5s','0s');   // re-cleanse the top panel on entry
     slide.classList.add('is-explorer');
     render(i, true);
     prev.focus({preventScroll:true});
@@ -674,6 +710,8 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
     inExplorer=false;
     slide.classList.remove('is-explorer');
     capSub.textContent='Select an endpoint to explore its Kaplan–Meier data.';
+    refreshHubSource();
+    replayHub();                        // replay the staged hub entrance each return
     cards[index].focus({preventScroll:true});
   }
   function goTo(i){
@@ -772,6 +810,8 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
     else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); }
   }
 
+  /* ---------- init ---------- */
+  refreshHubSource();
 })();
 </script>
 </body>
