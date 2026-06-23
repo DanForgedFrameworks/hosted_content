@@ -506,21 +506,57 @@ const STATEMENTS = [
 
   countEl.textContent = STATEMENTS.length;
 
-  /* ---------- panel open / close (fills the embed frame; NOT browser fullscreen) ---------- */
+  /* ---------- panel open / close ----------
+     On open we ask the browser for fullscreen so the embed box in Visme can be
+     TINY (just the pill) yet the citations still open at full size. If fullscreen
+     is unavailable/blocked, the overlay simply fills the embed frame instead. */
   let lastFocus = null;
+
+  function fsElement(){
+    return document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement || null;
+  }
+  function reqFS(){
+    const el = document.documentElement;
+    const fn = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+    if(!fn) return Promise.reject();
+    try{ const r = fn.call(el); return (r && r.then) ? r : Promise.resolve(); }
+    catch(e){ return Promise.reject(e); }
+  }
+  function exitFS(){
+    const fn = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+    if(fn && fsElement()){ try{ const r = fn.call(document); return (r && r.then) ? r : Promise.resolve(); }catch(e){} }
+    return Promise.resolve();
+  }
+
   function open(){
     lastFocus = document.activeElement;
     overlay.hidden = false;
     overlay.classList.add('is-open');
     pill.setAttribute('aria-expanded','true');
+    reqFS().catch(()=>{});           // best-effort; harmless if the embed blocks it
     setTimeout(()=> closeBtn.focus(), 30);
   }
   function close(){
+    if(inter.classList.contains('is-open')) closeInter();
     overlay.classList.remove('is-open');
     overlay.hidden = true;
     pill.setAttribute('aria-expanded','false');
+    if(fsElement()) exitFS();
     if(lastFocus && lastFocus.focus){ try{ lastFocus.focus(); }catch(e){} }
   }
+
+  // If the user leaves fullscreen by any means (Esc / browser UI), collapse cleanly.
+  function onFsChange(){
+    if(!fsElement() && overlay.classList.contains('is-open')){
+      if(inter.classList.contains('is-open')) closeInter();
+      overlay.classList.remove('is-open');
+      overlay.hidden = true;
+      pill.setAttribute('aria-expanded','false');
+      if(lastFocus && lastFocus.focus){ try{ lastFocus.focus(); }catch(e){} }
+    }
+  }
+  ['fullscreenchange','webkitfullscreenchange','msfullscreenchange']
+    .forEach(ev => document.addEventListener(ev, onFsChange));
 
   /* ---------- D16 external-link interstitial (Tiro "Launch" preparing-delay) ---------- */
   let pendingURL = null, interTrigger = null, launchTimer = null;
@@ -603,13 +639,10 @@ const STATEMENTS = [
     }
   }, true);
 
-  /* ---------- wiring ---------- */
+  /* ---------- wiring ----------
+     Click/tap only: fullscreen needs a genuine user gesture, which a hover
+     timer can't reliably provide. */
   pill.addEventListener('click', open);
-  let hoverTimer=null;
-  pill.addEventListener('mouseenter', ()=>{
-    if(window.matchMedia('(hover:hover)').matches){ hoverTimer = setTimeout(open, 180); }
-  });
-  pill.addEventListener('mouseleave', ()=>{ if(hoverTimer){ clearTimeout(hoverTimer); hoverTimer=null; } });
   closeBtn.addEventListener('click', close);
   overlay.addEventListener('click', e =>{ if(e.target === overlay) close(); });
 })();
