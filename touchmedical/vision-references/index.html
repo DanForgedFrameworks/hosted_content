@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>References &amp; citations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   TOUCH MEDICAL — CITATION PILL
+   Self-contained. No external dependencies (safe for Visme embed).
+
+   >>> BRAND SWAP HAPPENS HERE <<<
+   Everything Touch-Medical-specific is a CSS variable below.
+   When the brand assets arrive, change ONLY these values.
+   ============================================================ */
+:root{
+  /* Brand colours (Touch Medical) */
+  --tm-accent:        #0098be;   /* Touch Medical border/accent blue            */
+  --tm-accent-strong: #007a98;   /* darker accent for hover/active              */
+  --tm-on-accent:     #ffffff;   /* text/icon colour ON the accent              */
+
+  /* Neutrals */
+  --tm-ink:    #222f55;          /* Touch Medical navy — main text */
+  --tm-muted:  #56608a;          /* secondary text       */
+  --tm-faint:  #8a91b0;          /* tertiary / labels    */
+  --tm-line:   #e3e8ee;          /* hairlines / borders  */
+  --tm-panel:  #ffffff;          /* expanded panel bg    */
+  --tm-tint:   #f4f7f9;          /* card / row tint      */
+  --tm-backdrop: rgba(16,26,38,.55); /* dim behind panel */
+
+  /* Typography (Touch Medical — Poppins, loaded from Google Fonts in <head>) */
+  --tm-font: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  /* Shape */
+  --tm-radius:   14px;
+  --tm-radius-sm: 9px;
+}
+
+*{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; background:transparent; }
+body{
+  font-family:var(--tm-font);
+  color:var(--tm-ink);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ---------- THE PILL (the tiny embeddable trigger) ---------- */
+.tm-pill{
+  position:fixed;            /* anchored to its embed frame */
+  right:14px;
+  bottom:14px;
+  display:inline-flex;
+  align-items:center;
+  gap:.42em;
+  font-family:var(--tm-font);
+  font-size:13px;
+  font-weight:600;
+  line-height:1;
+  color:var(--tm-on-accent);
+  background:var(--tm-accent);
+  border:0;
+  padding:7px 13px 7px 10px;
+  border-radius:999px;
+  cursor:pointer;
+  letter-spacing:.01em;
+  box-shadow:0 1px 2px rgba(16,26,38,.18);
+  transition:background .16s ease, transform .12s ease, box-shadow .16s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.tm-pill:hover,
+.tm-pill:focus-visible{
+  background:var(--tm-accent-strong);
+  box-shadow:0 3px 9px rgba(16,26,38,.22);
+  outline:none;
+}
+.tm-pill:focus-visible{ outline:2px solid var(--tm-accent); outline-offset:2px; }
+.tm-pill:active{ transform:translateY(1px); }
+.tm-pill__glyph{
+  width:16px;height:16px;
+  display:inline-flex;align-items:center;justify-content:center;
+  border-radius:50%;
+  background:rgba(255,255,255,.22);
+  font-size:11px;font-weight:700;font-style:italic;
+}
+.tm-pill__count{
+  font-variant-numeric:tabular-nums;
+  opacity:.85;
+  font-weight:500;
+}
+
+/* ---------- THE OVERLAY (expanded citation panel) ---------- */
+.tm-overlay{
+  position:fixed; inset:0;
+  display:none;
+  align-items:flex-start;
+  justify-content:center;
+  background:var(--tm-backdrop);
+  -webkit-backdrop-filter:blur(2px);
+  backdrop-filter:blur(2px);
+  padding:clamp(12px,4vw,48px);
+  overflow:auto;
+  z-index:2147483600;            /* max-ish: sit above embed chrome */
+}
+.tm-overlay.is-open{ display:flex; }
+
+/* When the overlay element itself is the fullscreen element */
+.tm-overlay:fullscreen{
+  background:var(--tm-backdrop);
+  padding:clamp(16px,5vh,56px);
+}
+.tm-overlay:-webkit-full-screen{
+  background:var(--tm-backdrop);
+  padding:clamp(16px,5vh,56px);
+}
+
+.tm-panel{
+  width:min(680px,100%);
+  margin:auto;
+  background:var(--tm-panel);
+  border-radius:var(--tm-radius);
+  box-shadow:0 24px 60px rgba(16,26,38,.32);
+  overflow:hidden;
+  animation:tm-rise .22s ease both;
+}
+@keyframes tm-rise{ from{ opacity:0; transform:translateY(10px) scale(.99);} to{opacity:1;transform:none;} }
+
+.tm-panel__head{
+  display:flex; align-items:flex-start; gap:16px;
+  padding:20px 22px 16px;
+  border-bottom:1px solid var(--tm-line);
+}
+.tm-panel__titles{ flex:1 1 auto; min-width:0; }
+.tm-panel__eyebrow{
+  font-size:11px; font-weight:700; letter-spacing:.10em; text-transform:uppercase;
+  color:var(--tm-accent); margin:0 0 4px;
+}
+.tm-panel__title{ font-size:18px; font-weight:700; margin:0; color:var(--tm-ink); }
+.tm-panel__sub{ font-size:12.5px; color:var(--tm-muted); margin:5px 0 0; }
+
+.tm-close{
+  flex:0 0 auto;
+  width:36px;height:36px;
+  border:1px solid var(--tm-line);
+  background:#fff; color:var(--tm-muted);
+  border-radius:9px; cursor:pointer;
+  font-size:18px; line-height:1;
+  display:inline-flex; align-items:center; justify-content:center;
+  transition:background .15s ease,color .15s ease,border-color .15s ease;
+}
+.tm-close:hover,.tm-close:focus-visible{
+  background:var(--tm-tint); color:var(--tm-ink); border-color:var(--tm-faint); outline:none;
+}
+
+.tm-panel__body{
+  padding:8px 22px 22px;
+  max-height:none;
+}
+
+/* ---------- One statement block ---------- */
+.tm-stmt{
+  padding:18px 0;
+  border-bottom:1px solid var(--tm-line);
+}
+.tm-stmt:last-child{ border-bottom:0; }
+.tm-stmt__head{ display:flex; align-items:baseline; gap:10px; margin:0 0 8px; }
+.tm-stmt__num{
+  flex:0 0 auto;
+  font-size:11px; font-weight:700;
+  color:var(--tm-accent);
+  background:var(--tm-tint);
+  border:1px solid var(--tm-line);
+  border-radius:6px;
+  padding:3px 8px;
+  letter-spacing:.04em;
+  white-space:nowrap;
+}
+.tm-stmt__text{ margin:0; font-size:14.5px; line-height:1.55; color:var(--tm-ink); }
+
+.tm-cites{
+  list-style:none; margin:12px 0 0; padding:0;
+  display:flex; flex-direction:column; gap:7px;
+}
+.tm-cite{
+  display:flex; align-items:flex-start; gap:9px;
+  font-size:13px; line-height:1.45; color:var(--tm-muted);
+}
+.tm-cite__dot{
+  flex:0 0 auto; margin-top:.5em;
+  width:5px;height:5px;border-radius:50%;
+  background:var(--tm-faint);
+}
+.tm-cite__txt{ flex:1 1 auto; }
+.tm-cite__ref{ display:block; color:var(--tm-ink); }
+.tm-cite__url{
+  display:block; margin-top:3px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  font-size:11px; line-height:1.45; color:var(--tm-muted);
+  word-break:break-all;
+}
+.tm-cite__acc{ color:var(--tm-faint); white-space:nowrap; }
+
+.tm-panel__foot{
+  padding:13px 22px;
+  border-top:1px solid var(--tm-line);
+  background:var(--tm-tint);
+  font-size:11.5px; color:var(--tm-faint);
+  display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
+}
+.tm-esc-hint{ display:none; }
+@media (hover:hover) and (min-width:520px){ .tm-esc-hint{ display:inline; } }
+
+/* ---------- Source action pill (inside the citation list) ---------- */
+.tm-src{
+  margin-top:8px;
+  display:inline-flex; align-items:center; gap:5px;
+  font-family:var(--tm-font); font-size:11.5px; font-weight:600;
+  color:var(--tm-accent); background:var(--tm-tint);
+  border:1px solid color-mix(in srgb,var(--tm-accent) 30%, var(--tm-line));
+  border-radius:999px; padding:5px 11px; cursor:pointer;
+  transition:background .15s ease, border-color .15s ease, color .15s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.tm-src:hover,.tm-src:focus-visible{
+  background:var(--tm-accent); color:var(--tm-on-accent); border-color:var(--tm-accent); outline:none;
+}
+
+/* ---------- D16 external-link interstitial (Tiro launch behaviour, TM skin) ---------- */
+.tm-inter{
+  position:fixed; inset:0; z-index:2147483601;
+  display:none; align-items:center; justify-content:center;
+  padding:clamp(12px,4vw,40px);
+  background:rgba(16,26,38,.68);
+}
+.tm-inter.is-open{ display:flex; }
+.tm-inter__panel{
+  width:min(460px,100%); max-height:calc(100% - 24px); overflow:auto;
+  background:var(--tm-panel); border-radius:var(--tm-radius);
+  box-shadow:0 24px 60px rgba(16,26,38,.4);
+  padding:22px; animation:tm-rise .2s ease both;
+}
+.tm-inter__title{ font-size:16px; font-weight:700; margin:0 0 8px; color:var(--tm-ink); }
+.tm-inter__p{ font-size:13px; line-height:1.5; color:var(--tm-muted); margin:0 0 10px; }
+.tm-inter__p strong{ color:var(--tm-ink); font-weight:600; }
+.tm-inter__domain{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12px;
+  color:var(--tm-ink); margin:0 0 8px; overflow-wrap:anywhere;
+}
+.tm-inter__url{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:11.5px; line-height:1.45;
+  color:var(--tm-muted); background:var(--tm-tint); border:1px solid var(--tm-line);
+  border-radius:8px; padding:9px 11px; word-break:break-all;
+}
+.tm-inter__status{ margin-top:12px; display:flex; align-items:center; gap:9px; min-height:22px; font-size:12px; font-style:italic; color:var(--tm-muted); }
+.tm-prep{ display:inline-flex; gap:5px; }
+.tm-prep i{ width:8px; height:8px; border-radius:50%; background:var(--tm-accent); display:inline-block; animation:tm-prep-pulse 1s infinite ease-in-out; }
+.tm-prep i:nth-child(2){ animation-delay:.15s; }
+.tm-prep i:nth-child(3){ animation-delay:.3s; }
+@keyframes tm-prep-pulse{ 0%,100%{ transform:scale(.6); opacity:.4; } 50%{ transform:scale(1); opacity:1; } }
+.tm-inter__actions{ display:flex; flex-wrap:wrap; gap:9px; margin-top:16px; }
+.tm-inter__btn{
+  min-height:44px; padding:10px 18px;
+  border:2px solid var(--tm-accent); border-radius:10px;
+  background:var(--tm-accent); color:var(--tm-on-accent);
+  font-family:var(--tm-font); font-weight:600; font-size:13px; cursor:pointer;
+}
+.tm-inter__btn.secondary{ background:var(--tm-panel); color:var(--tm-accent); }
+.tm-inter__btn:disabled{ background:#c3c8d2; border-color:#c3c8d2; color:#fff; cursor:not-allowed; }
+.tm-inter__btn:hover:not(:disabled){ filter:brightness(.96); }
+
+/* ---------- Mobile ---------- */
+@media (max-width:520px){
+  .tm-panel__head{ padding:16px 16px 13px; }
+  .tm-panel__body{ padding:6px 16px 18px; }
+  .tm-panel__foot{ padding:11px 16px; }
+  .tm-stmt__text{ font-size:14px; }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion:reduce){
+  .tm-pill,.tm-close,.tm-src{ transition:none; }
+  .tm-panel,.tm-inter__panel{ animation:none; }
+  .tm-prep i{ animation:none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     THE EMBEDDABLE PILL
+     This is all that shows until clicked/hovered.
+     Edit the label text in .tm-pill__label freely
+     (e.g. "References", "Sources", "Citations", or just "?").
+     ============================================================ -->
+<button class="tm-pill" id="tmPill" type="button"
+        aria-haspopup="dialog" aria-expanded="false" aria-controls="tmOverlay">
+  <span class="tm-pill__glyph" aria-hidden="true">i</span>
+  <span class="tm-pill__label">References</span>
+  <span class="tm-pill__count" id="tmCount" aria-hidden="true"></span>
+</button>
+
+<!-- THE EXPANDED PANEL (built from data below) -->
+<div class="tm-overlay" id="tmOverlay" role="dialog" aria-modal="true"
+     aria-labelledby="tmTitle" hidden>
+  <div class="tm-panel" role="document">
+    <header class="tm-panel__head">
+      <div class="tm-panel__titles">
+        <p class="tm-panel__eyebrow">Evidence &amp; sources</p>
+        <h1 class="tm-panel__title" id="tmTitle">References &amp; citations</h1>
+        <p class="tm-panel__sub">Supporting evidence for the statements in this module.</p>
+      </div>
+      <button class="tm-close" id="tmClose" type="button" aria-label="Close references">&times;</button>
+    </header>
+    <div class="tm-panel__body" id="tmBody"><!-- statements injected here --></div>
+    <footer class="tm-panel__foot">
+      <span>Touch Medical</span>
+      <span class="tm-esc-hint">Press <strong>Esc</strong> to close</span>
+    </footer>
+  </div>
+</div>
+
+<!-- D16 EXTERNAL-LINK INTERSTITIAL (Tiro launch behaviour, Touch Medical skin) -->
+<div class="tm-inter" id="tmInter" role="dialog" aria-modal="true"
+     aria-labelledby="tmInterTitle" aria-describedby="tmInterReason" hidden>
+  <div class="tm-inter__panel" role="document">
+    <h2 class="tm-inter__title" id="tmInterTitle">You are leaving this activity</h2>
+    <p class="tm-inter__p" id="tmInterReason"></p>
+    <p class="tm-inter__p"><strong>Source:</strong> <span id="tmInterDest"></span><br><strong>Organisation:</strong> <span id="tmInterOrg"></span></p>
+    <p class="tm-inter__domain" id="tmInterDomain"></p>
+    <p class="tm-inter__p">The source opens in a new tab. Check the address is expected before continuing.</p>
+    <div class="tm-inter__url" id="tmInterUrl"></div>
+    <div class="tm-inter__status" aria-live="polite"><span class="tm-prep" aria-hidden="true"><i></i><i></i><i></i></span><span id="tmInterStatus">Preparing the link&hellip;</span></div>
+    <div class="tm-inter__actions">
+      <button class="tm-inter__btn" id="tmInterOpen" type="button" disabled>Open source</button>
+      <button class="tm-inter__btn secondary" id="tmInterCopy" type="button">Copy link</button>
+      <button class="tm-inter__btn secondary" id="tmInterStay" type="button">Stay here</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   CONTENT  —  edit here only.
+   Each statement: { text, cites:[ {label, url} | {label, pending:true} ] }
+   - Give a citation a `url` to make it a clickable link.
+   - Use `pending:true` while a URL/last-accessed date is still outstanding.
+   ============================================================ */
+const STATEMENTS = [
+  {
+    text: "Potentially actionable genomic alterations have been identified in approximately 35% of patients with NSCLC undergoing comprehensive genomic profiling, including in approximately 45% of lung adenocarcinomas. Early biomarker-guided treatment has been associated with improved survival.",
+    cites: [
+      { ref: "Russo A, et al. 2026 J Thorac Oncol e-pub ahead of print. doi: 10.1016/j.jtho.2026.103695",
+        url: "https://doi.org/10.1016/j.jtho.2026.103695" },
+      { ref: "Aggarwal C, et al. 2023 JCO Precis Oncol e2300191. doi: 10.1200/PO.23.00191",
+        url: "https://doi.org/10.1200/PO.23.00191" }
+    ]
+  },
+  {
+    text: "The MET pathway is critical for normal physiological processes (e.g. cell growth, and tissue repair). Its dysregulation, most notably through METex14 skipping, but also via other MET alterations (MET amplification, MET fusions) can drive tumour cell proliferation, survival, invasion, and metastasis in NSCLC.",
+    cites: [
+      { ref: "Drilon A, et al. 2017 J Thorac Oncol 12(1):15–26. doi: 10.1016/j.jtho.2016.10.014",
+        url: "https://doi.org/10.1016/j.jtho.2016.10.014" }
+    ]
+  },
+  {
+    text: "Approximately 2–4% of patients with NSCLC harbour MET exon 14 (METex14) skipping, a primary oncogenic driver associated with a poor prognosis but sensitivity to targeted treatment with selective MET tyrosine kinase inhibitors (MET TKIs).",
+    cites: [
+      { ref: "Russo A, et al. 2026 J Thorac Oncol e-pub ahead of print. doi: 10.1016/j.jtho.2026.103695",
+        url: "https://doi.org/10.1016/j.jtho.2026.103695" },
+      { ref: "Awad MM, et al. 2016 J Clin Oncol 34(7):721–730. doi: 10.1200/JCO.2015.63.4600",
+        url: "https://doi.org/10.1200/JCO.2015.63.4600" },
+      { ref: "Drilon A, et al. 2017 J Thorac Oncol 12(1):15–26. doi: 10.1016/j.jtho.2016.10.014",
+        url: "https://doi.org/10.1016/j.jtho.2016.10.014" },
+      { ref: "Remon J, et al. 2023 J Thorac Oncol 18(4):419–435. doi: 10.1016/j.jtho.2022.10.015",
+        url: "https://doi.org/10.1016/j.jtho.2022.10.015" },
+      { ref: "Tong JH, et al. 2016 Clin Cancer Res 22(12):3048–3056. doi: 10.1158/1078-0432.CCR-15-2061",
+        url: "https://doi.org/10.1158/1078-0432.CCR-15-2061" }
+    ]
+  },
+  {
+    text: "Multiple MET TKIs, including tepotinib and capmatinib, are approved for targeted therapy of patients with advanced/metastatic METex14 skipping NSCLC and are recommended as targeted therapy options in key international guidelines, including those of ESMO.",
+    cites: [
+      { ref: "US FDA. TEPMETKO (tepotinib) Prescribing Information. 2024.",
+        url: "https://www.emdserono.com/us-en/pi/tepmetko-pi.pdf",
+        accessed: "23 June 2026" },
+      { ref: "TEPMETKO (tepotinib) approved in Japan for advanced NSCLC with METex14 skipping alterations. Merck KGaA; 25 March 2020.",
+        url: "https://www.merckgroup.com/en/news/tepotinib-25-03-2020.html",
+        accessed: "23 June 2026" },
+      { ref: "US FDA. Tabrecta (capmatinib) Prescribing Information. 2024.",
+        url: "https://www.novartis.com/us-en/sites/novartis_us/files/tabrecta.pdf",
+        accessed: "23 June 2026" },
+      { ref: "European Medicines Agency. Tabrecta (capmatinib) Summary of Product Characteristics. 2025.",
+        url: "https://www.ema.europa.eu/en/documents/product-information/tabrecta-epar-product-information_en.pdf",
+        accessed: "23 June 2026" },
+      { ref: "Hendriks LE, et al. Ann Oncol. 2023;34(4):339–357. doi: 10.1016/j.annonc.2022.12.009",
+        url: "https://doi.org/10.1016/j.annonc.2022.12.009" },
+      { ref: "ESMO Oncogene-Addicted Metastatic NSCLC Living Guideline, v1.3 – February 2026.",
+        url: "https://www.esmo.org/guidelines/living-guidelines/esmo-living-guideline-oncogene-addicted-metastatic-non-small-cell-lung-cancer/management-of-advanced-and-metastatic-disease/ret-fusion-ntrk-her2-activating-mutations-her2-overexpression-met-ex14-skipping-mutation-c-met-or-kras-g12c-mutation/ret-ntrk-her2-exon-20-egfr-ex20ins",
+        accessed: "23 June 2026" }
+    ]
+  },
+  {
+    text: "Tepotinib is an oral, once-daily, highly selective MET tyrosine kinase inhibitor approved in multiple countries (including the United States, Japan, and others) for the treatment of adult patients with advanced/metastatic NSCLC harbouring METex14 skipping. In the European Union, tepotinib is approved for patients who received prior treatment with immunotherapy and/or platinum-based chemotherapy.",
+    cites: [
+      { ref: "Mazieres J, et al. 2023 JAMA Oncol 9(9):1260–1266. doi: 10.1001/jamaoncol.2023.1962",
+        url: "https://doi.org/10.1001/jamaoncol.2023.1962" },
+      { ref: "US FDA. TEPMETKO (tepotinib) Prescribing Information. 2024.",
+        url: "https://www.emdserono.com/us-en/pi/tepmetko-pi.pdf",
+        accessed: "23 June 2026" },
+      { ref: "TEPMETKO (tepotinib) approved in Japan for advanced NSCLC with METex14 skipping alterations. Merck KGaA; 25 March 2020.",
+        url: "https://www.merckgroup.com/en/news/tepotinib-25-03-2020.html",
+        accessed: "23 June 2026" },
+      { ref: "European Medicines Agency. TEPMETKO (tepotinib) Summary of Product Characteristics. 17 April 2026.",
+        url: "https://www.ema.europa.eu/en/documents/product-information/tepmetko-epar-product-information_en.pdf",
+        accessed: "23 June 2026" }
+    ]
+  },
+  {
+    text: "The Phase 2 VISION study, a single-arm, open-label trial, evaluated the efficacy and safety of tepotinib in patients with advanced NSCLC harbouring MET alterations. This e-learning module focuses on the 313 patients with METex14 skipping NSCLC (detected by liquid and/or tissue biopsy), in whom tepotinib demonstrated robust and durable efficacy, with long-term follow-up data now available at ≥3 years.",
+    cites: [
+      { ref: "Paik PK, et al. 2020 N Engl J Med 383(10):931–943. doi: 10.1056/NEJMoa2004407",
+        url: "https://doi.org/10.1056/NEJMoa2004407" },
+      { ref: "Mazieres J, et al. 2023 JAMA Oncol 9(9):1260–1266. doi: 10.1001/jamaoncol.2023.1962",
+        url: "https://doi.org/10.1001/jamaoncol.2023.1962" }
+    ]
+  }
+];
+
+/* ============================================================
+   ENGINE — no edits needed below.
+   ============================================================ */
+(function(){
+  "use strict";
+  const pill    = document.getElementById('tmPill');
+  const overlay = document.getElementById('tmOverlay');
+  const body    = document.getElementById('tmBody');
+  const closeBtn= document.getElementById('tmClose');
+  const countEl = document.getElementById('tmCount');
+
+  // interstitial elements
+  const inter    = document.getElementById('tmInter');
+  const iDest    = document.getElementById('tmInterDest');
+  const iOrg     = document.getElementById('tmInterOrg');
+  const iDomain  = document.getElementById('tmInterDomain');
+  const iUrl     = document.getElementById('tmInterUrl');
+  const iReason  = document.getElementById('tmInterReason');
+  const iStatus  = document.getElementById('tmInterStatus');
+  const iDots    = inter.querySelector('.tm-prep');
+  const iOpen    = document.getElementById('tmInterOpen');
+  const iCopy    = document.getElementById('tmInterCopy');
+  const iStay    = document.getElementById('tmInterStay');
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+  // Friendly publisher name for the interstitial "Organisation" line, keyed on host.
+  function orgFromHost(host){
+    const map = {
+      'doi.org':'Publisher (resolved via doi.org)',
+      'www.novartis.com':'Novartis',
+      'novartis.com':'Novartis',
+      'www.emdserono.com':'EMD Serono',
+      'emdserono.com':'EMD Serono',
+      'accessdata.fda.gov':'U.S. Food & Drug Administration',
+      'www.accessdata.fda.gov':'U.S. Food & Drug Administration',
+      'www.ema.europa.eu':'European Medicines Agency',
+      'ema.europa.eu':'European Medicines Agency',
+      'www.esmo.org':'European Society for Medical Oncology',
+      'esmo.org':'European Society for Medical Oncology',
+      'www.merckgroup.com':'Merck KGaA'
+    };
+    return map[host] || host;
+  }
+
+  // ---- render statements ----
+  function citeHTML(c){
+    let out = '<span class="tm-cite__ref">'+esc(c.ref)+'</span>';
+    if(c.url){
+      out += '<span class="tm-cite__url">'+esc(c.url)+
+             (c.accessed ? ' <span class="tm-cite__acc">[Accessed '+esc(c.accessed)+']</span>' : '')+
+             '</span>'+
+             '<button class="tm-src" type="button" data-url="'+esc(c.url)+'" data-ref="'+esc(c.ref)+'">'+
+               'Open / copy link <span aria-hidden="true">↗</span>'+
+             '</button>';
+    }
+    return out;
+  }
+
+  body.innerHTML = STATEMENTS.map((s,i)=>{
+    const cites = s.cites.map(c =>
+      '<li class="tm-cite"><span class="tm-cite__dot" aria-hidden="true"></span>'+
+      '<span class="tm-cite__txt">'+citeHTML(c)+'</span></li>'
+    ).join('');
+    return '<section class="tm-stmt">'+
+      '<div class="tm-stmt__head">'+
+        '<span class="tm-stmt__num">'+(i+1)+'</span>'+
+        '<p class="tm-stmt__text">'+esc(s.text)+'</p>'+
+      '</div>'+
+      '<ul class="tm-cites">'+cites+'</ul>'+
+    '</section>';
+  }).join('');
+
+  countEl.textContent = STATEMENTS.length;
+
+  /* ---------- panel open / close (fills the embed frame; NOT browser fullscreen) ---------- */
+  let lastFocus = null;
+  function open(){
+    lastFocus = document.activeElement;
+    overlay.hidden = false;
+    overlay.classList.add('is-open');
+    pill.setAttribute('aria-expanded','true');
+    setTimeout(()=> closeBtn.focus(), 30);
+  }
+  function close(){
+    overlay.classList.remove('is-open');
+    overlay.hidden = true;
+    pill.setAttribute('aria-expanded','false');
+    if(lastFocus && lastFocus.focus){ try{ lastFocus.focus(); }catch(e){} }
+  }
+
+  /* ---------- D16 external-link interstitial (Tiro "Launch" preparing-delay) ---------- */
+  let pendingURL = null, interTrigger = null, launchTimer = null;
+
+  function openInter(url, ref, trigger){
+    pendingURL = url;
+    interTrigger = trigger;
+    let host = url;
+    try{ host = new URL(url).hostname; }catch(e){}
+    iDest.textContent   = ref;
+    iOrg.textContent    = orgFromHost(host);
+    iDomain.textContent = host;
+    iUrl.textContent    = url;
+    iReason.textContent = 'This link opens an external source in a new tab.';
+    if(iDots) iDots.style.display = '';
+    iStatus.textContent = 'Preparing the link…';
+    iOpen.disabled = true;
+    inter.hidden = false;
+    inter.classList.add('is-open');
+    iStay.focus();                                   // focus held on "Stay here" while preparing
+    if(launchTimer) clearTimeout(launchTimer);
+    launchTimer = setTimeout(()=>{
+      if(iDots) iDots.style.display = 'none';
+      iStatus.textContent = 'Ready to open.';
+      iOpen.disabled = false;
+      iOpen.focus();                                 // focus moves to Open when ready
+    }, reduceMotion ? 250 : 1300);
+  }
+  function closeInter(){
+    if(launchTimer) clearTimeout(launchTimer);
+    inter.classList.remove('is-open');
+    inter.hidden = true;
+    if(interTrigger && interTrigger.focus){ try{ interTrigger.focus(); }catch(e){} }
+  }
+
+  iOpen.addEventListener('click', ()=>{
+    if(!pendingURL) return;
+    window.open(pendingURL, '_blank', 'noopener,noreferrer');
+    iStatus.textContent = 'Link opened in a new tab. Nothing opened? Copy the link and open it manually.';
+  });
+  iCopy.addEventListener('click', ()=>{
+    if(!pendingURL) return;
+    const ta = document.createElement('textarea');
+    ta.value = pendingURL; ta.setAttribute('readonly','');
+    ta.style.position='fixed'; ta.style.left='-9999px';
+    document.body.appendChild(ta); ta.select();
+    let ok=false;
+    try{ ok = document.execCommand('copy'); }catch(e){ ok=false; }
+    document.body.removeChild(ta);
+    iStatus.textContent = ok ? 'Link copied. Paste it into a fresh browser tab.'
+                             : 'Copying is unavailable. Select and copy the visible URL manually.';
+  });
+  iStay.addEventListener('click', closeInter);
+  inter.addEventListener('click', e =>{ if(e.target === inter) closeInter(); });
+
+  // source action pills (event delegation)
+  body.addEventListener('click', e =>{
+    const btn = e.target.closest('.tm-src');
+    if(!btn) return;
+    openInter(btn.getAttribute('data-url'), btn.getAttribute('data-ref'), btn);
+  });
+
+  /* ---------- keyboard: interstitial takes precedence over the panel ---------- */
+  function trap(e, container){
+    const f = container.querySelectorAll('a[href],button:not([disabled])');
+    if(!f.length) return;
+    const first=f[0], last=f[f.length-1];
+    if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+  }
+  document.addEventListener('keydown', e =>{
+    if(inter.classList.contains('is-open')){
+      if(e.key === 'Escape'){ e.preventDefault(); closeInter(); return; }
+      if(e.key === 'Tab'){ trap(e, inter); }
+      return;
+    }
+    if(overlay.classList.contains('is-open')){
+      if(e.key === 'Escape'){ e.preventDefault(); close(); return; }
+      if(e.key === 'Tab'){ trap(e, overlay); }
+    }
+  }, true);
+
+  /* ---------- wiring ---------- */
+  pill.addEventListener('click', open);
+  let hoverTimer=null;
+  pill.addEventListener('mouseenter', ()=>{
+    if(window.matchMedia('(hover:hover)').matches){ hoverTimer = setTimeout(open, 180); }
+  });
+  pill.addEventListener('mouseleave', ()=>{ if(hoverTimer){ clearTimeout(hoverTimer); hoverTimer=null; } });
+  closeBtn.addEventListener('click', close);
+  overlay.addEventListener('click', e =>{ if(e.target === overlay) close(); });
+})();
+</script>
+</body>
+</html>
