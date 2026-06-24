@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HRQoL (VISION study) knowledge check</title>
+  <style>
+    @font-face { font-family: "Poppins"; src: url("assets/poppins-400.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+    @font-face { font-family: "Poppins"; src: url("assets/poppins-600.ttf") format("truetype"); font-weight: 600; font-display: swap; }
+    @font-face { font-family: "Poppins"; src: url("assets/poppins-700.ttf") format("truetype"); font-weight: 700; font-display: swap; }
+    :root {
+      --teal:#0098be; --teal-strong:#007a98; --navy:#222f55; --on-accent:#fff;
+      --muted:#56608a; --pale:#d9eff8; --mist:#f4f7f9; --line:#e3e8ee;
+      --neutral:#c6d3e2; --pink:#e2abb5; --green:#90cbae; --good:#287d5c; --bad:#b64457;
+      --backdrop:rgba(16,26,38,.68);
+      --font:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body { margin: 0; background: #f2f2f2; color: var(--navy); font-family: var(--font); overflow: hidden; }
+
+    .slide { position: relative; height: 100%; width: 100%; margin: 0; display: flex; flex-direction: column; overflow: hidden; background: #fff; }
+
+    /* Slim functional caption (not a branded header) */
+    .caption { flex: 0 0 auto; text-align: center; padding: clamp(8px,1.3vw,14px) 16px clamp(4px,0.8vw,8px); }
+    .caption h1 { margin: 0; font-size: clamp(1.1rem,2vw,1.6rem); font-weight: 700; color: var(--navy); }
+    .slide.is-viewing .caption { padding-bottom: 4px; }
+
+    /* Question band */
+    .question-band { flex: 0 0 auto; padding: clamp(6px,1vw,12px) clamp(14px,3vw,28px) clamp(8px,1.2vw,12px); display: flex; justify-content: center; }
+    .question { display: grid; grid-template-columns: 48px minmax(0,1fr); gap: 12px; align-items: center; width: min(100%,960px); padding: 8px 16px; border: 3px solid var(--teal); border-radius: 18px; background: var(--pale); color: var(--teal); }
+    .question-icon { width: 48px; height: 48px; display: grid; place-items: center; border: 3px solid var(--teal); border-radius: 50%; font-size: 1.85rem; font-weight: 600; line-height: 1; }
+    .question p { margin: 0; font-size: clamp(.95rem,1.75vw,1.25rem); line-height: 1.2; font-weight: 700; text-align: center; }
+    .slide.is-viewing .question-band { display: none; }
+
+    .stage { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: center; padding: clamp(10px,1.8vw,22px) clamp(14px,2.5vw,30px); }
+    .slide.is-viewing .stage { display: none; }
+
+    /* Answers — neutral until answered */
+    .answers { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: clamp(12px,1.9vw,22px); align-items: stretch; }
+    .answer { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-align: center; min-height: clamp(120px,13vw,168px); padding: 16px; border: 0; border-radius: 18px; background: var(--neutral); color: var(--navy); font: inherit; font-size: clamp(1.05rem,1.85vw,1.4rem); font-weight: 700; line-height: 1.15; cursor: pointer; box-shadow: 0 8px 18px rgba(34,47,85,.12); transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease; }
+    .answer .kw { color: var(--teal); }
+    .answer:hover:not(:disabled) { transform: translateY(-6px); box-shadow: 0 14px 24px rgba(34,47,85,.2); }
+    .answer:active:not(:disabled) { transform: translateY(1px) scale(.985); }
+    .answer:focus-visible { outline: 4px solid var(--navy); outline-offset: 4px; }
+    .answer.is-correct { background: var(--green); color: #080808; animation: celebrate 620ms cubic-bezier(.22,1.35,.36,1) both; }
+    .answer.is-correct .kw, .answer-final .kw { color: var(--good); }
+    .answer.is-incorrect { background: var(--pink); color: #080808; animation: shake 570ms ease both; }
+    .answer:disabled { cursor: default; }
+
+    .slide.is-answered .answers { display: none; }
+
+    /* Reveal: correct card + summary + CTA */
+    .reveal { display: none; width: 100%; max-width: 1040px; margin: 0 auto; text-align: center; }
+    .slide.is-answered .reveal { display: block; }
+    .result-line { margin: 0 0 clamp(8px,1.2vw,14px); font-size: clamp(1rem,1.7vw,1.2rem); font-weight: 700; }
+    .result-line.is-correct { color: var(--good); }
+    .result-line.is-incorrect { color: var(--bad); }
+    .answer-final { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; width: min(100%,560px); min-height: clamp(84px,11vw,120px); padding: 14px 22px; border-radius: 18px; background: var(--green); color: #080808; font-size: clamp(1.15rem,2.1vw,1.6rem); font-weight: 700; line-height: 1.18; box-shadow: 0 12px 26px rgba(40,125,92,.26); }
+    .data-summary { margin: clamp(12px,1.8vw,20px) auto 0; max-width: 940px; font-size: clamp(1rem,1.7vw,1.3rem); line-height: 1.35; font-weight: 600; color: var(--navy); }
+    .data-summary strong { color: var(--teal); }
+    .data-overall { margin: 8px auto 0; font-size: clamp(.85rem,1.3vw,1rem); font-weight: 700; color: var(--muted); }
+    .cta-row { margin-top: clamp(14px,2vw,22px); display: flex; justify-content: center; }
+    .cta { display: inline-flex; align-items: center; gap: 12px; padding: 12px 22px; border: 3px solid var(--teal); border-radius: 16px; background: rgba(0,152,190,.06); color: var(--teal); font: inherit; font-size: clamp(1rem,1.6vw,1.18rem); font-weight: 700; cursor: pointer; transition: background 180ms ease, transform 180ms ease, box-shadow 180ms ease; }
+    .cta:hover { background: rgba(0,152,190,.13); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(34,47,85,.16); }
+    .cta:focus-visible { outline: 3px solid var(--navy); outline-offset: 3px; }
+    .cta .plus { width: 32px; height: 32px; flex: 0 0 auto; display: grid; place-items: center; border: 3px solid var(--teal); border-radius: 50%; font-size: 1.4rem; line-height: 1; font-weight: 600; }
+    .slide.is-answered .result-line { animation: revealUp 320ms ease both; }
+    .slide.is-answered .reveal > *:not(.result-line) { animation: revealUp 400ms ease 90ms both; }
+
+    /* ===== Graph viewer (full-box) ===== */
+    .viewer { display: none; }
+    .slide.is-viewing .viewer { display: flex; flex: 1 1 auto; min-height: 0; flex-direction: column; }
+    .viewer-top { position: relative; z-index: 3; flex: 0 0 auto; display: flex; align-items: stretch; gap: 8px; padding: 10px clamp(12px,2vw,22px) 0; }
+    .vtab-rail { flex: 1 1 auto; display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 6px; }
+    .vtab { position: relative; display: flex; flex-direction: column; justify-content: center; gap: 1px; min-height: 52px; padding: 7px 12px; border: 0; border-radius: 12px 12px 0 0; background: var(--mist); color: var(--navy); font: inherit; font-size: clamp(.72rem,1.05vw,.9rem); font-weight: 700; line-height: 1.12; text-align: left; cursor: pointer; transition: background 180ms ease, color 180ms ease, transform 180ms ease, box-shadow 180ms ease; }
+    .vtab .sub { font-weight: 700; font-style: italic; color: var(--teal); }
+    .vtab-title { display: block; }
+    .vtab .fn { padding: 0 1px; font-size: .74em; font-weight: 700; vertical-align: super; color: var(--teal-strong); cursor: help; }
+    .vtab:hover:not([aria-selected="true"]) { background: #e7eef4; transform: translateY(-2px); }
+    .vtab[aria-selected="true"] { background: var(--teal); color: #fff; box-shadow: inset 0 -4px 0 0 var(--teal-strong); transform: translateY(-2px); }
+    .vtab[aria-selected="true"] .sub, .vtab[aria-selected="true"] .fn { color: #fff; }
+    .vtab:focus-visible { outline: 3px solid var(--navy); outline-offset: -3px; }
+    .vtab-note { position: absolute; top: calc(100% + 4px); left: 0; width: min(300px, 88vw); padding: 9px 12px; border: 2px solid var(--teal); border-radius: 10px; background: #fff; box-shadow: 0 12px 26px rgba(34,47,85,.22); color: #151515; font-size: clamp(.72rem,1vw,.84rem); font-weight: 400; line-height: 1.4; text-align: left; opacity: 0; visibility: hidden; transform: translateY(-4px); transition: opacity 160ms ease, visibility 160ms ease, transform 160ms ease; z-index: 8; }
+    .vtab .fn:hover ~ .vtab-note, .vtab:focus-visible .vtab-note { opacity: 1; visibility: visible; transform: translateY(0); }
+    .vtab .tick { position: absolute; top: 5px; right: 7px; width: 15px; height: 15px; border-radius: 50%; background: var(--good); color: #fff; font-size: .68rem; line-height: 15px; text-align: center; opacity: 0; transition: opacity 160ms ease; }
+    .vtab.viewed .tick { opacity: 1; }
+    .viewer-back { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 8px 14px; border: 2px solid var(--teal); border-radius: 10px; background: #fff; color: var(--teal); font: inherit; font-size: .9rem; font-weight: 700; cursor: pointer; }
+    .viewer-back:hover { background: var(--pale); }
+    .viewer-back:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+
+    .viewer-body { position: relative; z-index: 1; flex: 1 1 auto; min-height: 0; border-top: 3px solid var(--teal); background: var(--pale); padding: clamp(10px,1.6vw,18px) clamp(12px,2vw,22px); }
+    .gpanel { display: none; height: 100%; }
+    .gpanel.active { display: grid; grid-template-columns: minmax(170px,230px) minmax(0,1fr); gap: clamp(12px,1.8vw,24px); align-items: center; height: 100%; animation: fadeIn 280ms ease both; }
+    .gcaption { align-self: center; background: #fff; border: 2px solid var(--teal); border-radius: 16px; padding: 14px 16px; color: var(--navy); font-size: clamp(.92rem,1.35vw,1.12rem); font-weight: 600; line-height: 1.35; text-align: center; }
+    .gcaption strong { color: var(--teal); font-weight: 700; }
+    .gfigure { display: flex; flex-direction: column; min-height: 0; height: 100%; }
+    .gimg-wrap { position: relative; flex: 1 1 auto; min-height: 0; display: flex; align-items: center; justify-content: center; border: 2px solid var(--teal); border-radius: 16px; background: #fff; padding: 10px 12px; }
+    .gimg-wrap img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .note.dagger { position: absolute; left: 12px; bottom: 10px; }
+    .note-btn { display: inline-grid; place-items: center; width: 28px; height: 28px; border: 2px solid var(--teal); border-radius: 50%; background: #fff; color: var(--teal-strong); font: inherit; font-size: 1rem; font-weight: 700; line-height: 1; cursor: help; box-shadow: 0 3px 8px rgba(34,47,85,.18); }
+    .note-btn:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+    .note-pop { position: absolute; left: 0; bottom: calc(100% + 8px); width: min(420px, 62vw); padding: 10px 13px; border: 2px solid var(--teal); border-radius: 12px; background: #fff; box-shadow: 0 14px 30px rgba(34,47,85,.24); color: #151515; font-size: clamp(.76rem,1.05vw,.9rem); font-weight: 400; line-height: 1.4; text-align: left; opacity: 0; visibility: hidden; transition: opacity 150ms ease, visibility 150ms ease; z-index: 9; }
+    .note:hover .note-pop, .note:focus-within .note-pop, .note.open .note-pop { opacity: 1; visibility: visible; }
+
+    .gcycle { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 16px; padding: 6px 0 2px; }
+    .cyc { width: 38px; height: 38px; display: grid; place-items: center; border: 2px solid var(--teal); border-radius: 50%; background: #fff; color: var(--teal); font-size: 1.4rem; line-height: 1; font-weight: 700; cursor: pointer; transition: background 160ms ease, transform 160ms ease; }
+    .cyc:hover { background: var(--pale); transform: translateY(-2px); }
+    .cyc:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+    .cyc-label { min-width: 96px; text-align: center; font-size: clamp(.82rem,1.2vw,.98rem); font-weight: 700; color: var(--navy); }
+    .viewer-foot { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 8px clamp(12px,2vw,22px) 10px; }
+    .progress { font-size: clamp(.82rem,1.2vw,.98rem); font-weight: 700; color: var(--muted); }
+    .progress .done { color: var(--good); }
+    .source-chip { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border: 2px solid var(--teal); border-radius: 999px; background: #fff; color: var(--teal); font: inherit; font-size: clamp(.82rem,1.2vw,.98rem); font-weight: 700; cursor: pointer; transition: background 160ms ease, opacity 160ms ease; }
+    .source-chip:hover:not(:disabled) { background: var(--pale); }
+    .source-chip:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+    .source-chip:disabled { opacity: .5; cursor: not-allowed; border-color: var(--line); color: var(--muted); }
+
+    /* Modal (citation) */
+    .modal { position: fixed; inset: 0; z-index: 20; display: none; align-items: center; justify-content: center; padding: 20px; background: var(--backdrop); }
+    .modal.visible { display: flex; }
+    .modal-card { position: relative; width: min(560px,100%); max-height: calc(100vh - 40px); overflow: auto; padding: clamp(20px,3vw,30px); border-radius: 16px; background: #fff; box-shadow: 0 24px 50px rgba(0,0,0,.3); }
+    .modal-card h2 { margin: 0 0 12px; padding-right: 40px; color: var(--navy); font-size: 1.15rem; }
+    .modal-card p { margin: 0 0 10px; color: #151515; line-height: 1.5; font-size: .96rem; }
+    .modal-close { position: absolute; top: 12px; right: 12px; width: 36px; height: 36px; display: grid; place-items: center; border: 2px solid var(--teal); border-radius: 50%; background: #fff; color: var(--teal); font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: background 150ms ease; }
+    .modal-close:hover { background: var(--pale); }
+    .modal-close:focus-visible { outline: 3px solid var(--navy); outline-offset: 3px; }
+    .pending-note { margin-top: 8px; padding: 10px 12px; border: 1px dashed var(--teal); border-radius: 10px; background: var(--mist); color: var(--muted); font-size: .86rem; font-weight: 600; }
+    .view-source { margin-top: 14px; min-height: 44px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 10px; background: #eef1f5; color: var(--muted); font: inherit; font-weight: 700; cursor: not-allowed; }
+
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    @keyframes revealUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes celebrate { 0% { transform: scale(1); } 45% { transform: scale(1.05) translateY(-6px); } 100% { transform: scale(1); } }
+    @keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-10px); } 40% { transform: translateX(9px); } 60% { transform: translateX(-6px); } 80% { transform: translateX(4px); } }
+
+    @media (max-width: 760px) {
+      html, body { height: auto; }
+      body { overflow: auto; }
+      .slide { height: auto; }
+      .answers { grid-template-columns: minmax(0,1fr); gap: 14px; }
+      .answer { min-height: 88px; }
+      .vtab-rail { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .gpanel.active { grid-template-columns: minmax(0,1fr); }
+      .gimg-wrap img { max-height: none; }
+      .note-pop { width: min(86vw, 460px); }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <main class="slide" id="slide" aria-label="HRQoL VISION study knowledge check">
+    <div class="caption"><h1>HRQoL (VISION study)</h1></div>
+
+    <section class="question-band" aria-labelledby="question-text">
+      <div class="question"><span class="question-icon" aria-hidden="true">?</span><p id="question-text">Over 228 weeks, how did HRQoL PRO scores change from baseline in patients with <em>MET</em>ex14 skipping NSCLC, as exemplified by EORTC QLQ-C30 and EQ-5D-5L scores?</p></div>
+    </section>
+
+    <div class="stage">
+      <section class="answers" role="group" aria-describedby="selection-status" aria-label="Answer options">
+        <button class="answer" type="button" data-correct="false">Scores<span class="kw">declined</span></button>
+        <button class="answer" type="button" data-correct="false">Scores<span class="kw">improved</span></button>
+        <button class="answer" type="button" data-correct="true">Scores<span class="kw">remained stable</span></button>
+      </section>
+
+      <section class="reveal" id="reveal" aria-live="polite" aria-atomic="true">
+        <p class="result-line" id="result-line"></p>
+        <div class="answer-final">Scores<span class="kw">remained stable</span></div>
+        <p class="data-summary">There was no meaningful change in <strong>EORTC QLQ-C30</strong> or <strong>EQ-5D-5L</strong> scores up to 228 weeks with tepotinib.</p>
+        <p class="data-overall">Overall, HRQoL PRO scores remained stable.</p>
+        <div class="cta-row"><button class="cta" type="button" id="open-graphs"><span class="plus" aria-hidden="true">+</span>Click here to view data graphs</button></div>
+        <p class="sr-only" id="selection-status"></p>
+      </section>
+    </div>
+
+    <section class="viewer" id="viewer" aria-label="HRQoL data graphs" aria-hidden="true">
+      <div class="viewer-top">
+        <div class="vtab-rail" role="tablist" aria-label="HRQoL outcome graphs">
+          <button class="vtab" role="tab" type="button" id="tab-0" aria-controls="panel-0" aria-selected="true" data-i="0"><span class="vtab-title">EORTC QLQ-C30 global health scores<sup class="fn">*</sup><span class="vtab-note" role="note">Visits with &lt;10 patients are not presented, with the exception of the EoT/30-day safety follow-up. Dashed lines show minimal clinically important difference of &plusmn;10 points. In each box plot, horizontal lines indicate the medians, boxes indicate the interquartile ranges, whiskers indicate the ranges (excluding outliers), and circles indicate outliers.</span></span><span class="tick" aria-hidden="true">&check;</span></button>
+          <button class="vtab" role="tab" type="button" id="tab-1" aria-controls="panel-1" aria-selected="false" tabindex="-1" data-i="1"><span class="vtab-title">EORTC QLQ LC-13 symptom scores<sup class="fn">*</sup><span class="vtab-note" role="note">Visits with &lt;10 patients are not presented. Dashed lines show minimal clinically important difference of &plusmn;10 points.</span></span><span class="sub">Cough</span><span class="tick" aria-hidden="true">&check;</span></button>
+          <button class="vtab" role="tab" type="button" id="tab-2" aria-controls="panel-2" aria-selected="false" tabindex="-1" data-i="2"><span class="vtab-title">EORTC QLQ LC-13 symptom scores<sup class="fn">*</sup><span class="vtab-note" role="note">Visits with &lt;10 patients are not presented. Dashed lines show minimal clinically important difference of &plusmn;10 points.</span></span><span class="sub">Dyspnea</span><span class="tick" aria-hidden="true">&check;</span></button>
+          <button class="vtab" role="tab" type="button" id="tab-3" aria-controls="panel-3" aria-selected="false" tabindex="-1" data-i="3"><span class="vtab-title">EORTC QLQ LC-13 symptom scores<sup class="fn">*</sup><span class="vtab-note" role="note">Visits with &lt;10 patients are not presented. Dashed lines show minimal clinically important difference of &plusmn;10 points.</span></span><span class="sub">Chest pain</span><span class="tick" aria-hidden="true">&check;</span></button>
+        </div>
+      </div>
+
+      <div class="viewer-body">
+        <div class="gpanel active" role="tabpanel" id="panel-0" aria-labelledby="tab-0" tabindex="0">
+          <div class="gcaption">The mean change (&plusmn;SD) from baseline for EORTC QLQ-C30 GHS was <strong>&minus;7.1 (26.66)</strong> (n=174).</div>
+          <div class="gfigure">
+            <div class="gimg-wrap">
+              <img src="assets/graph-c30.jpg" alt="Box plots of EORTC QLQ-C30 global health score change from baseline by time on treatment to 228 weeks and end of treatment; medians remain near zero within the minimal clinically important difference band.">
+              <span class="note dagger"><button class="note-btn" type="button" aria-expanded="false" aria-label="What n dagger means">&dagger;</button><span class="note-pop" role="note">Number of patients who completed the questionnaire at each visit.</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="gpanel" role="tabpanel" id="panel-1" aria-labelledby="tab-1" tabindex="0" hidden>
+          <div class="gcaption">The mean change (&plusmn;SD) from baseline in EORTC QLQ-LC13 symptom scores for cough was <strong>&minus;6.1 (28.16)</strong> (n=175).</div>
+          <div class="gfigure">
+            <div class="gimg-wrap">
+              <img src="assets/graph-cough.jpg" alt="Line plot of least-squares mean change (plus or minus SEM) in EORTC QLQ-LC13 cough symptom score from baseline to 216 weeks; values stay near or below the minimal clinically important difference band.">
+              <span class="note dagger"><button class="note-btn" type="button" aria-expanded="false" aria-label="What n dagger means">&dagger;</button><span class="note-pop" role="note">Number of patients who completed the questionnaire at each visit.</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="gpanel" role="tabpanel" id="panel-2" aria-labelledby="tab-2" tabindex="0" hidden>
+          <div class="gcaption">The mean change (&plusmn;SD) from baseline in EORTC QLQ-LC13 symptom scores for dyspnea was <strong>7.1 (21.05)</strong> (n=175).</div>
+          <div class="gfigure">
+            <div class="gimg-wrap">
+              <img src="assets/graph-dyspnea.jpg" alt="Line plot of least-squares mean change (plus or minus SEM) in EORTC QLQ-LC13 dyspnea symptom score from baseline to 216 weeks; values stay within the minimal clinically important difference band.">
+              <span class="note dagger"><button class="note-btn" type="button" aria-expanded="false" aria-label="What n dagger means">&dagger;</button><span class="note-pop" role="note">Number of patients who completed the questionnaire at each visit.</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="gpanel" role="tabpanel" id="panel-3" aria-labelledby="tab-3" tabindex="0" hidden>
+          <div class="gcaption">The mean change (&plusmn;SD) from baseline in EORTC QLQ-LC13 symptom scores for chest pain was <strong>&minus;2.3 (28.13)</strong> (n=174).</div>
+          <div class="gfigure">
+            <div class="gimg-wrap">
+              <img src="assets/graph-chestpain.jpg" alt="Line plot of least-squares mean change (plus or minus SEM) in EORTC QLQ-LC13 chest pain symptom score from baseline to 216 weeks; values stay near or below the minimal clinically important difference band.">
+              <span class="note dagger"><button class="note-btn" type="button" aria-expanded="false" aria-label="What n dagger means">&dagger;</button><span class="note-pop" role="note">Number of patients who completed the questionnaire at each visit.</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gcycle">
+        <button class="cyc" type="button" id="cyc-prev" aria-label="Previous graph">&lsaquo;</button>
+        <span class="cyc-label" id="cyc-label">Graph 1 of 4</span>
+        <button class="cyc" type="button" id="cyc-next" aria-label="Next graph">&rsaquo;</button>
+      </div>
+
+      <div class="viewer-foot">
+        <button class="viewer-back" type="button" id="close-graphs">&larr; Back to question</button>
+        <span class="progress" id="progress" aria-live="polite">Explored <span id="seen">1</span> of 4 graphs</span>
+        <button class="source-chip" type="button" id="source-chip" disabled aria-describedby="source-locked">Source <span aria-hidden="true">&rsaquo;</span></button>
+        <span class="sr-only" id="source-locked">Explore all four graphs to unlock the source.</span>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="source-modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="source-title">
+      <button class="modal-close" type="button" id="source-close" aria-label="Close">&times;</button>
+      <h2 id="source-title">Source</h2>
+      <p><strong>VISION study — HRQoL / patient-reported outcomes.</strong></p>
+      <p class="pending-note">Citation pending confirmation by the content owner. The exact VISION HRQoL reference and DOI will be inserted here before this asset is published.</p>
+      <button class="view-source" type="button" disabled>View source (link pending)</button>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const slide = document.getElementById('slide');
+      const answers = Array.from(document.querySelectorAll('.answer'));
+      const resultLine = document.getElementById('result-line');
+      const status = document.getElementById('selection-status');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let answered = false;
+
+      function revealAnswer(correct) {
+        slide.classList.add('is-answered');
+        resultLine.textContent = correct ? 'Correct' : 'Not quite — here is the correct answer.';
+        resultLine.className = 'result-line ' + (correct ? 'is-correct' : 'is-incorrect');
+        status.textContent = (correct ? 'Correct.' : 'Not quite.') + ' The correct answer and data summary are shown; open the data graphs for detail.';
+      }
+      function completeQuiz(button) {
+        if (answered) return;
+        answered = true;
+        const correct = button.dataset.correct === 'true';
+        answers.forEach(a => { a.disabled = true; a.setAttribute('aria-disabled', 'true'); });
+        button.classList.add(correct ? 'is-correct' : 'is-incorrect');
+        window.setTimeout(() => revealAnswer(correct), reduceMotion ? 0 : (correct ? 640 : 1100));
+      }
+      answers.forEach(a => {
+        a.addEventListener('click', () => completeQuiz(a));
+        a.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); completeQuiz(a); } });
+      });
+
+      /* ===== Graph viewer ===== */
+      const viewer = document.getElementById('viewer');
+      const openBtn = document.getElementById('open-graphs');
+      const closeBtn = document.getElementById('close-graphs');
+      const tabs = Array.from(document.querySelectorAll('.vtab'));
+      const panels = Array.from(document.querySelectorAll('.gpanel'));
+      const seenEl = document.getElementById('seen');
+      const progress = document.getElementById('progress');
+      const sourceChip = document.getElementById('source-chip');
+      const seen = new Set();
+
+      function markSeen(i) {
+        seen.add(i);
+        tabs[i].classList.add('viewed');
+        seenEl.textContent = String(seen.size);
+        if (seen.size === 4) {
+          sourceChip.disabled = false;
+          progress.innerHTML = 'All 4 graphs explored <span class="done">&check;</span>';
+          sourceChip.setAttribute('aria-describedby', '');
+        }
+      }
+      function selectTab(i, focusPanel) {
+        tabs.forEach((t, k) => {
+          const on = k === i;
+          t.setAttribute('aria-selected', String(on));
+          t.tabIndex = on ? 0 : -1;
+        });
+        panels.forEach((p, k) => { p.classList.toggle('active', k === i); p.hidden = k !== i; });
+        markSeen(i);
+        const cl = document.getElementById('cyc-label');
+        if (cl) cl.textContent = 'Graph ' + (i + 1) + ' of 4';
+        if (focusPanel) panels[i].focus();
+      }
+      tabs.forEach((t, i) => {
+        t.addEventListener('click', () => selectTab(i));
+        t.addEventListener('keydown', e => {
+          let ni = null;
+          if (e.key === 'ArrowRight') ni = (i + 1) % tabs.length;
+          else if (e.key === 'ArrowLeft') ni = (i - 1 + tabs.length) % tabs.length;
+          else if (e.key === 'Home') ni = 0;
+          else if (e.key === 'End') ni = tabs.length - 1;
+          if (ni !== null) { e.preventDefault(); selectTab(ni); tabs[ni].focus(); }
+        });
+      });
+
+      const cycCur = () => tabs.findIndex(t => t.getAttribute('aria-selected') === 'true');
+      document.getElementById('cyc-prev').addEventListener('click', () => { const i = cycCur(); selectTab((i - 1 + tabs.length) % tabs.length); });
+      document.getElementById('cyc-next').addEventListener('click', () => { const i = cycCur(); selectTab((i + 1) % tabs.length); });
+
+      function openViewer() {
+        slide.classList.add('is-viewing');
+        viewer.setAttribute('aria-hidden', 'false');
+        selectTab(0);
+        tabs[0].focus();
+      }
+      function closeViewer() {
+        slide.classList.remove('is-viewing');
+        viewer.setAttribute('aria-hidden', 'true');
+        openBtn.focus();
+      }
+      openBtn.addEventListener('click', openViewer);
+      closeBtn.addEventListener('click', closeViewer);
+
+      /* Footnote tooltips — click toggles (tap/keyboard); hover/focus handled by CSS */
+      document.querySelectorAll('.note-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const note = btn.closest('.note');
+          const open = note.classList.toggle('open');
+          btn.setAttribute('aria-expanded', String(open));
+        });
+      });
+
+      /* Source modal */
+      const sourceModal = document.getElementById('source-modal');
+      const sourceClose = document.getElementById('source-close');
+      function openSource() { if (sourceChip.disabled) return; sourceModal.classList.add('visible'); sourceModal.setAttribute('aria-hidden', 'false'); sourceClose.focus(); }
+      function closeSource() { sourceModal.classList.remove('visible'); sourceModal.setAttribute('aria-hidden', 'true'); sourceChip.focus(); }
+      sourceChip.addEventListener('click', openSource);
+      sourceClose.addEventListener('click', closeSource);
+      sourceModal.addEventListener('click', e => { if (e.target === sourceModal) closeSource(); });
+
+      document.addEventListener('keydown', e => {
+        if (e.key !== 'Escape') return;
+        if (sourceModal.classList.contains('visible')) { closeSource(); return; }
+        const openNote = document.querySelector('.note.open');
+        if (openNote) { openNote.classList.remove('open'); const b = openNote.querySelector('.note-btn'); if (b) b.setAttribute('aria-expanded', 'false'); return; }
+        if (slide.classList.contains('is-viewing')) closeViewer();
+      });
+    }());
+  </script>
+</body>
+</html>
