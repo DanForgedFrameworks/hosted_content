@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Long-term efficacy by METex14 detection method — knowledge check</title>
+  <style>
+    @font-face { font-family: "Poppins"; src: url("assets/poppins-400.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+    @font-face { font-family: "Poppins"; src: url("assets/poppins-600.ttf") format("truetype"); font-weight: 600; font-display: swap; }
+    @font-face { font-family: "Poppins"; src: url("assets/poppins-700.ttf") format("truetype"); font-weight: 700; font-display: swap; }
+    :root {
+      --teal:#0098be; --teal-strong:#007a98; --navy:#222f55; --on-accent:#fff;
+      --muted:#56608a; --pale:#d9eff8; --mist:#f4f7f9; --line:#e3e8ee;
+      --neutral:#c6d3e2; --pink:#e2abb5; --green:#90cbae; --good:#287d5c; --bad:#b64457;
+      --rowfill:#9fc1e0; --rowfill-strong:#3f6f9c;
+      --backdrop:rgba(16,26,38,.68);
+      --font:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body { margin: 0; background: #f2f2f2; color: var(--navy); font-family: var(--font); overflow: hidden; }
+    .slide { position: relative; height: 100%; width: 100%; margin: 0; display: flex; flex-direction: column; overflow: hidden; background: #fff; }
+
+    .caption { flex: 0 0 auto; text-align: center; padding: clamp(8px,1.2vw,13px) 16px clamp(2px,0.6vw,6px); }
+    .caption h1 { margin: 0; font-size: clamp(1.05rem,1.95vw,1.55rem); font-weight: 700; color: var(--navy); }
+    .slide.is-viewing .caption { padding-bottom: 4px; }
+
+    .intro { flex: 0 0 auto; display: flex; justify-content: center; padding: 4px clamp(14px,3vw,28px) 6px; }
+    .intro p { margin: 0; width: min(100%, 1020px); padding: 9px 18px; border: 2px solid var(--teal); border-radius: 14px; background: var(--mist); color: var(--navy); font-size: clamp(.85rem,1.4vw,1.05rem); line-height: 1.3; font-weight: 600; text-align: center; }
+    .slide.is-viewing .intro { display: none; }
+
+    .question-band { flex: 0 0 auto; padding: clamp(4px,0.8vw,10px) clamp(14px,3vw,28px) clamp(6px,1vw,10px); display: flex; justify-content: center; }
+    .question { display: grid; grid-template-columns: 46px minmax(0,1fr); gap: 12px; align-items: center; width: min(100%,860px); padding: 7px 16px; border: 3px solid var(--teal); border-radius: 18px; background: var(--pale); color: var(--teal); }
+    .question-icon { width: 46px; height: 46px; display: grid; place-items: center; border: 3px solid var(--teal); border-radius: 50%; font-size: 1.8rem; font-weight: 600; line-height: 1; }
+    .question p { margin: 0; font-size: clamp(.95rem,1.7vw,1.25rem); line-height: 1.2; font-weight: 700; text-align: center; }
+    .slide.is-viewing .question-band { display: none; }
+
+    .stage { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: center; padding: clamp(8px,1.5vw,18px) clamp(14px,2.5vw,30px); }
+    .slide.is-viewing .stage { display: none; }
+
+    .answers { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: clamp(12px,1.9vw,22px); align-items: stretch; }
+    .answer { display: flex; align-items: center; justify-content: center; text-align: center; min-height: clamp(120px,15vw,176px); padding: 16px 16px; border: 0; border-radius: 18px; background: var(--neutral); color: var(--navy); font: inherit; font-size: clamp(.95rem,1.55vw,1.18rem); font-weight: 700; line-height: 1.22; cursor: pointer; box-shadow: 0 8px 18px rgba(34,47,85,.12); transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease; }
+    .answer:hover:not(:disabled) { transform: translateY(-6px); box-shadow: 0 14px 24px rgba(34,47,85,.2); }
+    .answer:active:not(:disabled) { transform: translateY(1px) scale(.985); }
+    .answer:focus-visible { outline: 4px solid var(--navy); outline-offset: 4px; }
+    .answer.is-correct { background: var(--green); color: #080808; animation: celebrate 620ms cubic-bezier(.22,1.35,.36,1) both; }
+    .answer.is-incorrect { background: var(--pink); color: #080808; animation: shake 570ms ease both; }
+    .answer:disabled { cursor: default; }
+    .slide.is-answered .answers { display: none; }
+
+    .reveal { display: none; width: 100%; max-width: 980px; margin: 0 auto; text-align: center; }
+    .slide.is-answered .reveal { display: block; }
+    .result-line { margin: 0 0 clamp(8px,1.2vw,14px); font-size: clamp(1rem,1.6vw,1.18rem); font-weight: 700; }
+    .result-line.is-correct { color: var(--good); }
+    .result-line.is-incorrect { color: var(--bad); }
+    .answer-final { display: inline-flex; align-items: center; justify-content: center; text-align: center; width: min(100%,720px); min-height: clamp(80px,10vw,116px); padding: 16px 24px; border-radius: 18px; background: var(--green); color: #080808; font-size: clamp(1.02rem,1.7vw,1.3rem); font-weight: 700; line-height: 1.24; box-shadow: 0 12px 26px rgba(40,125,92,.26); }
+    .cta-row { margin-top: clamp(14px,2vw,22px); display: flex; justify-content: center; }
+    .cta { display: inline-flex; align-items: center; gap: 12px; padding: 12px 22px; border: 3px solid var(--teal); border-radius: 16px; background: rgba(0,152,190,.06); color: var(--teal); font: inherit; font-size: clamp(1rem,1.6vw,1.18rem); font-weight: 700; cursor: pointer; transition: background 180ms ease, transform 180ms ease, box-shadow 180ms ease; }
+    .cta:hover { background: rgba(0,152,190,.13); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(34,47,85,.16); }
+    .cta:focus-visible { outline: 3px solid var(--navy); outline-offset: 3px; }
+    .cta .plus { width: 32px; height: 32px; flex: 0 0 auto; display: grid; place-items: center; border: 3px solid var(--teal); border-radius: 50%; font-size: 1.4rem; line-height: 1; font-weight: 600; }
+    .slide.is-answered .result-line { animation: revealUp 320ms ease both; }
+    .slide.is-answered .reveal > *:not(.result-line) { animation: revealUp 400ms ease 90ms both; }
+
+    /* ===== Table viewer (full-box) ===== */
+    .viewer { display: none; }
+    .slide.is-viewing .viewer { display: flex; flex: 1 1 auto; min-height: 0; flex-direction: column; animation: viewerIn 340ms ease both; }
+    .viewer-head { flex: 0 0 auto; padding: 6px clamp(14px,2.5vw,30px) 2px; text-align: center; }
+    .viewer-head h2 { margin: 0; color: var(--teal); font-size: clamp(1rem,1.8vw,1.35rem); font-weight: 700; line-height: 1.22; }
+    .viewer-hint { margin: 4px 0 0; color: var(--muted); font-size: clamp(.8rem,1.2vw,.95rem); font-weight: 600; }
+    .viewer-body { flex: 1 1 auto; min-height: 0; display: flex; align-items: center; justify-content: center; padding: clamp(8px,1.4vw,16px) clamp(14px,2.5vw,30px); overflow: hidden; }
+    .table-scope { width: min(100%, 1180px); }
+    .table-round { border-radius: 14px; overflow: hidden; box-shadow: 0 0 0 1px #cdd5e0; }
+    .table-prompt { margin: clamp(10px,1.6vw,16px) 0 0; text-align: center; color: var(--navy); font-size: clamp(.85rem,1.3vw,1rem); font-weight: 700; }
+    .table-prompt strong { color: var(--teal-strong); }
+    .table-prompt .chev-cue { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--navy); color: #fff; font-size: .8rem; vertical-align: -4px; margin-right: 5px; }
+
+    .efftable { width: 100%; border-collapse: collapse; font-size: clamp(.78rem,1.25vw,.98rem); }
+    .efftable th, .efftable td { border: 1px solid #cdd5e0; padding: clamp(6px,0.9vw,11px) clamp(8px,1vw,14px); text-align: center; vertical-align: middle; line-height: 1.22; }
+    .efftable thead th { background: var(--navy); color: #fff; font-weight: 700; }
+    .efftable thead th .subhdr { display: block; font-weight: 600; font-size: .86em; opacity: .92; margin-top: 1px; }
+    .efftable .col-label { text-align: left; }
+    .efftable td .ci { display: block; font-size: .86em; font-weight: 400; color: #41506a; margin-top: 1px; }
+    .efftable td strong { font-weight: 700; }
+
+    .row-parent > * { background: var(--rowfill); color: var(--navy); }
+    .row-parent td strong { color: var(--navy); }
+    .row-parent td .ci { color: #2c3e57; }
+    .rowlabel { text-align: left; cursor: pointer; user-select: none; }
+    .rowlabel .lab { display: inline-flex; align-items: center; gap: 9px; font-weight: 700; }
+    .rowlabel .chev { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--navy); color: #fff; font-size: .8rem; line-height: 1; transition: transform 200ms ease; }
+    .row-parent[aria-expanded="true"] .chev { transform: rotate(90deg); }
+    .rowlabel:focus-visible { outline: 3px solid var(--navy); outline-offset: -3px; }
+    .row-parent:hover > * { background: #b3d0e8; }
+
+    .row-child td, .row-child th { background: #fff; }
+    .row-child:nth-of-type(odd) td, .row-child:nth-of-type(odd) th { background: var(--mist); }
+    .row-child .col-label { padding-left: clamp(26px, 3vw, 44px); font-weight: 600; color: var(--navy); }
+    .row-child .col-label::before { content: "\21B3"; margin-right: 6px; color: var(--teal); font-weight: 700; }
+    .row-child.rowin { animation: rowIn 300ms ease both; }
+    .row-child.rowout { animation: rowOut 200ms ease both; }
+
+    .viewer-foot { flex: 0 0 auto; display: flex; justify-content: flex-start; padding: 6px clamp(14px,2.5vw,30px) 10px; }
+    .viewer-back { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 8px 16px; border: 2px solid var(--teal); border-radius: 10px; background: #fff; color: var(--teal); font: inherit; font-size: .92rem; font-weight: 700; cursor: pointer; transition: background 160ms ease; }
+    .viewer-back:hover { background: var(--pale); }
+    .viewer-back:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    @keyframes revealUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes viewerIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+    @keyframes rowIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+    @keyframes rowOut { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-8px); } }
+    @keyframes celebrate { 0% { transform: scale(1); } 45% { transform: scale(1.04) translateY(-5px); } 100% { transform: scale(1); } }
+    @keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-10px); } 40% { transform: translateX(9px); } 60% { transform: translateX(-6px); } 80% { transform: translateX(4px); } }
+
+    @media (max-width: 760px) {
+      html, body { height: auto; }
+      body { overflow: auto; }
+      .slide { height: auto; }
+      .answers { grid-template-columns: minmax(0,1fr); gap: 14px; }
+      .answer { min-height: 84px; }
+      .viewer-body { overflow: auto; }
+      .efftable { font-size: .82rem; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <main class="slide" id="slide" aria-label="Long-term efficacy by detection method knowledge check">
+    <div class="caption"><h1>Long-term efficacy by <em>MET</em>ex14 skipping detection method</h1></div>
+
+    <div class="intro"><p>The median duration of treatment in patients with <em>MET</em>ex14 skipping NSCLC detected by tissue (T+) biopsy was 8.3 months (range: 0.03, 83.12), and liquid (L+) biopsy was 7.0 months (0.39, 83.12).</p></div>
+
+    <section class="question-band" aria-labelledby="question-text">
+      <div class="question"><span class="question-icon" aria-hidden="true">?</span><p id="question-text">How do outcomes differ for <em>MET</em>ex14 skipping T+ and L+ biopsy?</p></div>
+    </section>
+
+    <div class="stage">
+      <section class="answers" role="group" aria-describedby="selection-status" aria-label="Answer options">
+        <button class="answer" type="button" data-correct="true">Outcomes were consistent irrespective of T+/L+ status, but L+ patients had shorter time-dependent endpoints</button>
+        <button class="answer" type="button" data-correct="false">Outcomes were consistent irrespective of T+/L+ status, but T+ patients had shorter time-dependent endpoints</button>
+        <button class="answer" type="button" data-correct="false">Outcomes were consistent irrespective of T+/L+ status, and both T+/L+ patients had similar time-dependent endpoint results</button>
+      </section>
+
+      <section class="reveal" id="reveal" aria-live="polite" aria-atomic="true">
+        <p class="result-line" id="result-line"></p>
+        <div class="answer-final">Outcomes were consistent irrespective of T+/L+ status, but L+ patients had shorter time-dependent endpoints</div>
+        <div class="cta-row"><button class="cta" type="button" id="open-table"><span class="plus" aria-hidden="true">+</span>Click here to view data table</button></div>
+        <p class="sr-only" id="selection-status"></p>
+      </section>
+    </div>
+
+    <section class="viewer" id="viewer" aria-label="Long-term outcomes data table" aria-hidden="true">
+      <div class="viewer-head">
+        <h2>What were the long-term outcomes in patients with <em>MET</em>ex14 skipping NSCLC detected by tissue (T+) and liquid (L+) biopsy?</h2>
+      </div>
+      <div class="viewer-body">
+        <div class="table-scope">
+          <div class="table-round">
+          <table class="efftable">
+            <thead>
+              <tr>
+                <th scope="col" class="col-label">Tepotinib efficacy</th>
+                <th scope="col">ORR, %<span class="subhdr">(95% CI)</span></th>
+                <th scope="col">mDOR, months<span class="subhdr">(95% CI)</span></th>
+                <th scope="col">mPFS, months<span class="subhdr">(95% CI)</span></th>
+                <th scope="col">mOS, months<span class="subhdr">(95% CI)</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="row-parent" aria-expanded="false">
+                <th scope="row" class="col-label rowlabel" role="button" tabindex="0" data-group="t" aria-controls="t1 t2"><span class="lab"><span class="chev" aria-hidden="true">&rsaquo;</span>T+ (n=208)</span></th>
+                <td><strong>54.8</strong><span class="ci">(47.8, 61.7)</span></td>
+                <td><strong>17.4</strong><span class="ci">(12.4, 31.7)</span></td>
+                <td><strong>13.7</strong><span class="ci">(11.0, 17.1)</span></td>
+                <td><strong>22.3</strong><span class="ci">(18.8, 25.9)</span></td>
+              </tr>
+              <tr class="row-child" id="t1" data-parent="t" hidden>
+                <th scope="row" class="col-label">1L T+ (n=111)</th>
+                <td><strong>59.5</strong><span class="ci">(49.7, 68.7)</span></td>
+                <td><strong>31.7</strong><span class="ci">(15.2, 53.7)</span></td>
+                <td><strong>15.9</strong><span class="ci">(11.0, 33.1)</span></td>
+                <td><strong>24.6</strong><span class="ci">(18.8, 31.6)</span></td>
+              </tr>
+              <tr class="row-child" id="t2" data-parent="t" hidden>
+                <th scope="row" class="col-label">2L+ T+ (n=97)</th>
+                <td><strong>49.5</strong><span class="ci">(39.2, 59.8)</span></td>
+                <td><strong>12.4</strong><span class="ci">(8.3, 18.0)</span></td>
+                <td><strong>11.5</strong><span class="ci">(8.2, 14.7)</span></td>
+                <td><strong>19.7</strong><span class="ci">(17.0, 24.5)</span></td>
+              </tr>
+              <tr class="row-parent" aria-expanded="false">
+                <th scope="row" class="col-label rowlabel" role="button" tabindex="0" data-group="l" aria-controls="l1 l2"><span class="lab"><span class="chev" aria-hidden="true">&rsaquo;</span>L+ (n=178)</span></th>
+                <td><strong>51.7</strong><span class="ci">(44.1, 59.2)</span></td>
+                <td><strong>15.2</strong><span class="ci">(9.7, 33.6)</span></td>
+                <td><strong>8.9</strong><span class="ci">(7.8, 11.0)</span></td>
+                <td><strong>17.6</strong><span class="ci">(12.6, 21.3)</span></td>
+              </tr>
+              <tr class="row-child" id="l1" data-parent="l" hidden>
+                <th scope="row" class="col-label">1L L+ (n=95)</th>
+                <td><strong>58.9</strong><span class="ci">(48.4, 68.9)</span></td>
+                <td><strong>17.4</strong><span class="ci">(8.3, 46.4)</span></td>
+                <td><strong>10.3</strong><span class="ci">(8.0, 16.5)</span></td>
+                <td><strong>17.6</strong><span class="ci">(10.4, 23.7)</span></td>
+              </tr>
+              <tr class="row-child" id="l2" data-parent="l" hidden>
+                <th scope="row" class="col-label">2L+ L+ (n=83)</th>
+                <td><strong>43.4</strong><span class="ci">(32.5, 54.7)</span></td>
+                <td><strong>12.4</strong><span class="ci">(8.4, 33.6)</span></td>
+                <td><strong>8.2</strong><span class="ci">(5.7, 11.0)</span></td>
+                <td><strong>16.2</strong><span class="ci">(12.0, 21.0)</span></td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+          <p class="table-prompt"><span class="chev-cue" aria-hidden="true">&rsaquo;</span>Select the <strong>T+</strong> or <strong>L+</strong> rows to expand the first-line (1L) and second-line+ (2L+) breakdown.</p>
+        </div>
+      </div>
+      <div class="viewer-foot">
+        <button class="viewer-back" type="button" id="close-table">&larr; Back to question</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const slide = document.getElementById('slide');
+      const answers = Array.from(document.querySelectorAll('.answer'));
+      const resultLine = document.getElementById('result-line');
+      const status = document.getElementById('selection-status');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let answered = false;
+
+      function revealAnswer(correct) {
+        slide.classList.add('is-answered');
+        resultLine.textContent = correct ? 'Correct' : 'Not quite — here is the correct answer.';
+        resultLine.className = 'result-line ' + (correct ? 'is-correct' : 'is-incorrect');
+        status.textContent = (correct ? 'Correct.' : 'Not quite.') + ' The correct answer is shown; open the data table for the full breakdown.';
+      }
+      function completeQuiz(button) {
+        if (answered) return;
+        answered = true;
+        const correct = button.dataset.correct === 'true';
+        answers.forEach(a => { a.disabled = true; a.setAttribute('aria-disabled', 'true'); });
+        button.classList.add(correct ? 'is-correct' : 'is-incorrect');
+        window.setTimeout(() => revealAnswer(correct), reduceMotion ? 0 : (correct ? 640 : 1100));
+      }
+      answers.forEach(a => {
+        a.addEventListener('click', () => completeQuiz(a));
+        a.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); completeQuiz(a); } });
+      });
+
+      /* Table viewer */
+      const viewer = document.getElementById('viewer');
+      const openBtn = document.getElementById('open-table');
+      const closeBtn = document.getElementById('close-table');
+      function openViewer() { slide.classList.add('is-viewing'); viewer.setAttribute('aria-hidden', 'false'); closeBtn.focus(); }
+      function closeViewer() { slide.classList.remove('is-viewing'); viewer.setAttribute('aria-hidden', 'true'); openBtn.focus(); }
+      openBtn.addEventListener('click', openViewer);
+      closeBtn.addEventListener('click', closeViewer);
+
+      /* Expand / collapse parent rows */
+      function toggleGroup(label) {
+        const row = label.closest('.row-parent');
+        const open = row.getAttribute('aria-expanded') !== 'true';
+        row.setAttribute('aria-expanded', String(open));
+        const ids = (label.getAttribute('aria-controls') || '').split(' ');
+        ids.forEach((id, k) => {
+          const c = document.getElementById(id);
+          if (!c) return;
+          c.classList.remove('rowin', 'rowout');
+          if (open) {
+            c.hidden = false;
+            if (!reduceMotion) { c.style.animationDelay = (k * 70) + 'ms'; void c.offsetWidth; c.classList.add('rowin'); }
+          } else if (reduceMotion) {
+            c.hidden = true;
+          } else {
+            c.style.animationDelay = '0ms'; void c.offsetWidth; c.classList.add('rowout');
+            const done = () => { c.hidden = true; c.classList.remove('rowout'); };
+            c.addEventListener('animationend', done, { once: true });
+            window.setTimeout(() => { if (!c.hidden) done(); }, 320);
+          }
+        });
+      }
+      document.querySelectorAll('.rowlabel').forEach(label => {
+        label.addEventListener('click', () => toggleGroup(label));
+        label.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleGroup(label); } });
+      });
+
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && slide.classList.contains('is-viewing')) closeViewer();
+      });
+    }());
+  </script>
+</body>
+</html>
