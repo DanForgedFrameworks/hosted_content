@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Efficacy with tepotinib according to line of therapy (VISION)</title>
+<style>
+/* ============================================================
+   TOUCH MEDICAL — TM9035 SLIDE 47  (fit-to-embed-box, 680 ceiling)
+   Efficacy with tepotinib according to line of therapy (VISION METex14).
+   Scaffolded table: ORR % + mDOR months by default; "Show 95% CI / IQR"
+   toggle adds intervals; 2L+ prior-treatment breakdown expandable; the
+   * / dagger / double-dagger footnotes are hover/focus/tap hotspots.
+   Self-contained. No external runtime dependencies. Poppins (bundled).
+   Brand: teal #0098be, navy #222f55.
+   ============================================================ */
+@font-face { font-family:"Poppins"; src:url("assets/poppins-400.ttf") format("truetype"); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-600.ttf") format("truetype"); font-weight:600; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-700.ttf") format("truetype"); font-weight:700; font-style:normal; font-display:swap; }
+
+:root{
+  --teal:#0098be; --teal-strong:#007a98;
+  --navy:#222f55; --on-accent:#ffffff;
+  --neutral:#c6d3e2;
+  --muted:#56608a; --faint:#8a91b0;
+  --pale:#d9eff8; --mist:#f4f7f9; --line:#e3e8ee;
+  --rowcomp:#eef1f6; --rowsub:#f7fafc;
+  --backdrop:rgba(16,26,38,.68);
+  --c1:#222f55; --c2:#0098be;
+  --font:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{ box-sizing:border-box; }
+html,body{ height:100%; margin:0; }
+body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--font); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; display:flex; align-items:center; justify-content:center; }
+
+.frame{ width:100%; height:auto; max-height:680px; display:flex; flex-direction:column; overflow:hidden; background:#fff; }
+
+.banner{ flex:0 0 auto; text-align:center; padding:clamp(7px,1.5vh,14px) clamp(16px,3vw,40px) clamp(5px,1vh,10px); background:var(--pale); }
+.banner__title{ margin:0; font-size:clamp(1.2rem,2.5vw,1.66rem); font-weight:700; line-height:1.16; color:var(--navy); }
+.banner__title em{ font-style:italic; }
+.banner__prompt{ margin:4px 0 0; font-size:clamp(.76rem,1.3vw,.94rem); font-weight:500; color:var(--muted); }
+
+/* ---------- body ---------- */
+.body{ flex:0 0 auto; position:relative; z-index:1; display:flex; flex-direction:column; padding:clamp(8px,1.5vh,16px) clamp(16px,3vw,40px) clamp(4px,0.8vh,9px); gap:clamp(7px,1.3vh,12px); }
+.tools{ flex:0 0 auto; display:flex; align-items:center; justify-content:flex-end; gap:12px; flex-wrap:wrap; }
+.tools__hint{ font-size:clamp(.72rem,1.25vw,.84rem); font-weight:500; color:var(--muted); }
+.tools__hint b{ color:var(--navy); font-weight:700; }
+.ci-toggle{ display:inline-flex; align-items:center; gap:9px; min-height:38px; padding:7px 14px; border:2px solid var(--teal); border-radius:10px; background:#fff; color:var(--teal); font:inherit; font-weight:700; font-size:.82rem; cursor:pointer; transition:background .15s ease,color .15s ease; }
+.ci-toggle .sw{ position:relative; width:34px; height:18px; border-radius:10px; background:var(--neutral); transition:background .15s ease; flex:0 0 auto; }
+.ci-toggle .sw::after{ content:""; position:absolute; top:2px; left:2px; width:14px; height:14px; border-radius:50%; background:#fff; box-shadow:0 1px 2px rgba(16,26,38,.3); transition:transform .15s ease; }
+.ci-toggle[aria-pressed="true"]{ background:var(--teal); color:#fff; }
+.ci-toggle[aria-pressed="true"] .sw{ background:rgba(255,255,255,.5); }
+.ci-toggle[aria-pressed="true"] .sw::after{ transform:translateX(16px); }
+.ci-toggle:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+
+/* ---------- table ---------- */
+.twrap{ flex:0 0 auto; border-radius:14px; box-shadow:0 0 0 1px var(--line); overflow:hidden; }
+table.eff{ width:100%; border-collapse:collapse; table-layout:fixed; }
+.eff th,.eff td{ padding:clamp(6px,1.15vh,12px) clamp(8px,1vw,16px); text-align:center; vertical-align:middle; border-bottom:1px solid var(--line); font-size:clamp(.76rem,1.3vw,.92rem); }
+.eff thead th{ background:var(--navy); color:#fff; font-weight:700; line-height:1.2; border-bottom:0; }
+.eff col.c-out{ width:40%; } .eff col.c-n{ width:13%; } .eff col.c-orr{ width:24%; } .eff col.c-dor{ width:23%; }
+.eff td.out{ text-align:left; font-weight:700; color:var(--navy); }
+.eff td.out .sub{ display:block; font-weight:600; font-size:.86em; color:var(--muted); }
+.eff td.num{ font-weight:600; color:var(--navy); font-variant-numeric:tabular-nums; }
+.eff .val{ font-weight:700; }
+.eff .ci{ display:none; color:var(--muted); font-weight:600; white-space:nowrap; }
+[data-ci="on"] .eff .ci{ display:inline; }
+[data-ci="on"] .eff .ci.block{ display:block; font-size:.84em; margin-top:1px; }
+
+/* ORR data-bar cell */
+.eff td.orr{ position:relative; }
+.eff td.orr .bar{ position:absolute; left:0; top:8%; bottom:8%; border-radius:0 6px 6px 0; background:var(--pale); z-index:0; }
+.eff td.orr .orrwrap{ position:relative; z-index:1; }
+.eff tr.comp td.orr .bar{ background:#dfe3ec; }
+
+/* comparator row */
+.eff tr.comp td{ background:var(--rowcomp); }
+.eff tr.comp td.out{ color:var(--navy); }
+.eff tr.comp td.out .tag{ display:block; font-weight:700; font-size:.72em; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); margin-bottom:1px; }
+
+/* expand parent + subrows */
+.eff tr.parent{ cursor:pointer; }
+.eff tr.parent td{ background:var(--mist); font-weight:700; }
+.eff tr.parent td.out{ display:flex; align-items:center; gap:8px; }
+.eff tr.parent:hover td{ background:#eef4f7; }
+.eff tr.parent:focus-visible{ outline:3px solid var(--navy); outline-offset:-3px; }
+.chev{ flex:0 0 auto; width:18px; height:18px; color:var(--teal); transition:transform .2s ease; }
+.eff tr.parent[aria-expanded="true"] .chev{ transform:rotate(90deg); }
+.eff tr.sub td{ background:var(--rowsub); }
+.eff tr.sub td.out{ font-weight:600; padding-left:clamp(22px,3vw,42px); }
+.eff tr.sub td.out::before{ content:""; display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--teal); margin-right:9px; vertical-align:middle; }
+.eff tr.sub.is-anim td{ animation:rowIn .3s ease both; }
+.eff tr.sub[hidden]{ display:none; }
+.eff tr.subnote td{ background:var(--rowsub); text-align:left; font-size:clamp(.68rem,1.15vw,.78rem); font-style:italic; color:var(--muted); line-height:1.35; padding:7px clamp(10px,1.4vw,18px) 9px clamp(22px,3vw,42px); border-bottom:0; }
+.eff tr.subnote td strong{ font-style:normal; font-weight:700; color:var(--navy); }
+.eff tr.subnote[hidden]{ display:none; }
+@keyframes rowIn{ from{ opacity:0; transform:translateY(-5px);} to{ opacity:1; transform:none; } }
+
+/* footnote hotspot markers */
+.fn{ display:inline-flex; align-items:center; justify-content:center; min-width:15px; height:15px; padding:0 2px; margin-left:2px; border:0; border-radius:4px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.7em; line-height:1; cursor:pointer; vertical-align:super; transition:filter .15s ease; }
+.fn:hover{ filter:brightness(1.1); }
+.fn:focus-visible{ outline:3px solid var(--navy); outline-offset:2px; }
+thead .fn{ background:rgba(255,255,255,.92); color:var(--navy); }
+
+/* ---------- footnote tooltip (body-level) ---------- */
+.fntip{ position:fixed; z-index:45; max-width:300px; padding:10px 13px; border-radius:10px; background:var(--navy); color:#fff; font-size:clamp(.76rem,1.3vw,.86rem); line-height:1.4; font-weight:500; box-shadow:0 12px 28px rgba(16,26,38,.36); visibility:hidden; opacity:0; transition:opacity .12s ease; transform:translateX(-50%); pointer-events:none; }
+.fntip.is-on{ visibility:visible; opacity:1; }
+.fntip::after{ content:""; position:absolute; left:50%; transform:translateX(-50%); border:7px solid transparent; }
+.fntip:not(.is-above)::after{ bottom:100%; border-bottom-color:var(--navy); }
+.fntip.is-above::after{ top:100%; border-top-color:var(--navy); }
+.fntip b{ color:#bfe1f0; }
+
+/* ---------- footer controls ---------- */
+.controls{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:clamp(12px,2.4vw,26px); padding:clamp(6px,1.1vh,11px) clamp(12px,3vw,24px); }
+.controls__note{ font-size:clamp(.7rem,1.2vw,.8rem); color:var(--faint); }
+.cite-src{ display:inline-flex; align-items:center; gap:8px; min-height:38px; padding:8px 16px; border:2px solid var(--teal); border-radius:10px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.84rem; cursor:pointer; transition:filter .15s ease; }
+.cite-src:hover{ filter:brightness(.95); }
+.cite-src svg{ width:14px; height:14px; }
+.cite-src:focus-visible,.cite-dismiss:focus-visible,.inter__btn:focus-visible,.cite-view:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+
+/* ---------- citation modal ---------- */
+.cite-modal{ position:fixed; inset:0; z-index:40; display:none; align-items:center; justify-content:center; padding:clamp(12px,4vw,40px); background:var(--backdrop); }
+.cite-modal.is-open{ display:flex; }
+.cite-card{ width:min(680px,100%); max-height:calc(100% - 24px); overflow:auto; background:#fff; border-radius:16px; box-shadow:0 24px 60px rgba(16,26,38,.4); padding:clamp(18px,3vw,26px); animation:rise .22s ease both; }
+.cite-card__eyebrow{ margin:0 0 4px; font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--teal); }
+.cite-card__title{ margin:0 0 8px; font-size:clamp(1.05rem,2vw,1.25rem); font-weight:700; color:var(--navy); }
+.cite-card__body{ margin:0; font-size:.92rem; line-height:1.5; color:var(--navy); }
+.cite-card__ref{ display:block; margin-top:10px; padding-top:10px; border-top:1px solid var(--line); font-size:.85rem; line-height:1.5; color:var(--muted); }
+.cite-card__ref sup{ color:var(--teal); font-weight:700; }
+.cite-card__actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+.cite-view{ flex:0 0 auto; display:inline-flex; align-items:center; gap:7px; min-height:44px; padding:10px 18px; border:2px solid var(--teal); border-radius:10px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.88rem; cursor:pointer; transition:filter .15s ease; }
+.cite-view:hover{ filter:brightness(.95); }
+.cite-dismiss{ flex:0 0 auto; min-height:44px; padding:10px 18px; border:2px solid var(--teal); border-radius:10px; background:#fff; color:var(--teal); font:inherit; font-weight:700; font-size:.88rem; cursor:pointer; }
+
+/* ---------- D16/D22 interstitial ---------- */
+.inter{ position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center; padding:clamp(12px,4vw,40px); background:var(--backdrop); }
+.inter.is-open{ display:flex; }
+.inter__panel{ width:min(460px,100%); max-height:calc(100% - 24px); overflow:auto; background:#fff; border-radius:16px; box-shadow:0 24px 60px rgba(16,26,38,.4); padding:22px; animation:rise .2s ease both; }
+.inter__title{ font-size:1.05rem; font-weight:700; margin:0 0 8px; color:var(--navy); }
+.inter__p{ font-size:.82rem; line-height:1.5; color:var(--muted); margin:0 0 10px; }
+.inter__p strong{ color:var(--navy); font-weight:600; }
+.inter__url{ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.72rem; line-height:1.45; color:var(--muted); background:var(--mist); border:1px solid var(--line); border-radius:8px; padding:9px 11px; word-break:break-all; }
+.inter__status{ margin-top:12px; display:flex; align-items:center; gap:9px; min-height:22px; font-size:.76rem; font-style:italic; color:var(--muted); }
+.prep{ display:inline-flex; gap:5px; }
+.prep i{ width:8px; height:8px; border-radius:50%; background:var(--teal); display:inline-block; animation:prep 1s infinite ease-in-out; }
+.prep i:nth-child(2){ animation-delay:.15s; }
+.prep i:nth-child(3){ animation-delay:.3s; }
+.inter__actions{ display:flex; flex-wrap:wrap; gap:9px; margin-top:16px; }
+.inter__btn{ min-height:44px; padding:10px 18px; border:2px solid var(--teal); border-radius:10px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.82rem; cursor:pointer; }
+.inter__btn.secondary{ background:#fff; color:var(--teal); }
+.inter__btn:disabled{ background:#c3c8d2; border-color:#c3c8d2; color:#fff; cursor:not-allowed; }
+.inter__btn:hover:not(:disabled){ filter:brightness(.96); }
+
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+@keyframes rise{ from{ opacity:0; transform:translateY(10px) scale(.99);} to{ opacity:1; transform:none; } }
+@keyframes prep{ 0%,100%{ transform:scale(.6); opacity:.4; } 50%{ transform:scale(1); opacity:1; } }
+
+/* ---------- phone ---------- */
+@media (max-width:760px){
+  html,body{ height:auto; }
+  body{ overflow:auto; display:block; }
+  .frame{ height:auto; min-height:100%; max-height:none; }
+  .body{ overflow:visible; }
+  .eff th,.eff td{ font-size:.74rem; padding:7px 6px; }
+  .eff col.c-out{ width:36%; }
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+}
+</style>
+</head>
+<body>
+<main class="frame" aria-label="Efficacy with tepotinib according to line of therapy in VISION">
+
+  <header class="banner">
+    <h1 class="banner__title">Efficacy with tepotinib according to line of therapy</h1>
+    <p class="banner__prompt">Toggle <b>95% CI / IQR</b> for full intervals, expand the 2L+ breakdown, and select the <strong>*&nbsp;&dagger;&nbsp;&Dagger;</strong> markers for notes.</p>
+  </header>
+
+  <div class="body">
+    <div class="tools">
+      <button class="ci-toggle" id="ciToggle" type="button" aria-pressed="false"><span class="sw" aria-hidden="true"></span>Show 95% CI / IQR</button>
+    </div>
+
+    <div class="twrap">
+      <table class="eff" id="effTable">
+        <colgroup><col class="c-out"><col class="c-n"><col class="c-orr"><col class="c-dor"></colgroup>
+        <thead><tr>
+          <th scope="col" id="hOut" style="text-align:left">Outcomes with</th>
+          <th scope="col">Patients, n</th>
+          <th scope="col">ORR, %</th>
+          <th scope="col"><span id="hDor">mDOR, months <button class="fn" type="button" data-fn="*" aria-label="Footnote about confidence intervals and IQR">*</button></span></th>
+        </tr></thead>
+        <tbody id="effBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="controls">
+    <span class="controls__note">VISION (METex14 skipping NSCLC, N=313)</span>
+    <button class="cite-src" id="citeSrc" type="button" aria-haspopup="dialog">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Source
+    </button>
+  </div>
+
+  <p class="sr-only" id="live" aria-live="polite" aria-atomic="true"></p>
+</main>
+
+<div class="fntip" id="fntip" role="status"></div>
+
+<!-- citation modal -->
+<div class="cite-modal" id="citeModal" role="dialog" aria-modal="true" aria-labelledby="citeTitle" hidden>
+  <div class="cite-card" role="document">
+    <p class="cite-card__eyebrow">Source</p>
+    <h2 class="cite-card__title" id="citeTitle">VISION trial &mdash; tepotinib in <em>MET</em>ex14 skipping NSCLC</h2>
+    <p class="cite-card__body">Data are for the 313 patients with <em>MET</em>ex14 skipping NSCLC in the Phase&nbsp;2 VISION trial. ORR is objective response rate; mDOR is median duration of response. 95%&nbsp;CIs are shown for tepotinib efficacy outcomes; IQR is shown for prior treatments.
+      <span class="cite-card__ref">Mazieres J, Paik PK, Garassino MC, et al. Tepotinib treatment in patients with <em>MET</em> exon&nbsp;14-skipping NSCLC: long-term follow-up of the VISION phase&nbsp;2 nonrandomized clinical trial. <em>JAMA Oncol.</em> 2023;9(9):1260&ndash;6.<sup>&nbsp;9</sup></span>
+    </p>
+    <div class="cite-card__actions">
+      <button class="cite-view" id="citeView" type="button" data-url="https://doi.org/10.1001/jamaoncol.2023.1962" data-ref="Mazieres J, et al. JAMA Oncol. 2023;9(9):1260&ndash;6">View source <span aria-hidden="true">&#8599;</span></button>
+      <button class="cite-dismiss" id="citeDismiss" type="button">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- D16/D22 interstitial -->
+<div class="inter" id="inter" role="dialog" aria-modal="true" aria-labelledby="interTitle" aria-describedby="interReason" hidden>
+  <div class="inter__panel" role="document">
+    <h2 class="inter__title" id="interTitle">You are leaving this activity</h2>
+    <p class="inter__p" id="interReason">This link opens an external source in a new tab.</p>
+    <p class="inter__p"><strong>Source:</strong> <span id="interDest"></span><br><strong>Organisation:</strong> <span id="interOrg"></span></p>
+    <p class="inter__p">The source opens in a new tab. Check the address is expected before continuing.</p>
+    <div class="inter__url" id="interUrl"></div>
+    <div class="inter__status" aria-live="polite"><span class="prep" aria-hidden="true"><i></i><i></i><i></i></span><span id="interStatus">Preparing the link&hellip;</span></div>
+    <div class="inter__actions">
+      <button class="inter__btn" id="interOpen" type="button" disabled>Open source</button>
+      <button class="inter__btn secondary" id="interCopy" type="button">Copy link</button>
+      <button class="inter__btn secondary" id="interStay" type="button">Stay here</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- footnotes (verbatim) ---------- */
+  const FN = {
+    '*':'95% confidence intervals for efficacy outcomes with tepotinib and IQR for other treatments.',
+    '†':'Assessed by investigator; mDOR and mPFS were based on descriptive analyses.',
+    '‡':'Assessed by independent review committee.'
+  };
+
+  /* ---------- data (supplied figures, verbatim) ----------
+     orr.ci null = no CI reported (descriptive). dor.kind labels the interval. */
+  const ROWS = [
+    { cls:'comp', tag:'Before tepotinib', out:'All treatment lines prior to tepotinib', fn:'†',
+      n:149, orr:{v:'28.9', ci:null}, dor:{v:'6.0', ci:'4.0–12.0', kind:'IQR'} },
+    { cls:'line', out:'Tepotinib in 1L', fn:'‡', n:164, orr:{v:'57.9', ci:'50.0, 65.6'}, dor:{v:'31.7', ci:'13.8, 46.4'} },
+    { cls:'line', out:'Tepotinib in 2L', fn:'‡', n:92, orr:{v:'45.7', ci:'35.2, 56.4'}, dor:{v:'12.6', ci:'8.3, 18.5'} },
+    { cls:'line', out:'Tepotinib in 2L+', fn:'‡', n:149, orr:{v:'45.0', ci:'36.8, 53.3'}, dor:{v:'12.6', ci:'9.5, 18.5'} },
+    { cls:'line', out:'Tepotinib in 3L+', fn:'‡', n:57, orr:{v:'43.9', ci:'30.7, 57.6'}, dor:{v:'10.8', ci:'8.3, NE'} }
+  ];
+  const SUBROWS = [
+    { out:'Platinum-based CT alone', fn:'‡', n:104, orr:{v:'48.1', ci:'38.2, 58.1'}, dor:{v:'15.4', ci:'8.3, 33.6'} },
+    { out:'IO monotherapy', fn:'‡', n:59, orr:{v:'33.9', ci:'22.1, 47.4'}, dor:{v:'12.6', ci:'8.3, NE'} },
+    { out:'IO-CT', fn:'‡', n:22, orr:{v:'54.5', ci:'32.2, 75.6'}, dor:{v:'10.1', ci:'4.2, NE'} }
+  ];
+  const SUBNOTE = 'These prior-treatment categories overlap (patients could receive more than one), so they are not mutually exclusive and do not sum to the 149 patients treated in 2L+.';
+
+  function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  function fnMark(sym){ return '<button class="fn" type="button" data-fn="'+sym+'" aria-label="Footnote '+sym+'">'+sym+'</button>'; }
+  function orrCell(o){
+    const w = Math.min(100, parseFloat(o.v));
+    const ci = o.ci ? '<span class="ci"> ('+esc(o.ci)+')</span>' : '';
+    return '<td class="num orr"><span class="bar" style="width:'+w.toFixed(1)+'%"></span>'+
+      '<span class="orrwrap"><span class="val">'+esc(o.v)+'</span>'+ci+'</span></td>';
+  }
+  function dorCell(d){
+    const ci = d.ci ? '<span class="ci"> ('+esc(d.ci)+')</span>' : '';
+    return '<td class="num"><span class="val">'+esc(d.v)+'</span>'+ci+'</td>';
+  }
+  function ariaRow(r){
+    const orrCI = r.orr.ci ? ' (95% CI '+r.orr.ci.replace(',',' to')+')' : '';
+    const dorKind = r.dor.kind==='IQR' ? 'IQR ' : '95% CI ';
+    const dorCI = r.dor.ci ? ' ('+dorKind+r.dor.ci.replace(',',' to').replace('–',' to ')+')' : '';
+    return r.out+': '+r.n+' patients; ORR '+r.orr.v+'%'+orrCI+'; median DOR '+r.dor.v+' months'+dorCI+'.';
+  }
+
+  /* ---------- render table ---------- */
+  const body=document.getElementById('effBody');
+  ROWS.forEach(r=>{
+    const tr=document.createElement('tr'); tr.className=r.cls;
+    const tag = r.cls==='comp' ? '<span class="tag">'+esc(r.tag)+'</span>' : '';
+    tr.innerHTML = '<td class="out">'+tag+esc(r.out)+(r.fn?fnMark(r.fn):'')+'</td>'+
+      '<td class="num">'+r.n+'</td>'+orrCell(r.orr)+dorCell(r.dor);
+    tr.setAttribute('aria-label', ariaRow(r));
+    body.appendChild(tr);
+  });
+  // expandable parent
+  const parent=document.createElement('tr'); parent.className='parent'; parent.id='subParent';
+  parent.tabIndex=0; parent.setAttribute('role','button'); parent.setAttribute('aria-expanded','false'); parent.setAttribute('aria-controls','sub0 sub1 sub2');
+  parent.innerHTML='<td class="out"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>Tepotinib in 2L+ by prior treatment received'+fnMark('‡')+'</td>'+
+    '<td class="num">&mdash;</td><td class="num">&mdash;</td><td class="num">&mdash;</td>';
+  body.appendChild(parent);
+  const subEls=[];
+  SUBROWS.forEach((r,i)=>{
+    const tr=document.createElement('tr'); tr.className='sub'; tr.id='sub'+i; tr.hidden=true;
+    tr.innerHTML='<td class="out">'+esc(r.out)+(r.fn?fnMark(r.fn):'')+'</td>'+
+      '<td class="num">'+r.n+'</td>'+orrCell(r.orr)+dorCell(r.dor);
+    tr.setAttribute('aria-label', ariaRow(r));
+    body.appendChild(tr); subEls.push(tr);
+  });
+  // visible overlap caveat shown with the breakdown (honest: categories not mutually exclusive)
+  const subnote=document.createElement('tr'); subnote.className='subnote'; subnote.id='subnote'; subnote.hidden=true;
+  subnote.innerHTML='<td colspan="4"><strong>Note:</strong> '+esc(SUBNOTE)+'</td>';
+  body.appendChild(subnote);
+
+  /* ---------- CI toggle ---------- */
+  const ciToggle=document.getElementById('ciToggle');
+  const frame=document.querySelector('.frame');
+  const live=document.getElementById('live');
+  let ciOn=false;
+  ciToggle.addEventListener('click',()=>{
+    ciOn=!ciOn; frame.dataset.ci=ciOn?'on':'off'; ciToggle.setAttribute('aria-pressed',ciOn?'true':'false');
+    ciToggle.lastChild.textContent = ciOn ? 'Hide 95% CI / IQR' : 'Show 95% CI / IQR';
+    live.textContent = ciOn ? 'Confidence intervals and IQR shown.' : 'Confidence intervals hidden.';
+  });
+
+  /* ---------- expandable subrows (robust, no animation-gating) ---------- */
+  let expanded=false, collapseTimer=null;
+  function setExpanded(on){
+    expanded=on; parent.setAttribute('aria-expanded',on?'true':'false');
+    if(collapseTimer){ clearTimeout(collapseTimer); collapseTimer=null; }
+    if(on){
+      subEls.forEach((tr,i)=>{ tr.hidden=false; tr.classList.remove('is-anim'); void tr.offsetWidth;
+        tr.style.animationDelay=(reduceMotion?0:i*0.05)+'s'; tr.classList.add('is-anim'); });
+      subnote.hidden=false;
+      live.textContent='2L+ prior-treatment breakdown expanded. '+SUBNOTE;
+    } else {
+      subEls.forEach(tr=>tr.classList.remove('is-anim'));
+      // hide immediately (rows can't animate height); robust regardless of animation
+      subEls.forEach(tr=>{ tr.hidden=true; });
+      subnote.hidden=true;
+      live.textContent='2L+ prior-treatment breakdown collapsed.';
+    }
+  }
+  parent.addEventListener('click',()=>setExpanded(!expanded));
+  parent.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); setExpanded(!expanded); } });
+
+  /* ---------- footnote tooltips (hover + focus + tap) ---------- */
+  const fntip=document.getElementById('fntip');
+  let pinned=null;
+  function fnText(key){ return key==='§sub' ? SUBNOTE : (FN[key]||''); }
+  function showTip(btn){
+    const key=btn.dataset.fn; fntip.innerHTML=esc(fnText(key));
+    fntip.style.left='0px'; fntip.style.top='0px'; fntip.classList.remove('is-above');
+    const r=btn.getBoundingClientRect(), tw=fntip.offsetWidth, th=fntip.offsetHeight;
+    let top=r.bottom+10;
+    if(top+th>window.innerHeight-6){ top=r.top-th-10; fntip.classList.add('is-above'); }
+    let left=Math.max(tw/2+6, Math.min(window.innerWidth-tw/2-6, r.left+r.width/2));
+    fntip.style.left=left+'px'; fntip.style.top=top+'px'; fntip.classList.add('is-on');
+  }
+  function hideTip(){ if(pinned) return; fntip.classList.remove('is-on'); }
+  document.querySelectorAll('.fn').forEach(btn=>{
+    btn.addEventListener('mouseenter',()=>{ if(!pinned) showTip(btn); });
+    btn.addEventListener('mouseleave',hideTip);
+    btn.addEventListener('focus',()=>{ if(!pinned) showTip(btn); });
+    btn.addEventListener('blur',()=>{ if(pinned===btn){ pinned=null; } fntip.classList.remove('is-on'); });
+    btn.addEventListener('click',e=>{ e.stopPropagation(); if(pinned===btn){ pinned=null; fntip.classList.remove('is-on'); } else { pinned=btn; showTip(btn); } });
+  });
+  document.addEventListener('click',e=>{ if(pinned && !e.target.closest('.fn')){ pinned=null; fntip.classList.remove('is-on'); } });
+  window.addEventListener('resize',()=>{ pinned=null; fntip.classList.remove('is-on'); });
+
+  /* ---------- citation modal ---------- */
+  const citeModal=document.getElementById('citeModal'); let citeLastFocus=null;
+  function openCite(){ citeLastFocus=document.activeElement; citeModal.hidden=false; citeModal.classList.add('is-open'); setTimeout(()=>document.getElementById('citeDismiss').focus(),30); }
+  function closeCite(){ citeModal.classList.remove('is-open'); citeModal.hidden=true; if(citeLastFocus&&citeLastFocus.focus){ try{ citeLastFocus.focus(); }catch(e){} } }
+  document.getElementById('citeSrc').addEventListener('click',openCite);
+  document.getElementById('citeDismiss').addEventListener('click',closeCite);
+  citeModal.addEventListener('click',e=>{ if(e.target===citeModal) closeCite(); });
+
+  /* ---------- D16/D22 interstitial ---------- */
+  const inter=document.getElementById('inter');
+  const iDest=document.getElementById('interDest'), iOrg=document.getElementById('interOrg'), iUrl=document.getElementById('interUrl');
+  const iStatus=document.getElementById('interStatus'), iDots=inter.querySelector('.prep');
+  const iOpen=document.getElementById('interOpen'), iCopy=document.getElementById('interCopy'), iStay=document.getElementById('interStay');
+  let pendingURL=null, interTrigger=null, launchTimer=null;
+  function orgFromHost(h){ return ({'doi.org':'Publisher (resolved via doi.org)'})[h]||h; }
+  function openInter(url,ref,trigger){
+    pendingURL=url; interTrigger=trigger; let host=url; try{ host=new URL(url).hostname; }catch(e){}
+    iDest.textContent=ref; iOrg.textContent=orgFromHost(host); iUrl.textContent=url;
+    if(iDots) iDots.style.display=''; iStatus.textContent='Preparing the link…'; iOpen.disabled=true;
+    inter.hidden=false; inter.classList.add('is-open'); iStay.focus();
+    if(launchTimer) clearTimeout(launchTimer);
+    launchTimer=setTimeout(()=>{ if(iDots) iDots.style.display='none'; iStatus.textContent='Ready to open.'; iOpen.disabled=false; iOpen.focus(); }, reduceMotion?250:1300);
+  }
+  function closeInter(){ if(launchTimer) clearTimeout(launchTimer); inter.classList.remove('is-open'); inter.hidden=true; if(interTrigger&&interTrigger.focus){ try{ interTrigger.focus(); }catch(e){} } }
+  document.getElementById('citeView').addEventListener('click',function(){ openInter(this.dataset.url,this.dataset.ref,this); });
+  iOpen.addEventListener('click',()=>{ if(!pendingURL) return; window.open(pendingURL,'_blank','noopener,noreferrer'); iStatus.textContent='Link opened in a new tab. Nothing opened? Copy the link and open it manually.'; });
+  iCopy.addEventListener('click',()=>{ if(!pendingURL) return; const ta=document.createElement('textarea'); ta.value=pendingURL; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select(); let ok=false; try{ ok=document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); iStatus.textContent=ok?'Link copied. Paste it into a fresh browser tab.':'Copying is unavailable. Select and copy the visible URL manually.'; });
+  iStay.addEventListener('click',closeInter);
+  inter.addEventListener('click',e=>{ if(e.target===inter) closeInter(); });
+
+  /* ---------- keyboard layering ---------- */
+  function trap(e,container){ const f=container.querySelectorAll('a[href],button:not([disabled])'); if(!f.length) return; const first=f[0],last=f[f.length-1]; if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); } else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); } }
+  document.addEventListener('keydown',e=>{
+    if(inter.classList.contains('is-open')){ if(e.key==='Escape'){ e.preventDefault(); closeInter(); return; } if(e.key==='Tab'){ trap(e,inter); } return; }
+    if(citeModal.classList.contains('is-open')){ if(e.key==='Escape'){ e.preventDefault(); closeCite(); return; } if(e.key==='Tab'){ trap(e,citeModal); } return; }
+    if(e.key==='Escape' && pinned){ pinned=null; fntip.classList.remove('is-on'); }
+  },true);
+
+})();
+</script>
+</body>
+</html>
