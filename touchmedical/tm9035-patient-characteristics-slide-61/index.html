@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Patient characteristics (METex14 skipping NSCLC)</title>
+<style>
+/* ============================================================
+   TOUCH MEDICAL — TM9035 SLIDE 61  (fit-to-embed-box, 680 ceiling)
+   Patient characteristics (N=106). Grid of flip cards: front = quick
+   split graphic (adapted per stat), back = full n (%) figures. Both
+   footnotes (* and dagger) sit on smoking history as hover/focus/tap
+   hotspots. No citation/source. Self-contained, bundled Poppins.
+   Brand: teal #0098be, navy #222f55.
+   ============================================================ */
+@font-face { font-family:"Poppins"; src:url("assets/poppins-400.ttf") format("truetype"); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-600.ttf") format("truetype"); font-weight:600; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-700.ttf") format("truetype"); font-weight:700; font-style:normal; font-display:swap; }
+
+:root{
+  --teal:#0098be; --teal-strong:#007a98;
+  --navy:#222f55; --on-accent:#ffffff;
+  --neutral:#c6d3e2;
+  --muted:#56608a; --faint:#8a91b0;
+  --pale:#d9eff8; --mist:#f4f7f9; --line:#e3e8ee;
+  --backdrop:rgba(16,26,38,.68);
+  --c1:#222f55; --c2:#0098be; --c3:#4f9fc4; --c4:#86bdd8; --c5:#b9d8e8;
+  --font:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{ box-sizing:border-box; }
+html,body{ height:100%; margin:0; }
+body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--font); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; display:flex; align-items:center; justify-content:center; }
+
+.frame{ width:100%; height:100%; max-height:680px; display:flex; flex-direction:column; overflow:hidden; background:#fff; }
+
+.banner{ flex:0 0 auto; text-align:center; padding:clamp(8px,1.6vh,15px) clamp(16px,3vw,40px) clamp(6px,1.1vh,11px); background:var(--pale); }
+.banner__title{ margin:0; font-size:clamp(1.2rem,2.5vw,1.7rem); font-weight:700; line-height:1.14; color:var(--navy); }
+.banner__title span{ font-size:.55em; font-weight:600; color:var(--muted); margin-left:8px; vertical-align:middle; }
+.banner__prompt{ margin:4px 0 0; font-size:clamp(.76rem,1.3vw,.94rem); font-weight:500; color:var(--muted); }
+.banner__prompt b{ color:var(--navy); font-weight:700; }
+
+/* ---------- card grid ---------- */
+.grid{ flex:1 1 auto; min-height:0; display:grid; grid-template-columns:repeat(4,1fr); grid-template-rows:1fr 1fr; gap:clamp(9px,1.3vw,16px); padding:clamp(9px,1.6vh,18px) clamp(14px,2.6vw,34px); }
+
+.card{ position:relative; border:0; background:transparent; padding:0; font:inherit; color:inherit; cursor:pointer; perspective:1300px; min-height:0; }
+.card:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; border-radius:18px; }
+.card__inner{ position:relative; display:grid; width:100%; height:100%; transition:transform .55s cubic-bezier(.4,0,.2,1); transform-style:preserve-3d; }
+.card[aria-expanded="true"] .card__inner{ transform:rotateY(180deg); }
+.card__face{ grid-area:1 / 1; -webkit-backface-visibility:hidden; backface-visibility:hidden; display:flex; flex-direction:column; border:2px solid var(--line); border-radius:16px; background:#fff; overflow:hidden; transition:border-color .16s ease, box-shadow .16s ease; }
+
+/* front */
+.card__front{ padding:clamp(11px,1.8vh,18px) clamp(12px,1.3vw,18px); }
+.card:hover .card__front{ border-color:var(--teal); box-shadow:0 9px 18px rgba(34,47,85,.10); }
+.card__head{ flex:0 0 auto; display:flex; align-items:center; gap:9px; margin-bottom:clamp(7px,1.4vh,12px); }
+.card__icon{ flex:0 0 auto; width:clamp(26px,2.7vw,34px); height:clamp(26px,2.7vw,34px); color:var(--teal); }
+.card__icon svg{ width:100%; height:100%; }
+.card__name{ font-size:clamp(.78rem,1.32vw,.95rem); font-weight:700; line-height:1.12; color:var(--navy); }
+.card__name em{ font-style:italic; }
+.card__graphic{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; justify-content:center; gap:clamp(6px,1.1vh,10px); }
+.card__flip{ flex:0 0 auto; margin-top:clamp(6px,1.1vh,10px); display:inline-flex; align-items:center; gap:6px; font-size:clamp(.66rem,1.15vw,.76rem); font-weight:700; color:var(--teal); }
+.card__flip svg{ width:14px; height:14px; }
+
+/* back */
+.card__back{ transform:rotateY(180deg); border-color:var(--teal); padding:clamp(26px,3.6vh,38px) clamp(13px,1.4vw,20px) clamp(12px,1.8vh,18px); justify-content:center; gap:clamp(6px,1.1vh,10px); }
+.card__tick{ position:absolute; top:clamp(10px,1.6vh,16px); left:clamp(12px,1.4vw,18px); width:23px; height:23px; border-radius:50%; background:var(--teal); color:#fff; display:grid; place-items:center; }
+.card__tick svg{ width:13px; height:13px; }
+.card__biconwrap{ position:absolute; top:clamp(9px,1.5vh,15px); right:clamp(12px,1.4vw,18px); width:clamp(24px,2.5vw,30px); height:clamp(24px,2.5vw,30px); color:var(--teal); opacity:.9; }
+.card__biconwrap svg{ width:100%; height:100%; }
+.card__bname{ font-size:clamp(.72rem,1.25vw,.86rem); font-weight:700; color:var(--teal); text-transform:uppercase; letter-spacing:.04em; text-align:center; }
+.detail{ display:flex; flex-direction:column; gap:clamp(4px,0.9vh,8px); }
+.detail__row{ display:flex; align-items:baseline; justify-content:center; gap:7px; font-size:clamp(.8rem,1.45vw,1rem); }
+.detail__row .lab{ font-weight:600; color:var(--navy); }
+.detail__row .fig{ font-weight:700; color:var(--navy); font-variant-numeric:tabular-nums; }
+.detail__row .sw{ width:11px; height:11px; border-radius:3px; flex:0 0 auto; align-self:center; }
+.detail__note{ margin-top:3px; text-align:center; font-size:clamp(.68rem,1.15vw,.78rem); font-style:italic; color:var(--muted); line-height:1.3; }
+
+/* ---------- split bar ---------- */
+.splitbar{ display:flex; width:100%; height:clamp(20px,3.4vh,30px); border-radius:8px; overflow:hidden; box-shadow:inset 0 0 0 1px rgba(34,47,85,.06); }
+.seg{ display:flex; align-items:center; justify-content:center; min-width:22px; color:#fff; font-size:clamp(.66rem,1.2vw,.8rem); font-weight:700; }
+.splitkey{ display:flex; flex-wrap:wrap; gap:4px 12px; }
+.splitkey--ends{ flex-wrap:nowrap; justify-content:space-between; gap:8px; }
+.splitkey--left{ justify-content:flex-start; }
+.key{ display:inline-flex; align-items:center; gap:6px; font-size:clamp(.7rem,1.2vw,.82rem); font-weight:600; color:var(--navy); }
+.key__sw{ width:11px; height:11px; border-radius:3px; flex:0 0 auto; }
+.key b{ font-weight:700; font-variant-numeric:tabular-nums; }
+
+/* ---------- dual / single proportion rows ---------- */
+.prow{ display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:9px; }
+.prow--nopct{ grid-template-columns:auto 1fr; }
+.prow__lab{ font-size:clamp(.7rem,1.2vw,.82rem); font-weight:600; color:var(--navy); white-space:nowrap; }
+.prow__lab b{ font-weight:700; font-variant-numeric:tabular-nums; }
+.prow__track{ height:clamp(13px,2.2vh,18px); background:var(--mist); border-radius:7px; box-shadow:inset 0 0 0 1px var(--line); overflow:hidden; }
+.prow__fill{ display:block; height:100%; border-radius:7px; background:var(--c2); min-width:3px; }
+.prow__pct{ font-size:clamp(.72rem,1.25vw,.86rem); font-weight:700; color:var(--navy); font-variant-numeric:tabular-nums; }
+
+/* ---------- age horseshoe ---------- */
+.hs{ display:flex; flex-direction:column; align-items:center; gap:2px; }
+.hs__ring{ position:relative; width:clamp(92px,16vh,130px); aspect-ratio:1; }
+.hs__ring svg{ width:100%; height:100%; display:block; overflow:visible; }
+.hs__center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none; }
+.hs__big{ font-size:clamp(1.3rem,3.6vh,2rem); font-weight:700; color:var(--navy); line-height:1; font-variant-numeric:tabular-nums; }
+.hs__unit{ font-size:clamp(.64rem,1.15vw,.76rem); font-weight:600; color:var(--muted); margin-top:1px; }
+.hs__sub{ font-size:.58rem; font-weight:700; color:var(--faint); text-transform:uppercase; letter-spacing:.08em; }
+.hs__ends{ width:clamp(92px,16vh,130px); display:flex; justify-content:space-between; font-size:clamp(.64rem,1.1vw,.74rem); font-weight:600; color:var(--faint); font-variant-numeric:tabular-nums; margin-top:-4px; }
+
+/* ---------- footnote hotspots ---------- */
+.fn{ display:inline-flex; align-items:center; justify-content:center; min-width:15px; height:15px; padding:0 2px; margin-left:3px; border:0; border-radius:4px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.72em; line-height:1; cursor:pointer; vertical-align:super; transition:filter .15s ease; }
+.fn:hover{ filter:brightness(1.1); }
+.fn:focus-visible{ outline:3px solid var(--navy); outline-offset:2px; }
+.fntip{ position:fixed; z-index:45; max-width:280px; padding:10px 13px; border-radius:10px; background:var(--navy); color:#fff; font-size:clamp(.76rem,1.3vw,.86rem); line-height:1.4; font-weight:500; box-shadow:0 12px 28px rgba(16,26,38,.36); visibility:hidden; opacity:0; transition:opacity .12s ease; transform:translateX(-50%); pointer-events:none; }
+.fntip.is-on{ visibility:visible; opacity:1; }
+.fntip::after{ content:""; position:absolute; left:50%; transform:translateX(-50%); border:7px solid transparent; }
+.fntip:not(.is-above)::after{ bottom:100%; border-bottom-color:var(--navy); }
+.fntip.is-above::after{ top:100%; border-top-color:var(--navy); }
+
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+/* ---------- phone ---------- */
+@media (max-width:760px){
+  html,body{ height:auto; }
+  body{ overflow:auto; display:block; }
+  .frame{ height:auto; min-height:100%; max-height:none; }
+  .grid{ grid-template-columns:1fr 1fr; grid-template-rows:none; }
+  .card{ min-height:170px; }
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+}
+</style>
+</head>
+<body>
+<main class="frame" aria-label="Patient characteristics">
+
+  <header class="banner">
+    <h1 class="banner__title">Patient characteristics<span>N&nbsp;=&nbsp;106</span></h1>
+    <p class="banner__prompt">Select a card for the quick split, then <b>flip it</b> for the full figures. Footnotes sit on smoking history.</p>
+  </header>
+
+  <div class="grid" id="grid"></div>
+
+  <p class="sr-only" id="live" aria-live="polite" aria-atomic="true"></p>
+</main>
+
+<div class="fntip" id="fntip" role="status"></div>
+
+<script>
+(function(){
+  "use strict";
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const FN = {
+    '*':'Smoking history was missing in two patients.',
+    '†':'Identified at baseline (by investigator or independent review committee).'
+  };
+
+  const ICON = {
+    sex:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="17" cy="16" r="8"/><path d="M17 24v15M11 33h12"/><circle cx="31" cy="32" r="8"/><path d="M37 26l8-8M39 18h6v6"/></svg>',
+    ecog:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="27" cy="9" r="4"/><path d="M25 16l-6 6 4 5 2 11M23 27l-9 3M27 22l8 4-2 9M19 22l-7 2"/></svg>',
+    age:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="11" width="34" height="30" rx="3"/><path d="M7 19h34M16 7v8M32 7v8"/><path d="M16 28h6M16 34h12"/></svg>',
+    brain:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 11c-3.5 0-6 2.4-6.3 5.2C14.4 16.7 12 19 12 22c0 1.7.8 3.2 2 4.2-.3 3 1.9 5.6 5 5.8.7 1.9 2.6 3 4.7 3"/><path d="M24 11c3.5 0 6 2.4 6.3 5.2 3.3.5 5.7 2.8 5.7 5.8 0 1.7-.8 3.2-2 4.2.3 3-1.9 5.6-5 5.8-.7 1.9-2.6 3-4.7 3"/><path d="M24 11v24"/></svg>',
+    smoking:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="28" width="30" height="8" rx="1.5"/><path d="M16 28v8M26 28v8"/><path d="M40 36h2M40 30h2"/><path d="M30 22c4-2 2-6 0-8M37 22c4-2 2-7 0-9"/></svg>',
+    line:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="17" y="6" width="14" height="12" rx="2"/><path d="M20 6V4h8v2"/><path d="M24 18v6"/><path d="M19 24h10v12a3 3 0 0 1-3 3h-4a3 3 0 0 1-3-3z"/><path d="M24 39v5"/></svg>',
+    histology:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="21" cy="21" r="12"/><path d="M30 30l10 10"/><path d="M16 21h10M21 16v10"/></svg>',
+    dna:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 6c0 10 16 8 16 18s-16 8-16 18"/><path d="M32 6c0 10-16 8-16 18s16 8 16 18"/><path d="M17 13h14M15 21h18M15 27h18M17 35h14"/></svg>'
+  };
+
+  const TEAL='var(--c2)', NAVY='var(--c1)';
+  const CHARS = [
+    { id:'sex', name:'Sex', icon:ICON.sex, type:'split',
+      levels:[{lab:'Male', n:64, pct:'60.4', c:NAVY},{lab:'Female', n:42, pct:'39.4', c:TEAL}] },
+    { id:'ecog', name:'ECOG PS', icon:ICON.ecog, type:'split',
+      levels:[{lab:'0', n:28, pct:'26.4', c:TEAL},{lab:'1', n:78, pct:'73.6', c:NAVY}] },
+    { id:'age', name:'Age', icon:ICON.age, type:'gauge',
+      stat:{ median:'70.5', min:52, max:89, unit:'years' } },
+    { id:'brain', name:'Presence of baseline brain metastases', icon:ICON.brain, type:'split',
+      levels:[{lab:'Yes', n:18, pct:'17.0', c:TEAL},{lab:'No', n:88, pct:'83.0', c:NAVY}] },
+    { id:'smoking', name:'Smoking history', icon:ICON.smoking, type:'single', fn:['*','†'],
+      single:{ n:43, pct:'43.4', lab:'History of smoking', desc:'with a history of smoking' } },
+    { id:'line', name:'Line of therapy', icon:ICON.line, type:'split',
+      levels:[{lab:'1L', n:50, pct:'47.2', c:NAVY},{lab:'2L+', n:56, pct:'52.8', c:TEAL}] },
+    { id:'histology', name:'Histology', icon:ICON.histology, type:'split3',
+      levels:[{lab:'Adenocarcinoma', n:84, pct:'79.2', c:NAVY},{lab:'Squamous', n:7, pct:'6.6', c:'var(--c4)'},{lab:'Others', n:15, pct:'14.2', c:'var(--c3)'}] },
+    { id:'detection', name:'<em>MET</em>ex14 skipping detection method', icon:ICON.dna, type:'dual',
+      note:'Patients could have both.',
+      levels:[{lab:'Liquid biopsy', n:48, pct:'45.3', c:TEAL},{lab:'Tissue biopsy', n:83, pct:'78.3', c:TEAL}] }
+  ];
+
+  function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  function fnMark(sym){ return '<button class="fn" type="button" data-fn="'+sym+'" aria-label="Footnote '+sym+'">'+sym+'</button>'; }
+  function nameHTML(c){ return c.id==='detection' ? c.name : esc(c.name); }
+
+  /* ---------- front graphics ---------- */
+  // FRONT = visual split + keys (labels only, no figures). Numbers live on the back.
+  function frontGraphic(c){
+    if(c.type==='split' || c.type==='split3'){
+      const segs=c.levels.map(l=>'<span class="seg" style="flex:'+l.pct+' 1 0;background:'+l.c+'"></span>').join('');
+      const keyCls = c.levels.length===2 ? 'splitkey splitkey--ends' : 'splitkey splitkey--left';
+      const keys=c.levels.map(l=>'<span class="key"><span class="key__sw" style="background:'+l.c+'"></span>'+esc(l.lab)+'&nbsp;<b>'+l.n+'</b></span>').join('');
+      return '<div class="splitbar">'+segs+'</div><div class="'+keyCls+'">'+keys+'</div>';
+    }
+    if(c.type==='dual'){
+      return c.levels.map(l=>'<div class="prow prow--nopct"><span class="prow__lab">'+esc(l.lab)+'&nbsp;<b>'+l.n+'</b></span>'+
+        '<span class="prow__track"><span class="prow__fill" style="width:'+l.pct+'%;background:'+l.c+'"></span></span></div>').join('');
+    }
+    if(c.type==='single'){
+      const s=c.single;
+      return '<div class="prow prow--nopct"><span class="prow__lab">'+esc(s.lab)+'&nbsp;<b>'+s.n+'</b>'+fnMark(c.fn[0])+fnMark(c.fn[1])+'</span>'+
+        '<span class="prow__track"><span class="prow__fill" style="width:'+s.pct+'%"></span></span></div>';
+    }
+    // gauge (age) -> horseshoe: 270deg arc across the observed range, marker at median
+    const st=c.stat, R=42, C=2*Math.PI*R, ARC=0.75*C;
+    const f=Math.max(0,Math.min(1,(parseFloat(st.median)-st.min)/(st.max-st.min)));
+    const lenMed=(f*ARC).toFixed(2);
+    const a=(135+f*270)*Math.PI/180, mx=(50+R*Math.cos(a)).toFixed(2), my=(50+R*Math.sin(a)).toFixed(2);
+    return '<div class="hs"><div class="hs__ring">'+
+      '<svg viewBox="0 0 100 100" aria-hidden="true"><g transform="rotate(135 50 50)">'+
+        '<circle cx="50" cy="50" r="'+R+'" fill="none" stroke="var(--line)" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+ARC.toFixed(2)+' '+C.toFixed(2)+'"/>'+
+        '<circle cx="50" cy="50" r="'+R+'" fill="none" stroke="var(--c2)" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+lenMed+' '+C.toFixed(2)+'"/>'+
+      '</g><circle cx="'+mx+'" cy="'+my+'" r="5.4" fill="#fff" stroke="var(--navy)" stroke-width="3.1"/></svg>'+
+      '<div class="hs__center"><div class="hs__big">'+esc(st.median)+'</div><div class="hs__unit">'+esc(st.unit)+'</div><div class="hs__sub">median</div></div>'+
+      '</div><div class="hs__ends"><span>'+st.min+'</span><span>'+st.max+'</span></div></div>';
+  }
+
+  /* ---------- back detail ---------- */
+  function backDetail(c){
+    if(c.type==='split' || c.type==='split3' || c.type==='dual'){
+      const rows=c.levels.map(l=>'<div class="detail__row"><span class="sw" style="background:'+l.c+'"></span><span class="lab">'+esc(l.lab)+'</span> <span class="fig">'+l.n+' ('+l.pct+'%)</span></div>').join('');
+      return '<div class="detail">'+rows+(c.note?'<div class="detail__note">'+esc(c.note)+'</div>':'')+'</div>';
+    }
+    if(c.type==='single'){
+      const s=c.single;
+      return '<div class="detail"><div class="detail__row"><span class="fig">'+s.n+' ('+s.pct+'%)</span></div>'+
+        '<div class="detail__row"><span class="lab">'+esc(s.desc)+fnMark(c.fn[0])+fnMark(c.fn[1])+'</span></div></div>';
+    }
+    const st=c.stat;
+    return '<div class="detail"><div class="detail__row"><span class="lab">Median age</span> <span class="fig">'+esc(st.median)+' '+esc(st.unit)+'</span></div>'+
+      '<div class="detail__row"><span class="lab">Range</span> <span class="fig">'+st.min+'&ndash;'+st.max+' '+esc(st.unit)+'</span></div></div>';
+  }
+
+  function ariaFor(c){
+    if(c.type==='single'){ return c.name+': '+c.single.n+' ('+c.single.pct+'%) '+c.single.desc+'. Select to flip; footnotes available.'; }
+    if(c.type==='gauge'){ return c.name+': median '+c.stat.median+' '+c.stat.unit+', range '+c.stat.min+' to '+c.stat.max+'. Select to flip for detail.'; }
+    const nm=c.name.replace(/<[^>]+>/g,'');
+    return nm+': '+c.levels.map(l=>l.lab+' '+l.n+' ('+l.pct+'%)').join(', ')+'. Select to flip for full figures.';
+  }
+
+  /* ---------- render ---------- */
+  const grid=document.getElementById('grid');
+  const live=document.getElementById('live');
+  CHARS.forEach((c,i)=>{
+    const card=document.createElement('button'); card.className='card'; card.type='button'; card.id='card-'+c.id; card.dataset.index=i;
+    card.setAttribute('aria-expanded','false'); card.setAttribute('aria-label', ariaFor(c));
+    card.innerHTML =
+      '<span class="card__inner">'+
+        '<span class="card__face card__front">'+
+          '<span class="card__head"><span class="card__icon" aria-hidden="true">'+c.icon+'</span><span class="card__name">'+nameHTML(c)+'</span></span>'+
+          '<span class="card__graphic">'+frontGraphic(c)+'</span>'+
+          '<span class="card__flip" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>Flip for figures</span>'+
+        '</span>'+
+        '<span class="card__face card__back">'+
+          '<span class="card__tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>'+
+          '<span class="card__biconwrap" aria-hidden="true">'+c.icon+'</span>'+
+          '<span class="card__bname">'+nameHTML(c)+'</span>'+
+          backDetail(c)+
+        '</span>'+
+      '</span>';
+    grid.appendChild(card);
+  });
+
+  const cards=Array.from(grid.children);
+  function flip(card){
+    const on=card.getAttribute('aria-expanded')!=='true';
+    card.setAttribute('aria-expanded', on?'true':'false');
+    if(on){ const c=CHARS[+card.dataset.index]; live.textContent=ariaFor(c).replace(' Select to flip for full figures.','').replace(' Select to flip; footnotes available.','').replace(' Select to flip for detail.',''); }
+  }
+  cards.forEach(card=>{
+    card.addEventListener('click',e=>{ if(e.target.closest('.fn')) return; flip(card); });
+    card.addEventListener('keydown',e=>{ if((e.key==='Enter'||e.key===' ') && !e.target.closest('.fn')){ e.preventDefault(); flip(card); } });
+  });
+
+  /* ---------- footnote tooltips (hover + focus + tap) ---------- */
+  const fntip=document.getElementById('fntip');
+  let pinned=null;
+  function showTip(btn){
+    fntip.textContent=FN[btn.dataset.fn]||'';
+    fntip.style.left='0px'; fntip.style.top='0px'; fntip.classList.remove('is-above');
+    const r=btn.getBoundingClientRect(), tw=fntip.offsetWidth, th=fntip.offsetHeight;
+    let top=r.bottom+10;
+    if(top+th>window.innerHeight-6){ top=r.top-th-10; fntip.classList.add('is-above'); }
+    let left=Math.max(tw/2+6, Math.min(window.innerWidth-tw/2-6, r.left+r.width/2));
+    fntip.style.left=left+'px'; fntip.style.top=top+'px'; fntip.classList.add('is-on');
+  }
+  function hideTip(){ if(!pinned) fntip.classList.remove('is-on'); }
+  document.querySelectorAll('.fn').forEach(btn=>{
+    btn.addEventListener('mouseenter',()=>{ if(!pinned) showTip(btn); });
+    btn.addEventListener('mouseleave',hideTip);
+    btn.addEventListener('focus',()=>{ if(!pinned) showTip(btn); });
+    btn.addEventListener('blur',()=>{ fntip.classList.remove('is-on'); });
+    btn.addEventListener('click',e=>{ e.stopPropagation(); if(pinned===btn){ pinned=null; fntip.classList.remove('is-on'); } else { pinned=btn; showTip(btn); } });
+  });
+  document.addEventListener('click',e=>{ if(pinned && !e.target.closest('.fn')){ pinned=null; fntip.classList.remove('is-on'); } });
+  window.addEventListener('resize',()=>{ pinned=null; fntip.classList.remove('is-on'); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape' && pinned){ pinned=null; fntip.classList.remove('is-on'); } });
+
+})();
+</script>
+</body>
+</html>
