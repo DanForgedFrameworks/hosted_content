@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Duration of treatment in METex14 skipping NSCLC in VISION</title>
+<style>
+/* ============================================================
+   TOUCH MEDICAL — TM9035 SLIDE 24  (fit-to-embed-box, 680 ceiling)
+   Treatment duration / durability (VISION METex14 skipping NSCLC).
+   Hero = two horseshoe gauges (median months, naive vs previously treated).
+   On first reveal the hero morphs into a slim range strip; flip cards
+   reveal the patient counts. Source gated until all three explored.
+   Self-contained. No external runtime dependencies.
+   Brand: Poppins (bundled), teal #0098be, navy #222f55.
+   ============================================================ */
+@font-face { font-family:"Poppins"; src:url("assets/poppins-400.ttf") format("truetype"); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-600.ttf") format("truetype"); font-weight:600; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-700.ttf") format("truetype"); font-weight:700; font-style:normal; font-display:swap; }
+
+:root{
+  --teal:#0098be; --teal-strong:#007a98;
+  --navy:#222f55; --on-accent:#ffffff;
+  --neutral:#c6d3e2;
+  --muted:#56608a; --faint:#8a91b0;
+  --pale:#d9eff8; --mist:#f4f7f9; --line:#e3e8ee;
+  --backdrop:rgba(16,26,38,.68);
+  --c1:#222f55; --c2:#0098be; --c3:#4f9fc4; --c4:#86bdd8; --c5:#b9d8e8;
+  --font:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{ box-sizing:border-box; }
+html,body{ height:100%; margin:0; }
+body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--font); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; display:flex; align-items:center; justify-content:center; }
+
+/* ---------- frame: fill height but cap at 680, centred in the box ---------- */
+.frame{ width:100%; height:100%; max-height:680px; display:flex; flex-direction:column; overflow:hidden; background:#fff; }
+
+/* banner (chrome) */
+.banner{ flex:0 0 auto; text-align:center; padding:clamp(8px,1.7vh,15px) clamp(16px,3vw,40px) clamp(5px,1vh,10px); background:var(--pale); }
+.banner__title{ margin:0; font-size:clamp(1.02rem,2.1vw,1.4rem); font-weight:700; line-height:1.16; color:var(--navy); }
+.banner__title em{ font-style:italic; }
+.banner__prompt{ margin:5px 0 0; font-size:clamp(.78rem,1.35vw,.95rem); font-weight:500; color:var(--muted); }
+
+/* ---------- body shell ---------- */
+.body{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; padding:clamp(8px,1.5vh,16px) clamp(14px,2.6vw,34px) clamp(6px,1.2vh,12px); gap:clamp(7px,1.2vh,12px); }
+
+/* shared cohort legend */
+.legend{ flex:0 0 auto; display:flex; justify-content:center; gap:clamp(14px,2.4vw,28px); }
+.legend__item{ display:inline-flex; align-items:center; gap:7px; font-size:clamp(.74rem,1.3vw,.9rem); font-weight:600; color:var(--navy); }
+.legend__sw{ width:14px; height:14px; border-radius:4px; flex:0 0 auto; }
+
+/* ---------- median region (hero horseshoes <-> compact strip) ---------- */
+.median{ display:flex; flex-direction:column; justify-content:center; min-height:0; }
+[data-stage="hero"] .median{ flex:1 1 auto; }
+[data-stage="compact"] .median{ flex:0 0 auto; }
+
+.median__hero,.median__strip{ overflow:hidden; transition:max-height .5s cubic-bezier(.4,0,.2,1), opacity .4s ease; }
+.median__hero{ display:flex; justify-content:center; align-items:center; gap:clamp(26px,6vw,86px); max-height:340px; opacity:1; }
+.median__strip{ max-height:0; opacity:0; }
+[data-stage="compact"] .median__hero{ max-height:0; opacity:0; }
+[data-stage="compact"] .median__strip{ max-height:200px; opacity:1; }
+
+/* horseshoe gauge */
+.hs{ display:flex; flex-direction:column; align-items:center; gap:5px; outline:none; cursor:default; }
+.hs__ring{ position:relative; width:clamp(118px,21vh,176px); aspect-ratio:1; transition:transform .2s ease; }
+.hs:hover .hs__ring,.hs:focus-visible .hs__ring{ transform:translateY(-3px); }
+.hs:focus-visible .hs__ring{ filter:drop-shadow(0 0 0 3px var(--navy)); }
+.hs__ring svg{ width:100%; height:100%; display:block; overflow:visible; }
+.hs__center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none; }
+.hs__big{ font-size:clamp(1.55rem,4vh,2.4rem); font-weight:700; color:var(--navy); line-height:1; font-variant-numeric:tabular-nums; }
+.hs__unit{ font-size:clamp(.7rem,1.3vw,.82rem); font-weight:600; color:var(--muted); margin-top:1px; }
+.hs__sub{ font-size:.64rem; font-weight:700; color:var(--faint); text-transform:uppercase; letter-spacing:.09em; margin-top:2px; }
+.hs__lab{ display:flex; align-items:center; gap:7px; font-size:clamp(.84rem,1.5vw,1rem); font-weight:700; color:var(--navy); margin-top:2px; }
+.hs__sw{ width:13px; height:13px; border-radius:4px; }
+.hs__range{ font-size:clamp(.7rem,1.25vw,.8rem); font-weight:600; color:var(--muted); font-variant-numeric:tabular-nums; }
+
+/* compact range strip */
+.median__strip{ flex-direction:column; }
+.median__stripcap{ text-align:center; font-size:clamp(.78rem,1.4vw,.92rem); font-weight:700; color:var(--navy); margin:0 0 clamp(6px,1.2vh,11px); }
+.mrow{ display:grid; grid-template-columns:clamp(108px,12vw,160px) 1fr; align-items:center; gap:clamp(10px,1.6vw,20px); }
+.mrow + .mrow{ margin-top:clamp(6px,1.1vh,10px); }
+.mrow__lab{ font-size:clamp(.74rem,1.3vw,.9rem); font-weight:700; color:var(--navy); line-height:1.15; }
+.mrow__lab b{ display:block; font-weight:600; font-size:.86em; color:var(--muted); }
+.mrow__axis{ position:relative; height:clamp(26px,4vh,34px); }
+.mrow__line{ position:absolute; left:0; right:0; top:50%; height:6px; transform:translateY(-50%); border-radius:6px; background:#e7edf3; box-shadow:inset 0 0 0 1px var(--line); }
+.mrow__fill{ position:absolute; top:50%; height:6px; transform:translateY(-50%); border-radius:6px; }
+.mrow__end{ position:absolute; top:50%; width:2px; height:13px; transform:translate(-50%,-50%); background:var(--faint); border-radius:2px; }
+.mrow__marker{ position:absolute; top:50%; width:15px; height:15px; transform:translate(-50%,-50%); border-radius:50%; background:#fff; border:4px solid var(--navy); box-shadow:0 1px 4px rgba(16,26,38,.28); }
+.mrow__val{ position:absolute; bottom:calc(50% + 11px); transform:translateX(-50%); font-size:clamp(.7rem,1.25vw,.84rem); font-weight:700; color:var(--navy); white-space:nowrap; font-variant-numeric:tabular-nums; }
+.mrow__min,.mrow__max{ position:absolute; top:calc(50% + 9px); font-size:clamp(.6rem,1.05vw,.7rem); font-weight:600; color:var(--faint); font-variant-numeric:tabular-nums; }
+.mrow__min{ left:0; } .mrow__max{ right:0; }
+
+/* hover/focus callout */
+.callout{ position:fixed; z-index:35; pointer-events:none; transform:translateX(-50%); max-width:260px; padding:9px 13px; border-radius:10px; background:var(--navy); color:#fff; font-size:clamp(.8rem,1.4vw,.9rem); line-height:1.3; box-shadow:0 10px 24px rgba(16,26,38,.34); visibility:hidden; opacity:0; transition:opacity .12s ease; }
+.callout.is-on{ visibility:visible; opacity:1; }
+.callout strong{ font-weight:700; font-variant-numeric:tabular-nums; }
+.callout__lab{ display:block; margin-top:2px; font-size:.78rem; font-weight:600; color:#bfe1f0; }
+.callout::after{ content:""; position:absolute; left:50%; transform:translateX(-50%); border:7px solid transparent; }
+.callout:not(.is-above)::after{ bottom:100%; border-bottom-color:var(--navy); }
+.callout.is-above::after{ top:100%; border-top-color:var(--navy); }
+
+/* ---------- flip cards ---------- */
+.cards{ display:grid; grid-template-columns:repeat(3,1fr); align-content:center; gap:clamp(10px,1.6vw,20px); min-height:0; }
+[data-stage="hero"] .cards{ flex:0 0 auto; }
+[data-stage="compact"] .cards{ flex:1 1 auto; }
+
+.qcard{ position:relative; border:0; background:transparent; padding:0; font:inherit; color:inherit; cursor:pointer; perspective:1300px; }
+.qcard:focus-visible{ outline:3px solid var(--navy); outline-offset:4px; border-radius:18px; }
+.qcard[aria-expanded="true"]{ cursor:default; }
+.qcard__inner{ position:relative; display:grid; transition:transform .55s cubic-bezier(.4,0,.2,1); transform-style:preserve-3d; }
+.qcard[aria-expanded="true"] .qcard__inner{ transform:rotateY(180deg); }
+.qcard__face{ grid-area:1 / 1; -webkit-backface-visibility:hidden; backface-visibility:hidden; display:flex; flex-direction:column; border:2px solid var(--line); border-radius:16px; background:#fff; transition:border-color .18s ease, box-shadow .18s ease; }
+
+/* front face */
+.qcard__front{ align-items:center; justify-content:center; text-align:center; gap:clamp(10px,1.8vh,16px); padding:clamp(16px,2.6vh,26px) clamp(14px,1.6vw,22px); }
+.qcard:hover .qcard__front{ border-color:var(--teal); box-shadow:0 10px 22px rgba(34,47,85,.10); }
+.qcard__iconlg{ width:clamp(38px,4.4vw,52px); height:clamp(38px,4.4vw,52px); display:grid; place-items:center; border:3px solid var(--teal); border-radius:50%; color:var(--teal); flex:0 0 auto; }
+.qcard__iconlg svg{ width:56%; height:56%; }
+.qcard__q{ margin:0; font-size:clamp(.92rem,1.6vw,1.1rem); font-weight:700; line-height:1.24; color:var(--navy); }
+.qcard__cue{ display:inline-flex; align-items:center; gap:7px; font-size:clamp(.76rem,1.35vw,.9rem); font-weight:700; color:var(--teal); }
+.qcard__cue svg{ width:17px; height:17px; }
+
+/* back face */
+.qcard__back{ transform:rotateY(180deg); border-color:var(--teal); padding:clamp(30px,4.4vh,42px) clamp(14px,1.6vw,22px) clamp(16px,2.6vh,26px); justify-content:center; gap:clamp(11px,2.2vh,20px); }
+.qcard__tick{ position:absolute; top:clamp(12px,1.9vh,18px); left:clamp(13px,1.5vw,20px); width:25px; height:25px; border-radius:50%; background:var(--teal); color:#fff; display:grid; place-items:center; }
+.qcard__tick svg{ width:14px; height:14px; }
+.qcard__icon{ position:absolute; top:clamp(11px,1.8vh,18px); right:clamp(13px,1.5vw,20px); width:clamp(28px,2.8vw,34px); height:clamp(28px,2.8vw,34px); color:var(--teal); opacity:.92; }
+.qcard__icon svg{ width:100%; height:100%; }
+.qcard__metric{ margin:0; text-align:center; font-size:clamp(.82rem,1.45vw,.98rem); font-weight:700; color:var(--navy); line-height:1.2; }
+.ans{ display:flex; flex-direction:column; justify-content:center; gap:clamp(10px,2vh,18px); }
+.arow{ display:grid; grid-template-columns:clamp(80px,8.5vw,116px) 1fr auto; align-items:center; gap:clamp(8px,1.2vw,14px); }
+.arow__lab{ font-size:clamp(.74rem,1.3vw,.88rem); font-weight:700; color:var(--navy); line-height:1.14; }
+.arow__track{ position:relative; height:clamp(22px,3.4vh,30px); background:#fff; border-radius:8px; box-shadow:inset 0 0 0 1px var(--line); overflow:hidden; cursor:pointer; }
+.arow__fill{ display:block; height:100%; min-width:4px; border-radius:8px; transition:filter .15s ease; }
+.arow__track:hover .arow__fill,.arow__track:focus-visible .arow__fill{ filter:brightness(1.08); }
+.arow__track:focus-visible{ outline:3px solid var(--navy); outline-offset:2px; }
+.arow__val{ font-size:clamp(1.06rem,2.05vw,1.36rem); font-weight:700; color:var(--navy); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.arow__val span{ font-size:.56em; font-weight:600; color:var(--muted); margin-left:4px; }
+
+/* ---------- footer controls (chrome) ---------- */
+.controls{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:clamp(12px,2.4vw,26px); padding:clamp(6px,1.2vh,12px) clamp(12px,3vw,24px); }
+.progress{ font-size:clamp(.78rem,1.45vw,.92rem); font-weight:700; color:var(--teal); white-space:nowrap; font-variant-numeric:tabular-nums; }
+.cite-src{ display:inline-flex; align-items:center; gap:8px; min-height:40px; padding:9px 18px; border:2px solid var(--teal); border-radius:10px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.86rem; cursor:pointer; transition:filter .15s ease, opacity .15s ease; }
+.cite-src:hover:not(:disabled){ filter:brightness(.95); }
+.cite-src:disabled{ background:#fff; color:var(--faint); border-color:var(--line); cursor:not-allowed; }
+.cite-src svg{ width:15px; height:15px; }
+.cite-src:focus-visible,.cite-dismiss:focus-visible,.inter__btn:focus-visible,.cite-view:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+
+/* ---------- completion citation (centred overlay) ---------- */
+.cite-modal{ position:fixed; inset:0; z-index:40; display:none; align-items:center; justify-content:center; padding:clamp(12px,4vw,40px); background:var(--backdrop); }
+.cite-modal.is-open{ display:flex; }
+.cite-card{ width:min(680px,100%); max-height:calc(100% - 24px); overflow:auto; background:#fff; border-radius:16px; box-shadow:0 24px 60px rgba(16,26,38,.4); padding:clamp(18px,3vw,26px); animation:rise .22s ease both; }
+.cite-card__check{ width:38px; height:38px; border-radius:50%; background:var(--teal); color:#fff; display:grid; place-items:center; margin-bottom:12px; }
+.cite-card__eyebrow{ margin:0 0 4px; font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--teal); }
+.cite-card__title{ margin:0 0 8px; font-size:clamp(1.05rem,2vw,1.25rem); font-weight:700; color:var(--navy); }
+.cite-card__body{ margin:0; font-size:.92rem; line-height:1.5; color:var(--navy); }
+.cite-card__ref{ display:block; margin-top:10px; padding-top:10px; border-top:1px solid var(--line); font-size:.85rem; line-height:1.5; color:var(--muted); }
+.cite-card__ref sup{ color:var(--teal); font-weight:700; }
+.cite-card__actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+.cite-view{ flex:0 0 auto; display:inline-flex; align-items:center; gap:7px; min-height:44px; padding:10px 18px; border:2px solid var(--teal); border-radius:10px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.88rem; cursor:pointer; transition:filter .15s ease; }
+.cite-view:hover{ filter:brightness(.95); }
+.cite-dismiss{ flex:0 0 auto; min-height:44px; padding:10px 18px; border:2px solid var(--teal); border-radius:10px; background:#fff; color:var(--teal); font:inherit; font-weight:700; font-size:.88rem; cursor:pointer; }
+
+/* ---------- D16/D22 external-link interstitial ---------- */
+.inter{ position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center; padding:clamp(12px,4vw,40px); background:var(--backdrop); }
+.inter.is-open{ display:flex; }
+.inter__panel{ width:min(460px,100%); max-height:calc(100% - 24px); overflow:auto; background:#fff; border-radius:16px; box-shadow:0 24px 60px rgba(16,26,38,.4); padding:22px; animation:rise .2s ease both; }
+.inter__title{ font-size:1.05rem; font-weight:700; margin:0 0 8px; color:var(--navy); }
+.inter__p{ font-size:.82rem; line-height:1.5; color:var(--muted); margin:0 0 10px; }
+.inter__p strong{ color:var(--navy); font-weight:600; }
+.inter__url{ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.72rem; line-height:1.45; color:var(--muted); background:var(--mist); border:1px solid var(--line); border-radius:8px; padding:9px 11px; word-break:break-all; }
+.inter__status{ margin-top:12px; display:flex; align-items:center; gap:9px; min-height:22px; font-size:.76rem; font-style:italic; color:var(--muted); }
+.prep{ display:inline-flex; gap:5px; }
+.prep i{ width:8px; height:8px; border-radius:50%; background:var(--teal); display:inline-block; animation:prep 1s infinite ease-in-out; }
+.prep i:nth-child(2){ animation-delay:.15s; }
+.prep i:nth-child(3){ animation-delay:.3s; }
+.inter__actions{ display:flex; flex-wrap:wrap; gap:9px; margin-top:16px; }
+.inter__btn{ min-height:44px; padding:10px 18px; border:2px solid var(--teal); border-radius:10px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.82rem; cursor:pointer; }
+.inter__btn.secondary{ background:#fff; color:var(--teal); }
+.inter__btn:disabled{ background:#c3c8d2; border-color:#c3c8d2; color:#fff; cursor:not-allowed; }
+.inter__btn:hover:not(:disabled){ filter:brightness(.96); }
+
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+@keyframes rise{ from{ opacity:0; transform:translateY(10px) scale(.99);} to{ opacity:1; transform:none; } }
+@keyframes prep{ 0%,100%{ transform:scale(.6); opacity:.4; } 50%{ transform:scale(1); opacity:1; } }
+
+/* ---------- phone view (<760px): drop fixed-height, allow scroll ---------- */
+@media (max-width:760px){
+  html,body{ height:auto; }
+  body{ overflow:auto; display:block; }
+  .frame{ height:auto; min-height:100%; max-height:none; }
+  .body{ overflow:visible; }
+  .median__hero{ flex-wrap:wrap; gap:18px; max-height:none; }
+  .median__strip{ max-height:none; }
+  [data-stage="hero"] .median__strip{ max-height:0; }
+  .cards{ grid-template-columns:1fr; }
+  .mrow{ grid-template-columns:1fr; gap:4px; }
+  .mrow__axis{ height:38px; }
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+}
+</style>
+</head>
+<body>
+<main class="frame" aria-label="Duration of treatment in METex14 skipping NSCLC in VISION">
+
+  <header class="banner">
+    <h1 class="banner__title">Duration of treatment in <em>MET</em>ex14 skipping NSCLC in VISION</h1>
+    <p class="banner__prompt">Compare treatment-na&iuml;ve and previously treated patients &mdash; reveal each card for the figures.</p>
+  </header>
+
+  <div class="body" id="body" data-stage="hero">
+
+    <div class="legend" aria-hidden="true">
+      <span class="legend__item"><span class="legend__sw" style="background:var(--c2)"></span>Treatment-na&iuml;ve</span>
+      <span class="legend__item"><span class="legend__sw" style="background:var(--c1)"></span>Previously treated</span>
+    </div>
+
+    <!-- median region: hero horseshoes <-> compact strip -->
+    <section class="median" aria-label="Median duration of treatment">
+      <div class="median__hero" id="medianHero"></div>
+      <div class="median__strip" id="medianStrip" aria-hidden="true">
+        <p class="median__stripcap">Median duration of treatment &middot; marker = median, bar spans the observed range (months)</p>
+        <div id="medianRows"></div>
+      </div>
+    </section>
+
+    <!-- flip cards -->
+    <div class="cards" id="cards"></div>
+
+  </div>
+
+  <div class="controls">
+    <span class="progress" aria-hidden="true"><b id="progNum">0</b> of 3 revealed</span>
+    <button class="cite-src" id="citeSrc" type="button" aria-haspopup="dialog" disabled>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <span id="citeSrcLabel">Source locked</span>
+    </button>
+  </div>
+
+  <p class="sr-only" id="live" aria-live="polite" aria-atomic="true"></p>
+</main>
+
+<div class="callout" id="callout" role="status" aria-hidden="true"></div>
+
+<!-- completion citation (centred overlay) -->
+<div class="cite-modal" id="citeModal" role="dialog" aria-modal="true" aria-labelledby="citeTitle" hidden>
+  <div class="cite-card" role="document">
+    <span class="cite-card__check" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+    <p class="cite-card__eyebrow">All three cards revealed</p>
+    <h2 class="cite-card__title" id="citeTitle">Source</h2>
+    <p class="cite-card__body">Data are for the 313 patients with <em>MET</em>ex14 skipping NSCLC in the Phase&nbsp;2 VISION trial.
+      <span class="cite-card__ref">Mazieres J, Paik PK, Garassino MC, et al. Tepotinib treatment in patients with <em>MET</em> exon&nbsp;14-skipping NSCLC: long-term follow-up of the VISION phase&nbsp;2 nonrandomized clinical trial. <em>JAMA Oncol.</em> 2023;9(9):1260&ndash;6.<sup>&nbsp;9</sup></span>
+    </p>
+    <div class="cite-card__actions">
+      <button class="cite-view" id="citeView" type="button" data-url="https://doi.org/10.1001/jamaoncol.2023.1962" data-ref="Mazieres J, et al. JAMA Oncol. 2023;9(9):1260&ndash;6">View source <span aria-hidden="true">&#8599;</span></button>
+      <button class="cite-dismiss" id="citeDismiss" type="button">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- D16/D22 external-link interstitial -->
+<div class="inter" id="inter" role="dialog" aria-modal="true" aria-labelledby="interTitle" aria-describedby="interReason" hidden>
+  <div class="inter__panel" role="document">
+    <h2 class="inter__title" id="interTitle">You are leaving this activity</h2>
+    <p class="inter__p" id="interReason">This link opens an external source in a new tab.</p>
+    <p class="inter__p"><strong>Source:</strong> <span id="interDest"></span><br><strong>Organisation:</strong> <span id="interOrg"></span></p>
+    <p class="inter__p">The source opens in a new tab. Check the address is expected before continuing.</p>
+    <div class="inter__url" id="interUrl"></div>
+    <div class="inter__status" aria-live="polite"><span class="prep" aria-hidden="true"><i></i><i></i><i></i></span><span id="interStatus">Preparing the link&hellip;</span></div>
+    <div class="inter__actions">
+      <button class="inter__btn" id="interOpen" type="button" disabled>Open source</button>
+      <button class="inter__btn secondary" id="interCopy" type="button">Copy link</button>
+      <button class="inter__btn secondary" id="interStay" type="button">Stay here</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- data (supplied figures, verbatim) ---------- */
+  const AXIS_MAX = 84; // shared months axis (covers both observed maxima)
+  const MEDIAN = [
+    { key:'naive', lab:'Treatment-naïve',     med:8.1, min:0.03, max:71.52, c:'var(--c2)' },
+    { key:'prev',  lab:'Previously treated',  med:7.0, min:0.03, max:83.12, c:'var(--c1)' }
+  ];
+
+  const PILL = '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="17" y="13" width="14" height="27" rx="3.5"/><path d="M17 21h14"/><path d="M19 8h10v5H19z"/><path d="M24 27v7M20.5 30.5h7"/></svg>';
+  const CAL  = '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="12" width="32" height="28" rx="3"/><path d="M8 20h32M18 8v8M30 8v8"/><path d="M15 29l4 4 9-9"/></svg>';
+  const CLOCK= '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="26" r="14"/><path d="M24 19v7l5 3M18 6h12"/></svg>';
+
+  // Three reveal cards. Counts verbatim; naive (c2) vs previously treated (c1).
+  const Q = [
+    { q:'How many patients were still receiving treatment at data cut-off?', metric:'Still receiving treatment at data cut-off', icon:PILL,
+      rows:[ {lab:'Treatment-naïve', n:12, c:'var(--c2)'}, {lab:'Previously treated', n:6, c:'var(--c1)'} ] },
+    { q:'How many patients had a treatment duration of ≥12 months?', metric:'Treatment duration ≥12 months', icon:CAL,
+      rows:[ {lab:'Treatment-naïve', n:58, c:'var(--c2)'}, {lab:'Previously treated', n:41, c:'var(--c1)'} ] },
+    { q:'How many patients had a treatment duration of ≥48 months?', metric:'Treatment duration ≥48 months', icon:CLOCK,
+      rows:[ {lab:'Treatment-naïve', n:13, c:'var(--c2)'}, {lab:'Previously treated', n:6, c:'var(--c1)'} ] }
+  ];
+
+  function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  const N1 = MEDIAN[0], N2 = MEDIAN[1];
+
+  /* ---------- horseshoe gauges (270deg, open bottom) ---------- */
+  const R = 42, C = 2*Math.PI*R, ARC = 0.75*C;           // 270 degrees of the circle
+  function ptAt(frac){ const a=(135+frac*270)*Math.PI/180; return [50+R*Math.cos(a), 50+R*Math.sin(a)]; }
+  const heroEl = document.getElementById('medianHero');
+  MEDIAN.forEach(m=>{
+    const med1=m.med.toFixed(1), min2=m.min.toFixed(2), max2=m.max.toFixed(2);
+    const fMed=Math.min(1,m.med/AXIS_MAX), fMax=Math.min(1,m.max/AXIS_MAX);
+    const lenMed=(fMed*ARC).toFixed(2), lenMax=(fMax*ARC).toFixed(2);
+    const mk=ptAt(fMed);
+    const el=document.createElement('div');
+    el.className='hs'; el.tabIndex=0; el.setAttribute('role','img');
+    el.setAttribute('aria-label', m.lab+': median duration of treatment '+med1+' months; observed range '+min2+' to '+max2+' months');
+    el.dataset.med=med1; el.dataset.min=min2; el.dataset.max=max2; el.dataset.lab=m.lab;
+    el.innerHTML =
+      '<div class="hs__ring">'+
+        '<svg viewBox="0 0 100 100">'+
+          '<g transform="rotate(135 50 50)">'+
+            '<circle cx="50" cy="50" r="'+R+'" fill="none" stroke="var(--line)" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+ARC.toFixed(2)+' '+C.toFixed(2)+'"/>'+
+            '<circle cx="50" cy="50" r="'+R+'" fill="none" stroke="'+m.c+'" stroke-opacity="0.30" stroke-width="9" stroke-linecap="butt" stroke-dasharray="'+lenMax+' '+C.toFixed(2)+'"/>'+
+            '<circle cx="50" cy="50" r="'+R+'" fill="none" stroke="'+m.c+'" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+lenMed+' '+C.toFixed(2)+'"/>'+
+          '</g>'+
+          '<circle cx="'+mk[0].toFixed(2)+'" cy="'+mk[1].toFixed(2)+'" r="5.4" fill="#fff" stroke="var(--navy)" stroke-width="3.1"/>'+
+        '</svg>'+
+        '<div class="hs__center"><div class="hs__big">'+med1+'</div><div class="hs__unit">months</div><div class="hs__sub">median</div></div>'+
+      '</div>'+
+      '<div class="hs__lab"><span class="hs__sw" style="background:'+m.c+'"></span>'+esc(m.lab)+'</div>'+
+      '<div class="hs__range">range '+min2+'&ndash;'+max2+' months</div>';
+    heroEl.appendChild(el);
+  });
+
+  /* ---------- compact range strip ---------- */
+  const medianRows = document.getElementById('medianRows');
+  MEDIAN.forEach(m=>{
+    const med1=m.med.toFixed(1), min2=m.min.toFixed(2), max2=m.max.toFixed(2);
+    const pMed=(m.med/AXIS_MAX*100), pMin=(m.min/AXIS_MAX*100), pMax=(m.max/AXIS_MAX*100);
+    const row=document.createElement('div');
+    row.className='mrow';
+    row.innerHTML =
+      '<div class="mrow__lab">'+esc(m.lab)+'<b>median '+med1+' months</b></div>'+
+      '<div class="mrow__axis" role="img" aria-label="'+esc(m.lab)+': median '+med1+' months; range '+min2+' to '+max2+' months">'+
+        '<span class="mrow__line"></span>'+
+        '<span class="mrow__fill" style="left:'+pMin.toFixed(2)+'%;width:'+(pMax-pMin).toFixed(2)+'%;background:'+m.c+';opacity:.34"></span>'+
+        '<span class="mrow__end" style="left:'+pMin.toFixed(2)+'%"></span>'+
+        '<span class="mrow__end" style="left:'+pMax.toFixed(2)+'%"></span>'+
+        '<span class="mrow__marker" style="left:'+pMed.toFixed(2)+'%;border-color:'+m.c+'"></span>'+
+        '<span class="mrow__val" style="left:'+pMed.toFixed(2)+'%">'+med1+'</span>'+
+        '<span class="mrow__min">'+min2+'</span>'+
+        '<span class="mrow__max">'+max2+'</span>'+
+      '</div>';
+    medianRows.appendChild(row);
+  });
+
+  /* ---------- flip cards ---------- */
+  const cards = document.getElementById('cards');
+  const live = document.getElementById('live');
+  const progNum = document.getElementById('progNum');
+  const body = document.getElementById('body');
+  const citeSrc = document.getElementById('citeSrc');
+  const citeSrcLabel = document.getElementById('citeSrcLabel');
+  const revealed = new Set();
+
+  Q.forEach((item,i)=>{
+    const maxN = Math.max.apply(null, item.rows.map(r=>r.n)) || 1;
+    const arows = item.rows.map(r=>{
+      const w = Math.max(4, r.n/maxN*100);                 // baked inline; widest in card ~ full
+      const plural = r.n===1 ? 'patient' : 'patients';
+      return '<div class="arow">'+
+        '<span class="arow__lab">'+esc(r.lab)+'</span>'+
+        '<span class="arow__track" role="img" aria-label="'+esc(r.lab)+': '+r.n+' '+plural+'" data-n="'+r.n+'" data-label="'+esc(r.lab)+'"><span class="arow__fill" style="width:'+w.toFixed(1)+'%;background:'+r.c+'"></span></span>'+
+        '<span class="arow__val" aria-hidden="true">'+r.n+'<span>'+plural+'</span></span>'+
+      '</div>';
+    }).join('');
+    const ariaAns = item.rows.map(r=>r.lab+' '+r.n+' '+(r.n===1?'patient':'patients')).join('; ');
+
+    const card=document.createElement('button');
+    card.className='qcard'; card.type='button';
+    card.id='q-'+i; card.dataset.index=i;
+    card.setAttribute('aria-expanded','false');
+    card.setAttribute('aria-label', item.q+' Select to reveal the figures.');
+    card.innerHTML =
+      '<span class="qcard__inner">'+
+        '<span class="qcard__face qcard__front">'+
+          '<span class="qcard__iconlg" aria-hidden="true">'+item.icon+'</span>'+
+          '<span class="qcard__q">'+esc(item.q)+'</span>'+
+          '<span class="qcard__cue" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>Tap to reveal</span>'+
+        '</span>'+
+        '<span class="qcard__face qcard__back">'+
+          '<span class="qcard__tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>'+
+          '<span class="qcard__icon" aria-hidden="true">'+item.icon+'</span>'+
+          '<span class="qcard__metric">'+esc(item.metric)+'</span>'+
+          '<span class="ans">'+arows+'</span>'+
+        '</span>'+
+      '</span>';
+    card.dataset.ariaAns = ariaAns;
+    cards.appendChild(card);
+  });
+
+  const cardEls = Array.from(cards.children);
+
+  function reveal(card){
+    const i=+card.dataset.index;
+    if(card.getAttribute('aria-expanded')==='true') return;
+    card.setAttribute('aria-expanded','true');
+    card.setAttribute('aria-label', Q[i].metric+'. '+card.dataset.ariaAns+'.');
+    revealed.add(i);
+    progNum.textContent=revealed.size;
+    if(body.dataset.stage!=='compact') body.dataset.stage='compact';   // morph hero -> strip on first reveal
+    if(revealed.size===Q.length){
+      unlockSource();
+      live.textContent='All three cards revealed. The Source button is now available.';
+    } else {
+      live.textContent=Q[i].metric+'. '+card.dataset.ariaAns+'. '+revealed.size+' of '+Q.length+' revealed.';
+    }
+  }
+  cardEls.forEach(card=>{
+    card.addEventListener('click',()=>reveal(card));
+    card.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); reveal(card); } });
+  });
+
+  /* ---------- hover/focus callout (horseshoes + bars) ---------- */
+  const callout=document.getElementById('callout');
+  function showCallout(el,html){
+    callout.innerHTML=html;
+    callout.style.left='0px'; callout.style.top='0px'; callout.classList.remove('is-above');
+    const r=el.getBoundingClientRect(), cw=callout.offsetWidth, ch=callout.offsetHeight;
+    let top=r.bottom+11;
+    if(top+ch>window.innerHeight-6){ top=r.top-ch-11; callout.classList.add('is-above'); }
+    let left=Math.max(cw/2+6, Math.min(window.innerWidth-cw/2-6, r.left+r.width/2));
+    callout.style.left=left+'px'; callout.style.top=top+'px';
+    callout.classList.add('is-on');
+  }
+  function hideCallout(){ callout.classList.remove('is-on'); }
+  function wire(el,html){
+    const enter=()=>showCallout(el,html), leave=hideCallout;
+    el.addEventListener('mouseenter',enter); el.addEventListener('focus',enter);
+    el.addEventListener('mouseleave',leave); el.addEventListener('blur',leave);
+  }
+  document.querySelectorAll('.hs').forEach(el=>{
+    wire(el,'<strong>'+esc(el.dataset.med)+' months</strong> median<span class="callout__lab">'+esc(el.dataset.lab)+' &middot; range '+esc(el.dataset.min)+'&ndash;'+esc(el.dataset.max)+'</span>');
+  });
+  document.querySelectorAll('.arow__track[data-n]').forEach(el=>{
+    el.tabIndex=0;
+    wire(el,'<strong>'+esc(el.dataset.n)+'</strong> patients<span class="callout__lab">'+esc(el.dataset.label)+'</span>');
+  });
+  window.addEventListener('resize',hideCallout);
+
+  /* ---------- source unlock + citation modal ---------- */
+  let sourceUnlocked=false;
+  function unlockSource(){ sourceUnlocked=true; citeSrc.disabled=false; citeSrcLabel.textContent='Source'; }
+  const citeModal=document.getElementById('citeModal');
+  let citeLastFocus=null;
+  function openCite(){ if(!sourceUnlocked) return; citeLastFocus=document.activeElement; citeModal.hidden=false; citeModal.classList.add('is-open'); setTimeout(()=>document.getElementById('citeDismiss').focus(),30); }
+  function closeCite(){ citeModal.classList.remove('is-open'); citeModal.hidden=true; if(citeLastFocus&&citeLastFocus.focus){ try{ citeLastFocus.focus(); }catch(e){} } }
+  citeSrc.addEventListener('click',openCite);
+  document.getElementById('citeDismiss').addEventListener('click',closeCite);
+  citeModal.addEventListener('click',e=>{ if(e.target===citeModal) closeCite(); });
+
+  /* ---------- D16/D22 interstitial ---------- */
+  const inter=document.getElementById('inter');
+  const iDest=document.getElementById('interDest'), iOrg=document.getElementById('interOrg'), iUrl=document.getElementById('interUrl');
+  const iStatus=document.getElementById('interStatus'), iDots=inter.querySelector('.prep');
+  const iOpen=document.getElementById('interOpen'), iCopy=document.getElementById('interCopy'), iStay=document.getElementById('interStay');
+  let pendingURL=null, interTrigger=null, launchTimer=null;
+  function orgFromHost(h){ return ({'doi.org':'Publisher (resolved via doi.org)'})[h]||h; }
+  function openInter(url,ref,trigger){
+    pendingURL=url; interTrigger=trigger; let host=url; try{ host=new URL(url).hostname; }catch(e){}
+    iDest.textContent=ref; iOrg.textContent=orgFromHost(host); iUrl.textContent=url;
+    if(iDots) iDots.style.display=''; iStatus.textContent='Preparing the link…'; iOpen.disabled=true;
+    inter.hidden=false; inter.classList.add('is-open'); iStay.focus();
+    if(launchTimer) clearTimeout(launchTimer);
+    launchTimer=setTimeout(()=>{ if(iDots) iDots.style.display='none'; iStatus.textContent='Ready to open.'; iOpen.disabled=false; iOpen.focus(); }, reduceMotion?250:1300);
+  }
+  function closeInter(){ if(launchTimer) clearTimeout(launchTimer); inter.classList.remove('is-open'); inter.hidden=true; if(interTrigger&&interTrigger.focus){ try{ interTrigger.focus(); }catch(e){} } }
+  document.getElementById('citeView').addEventListener('click',function(){ openInter(this.dataset.url,this.dataset.ref,this); });
+  iOpen.addEventListener('click',()=>{ if(!pendingURL) return; window.open(pendingURL,'_blank','noopener,noreferrer'); iStatus.textContent='Link opened in a new tab. Nothing opened? Copy the link and open it manually.'; });
+  iCopy.addEventListener('click',()=>{ if(!pendingURL) return; const ta=document.createElement('textarea'); ta.value=pendingURL; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select(); let ok=false; try{ ok=document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); iStatus.textContent=ok?'Link copied. Paste it into a fresh browser tab.':'Copying is unavailable. Select and copy the visible URL manually.'; });
+  iStay.addEventListener('click',closeInter);
+  inter.addEventListener('click',e=>{ if(e.target===inter) closeInter(); });
+
+  /* ---------- keyboard: interstitial > citation modal ---------- */
+  function trap(e,container){ const f=container.querySelectorAll('a[href],button:not([disabled])'); if(!f.length) return; const first=f[0],last=f[f.length-1]; if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); } else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); } }
+  document.addEventListener('keydown',e=>{
+    if(inter.classList.contains('is-open')){ if(e.key==='Escape'){ e.preventDefault(); closeInter(); return; } if(e.key==='Tab'){ trap(e,inter); } return; }
+    if(citeModal.classList.contains('is-open')){ if(e.key==='Escape'){ e.preventDefault(); closeCite(); return; } if(e.key==='Tab'){ trap(e,citeModal); } }
+  },true);
+
+})();
+</script>
+</body>
+</html>
