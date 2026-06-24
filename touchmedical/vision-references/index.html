@@ -126,7 +126,7 @@ body{
 .tm-panel__head{
   flex:0 0 auto;
   display:flex; align-items:flex-start; gap:16px;
-  padding:14px 22px 12px;
+  padding:11px 22px 9px;
   border-bottom:1px solid var(--tm-line);
 }
 .tm-panel__titles{ flex:1 1 auto; min-width:0; }
@@ -153,10 +153,10 @@ body{
 
 .tm-panel__body{
   flex:1 1 auto; min-height:0; overflow:hidden;
-  padding:14px 22px 16px;
+  padding:10px 22px 12px;
 }
 .tm-stmts{
-  display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
+  display:grid; grid-template-columns:repeat(3,1fr); gap:12px;
   align-content:start;
 }
 
@@ -164,8 +164,8 @@ body{
 .tm-stmt{
   border:1px solid var(--tm-line); border-radius:12px;
   background:var(--tm-panel);
-  padding:12px 13px;
-  display:flex; flex-direction:column; gap:7px;
+  padding:10px 12px;
+  display:flex; flex-direction:column; gap:6px;
   min-height:0;
 }
 .tm-stmt__head{ display:flex; align-items:baseline; gap:8px; margin:0; }
@@ -179,7 +179,7 @@ body{
   padding:2px 7px;
   letter-spacing:.04em; white-space:nowrap;
 }
-.tm-stmt__text{ margin:0; font-size:13.5px; line-height:1.45; color:var(--tm-ink); }
+.tm-stmt__text{ margin:0; font-size:13.5px; line-height:1.4; color:var(--tm-ink); }
 
 .tm-chips{ display:flex; flex-wrap:wrap; gap:6px; margin-top:2px; }
 .tm-chip{
@@ -287,7 +287,6 @@ body{
       <div class="tm-panel__titles">
         <p class="tm-panel__eyebrow">Evidence &amp; sources</p>
         <h1 class="tm-panel__title" id="tmTitle">References &amp; citations</h1>
-        <p class="tm-panel__sub">Supporting evidence for the statements in this module.</p>
       </div>
       <button class="tm-close" id="tmClose" type="button" aria-label="Close references">&times;</button>
     </header>
