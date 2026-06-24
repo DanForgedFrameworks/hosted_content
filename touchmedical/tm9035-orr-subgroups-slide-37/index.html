@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Long-term ORR across clinically relevant subgroups (VISION)</title>
+<style>
+/* ============================================================
+   TOUCH MEDICAL — TM9035 SLIDE 37  (fit-to-embed-box, 680 ceiling)
+   Long-term ORR across clinically relevant subgroups (VISION METex14).
+   Tiered: hub (subgroup cards, simple dot-strips) -> explorer (per-subgroup
+   forest: point + 95% CI vs Overall band, cycle) -> full forest plot.
+   Source gated until all 7 subgroups explored. Honest forest viz throughout.
+   Self-contained. No external runtime dependencies. Poppins (bundled).
+   Brand: teal #0098be, navy #222f55.
+   ============================================================ */
+@font-face { font-family:"Poppins"; src:url("assets/poppins-400.ttf") format("truetype"); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-600.ttf") format("truetype"); font-weight:600; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-700.ttf") format("truetype"); font-weight:700; font-style:normal; font-display:swap; }
+
+:root{
+  --teal:#0098be; --teal-strong:#007a98;
+  --navy:#222f55; --on-accent:#ffffff;
+  --neutral:#c6d3e2;
+  --muted:#56608a; --faint:#8a91b0;
+  --pale:#d9eff8; --mist:#f4f7f9; --line:#e3e8ee;
+  --backdrop:rgba(16,26,38,.68);
+  --band:rgba(0,152,190,.12);
+  --c1:#222f55; --c2:#0098be; --c3:#4f9fc4; --c4:#86bdd8; --c5:#b9d8e8;
+  --font:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{ box-sizing:border-box; }
+html,body{ height:100%; margin:0; }
+body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--font); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; display:flex; align-items:center; justify-content:center; }
+
+/* ---------- frame: fill height, cap at 680, centred ---------- */
+.frame{ width:100%; height:100%; max-height:680px; display:flex; flex-direction:column; overflow:hidden; background:#fff; }
+
+/* banner */
+.banner{ flex:0 0 auto; text-align:center; padding:clamp(7px,1.5vh,13px) clamp(16px,3vw,40px) clamp(5px,1vh,9px); background:var(--pale); }
+.banner__title{ margin:0; font-size:clamp(1.2rem,2.5vw,1.66rem); font-weight:700; line-height:1.16; color:var(--navy); }
+.banner__title em{ font-style:italic; }
+.banner__prompt{ margin:4px 0 0; font-size:clamp(.76rem,1.3vw,.92rem); font-weight:500; color:var(--muted); }
+
+/* ---------- stage shell ---------- */
+.stage{ flex:1 1 auto; min-height:0; position:relative; }
+.view{ position:absolute; inset:0; display:flex; flex-direction:column; padding:clamp(8px,1.5vh,16px) clamp(14px,2.6vw,34px) clamp(6px,1.1vh,12px); opacity:0; visibility:hidden; transition:opacity .3s ease; }
+.view.is-active{ opacity:1; visibility:visible; }
+[data-view="hub"] #view-hub,[data-view="explorer"] #view-explorer,[data-view="full"] #view-full{ }
+
+/* ---------- HUB ---------- */
+.hero{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:clamp(14px,2.4vw,28px); text-align:left; margin-bottom:clamp(8px,1.6vh,16px); }
+.hero__stat{ flex:0 0 auto; display:flex; flex-direction:column; align-items:center; padding:clamp(8px,1.5vh,14px) clamp(14px,2vw,22px); border:2px solid var(--teal); border-radius:14px; background:var(--mist); }
+.hero__big{ font-size:clamp(1.5rem,3.4vw,2.2rem); font-weight:700; color:var(--teal); line-height:1; font-variant-numeric:tabular-nums; }
+.hero__cap{ margin-top:3px; font-size:clamp(.7rem,1.25vw,.82rem); font-weight:600; color:var(--muted); white-space:nowrap; }
+.hero__msg{ margin:0; max-width:62ch; font-size:clamp(.84rem,1.5vw,1rem); font-weight:500; line-height:1.4; color:var(--navy); }
+
+.cards{ flex:1 1 auto; min-height:0; display:grid; grid-template-columns:repeat(4,1fr); align-content:center; gap:clamp(10px,1.5vw,18px); }
+.hcard{ position:relative; display:flex; flex-direction:column; align-items:stretch; justify-content:center; gap:clamp(9px,1.6vh,14px); border:2px solid var(--line); border-radius:16px; background:#fff; padding:clamp(13px,2.2vh,20px) clamp(13px,1.3vw,18px); font:inherit; color:var(--navy); text-align:left; cursor:pointer; overflow:hidden; transition:border-color .16s ease, box-shadow .16s ease, transform .16s ease; }
+.hcard:hover{ border-color:var(--teal); transform:translateY(-3px); box-shadow:0 10px 20px rgba(34,47,85,.12); }
+.hcard:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+.hcard__top{ display:flex; align-items:center; gap:9px; }
+.hcard__icon{ flex:0 0 auto; width:clamp(23px,2.3vw,29px); height:clamp(23px,2.3vw,29px); color:var(--teal); }
+.hcard__icon svg{ width:100%; height:100%; }
+.hcard__name{ font-size:clamp(.8rem,1.36vw,.96rem); font-weight:700; line-height:1.14; }
+.hcard__strip{ position:relative; flex:0 0 auto; height:clamp(44px,6.6vh,52px); }
+.hcard__track{ position:absolute; left:1px; right:1px; top:50%; height:7px; transform:translateY(-50%); border-radius:7px; background:var(--mist); box-shadow:inset 0 0 0 1px var(--line); }
+.hcard__ovl{ position:absolute; top:50%; height:15px; width:2px; transform:translate(-50%,-50%); background:var(--teal); border-radius:2px; opacity:.55; }
+.hmk{ position:absolute; top:0; bottom:0; transform:translateX(-50%); }
+.hmk__dot{ position:absolute; left:0; top:50%; width:10px; height:10px; transform:translate(-50%,-50%); border-radius:50%; background:var(--navy); border:2px solid #fff; box-shadow:0 1px 2px rgba(16,26,38,.32); }
+.hmk__stem{ position:absolute; left:0; width:1.5px; transform:translateX(-50%); background:var(--navy); opacity:.26; }
+.hmk__pill{ position:absolute; left:0; top:50%; background:var(--navy); color:#fff; font-size:clamp(.5rem,.95vw,.6rem); font-weight:700; line-height:1; padding:2px 5px; border-radius:6px; white-space:nowrap; }
+.hmk--l0 .hmk__pill{ transform:translate(-50%,calc(-50% - 15px)); }
+.hmk--l1 .hmk__pill{ transform:translate(-50%,calc(-50% + 15px)); }
+.hmk--l0 .hmk__stem{ top:calc(50% - 10px); height:10px; }
+.hmk--l1 .hmk__stem{ top:50%; height:10px; }
+.hcard__ends{ display:flex; justify-content:space-between; margin-top:3px; font-size:.56rem; font-weight:600; color:var(--faint); letter-spacing:.03em; }
+.hcard__tick{ position:absolute; top:9px; right:9px; width:21px; height:21px; border-radius:50%; background:var(--teal); color:#fff; display:none; align-items:center; justify-content:center; }
+.hcard.is-seen .hcard__tick{ display:flex; }
+.hcard__tick svg{ width:12px; height:12px; }
+
+/* launcher card */
+.hcard--launch{ border-style:dashed; border-color:var(--teal); background:var(--mist); align-items:center; justify-content:center; text-align:center; gap:8px; }
+.hcard--launch:hover{ background:var(--pale); }
+.hcard--launch .lc__plus{ width:34px; height:34px; border-radius:50%; border:2.5px solid var(--teal); color:var(--teal); display:grid; place-items:center; }
+.hcard--launch .lc__plus svg{ width:18px; height:18px; }
+.hcard--launch .lc__txt{ font-size:clamp(.84rem,1.4vw,1rem); font-weight:700; color:var(--teal); line-height:1.2; }
+
+/* ---------- EXPLORER ---------- */
+.exhead{ flex:0 0 auto; display:flex; align-items:center; gap:clamp(8px,1.4vw,16px); margin-bottom:clamp(6px,1.2vh,12px); }
+.backbtn{ flex:0 0 auto; display:inline-flex; align-items:center; gap:6px; min-height:38px; padding:7px 14px; border:2px solid var(--teal); border-radius:10px; background:#fff; color:var(--teal); font:inherit; font-weight:700; font-size:.82rem; cursor:pointer; transition:background .15s ease,color .15s ease; }
+.backbtn:hover{ background:var(--teal); color:#fff; }
+.backbtn:focus-visible,.navbtn:focus-visible,.dot:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+.backbtn svg{ width:15px; height:15px; }
+.extitle{ flex:1 1 auto; display:flex; align-items:center; gap:10px; min-width:0; }
+.extitle__icon{ flex:0 0 auto; width:clamp(30px,3vw,40px); height:clamp(30px,3vw,40px); display:grid; place-items:center; border:3px solid var(--teal); border-radius:50%; color:var(--teal); }
+.extitle__icon svg{ width:56%; height:56%; }
+.extitle__name{ margin:0; font-size:clamp(1rem,1.9vw,1.3rem); font-weight:700; }
+.excyc{ flex:0 0 auto; display:flex; align-items:center; gap:clamp(7px,1.2vw,12px); }
+.navbtn{ flex:0 0 auto; width:38px; height:38px; border-radius:50%; border:2px solid var(--teal); background:#fff; color:var(--teal); cursor:pointer; display:grid; place-items:center; transition:background .15s ease,color .15s ease,transform .12s ease; }
+.navbtn svg{ width:17px; height:17px; }
+.navbtn:hover{ background:var(--teal); color:#fff; }
+.navbtn:active{ transform:scale(.93); }
+.dots{ display:flex; gap:7px; }
+.dot{ width:9px; height:9px; border-radius:50%; border:0; background:#c7d2de; cursor:pointer; padding:0; transition:transform .15s ease, background .15s ease; }
+.dot[aria-current="true"]{ background:var(--teal); transform:scale(1.25); }
+.dot:hover{ background:var(--teal-strong); }
+.expanel{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; justify-content:center; }
+.exnote{ flex:0 0 auto; margin:clamp(6px,1.2vh,12px) 0 0; font-size:clamp(.72rem,1.25vw,.84rem); font-weight:500; color:var(--muted); font-style:italic; }
+
+/* ---------- FULL ---------- */
+.fuhead{ flex:0 0 auto; display:flex; align-items:center; gap:clamp(8px,1.4vw,16px); margin-bottom:clamp(5px,1vh,10px); }
+.futitle{ flex:1 1 auto; margin:0; font-size:clamp(.96rem,1.8vw,1.22rem); font-weight:700; }
+.fulegend{ flex:0 0 auto; display:flex; align-items:center; gap:clamp(10px,1.6vw,18px); font-size:clamp(.66rem,1.15vw,.76rem); font-weight:600; color:var(--muted); }
+.fulegend span{ display:inline-flex; align-items:center; gap:5px; }
+.fulegend .lg-dot{ width:11px; height:11px; border-radius:50%; background:var(--navy); }
+.fulegend .lg-band{ width:16px; height:11px; border-radius:3px; background:var(--band); box-shadow:inset 0 0 0 1px rgba(0,152,190,.3); }
+.fubody{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; justify-content:center; }
+
+/* ---------- forest engine (shared) ---------- */
+.forest{ display:flex; align-items:flex-start; gap:clamp(8px,1.2vw,16px); width:100%; }
+.forest__labels{ flex:0 0 auto; display:grid; grid-auto-rows:var(--rowh); }
+.forest__labels.has-group{ grid-template-columns:auto auto auto; }
+.forest__labels:not(.has-group){ grid-template-columns:auto auto; }
+.flbl{ display:flex; align-items:center; padding:0 8px 0 0; font-size:clamp(.72rem,1.25vw,.86rem); line-height:1.1; white-space:nowrap; }
+.flbl--group{ font-weight:700; color:var(--navy); }
+.flbl--lvl{ font-weight:600; color:var(--navy); }
+.flbl--lvl.is-overall{ font-weight:700; }
+.flbl--n{ justify-content:flex-end; font-weight:600; color:var(--muted); font-variant-numeric:tabular-nums; padding-right:4px; }
+.is-sep{ border-top:1px solid var(--line); }
+.forest__mid{ flex:1 1 auto; min-width:0; display:flex; flex-direction:column; }
+.forest__plot{ position:relative; }
+.forest__bg{ position:absolute; inset:0; pointer-events:none; }
+.pgrid{ position:absolute; top:0; bottom:0; width:1px; background:var(--line); transform:translateX(-.5px); }
+.pband{ position:absolute; top:0; bottom:0; background:var(--band); }
+.poverall{ position:absolute; top:0; bottom:0; width:2px; transform:translateX(-1px); background:var(--teal); opacity:.55; }
+.forest__prows{ position:relative; }
+.prow{ position:relative; height:var(--rowh); }
+.prow:focus-visible{ outline:3px solid var(--navy); outline-offset:-2px; border-radius:5px; }
+.pwhisk{ position:absolute; top:50%; height:2px; transform:translateY(-50%); background:var(--muted); }
+.pwhisk::before,.pwhisk::after{ content:""; position:absolute; top:-4px; height:10px; width:2px; background:var(--muted); }
+.pwhisk::before{ left:0; } .pwhisk::after{ right:0; }
+.pdot{ position:absolute; top:50%; transform:translate(-50%,-50%); border-radius:50%; background:var(--navy); border:2px solid #fff; box-shadow:0 1px 3px rgba(16,26,38,.3); }
+.pdot.is-overall{ background:var(--teal); }
+.forest__axis{ position:relative; height:16px; margin-top:3px; }
+.ptick{ position:absolute; top:0; transform:translateX(-50%); font-size:clamp(.62rem,1.1vw,.72rem); font-weight:600; color:var(--faint); font-variant-numeric:tabular-nums; }
+.forest__axtitle{ text-align:center; font-size:clamp(.66rem,1.15vw,.78rem); font-weight:700; color:var(--muted); margin-top:1px; }
+.forest__vals{ flex:0 0 auto; display:grid; grid-auto-rows:var(--rowh); }
+.fval{ display:flex; align-items:center; justify-content:flex-end; font-size:clamp(.72rem,1.25vw,.86rem); font-weight:600; color:var(--navy); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.fval b{ font-weight:700; }
+.fval.is-overall{ color:var(--teal); }
+
+/* ---------- footer controls (chrome) ---------- */
+.controls{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:clamp(12px,2.4vw,26px); padding:clamp(6px,1.1vh,11px) clamp(12px,3vw,24px); border-top:1px solid var(--line); }
+.progress{ font-size:clamp(.76rem,1.4vw,.9rem); font-weight:700; color:var(--teal); white-space:nowrap; font-variant-numeric:tabular-nums; }
+.cite-src{ display:inline-flex; align-items:center; gap:8px; min-height:38px; padding:8px 16px; border:2px solid var(--teal); border-radius:10px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.84rem; cursor:pointer; transition:filter .15s ease; }
+.cite-src:hover:not(:disabled){ filter:brightness(.95); }
+.cite-src:disabled{ background:#fff; color:var(--faint); border-color:var(--line); cursor:not-allowed; }
+.cite-src svg{ width:14px; height:14px; }
+.cite-src:focus-visible,.cite-dismiss:focus-visible,.inter__btn:focus-visible,.cite-view:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+
+/* ---------- citation modal ---------- */
+.cite-modal{ position:fixed; inset:0; z-index:40; display:none; align-items:center; justify-content:center; padding:clamp(12px,4vw,40px); background:var(--backdrop); }
+.cite-modal.is-open{ display:flex; }
+.cite-card{ width:min(680px,100%); max-height:calc(100% - 24px); overflow:auto; background:#fff; border-radius:16px; box-shadow:0 24px 60px rgba(16,26,38,.4); padding:clamp(18px,3vw,26px); animation:rise .22s ease both; }
+.cite-card__check{ width:38px; height:38px; border-radius:50%; background:var(--teal); color:#fff; display:grid; place-items:center; margin-bottom:12px; }
+.cite-card__eyebrow{ margin:0 0 4px; font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--teal); }
+.cite-card__title{ margin:0 0 8px; font-size:clamp(1.05rem,2vw,1.25rem); font-weight:700; color:var(--navy); }
+.cite-card__body{ margin:0; font-size:.92rem; line-height:1.5; color:var(--navy); }
+.cite-card__ref{ display:block; margin-top:10px; padding-top:10px; border-top:1px solid var(--line); font-size:.85rem; line-height:1.5; color:var(--muted); }
+.cite-card__ref sup{ color:var(--teal); font-weight:700; }
+.cite-card__actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+.cite-view{ flex:0 0 auto; display:inline-flex; align-items:center; gap:7px; min-height:44px; padding:10px 18px; border:2px solid var(--teal); border-radius:10px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.88rem; cursor:pointer; transition:filter .15s ease; }
+.cite-view:hover{ filter:brightness(.95); }
+.cite-dismiss{ flex:0 0 auto; min-height:44px; padding:10px 18px; border:2px solid var(--teal); border-radius:10px; background:#fff; color:var(--teal); font:inherit; font-weight:700; font-size:.88rem; cursor:pointer; }
+
+/* ---------- D16/D22 interstitial ---------- */
+.inter{ position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center; padding:clamp(12px,4vw,40px); background:var(--backdrop); }
+.inter.is-open{ display:flex; }
+.inter__panel{ width:min(460px,100%); max-height:calc(100% - 24px); overflow:auto; background:#fff; border-radius:16px; box-shadow:0 24px 60px rgba(16,26,38,.4); padding:22px; animation:rise .2s ease both; }
+.inter__title{ font-size:1.05rem; font-weight:700; margin:0 0 8px; color:var(--navy); }
+.inter__p{ font-size:.82rem; line-height:1.5; color:var(--muted); margin:0 0 10px; }
+.inter__p strong{ color:var(--navy); font-weight:600; }
+.inter__url{ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.72rem; line-height:1.45; color:var(--muted); background:var(--mist); border:1px solid var(--line); border-radius:8px; padding:9px 11px; word-break:break-all; }
+.inter__status{ margin-top:12px; display:flex; align-items:center; gap:9px; min-height:22px; font-size:.76rem; font-style:italic; color:var(--muted); }
+.prep{ display:inline-flex; gap:5px; }
+.prep i{ width:8px; height:8px; border-radius:50%; background:var(--teal); display:inline-block; animation:prep 1s infinite ease-in-out; }
+.prep i:nth-child(2){ animation-delay:.15s; }
+.prep i:nth-child(3){ animation-delay:.3s; }
+.inter__actions{ display:flex; flex-wrap:wrap; gap:9px; margin-top:16px; }
+.inter__btn{ min-height:44px; padding:10px 18px; border:2px solid var(--teal); border-radius:10px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.82rem; cursor:pointer; }
+.inter__btn.secondary{ background:#fff; color:var(--teal); }
+.inter__btn:disabled{ background:#c3c8d2; border-color:#c3c8d2; color:#fff; cursor:not-allowed; }
+.inter__btn:hover:not(:disabled){ filter:brightness(.96); }
+
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+@keyframes rise{ from{ opacity:0; transform:translateY(10px) scale(.99);} to{ opacity:1; transform:none; } }
+@keyframes prep{ 0%,100%{ transform:scale(.6); opacity:.4; } 50%{ transform:scale(1); opacity:1; } }
+
+/* ---------- phone (<760px) ---------- */
+@media (max-width:760px){
+  html,body{ height:auto; }
+  body{ overflow:auto; display:block; }
+  .frame{ height:auto; min-height:100%; max-height:none; }
+  .stage{ position:static; }
+  .view{ position:static; opacity:1; visibility:visible; display:none; }
+  [data-view="hub"] #view-hub,[data-view="explorer"] #view-explorer,[data-view="full"] #view-full{ display:flex; }
+  .hero{ flex-direction:column; }
+  .cards{ grid-template-columns:1fr 1fr; }
+  .forest{ font-size:.8rem; }
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+}
+</style>
+</head>
+<body>
+<main class="frame" data-view="hub" id="frame" aria-label="Long-term ORR across clinically relevant subgroups in VISION">
+
+  <header class="banner">
+    <h1 class="banner__title">Long-term ORR across clinically relevant subgroups</h1>
+    <p class="banner__prompt" id="prompt">Select a subgroup to compare overall response rate, or view the full forest plot.</p>
+  </header>
+
+  <div class="stage">
+
+    <!-- ===== HUB ===== -->
+    <section class="view is-active" id="view-hub" aria-label="Subgroup hub">
+      <div class="hero">
+        <div class="hero__stat">
+          <span class="hero__big">51.8%</span>
+          <span class="hero__cap">Overall ORR (95% CI 46.1, 57.4) &middot; N=313</span>
+        </div>
+        <p class="hero__msg">ORR was consistent across all patient subgroups assessed by sex, age, smoking history, histology, ECOG&nbsp;PS, brain metastases at baseline and line of therapy.</p>
+      </div>
+      <div class="cards" id="cards"></div>
+    </section>
+
+    <!-- ===== EXPLORER ===== -->
+    <section class="view" id="view-explorer" aria-label="Subgroup detail" aria-hidden="true">
+      <div class="exhead">
+        <button class="backbtn" type="button" data-back><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>All subgroups</button>
+        <div class="extitle"><span class="extitle__icon" id="exIcon" aria-hidden="true"></span><h2 class="extitle__name" id="exName" tabindex="-1"></h2></div>
+        <div class="excyc">
+          <button class="navbtn" id="exPrev" type="button" aria-label="Previous subgroup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <div class="dots" id="exDots" role="group" aria-label="Choose a subgroup"></div>
+          <button class="navbtn" id="exNext" type="button" aria-label="Next subgroup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+      </div>
+      <div class="expanel" id="exPanel"></div>
+      <p class="exnote" id="exNote" hidden></p>
+    </section>
+
+    <!-- ===== FULL FOREST ===== -->
+    <section class="view" id="view-full" aria-label="Full forest plot" aria-hidden="true">
+      <div class="fuhead">
+        <button class="backbtn" type="button" data-back><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>All subgroups</button>
+        <h2 class="futitle" id="fuTitle" tabindex="-1">Long-term ORR across clinically relevant subgroups</h2>
+        <div class="fulegend" aria-hidden="true">
+          <span><i class="lg-dot"></i> marker size &prop; n</span>
+          <span><i class="lg-band"></i> Overall 95% CI</span>
+        </div>
+      </div>
+      <div class="fubody" id="fuBody"></div>
+    </section>
+
+  </div>
+
+  <div class="controls">
+    <span class="progress" aria-hidden="true"><b id="progNum">0</b> of 7 subgroups explored</span>
+    <button class="cite-src" id="citeSrc" type="button" aria-haspopup="dialog" disabled>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <span id="citeSrcLabel">Source locked</span>
+    </button>
+  </div>
+
+  <p class="sr-only" id="live" aria-live="polite" aria-atomic="true"></p>
+</main>
+
+<!-- citation modal -->
+<div class="cite-modal" id="citeModal" role="dialog" aria-modal="true" aria-labelledby="citeTitle" hidden>
+  <div class="cite-card" role="document">
+    <span class="cite-card__check" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+    <p class="cite-card__eyebrow">All seven subgroups explored</p>
+    <h2 class="cite-card__title" id="citeTitle">Source</h2>
+    <p class="cite-card__body">Data are for the 313 patients with <em>MET</em>ex14 skipping NSCLC in the Phase&nbsp;2 VISION trial. ORR is objective response rate per independent review; 95%&nbsp;CIs are exact (Clopper&ndash;Pearson).
+      <span class="cite-card__ref">Mazieres J, Paik PK, Garassino MC, et al. Tepotinib treatment in patients with <em>MET</em> exon&nbsp;14-skipping NSCLC: long-term follow-up of the VISION phase&nbsp;2 nonrandomized clinical trial. <em>JAMA Oncol.</em> 2023;9(9):1260&ndash;6.<sup>&nbsp;9</sup></span>
+    </p>
+    <div class="cite-card__actions">
+      <button class="cite-view" id="citeView" type="button" data-url="https://doi.org/10.1001/jamaoncol.2023.1962" data-ref="Mazieres J, et al. JAMA Oncol. 2023;9(9):1260&ndash;6">View source <span aria-hidden="true">&#8599;</span></button>
+      <button class="cite-dismiss" id="citeDismiss" type="button">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- D16/D22 interstitial -->
+<div class="inter" id="inter" role="dialog" aria-modal="true" aria-labelledby="interTitle" aria-describedby="interReason" hidden>
+  <div class="inter__panel" role="document">
+    <h2 class="inter__title" id="interTitle">You are leaving this activity</h2>
+    <p class="inter__p" id="interReason">This link opens an external source in a new tab.</p>
+    <p class="inter__p"><strong>Source:</strong> <span id="interDest"></span><br><strong>Organisation:</strong> <span id="interOrg"></span></p>
+    <p class="inter__p">The source opens in a new tab. Check the address is expected before continuing.</p>
+    <div class="inter__url" id="interUrl"></div>
+    <div class="inter__status" aria-live="polite"><span class="prep" aria-hidden="true"><i></i><i></i><i></i></span><span id="interStatus">Preparing the link&hellip;</span></div>
+    <div class="inter__actions">
+      <button class="inter__btn" id="interOpen" type="button" disabled>Open source</button>
+      <button class="inter__btn secondary" id="interCopy" type="button">Copy link</button>
+      <button class="inter__btn secondary" id="interStay" type="button">Stay here</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- data (supplied figures, verbatim) ---------- */
+  const OVERALL = { lab:'Overall', n:313, orr:51.8, lo:46.1, hi:57.4, isOverall:true };
+  const ICON = {
+    sex:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="17" cy="16" r="8"/><path d="M17 24v15M11 33h12"/><circle cx="31" cy="32" r="8"/><path d="M37 26l8-8M39 18h6v6"/></svg>',
+    age:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="11" width="34" height="30" rx="3"/><path d="M7 19h34M16 7v8M32 7v8"/><path d="M16 28h6M16 34h12"/></svg>',
+    smoking:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="28" width="30" height="8" rx="1.5"/><path d="M16 28v8M26 28v8"/><path d="M40 36h2M40 30h2"/><path d="M30 22c4-2 2-6 0-8M37 22c4-2 2-7 0-9"/></svg>',
+    histology:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="21" cy="21" r="12"/><path d="M30 30l10 10"/><path d="M16 21h10M21 16v10"/></svg>',
+    ecog:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="27" cy="9" r="4"/><path d="M25 16l-6 6 4 5 2 11M23 27l-9 3M27 22l8 4-2 9M19 22l-7 2"/></svg>',
+    brain:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 11c-3.5 0-6 2.4-6.3 5.2C14.4 16.7 12 19 12 22c0 1.7.8 3.2 2 4.2-.3 3 1.9 5.6 5 5.8.7 1.9 2.6 3 4.7 3"/><path d="M24 11c3.5 0 6 2.4 6.3 5.2 3.3.5 5.7 2.8 5.7 5.8 0 1.7-.8 3.2-2 4.2.3 3-1.9 5.6-5 5.8-.7 1.9-2.6 3-4.7 3"/><path d="M24 11v24"/></svg>',
+    line:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="17" y="6" width="14" height="12" rx="2"/><path d="M20 6V4h8v2"/><path d="M24 18v6"/><path d="M19 24h10v12a3 3 0 0 1-3 3h-4a3 3 0 0 1-3-3z"/><path d="M24 39v5"/></svg>'
+  };
+  const SUBGROUPS = [
+    { id:'sex', name:'Sex', icon:ICON.sex, levels:[
+      {lab:'Male', short:'M', n:154, orr:51.3, lo:43.1, hi:59.4},
+      {lab:'Female', short:'F', n:159, orr:52.2, lo:44.1, hi:60.2} ] },
+    { id:'age', name:'Age', icon:ICON.age, levels:[
+      {lab:'<75 years', short:'<75', n:184, orr:55.4, lo:47.9, hi:62.7},
+      {lab:'≥75 years', short:'≥75', n:129, orr:46.5, lo:37.7, hi:55.5} ] },
+    { id:'smoking', name:'Smoking history', icon:ICON.smoking, levels:[
+      {lab:'Yes', short:'Y', n:149, orr:56.4, lo:48.0, hi:64.5},
+      {lab:'No', short:'N', n:154, orr:47.4, lo:39.3, hi:55.6} ] },
+    { id:'histology', name:'Histology', icon:ICON.histology, levels:[
+      {lab:'Adenocarcinoma', short:'A', n:252, orr:54.0, lo:47.6, hi:60.2},
+      {lab:'Squamous', short:'S', n:28, orr:35.7, lo:18.6, hi:55.9} ] },
+    { id:'ecog', name:'ECOG PS', icon:ICON.ecog, levels:[
+      {lab:'0', short:'0', n:81, orr:59.3, lo:47.8, hi:70.1},
+      {lab:'1', short:'1', n:231, orr:49.4, lo:42.7, hi:56.0} ] },
+    { id:'brain', name:'Brain metastases at baseline', icon:ICON.brain, levels:[
+      {lab:'Yes', short:'Y', n:57, orr:56.1, lo:42.4, hi:69.3},
+      {lab:'No', short:'N', n:256, orr:50.8, lo:44.5, hi:57.1} ] },
+    { id:'line', name:'Line of therapy', icon:ICON.line, note:'2L is a subset of 2L+ (second line or later); the two rows are not mutually exclusive.', levels:[
+      {lab:'1L', short:'1L', n:164, orr:57.9, lo:50.0, hi:65.6},
+      {lab:'2L', short:'2L', n:92, orr:45.7, lo:35.2, hi:56.4},
+      {lab:'2L+', short:'2L+', n:149, orr:45.0, lo:36.8, hi:53.3} ] }
+  ];
+
+  function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  function markerR(n){ return 4 + 7*Math.sqrt(n/313); }     // px radius, area ~ n
+  function fmt(v){ return v.toFixed(1); }
+  // Hub dot-strips are zoomed to a window around the data (all points 35.7-59.3) so the
+  // per-subgroup spread is visible; the explorer/full forest keep the true 0-100 axis.
+  const ZMIN=30, ZMAX=65;
+  function zx(v){ return Math.max(0, Math.min(100, (v-ZMIN)/(ZMAX-ZMIN)*100)); }
+  // Assign each level marker to lane 0 (label above) or 1 (label below) so close
+  // labels on the zoomed strip never collide.
+  function laneOf(levels){
+    const items=levels.map(l=>({l:l, x:zx(l.orr)})).sort((a,b)=>a.x-b.x);
+    const last=[-999,-999], MINSEP=12;
+    items.forEach(it=>{
+      let lane=0;
+      if(it.x-last[0]<MINSEP){ lane = (it.x-last[1]<MINSEP) ? (last[0]<=last[1]?0:1) : 1; }
+      last[lane]=it.x; it.lane=lane;
+    });
+    return items;
+  }
+
+  /* ---------- forest builder (shared) ---------- */
+  function buildForest(rows, opts){
+    opts = opts||{}; const rowH = opts.rowH||40, groupCol = !!opts.groupCol;
+    const wrap=document.createElement('div'); wrap.className='forest'; wrap.style.setProperty('--rowh', rowH+'px');
+
+    const labels=document.createElement('div'); labels.className='forest__labels'+(groupCol?' has-group':'');
+    rows.forEach((r,idx)=>{
+      const sep = groupCol && idx>0 && r.group!==rows[idx-1].group;
+      if(groupCol){
+        const firstOfGroup = idx===0 || r.group!==rows[idx-1].group;
+        const g=document.createElement('div'); g.className='flbl flbl--group'+(sep?' is-sep':'');
+        g.textContent = firstOfGroup ? (r.group||'') : ''; labels.appendChild(g);
+      }
+      const lv=document.createElement('div'); lv.className='flbl flbl--lvl'+(r.isOverall?' is-overall':'')+(sep?' is-sep':'');
+      lv.textContent=r.lab; labels.appendChild(lv);
+      const nn=document.createElement('div'); nn.className='flbl flbl--n'+(sep?' is-sep':'');
+      nn.textContent=r.n; labels.appendChild(nn);
+    });
+
+    const mid=document.createElement('div'); mid.className='forest__mid';
+    const plot=document.createElement('div'); plot.className='forest__plot';
+    const bg=document.createElement('div'); bg.className='forest__bg';
+    [0,25,50,75,100].forEach(p=>{ const g=document.createElement('span'); g.className='pgrid'; g.style.left=p+'%'; bg.appendChild(g); });
+    const band=document.createElement('span'); band.className='pband'; band.style.left=OVERALL.lo+'%'; band.style.width=(OVERALL.hi-OVERALL.lo)+'%'; bg.appendChild(band);
+    const ovl=document.createElement('span'); ovl.className='poverall'; ovl.style.left=OVERALL.orr+'%'; bg.appendChild(ovl);
+    plot.appendChild(bg);
+    const prows=document.createElement('div'); prows.className='forest__prows';
+    rows.forEach(r=>{
+      const pr=document.createElement('div'); pr.className='prow'; pr.tabIndex=0; pr.setAttribute('role','img');
+      pr.setAttribute('aria-label',(r.group?r.group+', ':'')+r.lab+': ORR '+fmt(r.orr)+'% (95% CI '+fmt(r.lo)+' to '+fmt(r.hi)+'), n='+r.n);
+      const wh=document.createElement('span'); wh.className='pwhisk'; wh.style.left=r.lo+'%'; wh.style.width=(r.hi-r.lo)+'%';
+      const dot=document.createElement('span'); dot.className='pdot'+(r.isOverall?' is-overall':''); const rad=markerR(r.n);
+      dot.style.left=r.orr+'%'; dot.style.width=dot.style.height=(2*rad).toFixed(1)+'px';
+      pr.appendChild(wh); pr.appendChild(dot); prows.appendChild(pr);
+    });
+    plot.appendChild(prows); mid.appendChild(plot);
+    const axis=document.createElement('div'); axis.className='forest__axis';
+    [0,25,50,75,100].forEach(p=>{ const t=document.createElement('span'); t.className='ptick'; t.style.left=p+'%'; t.textContent=p; axis.appendChild(t); });
+    mid.appendChild(axis);
+    const axt=document.createElement('div'); axt.className='forest__axtitle'; axt.textContent='ORR, % (95% CI)'; mid.appendChild(axt);
+
+    const vals=document.createElement('div'); vals.className='forest__vals';
+    rows.forEach(r=>{ const v=document.createElement('div'); v.className='fval'+(r.isOverall?' is-overall':''); v.innerHTML='<b>'+fmt(r.orr)+'</b> ('+fmt(r.lo)+', '+fmt(r.hi)+')'; vals.appendChild(v); });
+
+    wrap.appendChild(labels); wrap.appendChild(mid); wrap.appendChild(vals);
+    return wrap;
+  }
+
+  /* ---------- HUB cards ---------- */
+  const cardsEl=document.getElementById('cards');
+  SUBGROUPS.forEach((s,i)=>{
+    const marks = laneOf(s.levels).map(it=>
+      '<span class="hmk hmk--l'+it.lane+'" style="left:'+it.x.toFixed(1)+'%">'+
+        '<span class="hmk__pill">'+esc(it.l.short)+'</span>'+
+        '<span class="hmk__stem"></span>'+
+        '<span class="hmk__dot"></span>'+
+      '</span>').join('');
+    const aria = s.name+'. ORR by level: '+s.levels.map(l=>l.lab+' '+fmt(l.orr)+'%').join(', ')+'. Overall '+fmt(OVERALL.orr)+'%. Select to explore with 95% confidence intervals.';
+    const btn=document.createElement('button'); btn.className='hcard'; btn.type='button'; btn.dataset.index=i;
+    btn.setAttribute('aria-label', aria);
+    btn.innerHTML =
+      '<span class="hcard__tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>'+
+      '<span class="hcard__top"><span class="hcard__icon">'+s.icon+'</span><span class="hcard__name">'+esc(s.name)+'</span></span>'+
+      '<span class="hcard__strip" aria-hidden="true"><span class="hcard__track"></span><span class="hcard__ovl" style="left:'+zx(OVERALL.orr).toFixed(1)+'%"></span>'+marks+'</span>'+
+      '<span class="hcard__ends" aria-hidden="true"><span>'+ZMIN+'</span><span>ORR&nbsp;%</span><span>'+ZMAX+'</span></span>';
+    cardsEl.appendChild(btn);
+  });
+  // launcher card
+  const launch=document.createElement('button'); launch.className='hcard hcard--launch'; launch.type='button'; launch.id='launchFull';
+  launch.setAttribute('aria-label','View the full forest plot across all subgroups');
+  launch.innerHTML='<span class="lc__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span><span class="lc__txt">View full<br>forest plot</span>';
+  cardsEl.appendChild(launch);
+
+  const hcards = Array.from(cardsEl.querySelectorAll('.hcard[data-index]'));
+
+  /* ---------- EXPLORER ---------- */
+  const frame=document.getElementById('frame');
+  const exIcon=document.getElementById('exIcon'), exName=document.getElementById('exName');
+  const exPanel=document.getElementById('exPanel'), exNote=document.getElementById('exNote');
+  const exDots=document.getElementById('exDots');
+  const progNum=document.getElementById('progNum'), live=document.getElementById('live');
+  const citeSrc=document.getElementById('citeSrc'), citeSrcLabel=document.getElementById('citeSrcLabel');
+  const visited=new Set();
+  let exIndex=0;
+
+  SUBGROUPS.forEach((s,i)=>{
+    const d=document.createElement('button'); d.className='dot'; d.type='button'; d.dataset.index=i;
+    d.setAttribute('aria-label','Go to '+s.name); exDots.appendChild(d);
+  });
+  const exDotEls=Array.from(exDots.children);
+
+  function renderExplorer(i){
+    const s=SUBGROUPS[i]; exIndex=i;
+    exIcon.innerHTML=s.icon; exName.textContent=s.name;
+    const rows=[OVERALL].concat(s.levels.map(l=>Object.assign({},l)));
+    const rowH = s.levels.length>=3 ? 44 : 52;
+    exPanel.innerHTML=''; exPanel.appendChild(buildForest(rows,{rowH:rowH}));
+    if(s.note){ exNote.hidden=false; exNote.textContent='Note: '+s.note; } else { exNote.hidden=true; exNote.textContent=''; }
+    exDotEls.forEach((d,n)=>d.setAttribute('aria-current', n===i?'true':'false'));
+    markVisited(i);
+  }
+  function markVisited(i){
+    if(!visited.has(i)){
+      visited.add(i); hcards[i].classList.add('is-seen'); progNum.textContent=visited.size;
+      if(visited.size===SUBGROUPS.length){ unlockSource(); live.textContent=SUBGROUPS[i].name+' explored. All seven explored — the Source button is now available.'; return; }
+    }
+    live.textContent=SUBGROUPS[i].name+' shown. '+visited.size+' of '+SUBGROUPS.length+' explored.';
+  }
+
+  /* ---------- FULL forest ---------- */
+  const fuBody=document.getElementById('fuBody');
+  const FULL_ROWS=(function(){ const rows=[Object.assign({group:''},OVERALL)];
+    SUBGROUPS.forEach(s=> s.levels.forEach(l=> rows.push(Object.assign({group:s.name},l))) ); return rows; })();
+  function renderFull(){
+    if(matchMedia('(max-width:760px)').matches){ fuBody.innerHTML=''; fuBody.appendChild(buildForest(FULL_ROWS,{rowH:30, groupCol:true})); return; }
+    const avail=fuBody.clientHeight||440;                                  // fit rows to the height we actually have
+    const rh=Math.max(22, Math.min(34, Math.floor((avail-46)/FULL_ROWS.length)));
+    fuBody.innerHTML=''; fuBody.appendChild(buildForest(FULL_ROWS,{rowH:rh, groupCol:true}));
+  }
+
+  /* ---------- view switching ---------- */
+  const views={ hub:document.getElementById('view-hub'), explorer:document.getElementById('view-explorer'), full:document.getElementById('view-full') };
+  let lastTrigger=null;
+  function setView(name, focusEl){
+    frame.dataset.view=name;
+    Object.keys(views).forEach(k=>{ const v=views[k]; const on=k===name; v.classList.toggle('is-active',on); v.setAttribute('aria-hidden', on?'false':'true'); });
+    if(focusEl){ try{ focusEl.focus(); }catch(e){} }
+  }
+  function openExplorer(i, trigger){ lastTrigger=trigger||null; renderExplorer(i); setView('explorer', exName); }
+  function openFull(trigger){ lastTrigger=trigger||null; setView('full', document.getElementById('fuTitle')); renderFull(); }
+  window.addEventListener('resize',()=>{ if(frame.dataset.view==='full') renderFull(); });
+  function backToHub(){ setView('hub'); if(lastTrigger&&lastTrigger.focus){ try{ lastTrigger.focus(); }catch(e){} } lastTrigger=null; }
+
+  hcards.forEach(c=>c.addEventListener('click',()=>openExplorer(+c.dataset.index,c)));
+  launch.addEventListener('click',()=>openFull(launch));
+  document.querySelectorAll('[data-back]').forEach(b=>b.addEventListener('click',backToHub));
+  document.getElementById('exPrev').addEventListener('click',()=>renderExplorer((exIndex-1+SUBGROUPS.length)%SUBGROUPS.length));
+  document.getElementById('exNext').addEventListener('click',()=>renderExplorer((exIndex+1)%SUBGROUPS.length));
+  exDotEls.forEach(d=>d.addEventListener('click',()=>renderExplorer(+d.dataset.index)));
+  // keyboard cycling in explorer
+  document.getElementById('view-explorer').addEventListener('keydown',e=>{
+    if(e.key==='ArrowLeft'){ e.preventDefault(); renderExplorer((exIndex-1+SUBGROUPS.length)%SUBGROUPS.length); }
+    else if(e.key==='ArrowRight'){ e.preventDefault(); renderExplorer((exIndex+1)%SUBGROUPS.length); }
+  });
+
+  /* ---------- source unlock + citation ---------- */
+  let sourceUnlocked=false;
+  function unlockSource(){ sourceUnlocked=true; citeSrc.disabled=false; citeSrcLabel.textContent='Source'; }
+  const citeModal=document.getElementById('citeModal');
+  let citeLastFocus=null;
+  function openCite(){ if(!sourceUnlocked) return; citeLastFocus=document.activeElement; citeModal.hidden=false; citeModal.classList.add('is-open'); setTimeout(()=>document.getElementById('citeDismiss').focus(),30); }
+  function closeCite(){ citeModal.classList.remove('is-open'); citeModal.hidden=true; if(citeLastFocus&&citeLastFocus.focus){ try{ citeLastFocus.focus(); }catch(e){} } }
+  citeSrc.addEventListener('click',openCite);
+  document.getElementById('citeDismiss').addEventListener('click',closeCite);
+  citeModal.addEventListener('click',e=>{ if(e.target===citeModal) closeCite(); });
+
+  /* ---------- D16/D22 interstitial ---------- */
+  const inter=document.getElementById('inter');
+  const iDest=document.getElementById('interDest'), iOrg=document.getElementById('interOrg'), iUrl=document.getElementById('interUrl');
+  const iStatus=document.getElementById('interStatus'), iDots=inter.querySelector('.prep');
+  const iOpen=document.getElementById('interOpen'), iCopy=document.getElementById('interCopy'), iStay=document.getElementById('interStay');
+  let pendingURL=null, interTrigger=null, launchTimer=null;
+  function orgFromHost(h){ return ({'doi.org':'Publisher (resolved via doi.org)'})[h]||h; }
+  function openInter(url,ref,trigger){
+    pendingURL=url; interTrigger=trigger; let host=url; try{ host=new URL(url).hostname; }catch(e){}
+    iDest.textContent=ref; iOrg.textContent=orgFromHost(host); iUrl.textContent=url;
+    if(iDots) iDots.style.display=''; iStatus.textContent='Preparing the link…'; iOpen.disabled=true;
+    inter.hidden=false; inter.classList.add('is-open'); iStay.focus();
+    if(launchTimer) clearTimeout(launchTimer);
+    launchTimer=setTimeout(()=>{ if(iDots) iDots.style.display='none'; iStatus.textContent='Ready to open.'; iOpen.disabled=false; iOpen.focus(); }, reduceMotion?250:1300);
+  }
+  function closeInter(){ if(launchTimer) clearTimeout(launchTimer); inter.classList.remove('is-open'); inter.hidden=true; if(interTrigger&&interTrigger.focus){ try{ interTrigger.focus(); }catch(e){} } }
+  document.getElementById('citeView').addEventListener('click',function(){ openInter(this.dataset.url,this.dataset.ref,this); });
+  iOpen.addEventListener('click',()=>{ if(!pendingURL) return; window.open(pendingURL,'_blank','noopener,noreferrer'); iStatus.textContent='Link opened in a new tab. Nothing opened? Copy the link and open it manually.'; });
+  iCopy.addEventListener('click',()=>{ if(!pendingURL) return; const ta=document.createElement('textarea'); ta.value=pendingURL; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select(); let ok=false; try{ ok=document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); iStatus.textContent=ok?'Link copied. Paste it into a fresh browser tab.':'Copying is unavailable. Select and copy the visible URL manually.'; });
+  iStay.addEventListener('click',closeInter);
+  inter.addEventListener('click',e=>{ if(e.target===inter) closeInter(); });
+
+  /* ---------- keyboard: interstitial > citation modal > back ---------- */
+  function trap(e,container){ const f=container.querySelectorAll('a[href],button:not([disabled])'); if(!f.length) return; const first=f[0],last=f[f.length-1]; if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); } else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); } }
+  document.addEventListener('keydown',e=>{
+    if(inter.classList.contains('is-open')){ if(e.key==='Escape'){ e.preventDefault(); closeInter(); return; } if(e.key==='Tab'){ trap(e,inter); } return; }
+    if(citeModal.classList.contains('is-open')){ if(e.key==='Escape'){ e.preventDefault(); closeCite(); return; } if(e.key==='Tab'){ trap(e,citeModal); } return; }
+    if(e.key==='Escape' && frame.dataset.view!=='hub'){ e.preventDefault(); backToHub(); }
+  },true);
+
+})();
+</script>
+</body>
+</html>
