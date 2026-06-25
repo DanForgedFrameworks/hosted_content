@@ -229,25 +229,48 @@ body.is-embedded-mobile .mlaunch{
 .mlaunch__btn svg{ width:56px; height:56px; }
 .mlaunch__note{ margin:0; max-width:1040px; font-size:27px; line-height:1.4; opacity:.85; }
 
-/* PROTOTYPE — "Return to course" bar (shown only in the opened full-screen view) */
+/* PROTOTYPE — mobile: background animation off by default, hide its chip */
+body.is-mobile .bg-toggle{ display:none; }
+
+/* PROTOTYPE — "Return to course" control (full-screen view only): a minimal
+   corner bracket on steps 1-3, expanding to a labelled pill on the final step. */
 .returnbar{ display:none; }
 body.is-fullscreen .returnbar{
-  display:inline-flex; align-items:center; gap:8px; min-height:44px;
-  position:fixed; top:10px; left:10px; z-index:60;
-  padding:11px 18px; border-radius:999px;
-  background:var(--navy); color:#fff; font:inherit; font-weight:700; font-size:15px;
-  text-decoration:none; box-shadow:0 6px 18px rgba(16,26,38,.28);
+  display:inline-flex; align-items:center; justify-content:center; gap:0;
+  position:fixed; top:10px; left:10px; z-index:60; box-sizing:border-box;
+  width:44px; height:44px; padding:0; overflow:hidden;
+  border-radius:13px; background:rgba(34,47,85,.92); color:#fff;
+  text-decoration:none; box-shadow:0 6px 16px rgba(16,26,38,.26);
+  transition:width .28s cubic-bezier(.4,0,.2,1), padding .28s cubic-bezier(.4,0,.2,1), gap .28s ease, border-radius .28s ease;
 }
-body.is-fullscreen .returnbar svg{ width:18px; height:18px; }
+body.is-fullscreen .returnbar__ic{ flex:0 0 auto; width:22px; height:22px; display:grid; place-items:center; }
+body.is-fullscreen .returnbar__ic svg{ width:22px; height:22px; }
+body.is-fullscreen .returnbar__lab{
+  font:inherit; font-weight:700; font-size:15px; white-space:nowrap;
+  max-width:0; opacity:0; transition:max-width .28s ease, opacity .2s ease;
+}
 body.is-fullscreen .returnbar:focus-visible{ outline:3px solid var(--teal); outline-offset:3px; }
+/* expanded on the final step */
+body.is-fullscreen.is-laststep .returnbar{ width:auto; gap:9px; padding:0 18px 0 13px; border-radius:999px; }
+body.is-fullscreen.is-laststep .returnbar__lab{ max-width:220px; opacity:1; }
+
+/* helper note under the Step-4 controls (full-screen final step only) */
+.returnhint{ display:none; }
+body.is-fullscreen.is-laststep .returnhint{
+  display:block; flex:0 0 auto; margin:0; padding:10px clamp(16px,3vw,30px) 4px;
+  font-size:13px; line-height:1.42; color:var(--muted); text-align:center;
+}
+body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-weight:700; }
 </style>
 </head>
 <body>
 
 <!-- PROTOTYPE: return-to-course bar (shown only in the opened full-screen view) -->
 <a class="returnbar" id="returnBar" href="#" aria-label="Return to the course">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
-  Return to course
+  <span class="returnbar__ic" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 5 4 10 9 15"/><path d="M4 10 H15 a5 5 0 0 1 5 5 V19"/></svg>
+  </span>
+  <span class="returnbar__lab">Return to course</span>
 </a>
 
 <!-- PROTOTYPE: embedded-mobile launch card (shown only when iframed on a phone, e.g. inside Visme) -->
@@ -350,6 +373,9 @@ body.is-fullscreen .returnbar:focus-visible{ outline:3px solid var(--teal); outl
     </button>
   </div>
 
+  <!-- PROTOTYPE: full-screen final-step return hint -->
+  <p class="returnhint">Once you have completed your reflection and saved your summary, you can return to the course using the <b>Return to course</b> button at the top.</p>
+
   <p class="sr-only" id="live" aria-live="polite" aria-atomic="true"></p>
 </main>
 
@@ -393,6 +419,9 @@ body.is-fullscreen .returnbar:focus-visible{ outline:3px solid var(--teal); outl
     });
   }
 
+  if(isMobile){
+    document.body.classList.add('is-mobile');        // background animation off by default, hide its chip
+  }
   if(inIframe && isMobile && !fullscreen){
     document.body.classList.add('is-embedded-mobile');
   }
@@ -583,6 +612,7 @@ body.is-fullscreen .returnbar:focus-visible{ outline:3px solid var(--teal); outl
     });
     stepLabel.textContent='Step '+n+' of '+TOTAL;
     backBtn.disabled=(n===1);
+    document.body.classList.toggle('is-laststep', n===TOTAL);   // expand the return control + show the hint on the final step
     if(n===TOTAL){
       nextBtn.style.display='none'; exportBtn.style.display='';
       buildPreview();
@@ -617,7 +647,7 @@ body.is-fullscreen .returnbar:focus-visible{ outline:3px solid var(--teal); outl
     bgBtn.setAttribute('aria-label','Background animation '+(off?'off':'on'));
     bgIc.innerHTML=off?IC_OFF:IC_ON;
   }
-  setBg(reduceMotion);
+  setBg(reduceMotion || document.body.classList.contains('is-mobile'));
   bgBtn.addEventListener('click',function(){ setBg(!document.body.classList.contains('bg-off')); });
 
   // initial paint
