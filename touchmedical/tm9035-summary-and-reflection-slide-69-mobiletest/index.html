@@ -172,6 +172,7 @@ body.bg-off .bg-toggle .bg-ic{ color:var(--faint); }
   .rail__lab{ display:none; }
   .crow{ grid-template-columns:1fr; gap:8px; }
   .chips{ flex-wrap:wrap; }
+  body.is-fullscreen{ padding-top:56px; }   /* clear the fixed Return-to-course bar */
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
@@ -227,9 +228,27 @@ body.is-embedded-mobile .mlaunch{
   box-shadow:0 18px 54px rgba(16,26,38,.38); }
 .mlaunch__btn svg{ width:56px; height:56px; }
 .mlaunch__note{ margin:0; max-width:1040px; font-size:27px; line-height:1.4; opacity:.85; }
+
+/* PROTOTYPE — "Return to course" bar (shown only in the opened full-screen view) */
+.returnbar{ display:none; }
+body.is-fullscreen .returnbar{
+  display:inline-flex; align-items:center; gap:8px; min-height:44px;
+  position:fixed; top:10px; left:10px; z-index:60;
+  padding:11px 18px; border-radius:999px;
+  background:var(--navy); color:#fff; font:inherit; font-weight:700; font-size:15px;
+  text-decoration:none; box-shadow:0 6px 18px rgba(16,26,38,.28);
+}
+body.is-fullscreen .returnbar svg{ width:18px; height:18px; }
+body.is-fullscreen .returnbar:focus-visible{ outline:3px solid var(--teal); outline-offset:3px; }
 </style>
 </head>
 <body>
+
+<!-- PROTOTYPE: return-to-course bar (shown only in the opened full-screen view) -->
+<a class="returnbar" id="returnBar" href="#" aria-label="Return to the course">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+  Return to course
+</a>
 
 <!-- PROTOTYPE: embedded-mobile launch card (shown only when iframed on a phone, e.g. inside Visme) -->
 <div class="mlaunch" role="group" aria-label="Open the activity full screen">
@@ -345,21 +364,40 @@ body.is-embedded-mobile .mlaunch{
   var inIframe = true; try { inIframe = (window.self !== window.top); } catch(e){ inIframe = true; }
   var isMobile = /Android|iPhone|iPad|iPod|Mobile|Silk/i.test(navigator.userAgent);
   var btn = document.getElementById('mlaunchBtn');
-  var target = location.href.split('#')[0].split('?')[0] + '?fullscreen=1';
+  var base = location.href.split('#')[0].split('?')[0];
+  var courseUrl = ''; try { courseUrl = document.referrer || ''; } catch(e){ courseUrl = ''; }   // the Visme page that framed us
+  var target = base + '?fullscreen=1' + (courseUrl ? '&return=' + encodeURIComponent(courseUrl) : '');
   if(btn){
     btn.href = target;
     btn.addEventListener('click', function(e){
       e.preventDefault();
       var w = null;
-      try { w = window.open(target, '_blank', 'noopener'); } catch(err){ w = null; }
+      try { w = window.open(target, '_blank'); } catch(err){ w = null; }   // no 'noopener' so the tab can self-close on return
       if(!w){                                                          // popup blocked by the iframe sandbox
         try { window.top.location.href = target; }                    // take over the Visme tab full screen
         catch(err2){ window.location.href = target; }                 // last resort: navigate self
       }
     });
   }
+
+  // return-to-course (only meaningful on the opened full-screen page)
+  var rb = document.getElementById('returnBar');
+  var returnUrl = (function(){ try { return new URLSearchParams(location.search).get('return'); } catch(e){ return null; } })();
+  if(rb){
+    if(returnUrl){ rb.href = returnUrl; }
+    rb.addEventListener('click', function(e){
+      e.preventDefault();
+      try { if(window.opener && !window.opener.closed){ window.close(); return; } } catch(err){}  // new-tab case: close, revealing the course tab
+      if(window.history.length > 1){ window.history.back(); return; }                              // took-over-tab case: step back
+      if(returnUrl){ window.location.href = returnUrl; }                                           // last resort: navigate to the course
+    });
+  }
+
   if(inIframe && isMobile && !fullscreen){
     document.body.classList.add('is-embedded-mobile');
+  }
+  if(fullscreen){
+    document.body.classList.add('is-fullscreen');   // reveal the Return-to-course bar
   }
 })();
 </script>
