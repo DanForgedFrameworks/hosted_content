@@ -12,11 +12,17 @@
      1 Summary        — five VISION summary points (verbatim)
      2 Where you stand — confidence self-rating across the 7 topic areas
      3 Your reflection — three consolidated CPD prompts
-     4 CPD record      — review + export to PDF (browser print route)
+     4 CPD record      — review + in-frame export (download + copy; sandbox-safe)
    Reflection capture is plain textareas (editable throughout, no storage).
-   Export builds a print surface and calls window.print() on a learner action.
-   Decorative drifting backdrop is state-independent (motion toggle + RM safe);
+   Export is IN-FRAME (contract §0.5): a record modal with a best-effort file
+   download (Blob) + copy-to-clipboard fallback — never window.print()/open(),
+   which the Visme embed sandbox silently blocks.
+   Decorative drifting backdrop is state-independent (bg toggle + RM safe);
    no content is ever gated behind animation.
+   Mobile/Visme (contract §0.7/§4.2): iframed on a phone, show a launch card that
+   opens the activity standalone full-screen (the in-iframe 760px breakpoint can't
+   fire inside Visme's scaled fixed canvas); Return-to-course control in that view.
+   Desktop embed + direct-desktop load unchanged (all gated on is-* classes).
    Self-contained. No external runtime dependencies.
    Brand: Poppins (bundled), teal #0098be, navy #222f55.
    ============================================================ */
@@ -172,6 +178,7 @@ body.bg-off .bg-toggle .bg-ic{ color:var(--faint); }
   .rail__lab{ display:none; }
   .crow{ grid-template-columns:1fr; gap:8px; }
   .chips{ flex-wrap:wrap; }
+  body.is-fullscreen{ padding-top:56px; }   /* clear the fixed Return-to-course bar */
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
@@ -179,26 +186,107 @@ body.bg-off .bg-toggle .bg-ic{ color:var(--faint); }
   .scard{ opacity:1; transform:none; }
 }
 
-/* ---------- print surface (PDF export route) ---------- */
-#printSurface{ display:none; }
-@media print{
-  html,body{ height:auto; background:#fff; overflow:visible; }
-  .bg,.frame,.motion-toggle{ display:none !important; }
-  #printSurface{ display:block; color:#111; font-family:var(--font); }
-  @page{ margin:16mm; }
-  .p-h1{ font-size:20px; font-weight:700; color:#222f55; margin:0 0 2px; }
-  .p-meta{ font-size:11px; color:#56608a; margin:0 0 14px; }
-  .p-h2{ font-size:13px; font-weight:700; color:#007a98; text-transform:uppercase; letter-spacing:.06em; margin:16px 0 6px; border-bottom:1px solid #e3e8ee; padding-bottom:3px; }
-  .p-row{ font-size:12px; color:#222f55; margin:0 0 4px; }
-  .p-row .v{ font-weight:700; }
-  .p-q{ font-size:12px; font-weight:700; color:#222f55; margin:10px 0 2px; }
-  .p-a{ font-size:12px; color:#333; margin:0; white-space:pre-wrap; line-height:1.4; }
-  .p-a.empty{ font-style:italic; color:#8a91b0; }
-  .p-foot{ font-size:10px; color:#8a91b0; margin-top:18px; border-top:1px solid #e3e8ee; padding-top:6px; line-height:1.4; }
+/* ---------- export modal (in-frame; sandbox-safe download + copy) ---------- */
+.xmodal{ position:fixed; inset:0; z-index:40; display:none; align-items:center; justify-content:center; padding:clamp(12px,4vw,40px); background:var(--backdrop); }
+.xmodal.is-open{ display:flex; }
+.xcard{ width:min(560px,100%); max-height:calc(100% - 24px); overflow:auto; background:#fff; border-radius:16px; box-shadow:0 24px 60px rgba(16,26,38,.4); padding:clamp(18px,3vw,26px); animation:rise .22s ease both; }
+.xcard__check{ width:38px; height:38px; border-radius:50%; background:var(--teal); color:#fff; display:grid; place-items:center; margin-bottom:12px; }
+.xcard__check svg{ width:20px; height:20px; }
+.xcard__eyebrow{ margin:0 0 4px; font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--teal-strong); }
+.xcard__title{ margin:0 0 8px; font-size:clamp(1.05rem,2vw,1.25rem); font-weight:700; color:var(--navy); }
+.xcard__body{ margin:0; font-size:.9rem; line-height:1.5; color:var(--muted); }
+.xcard__body strong{ color:var(--navy); font-weight:700; }
+.xcard__actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+.xcard__status{ margin:12px 0 0; min-height:20px; font-size:.82rem; font-weight:600; color:var(--teal-strong); }
+.xcard__status.warn{ color:var(--amber); }
+@keyframes rise{ from{ opacity:0; transform:translateY(10px) scale(.99); } to{ opacity:1; transform:none; } }
+
+/* ============================================================
+   MOBILE/VISME — embedded-mobile launch card (approved 2026-06-25)
+   Visme scales this whole fixed canvas down (~0.3 on a phone), and the iframe
+   never receives a real phone width, so the in-asset 760px breakpoint cannot
+   fire inside Visme. When this asset is iframed on a phone we therefore hide
+   the (unusable, shrunk) activity and show ONE big, high-contrast card that
+   opens the activity full-screen, where the real responsive layout applies.
+   Everything below is deliberately oversized so it survives the ~0.3 scale.
+   Desktop and direct-standalone views are unaffected (all gated on is-* classes).
+   ============================================================ */
+.mlaunch{ display:none; }
+body.is-embedded-mobile .bg,
+body.is-embedded-mobile .frame{ display:none !important; }
+body.is-embedded-mobile{ display:block; }
+body.is-embedded-mobile .mlaunch{
+  display:flex; position:fixed; inset:0; z-index:50;
+  flex-direction:column; align-items:center; justify-content:center; text-align:center;
+  gap:42px; padding:90px 70px;
+  background:linear-gradient(135deg,#0098be 0%, #007a98 55%, #222f55 100%); color:#fff;
 }
+.mlaunch__badge{ font-size:30px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; opacity:.9; }
+.mlaunch__title{ margin:0; font-size:64px; font-weight:700; line-height:1.08; }
+.mlaunch__title em{ font-style:italic; }
+.mlaunch__lead{ margin:0; max-width:1040px; font-size:36px; font-weight:500; line-height:1.4; opacity:.96; }
+.mlaunch__btn{ display:inline-flex; align-items:center; gap:26px; margin-top:6px;
+  padding:48px 92px; border-radius:999px; background:#fff; color:#007a98;
+  font:inherit; font-weight:700; font-size:48px; text-decoration:none;
+  box-shadow:0 18px 54px rgba(16,26,38,.38); }
+.mlaunch__btn svg{ width:56px; height:56px; }
+.mlaunch__note{ margin:0; max-width:1040px; font-size:27px; line-height:1.4; opacity:.85; }
+
+/* MOBILE/VISME — mobile: background animation off by default, hide its chip */
+body.is-mobile .bg-toggle{ display:none; }
+
+/* MOBILE/VISME — "Return to course" control (full-screen view only): a minimal
+   corner bracket on steps 1-3, expanding to a labelled pill on the final step. */
+.returnbar{ display:none; }
+body.is-fullscreen .returnbar{
+  display:inline-flex; align-items:center; justify-content:center; gap:0;
+  position:fixed; top:10px; left:10px; z-index:60; box-sizing:border-box;
+  width:44px; height:44px; padding:0; overflow:hidden;
+  border-radius:13px; background:rgba(34,47,85,.92); color:#fff;
+  text-decoration:none; box-shadow:0 6px 16px rgba(16,26,38,.26);
+  transition:width .28s cubic-bezier(.4,0,.2,1), padding .28s cubic-bezier(.4,0,.2,1), gap .28s ease, border-radius .28s ease;
+}
+body.is-fullscreen .returnbar__ic{ flex:0 0 auto; width:22px; height:22px; display:grid; place-items:center; }
+body.is-fullscreen .returnbar__ic svg{ width:22px; height:22px; }
+body.is-fullscreen .returnbar__lab{
+  font:inherit; font-weight:700; font-size:15px; white-space:nowrap;
+  max-width:0; opacity:0; transition:max-width .28s ease, opacity .2s ease;
+}
+body.is-fullscreen .returnbar:focus-visible{ outline:3px solid var(--teal); outline-offset:3px; }
+/* expanded on the final step */
+body.is-fullscreen.is-laststep .returnbar{ width:auto; gap:9px; padding:0 18px 0 13px; border-radius:999px; }
+body.is-fullscreen.is-laststep .returnbar__lab{ max-width:220px; opacity:1; }
+
+/* helper note under the Step-4 controls (full-screen final step only) */
+.returnhint{ display:none; }
+body.is-fullscreen.is-laststep .returnhint{
+  display:block; flex:0 0 auto; margin:0; padding:10px clamp(16px,3vw,30px) 4px;
+  font-size:13px; line-height:1.42; color:var(--muted); text-align:center;
+}
+body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-weight:700; }
 </style>
 </head>
 <body>
+
+<!-- MOBILE/VISME: return-to-course bar (shown only in the opened full-screen view) -->
+<a class="returnbar" id="returnBar" href="#" aria-label="Return to the course">
+  <span class="returnbar__ic" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 5 4 10 9 15"/><path d="M4 10 H15 a5 5 0 0 1 5 5 V19"/></svg>
+  </span>
+  <span class="returnbar__lab">Return to course</span>
+</a>
+
+<!-- MOBILE/VISME: embedded-mobile launch card (shown only when iframed on a phone, e.g. inside Visme) -->
+<div class="mlaunch" role="group" aria-label="Open the activity full screen">
+  <span class="mlaunch__badge">Touch Oncology &middot; CPD activity</span>
+  <h1 class="mlaunch__title">Summary &amp; reflection</h1>
+  <p class="mlaunch__lead">This interactive activity is best viewed full screen on your phone. Tap below to open it.</p>
+  <a class="mlaunch__btn" id="mlaunchBtn" href="#" target="_blank" rel="noopener">
+    Open the activity
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><polyline points="13 6 19 12 13 18"/></svg>
+  </a>
+  <p class="mlaunch__note">On a computer, the activity appears here directly.</p>
+</div>
 
 <!-- decorative drifting backdrop -->
 <div class="bg" aria-hidden="true">
@@ -240,7 +328,7 @@ body.bg-off .bg-toggle .bg-ic{ color:var(--faint); }
 
     <!-- STEP 2 — CONFIDENCE MAP -->
     <section class="step" data-step="2" aria-label="Where you stand" hidden>
-      <p class="step__lead">Across the seven areas of this module, how confident do you feel right now? <b>There are no wrong answers</b> &mdash; this just flags what to revisit.</p>
+      <p class="step__lead">Across the six areas of this module, how confident do you feel right now? <b>There are no wrong answers</b> &mdash; this just flags what to revisit.</p>
       <div class="cmap" id="cmap"></div>
     </section>
 
@@ -265,7 +353,7 @@ body.bg-off .bg-toggle .bg-ic{ color:var(--faint); }
 
     <!-- STEP 4 — CPD RECORD -->
     <section class="step" data-step="4" aria-label="CPD record" hidden>
-      <p class="step__lead">Here is your record. <b>Create a PDF</b> to save or print it for your CPD log &mdash; or step back to refine anything.</p>
+      <p class="step__lead">Here is your record. <b>Create your CPD record</b> to download or copy it for your CPD log &mdash; or step back to refine anything.</p>
       <div class="cpd">
         <div class="cpd__scroll" id="cpdScroll" tabindex="0" aria-label="CPD record preview"></div>
         <p class="cpd__note">This is a personal reflective record, not clinical guidance. Figures relate to the 313 patients with <em>MET</em>ex14 skipping NSCLC in the Phase&nbsp;2 VISION trial.</p>
@@ -284,15 +372,84 @@ body.bg-off .bg-toggle .bg-ic{ color:var(--faint); }
       Next<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
     </button>
     <button class="btn" id="exportBtn" type="button" style="display:none">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><polyline points="8 11 12 15 16 11"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Create my CPD record (PDF)
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><polyline points="8 11 12 15 16 11"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Create my CPD record
     </button>
   </div>
+
+  <!-- MOBILE/VISME: full-screen final-step return hint -->
+  <p class="returnhint">Once you have completed your reflection and saved your summary, you can return to the course using the <b>Return to course</b> button at the top.</p>
 
   <p class="sr-only" id="live" aria-live="polite" aria-atomic="true"></p>
 </main>
 
-<!-- print surface (built on export, visible only to the print stylesheet) -->
-<div id="printSurface" aria-hidden="true"></div>
+<!-- in-frame export modal: download (best-effort) + copy (always works) -->
+<div class="xmodal" id="exportModal" role="dialog" aria-modal="true" aria-labelledby="xTitle" hidden>
+  <div class="xcard" role="document">
+    <span class="xcard__check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+    <p class="xcard__eyebrow">CPD record</p>
+    <h2 class="xcard__title" id="xTitle">Your CPD record is ready</h2>
+    <p class="xcard__body"><strong>Download</strong> keeps a copy as a file you can open and save as a PDF. <strong>Copy to clipboard</strong> puts the full record on your clipboard to paste into Word or your CPD system &mdash; use this if the download is blocked where this is embedded.</p>
+    <div class="xcard__actions">
+      <button class="btn" id="dlBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><polyline points="8 11 12 15 16 11"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Download record
+      </button>
+      <button class="btn secondary" id="cpBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Copy to clipboard
+      </button>
+      <button class="btn secondary" id="xClose" type="button">Close</button>
+    </div>
+    <p class="xcard__status" id="xStatus" aria-live="polite"></p>
+  </div>
+</div>
+
+<!-- MOBILE/VISME: decide whether to show the embedded-mobile launch card -->
+<script>
+(function(){
+  "use strict";
+  var fullscreen = /[?&]fullscreen=1/.test(location.search);          // opened standalone from the card
+  var inIframe = true; try { inIframe = (window.self !== window.top); } catch(e){ inIframe = true; }
+  var isMobile = /Android|iPhone|iPad|iPod|Mobile|Silk/i.test(navigator.userAgent);
+  var btn = document.getElementById('mlaunchBtn');
+  var base = location.href.split('#')[0].split('?')[0];
+  var courseUrl = ''; try { courseUrl = document.referrer || ''; } catch(e){ courseUrl = ''; }   // the Visme page that framed us
+  var target = base + '?fullscreen=1' + (courseUrl ? '&return=' + encodeURIComponent(courseUrl) : '');
+  if(btn){
+    btn.href = target;
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      var w = null;
+      try { w = window.open(target, '_blank'); } catch(err){ w = null; }   // no 'noopener' so the tab can self-close on return
+      if(!w){                                                          // popup blocked by the iframe sandbox
+        try { window.top.location.href = target; }                    // take over the Visme tab full screen
+        catch(err2){ window.location.href = target; }                 // last resort: navigate self
+      }
+    });
+  }
+
+  // return-to-course (only meaningful on the opened full-screen page)
+  var rb = document.getElementById('returnBar');
+  var returnUrl = (function(){ try { return new URLSearchParams(location.search).get('return'); } catch(e){ return null; } })();
+  if(rb){
+    if(returnUrl){ rb.href = returnUrl; }
+    rb.addEventListener('click', function(e){
+      e.preventDefault();
+      try { if(window.opener && !window.opener.closed){ window.close(); return; } } catch(err){}  // new-tab case: close, revealing the course tab
+      if(window.history.length > 1){ window.history.back(); return; }                              // took-over-tab case: step back
+      if(returnUrl){ window.location.href = returnUrl; }                                           // last resort: navigate to the course
+    });
+  }
+
+  if(isMobile){
+    document.body.classList.add('is-mobile');        // background animation off by default, hide its chip
+  }
+  if(inIframe && isMobile && !fullscreen){
+    document.body.classList.add('is-embedded-mobile');
+  }
+  if(fullscreen){
+    document.body.classList.add('is-fullscreen');   // reveal the Return-to-course bar
+  }
+})();
+</script>
 
 <script>
 (function(){
@@ -310,15 +467,17 @@ body.bg-off .bg-toggle .bg-ic{ color:var(--faint); }
     { eyebrow:'Asian patients', html:'In Asian patients, tepotinib demonstrated robust and durable long-term efficacy, particularly as a first-line treatment, consistent with outcomes in the overall population.' }
   ];
 
-  // Seven Table-of-Contents areas (verbatim). plain = text for the PDF record.
+  // Six Table-of-Contents content areas (verbatim). The 7th TOC entry ("Summary")
+  // is intentionally omitted from the confidence map — it is this activity itself,
+  // so self-rating confidence on it is circular (owner steer 2026-06-25).
+  // plain = text for the exported record.
   var TOPICS = [
     { html:'<em>MET</em>ex14 skipping NSCLC and tepotinib', plain:'METex14 skipping NSCLC and tepotinib' },
     { html:'Efficacy of tepotinib in the VISION study', plain:'Efficacy of tepotinib in the VISION study' },
     { html:'Safety of tepotinib in the VISION study', plain:'Safety of tepotinib in the VISION study' },
     { html:'Tepotinib efficacy in clinically relevant subgroups of the VISION study', plain:'Tepotinib efficacy in clinically relevant subgroups of the VISION study' },
     { html:'Efficacy of tepotinib across treatment lines in the VISION study', plain:'Efficacy of tepotinib across treatment lines in the VISION study' },
-    { html:'Outcomes in Asian patients in the VISION study', plain:'Outcomes in Asian patients in the VISION study' },
-    { html:'Summary', plain:'Summary' }
+    { html:'Outcomes in Asian patients in the VISION study', plain:'Outcomes in Asian patients in the VISION study' }
   ];
 
   var CHIPS = [
@@ -423,41 +582,108 @@ body.bg-off .bg-toggle .bg-ic{ color:var(--faint); }
       return '<li><span class="q">'+esc(q)+'</span><span class="a'+(ans?'':' empty')+'">'+(ans?esc(ans):'(not yet completed)')+'</span></li>';
     }).join('');
     host.innerHTML=
-      '<div class="cpd__sec"><h3 class="cpd__h">Confidence across the seven areas</h3>'+
+      '<div class="cpd__sec"><h3 class="cpd__h">Confidence across the six areas</h3>'+
         '<div class="cpd__grid">'+tags+'</div>'+priLine+'</div>'+
       '<div class="cpd__sec"><h3 class="cpd__h">My reflection</h3><ul class="rrev">'+refl+'</ul></div>';
   }
 
-  /* ---------- print export ---------- */
-  function buildPrint(){
+  /* ---------- export: build the record (plain text + standalone HTML doc) ---------- */
+  function fileDate(){ try{ var d=new Date(); function p(n){ return (n<10?'0':'')+n; } return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }catch(e){ return ''; } }
+
+  function buildPlainText(){
+    var a=answers(); var L=[];
+    L.push('CPD REFLECTION RECORD');
+    L.push('Tepotinib in METex14 skipping NSCLC — VISION study summary');
+    L.push('Date: '+dateStr());
+    L.push('');
+    L.push('CONFIDENCE ACROSS THE SIX AREAS');
+    TOPICS.forEach(function(t,i){ L.push((i+1)+'. '+t.plain+' — '+CHIP_TEXT[ratings[i]||'none']); });
+    var pri=TOPICS.filter(function(t,i){ return ratings[i]==='flag'; }).map(function(t){ return t.plain; });
+    if(pri.length){ L.push(''); L.push('Flagged to revisit next: '+pri.join('; ')+'.'); }
+    L.push(''); L.push('MY REFLECTION');
+    PROMPTS.forEach(function(q,i){ L.push(q); L.push(a[i]||'(not completed)'); L.push(''); });
+    L.push('— This is a personal reflective CPD record, not clinical guidance. Figures relate to the 313 patients with METex14 skipping NSCLC in the Phase 2 VISION trial (Mazieres J, et al. JAMA Oncol. 2023;9(9):1260–6).');
+    return L.join('\n');
+  }
+
+  function buildHtmlDoc(){
     var a=answers();
-    var rows=TOPICS.map(function(t,i){
-      var v=ratings[i]||'none';
-      return '<p class="p-row">'+(i+1)+'. '+t.html+' &mdash; <span class="v">'+CHIP_TEXT[v]+'</span></p>';
-    }).join('');
-    var priorities=TOPICS.filter(function(t,i){ return ratings[i]==='flag'; })
-      .map(function(t){ return t.plain; });
-    var priBlock = priorities.length
-      ? '<p class="p-row" style="margin-top:6px"><span class="v">Flagged to revisit next:</span> '+priorities.map(esc).join('; ')+'.</p>'
-      : '';
-    var refl=PROMPTS.map(function(q,i){
-      var ans=a[i];
-      return '<p class="p-q">'+esc(q)+'</p><p class="p-a'+(ans?'':' empty')+'">'+(ans?esc(ans):'(not completed)')+'</p>';
-    }).join('');
-    $('printSurface').innerHTML=
-      '<h1 class="p-h1">CPD reflection record</h1>'+
-      '<p class="p-meta">Tepotinib in <em>MET</em>ex14 skipping NSCLC &mdash; VISION study summary &middot; '+esc(dateStr())+'</p>'+
-      '<h2 class="p-h2">Confidence across the seven areas</h2>'+rows+priBlock+
-      '<h2 class="p-h2">My reflection</h2>'+refl+
-      '<p class="p-foot">This is a personal reflective CPD record, not clinical guidance or an operational decision. '+
+    var rows=TOPICS.map(function(t,i){ return '<p class="row">'+(i+1)+'. '+t.html+' &mdash; <b>'+CHIP_TEXT[ratings[i]||'none']+'</b></p>'; }).join('');
+    var pri=TOPICS.filter(function(t,i){ return ratings[i]==='flag'; });
+    var priBlock=pri.length ? '<p class="row" style="margin-top:6px"><b>Flagged to revisit next:</b> '+pri.map(function(t){ return t.html; }).join('; ')+'.</p>' : '';
+    var refl=PROMPTS.map(function(q,i){ var ans=a[i]; return '<h3>'+esc(q)+'</h3><p class="ans'+(ans?'':' empty')+'">'+(ans?esc(ans):'(not completed)')+'</p>'; }).join('');
+    return '<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'+
+      '<title>CPD reflection record — VISION (tepotinib)</title><style>'+
+      'body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#222f55;max-width:720px;margin:32px auto;padding:0 22px;line-height:1.5}'+
+      'h1{font-size:22px;margin:0 0 2px}.meta{color:#56608a;font-size:13px;margin:0 0 8px}'+
+      '.hint{color:#8a91b0;font-size:12px;margin:0 0 20px}'+
+      'h2{font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:#007a98;border-bottom:1px solid #e3e8ee;padding-bottom:4px;margin:22px 0 8px}'+
+      'h3{font-size:14px;margin:14px 0 2px}.row{margin:0 0 4px;font-size:14px}.ans{margin:0;font-size:14px;color:#333;white-space:pre-wrap}.ans.empty{font-style:italic;color:#8a91b0}'+
+      '.foot{margin-top:24px;border-top:1px solid #e3e8ee;padding-top:8px;color:#8a91b0;font-size:11px}'+
+      '@media print{.hint{display:none}@page{margin:16mm}}'+
+      '</style></head><body>'+
+      '<h1>CPD reflection record</h1>'+
+      '<p class="meta">Tepotinib in <em>MET</em>ex14 skipping NSCLC &mdash; VISION study summary &middot; '+esc(dateStr())+'</p>'+
+      '<p class="hint">To save as a PDF: open your browser&rsquo;s Print (Ctrl/Cmd&nbsp;+&nbsp;P) and choose &ldquo;Save as PDF&rdquo;.</p>'+
+      '<h2>Confidence across the six areas</h2>'+rows+priBlock+
+      '<h2>My reflection</h2>'+refl+
+      '<p class="foot">This is a personal reflective CPD record, not clinical guidance or an operational decision. '+
       'Figures relate to the 313 patients with <em>MET</em>ex14 skipping NSCLC in the Phase&nbsp;2 VISION trial '+
-      '(Mazieres J, et al. JAMA Oncol. 2023;9(9):1260&ndash;6).</p>';
+      '(Mazieres J, et al. JAMA Oncol. 2023;9(9):1260&ndash;6).</p>'+
+      '</body></html>';
   }
-  function doExport(){
-    buildPrint();
-    $('live').textContent='Opening your browser print dialogue. Choose Save as PDF to keep your CPD record.';
-    setTimeout(function(){ window.print(); }, reduceMotion?0:120);
+
+  /* ---------- export: download (best-effort) + copy (always works) ---------- */
+  function downloadRecord(){
+    var status=$('xStatus'); status.classList.remove('warn');
+    try{
+      var blob=new Blob([buildHtmlDoc()],{type:'text/html'});
+      var url=URL.createObjectURL(blob);
+      var a=document.createElement('a');
+      a.href=url; a.download='CPD-reflection-VISION-tepotinib-'+fileDate()+'.html';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+      status.textContent='Download started. If nothing downloaded, use Copy to clipboard instead.';
+      $('live').textContent='CPD record download started.';
+    }catch(e){
+      status.classList.add('warn');
+      status.textContent='Download was blocked here. Use Copy to clipboard instead.';
+    }
   }
+  function copyRecord(){
+    var status=$('xStatus'); status.classList.remove('warn');
+    var text=buildPlainText();
+    function ok(){ status.textContent='Copied. Paste it into Word or your CPD system to save.'; $('live').textContent='CPD record copied to clipboard.'; }
+    function fallback(){
+      var ta=document.createElement('textarea'); ta.value=text; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.left='-9999px';
+      document.body.appendChild(ta); ta.select();
+      var done=false; try{ done=document.execCommand('copy'); }catch(e){}
+      document.body.removeChild(ta);
+      if(done){ ok(); } else { status.classList.add('warn'); status.textContent='Copy was blocked. Select the text in your record (behind this panel) and copy it manually.'; }
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(ok, fallback); }
+    else { fallback(); }
+  }
+
+  /* ---------- export modal ---------- */
+  var exportModal=$('exportModal'); var xLastFocus=null;
+  function openExport(){
+    buildPreview();
+    xLastFocus=document.activeElement;
+    $('xStatus').textContent=''; $('xStatus').classList.remove('warn');
+    exportModal.hidden=false; exportModal.classList.add('is-open');
+    setTimeout(function(){ $('dlBtn').focus(); }, 30);
+  }
+  function closeExport(){ exportModal.classList.remove('is-open'); exportModal.hidden=true; if(xLastFocus&&xLastFocus.focus){ try{ xLastFocus.focus(); }catch(e){} } }
+  $('dlBtn').addEventListener('click',downloadRecord);
+  $('cpBtn').addEventListener('click',copyRecord);
+  $('xClose').addEventListener('click',closeExport);
+  exportModal.addEventListener('click',function(e){ if(e.target===exportModal) closeExport(); });
+  document.addEventListener('keydown',function(e){
+    if(!exportModal.classList.contains('is-open')) return;
+    if(e.key==='Escape'){ e.preventDefault(); closeExport(); return; }
+    if(e.key==='Tab'){ var f=exportModal.querySelectorAll('button:not([disabled])'); if(!f.length) return; var first=f[0],last=f[f.length-1]; if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); } else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); } }
+  });
 
   /* ---------- step navigation ---------- */
   var current=1, TOTAL=4;
@@ -475,6 +701,7 @@ body.bg-off .bg-toggle .bg-ic{ color:var(--faint); }
     });
     stepLabel.textContent='Step '+n+' of '+TOTAL;
     backBtn.disabled=(n===1);
+    document.body.classList.toggle('is-laststep', n===TOTAL);   // expand the return control + show the hint on the final step
     if(n===TOTAL){
       nextBtn.style.display='none'; exportBtn.style.display='';
       buildPreview();
@@ -491,7 +718,7 @@ body.bg-off .bg-toggle .bg-ic{ color:var(--faint); }
   }
   nextBtn.addEventListener('click',function(){ if(current<TOTAL) show(current+1,'right'); });
   backBtn.addEventListener('click',function(){ if(current>1) show(current-1,'left'); });
-  exportBtn.addEventListener('click',doExport);
+  exportBtn.addEventListener('click',openExport);
   // allow jumping back via the rail (only to visited/earlier steps)
   railSteps.forEach(function(r){
     r.style.cursor='pointer';
@@ -509,7 +736,7 @@ body.bg-off .bg-toggle .bg-ic{ color:var(--faint); }
     bgBtn.setAttribute('aria-label','Background animation '+(off?'off':'on'));
     bgIc.innerHTML=off?IC_OFF:IC_ON;
   }
-  setBg(reduceMotion);
+  setBg(reduceMotion || document.body.classList.contains('is-mobile'));   // background animation off by default on mobile
   bgBtn.addEventListener('click',function(){ setBg(!document.body.classList.contains('bg-off')); });
 
   // initial paint
