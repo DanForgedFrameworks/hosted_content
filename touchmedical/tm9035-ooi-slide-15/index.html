@@ -9,6 +9,8 @@
     @font-face { font-family: "Poppins"; src: url("assets/poppins-600.ttf") format("truetype"); font-weight: 600; font-style: normal; font-display: swap; }
     @font-face { font-family: "Poppins"; src: url("assets/poppins-700.ttf") format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
     :root { --teal: #0098be; --navy: #222f55; --pale: #d9eff8; --mist: #f8f8f8; --neutral: #c6d3e2; --pink: #e2abb5; --green: #90cbae; --good: #287d5c; --bad: #b64457;
+      /* Green "Consider" question box — house OOI standard */
+      --consider:#56b78f; --consider-strong:#1c7a58; --consider-pale:#e9f6f0;
       /* Functional title (§0.2). --title-shadow is the single rollout knob. */
       --title-shadow: 0 2px 4px rgba(34,47,85,0.22); }
     * { box-sizing: border-box; }
@@ -17,12 +19,13 @@
 
     /* Height-first frame: chrome (question) fixed, body scales to fill the rest */
     .slide { height: 100%; width: 100%; margin: 0; display: flex; flex-direction: column; overflow: hidden; background: var(--teal); }
-    .question-band { flex: 0 0 auto; padding: clamp(10px, 1.5vw, 16px) clamp(14px, 3vw, 28px) clamp(6px, 1vw, 10px); display: flex; justify-content: center; }
-    .question { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 12px; align-items: center; width: min(100%, 940px); padding: 8px 16px; border: 3px solid #fff; border-radius: 18px; background: rgba(255,255,255,0.12); color: #fff; }
-    .question-icon { width: 48px; height: 48px; display: grid; place-items: center; border: 3px solid #fff; border-radius: 50%; font-size: 1.9rem; font-weight: 600; line-height: 1; }
-    .question p { margin: 0; font-size: clamp(1rem, 1.85vw, 1.3rem); line-height: 1.2; font-weight: 700; text-align: center; color: #fff; }
+    .question-band { flex: 0 0 auto; padding: 0 clamp(14px, 3vw, 28px); display: flex; justify-content: center; }
+    .question { display: grid; grid-template-columns: 54px minmax(0, 1fr); gap: 14px; align-items: center; width: min(100%, 980px); padding: 14px 26px; border: 3px solid var(--consider); border-radius: 18px; background: var(--consider-pale); color: var(--consider-strong); }
+    .question-icon { width: 54px; height: 54px; display: grid; place-items: center; border: 3px solid var(--consider); border-radius: 50%; font-size: 2.1rem; font-weight: 600; line-height: 1; }
+    .question .lead { font-weight: 700; }
+    .question p { margin: 0; font-size: clamp(1.05rem, 1.9vw, 1.45rem); line-height: 1.25; font-weight: 700; text-align: center; }
 
-    .stage { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: center; padding: clamp(10px, 1.8vw, 22px) clamp(14px, 2.5vw, 30px); }
+    .stage { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: clamp(14px, 2.4vw, 28px); padding: clamp(10px, 1.8vw, 22px) clamp(14px, 2.5vw, 30px); }
 
     /* Answers — neutral cards until answered (no answer pre-revealed) */
     .answers { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(12px, 1.9vw, 22px); align-items: stretch; }
@@ -131,11 +134,11 @@
 <body>
   <main class="slide" id="slide" aria-label="Long-term ORR VISION study knowledge check">
     <header class="title-band"><h1 class="title">Long-term ORR (VISION study)</h1></header>
-    <section class="question-band" aria-labelledby="question-text">
-      <div class="question"><span class="question-icon" aria-hidden="true">?</span><p id="question-text">After &#8805;3 years of follow-up, what was the ORR in treatment-na&iuml;ve and in previously treated patients with <em>MET</em>ex14 skipping NSCLC?</p></div>
-    </section>
 
     <div class="stage">
+      <section class="question-band" aria-labelledby="question-text">
+        <div class="question"><span class="question-icon" aria-hidden="true">?</span><p id="question-text"><span class="lead">Consider:</span> After &#8805;3 years of follow-up, what was the ORR in treatment-na&iuml;ve and in previously treated patients with <em>MET</em>ex14 skipping NSCLC?</p></div>
+      </section>
       <section class="answers-wrap" aria-label="Answer options">
         <div class="answers" role="group" aria-describedby="selection-status">
           <button class="answer" type="button" data-correct="true">Treatment-na&iuml;ve patients had a higher ORR than previously treated patients</button>
