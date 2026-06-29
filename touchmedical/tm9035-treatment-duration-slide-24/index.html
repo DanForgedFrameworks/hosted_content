@@ -67,7 +67,10 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 
 /* horseshoe gauge */
 .hs{ display:flex; flex-direction:column; align-items:center; gap:clamp(1px,0.5vh,4px); outline:none; cursor:default; min-height:0; max-height:100%; }
-.hs__ring{ position:relative; flex:0 0 auto; width:clamp(96px,13vh,134px); aspect-ratio:1; transition:transform .2s ease; }
+.hs__ring{ position:relative; flex:0 0 auto; width:clamp(128px,20vh,190px); aspect-ratio:1; transition:transform .2s ease; }
+/* observed-range endpoints at the open ends (tips) of the horseshoe */
+.hs__min,.hs__max{ position:absolute; top:92%; transform:translate(-50%,-50%); font-size:clamp(.62rem,1.05vw,.76rem); font-weight:700; color:var(--muted); font-variant-numeric:tabular-nums; white-space:nowrap; pointer-events:none; }
+.hs__min{ left:14%; } .hs__max{ left:86%; }
 .hs:hover .hs__ring,.hs:focus-visible .hs__ring{ transform:translateY(-3px); }
 .hs:focus-visible .hs__ring{ filter:drop-shadow(0 0 0 3px var(--navy)); }
 .hs__ring svg{ width:100%; height:100%; display:block; overflow:visible; }
@@ -402,9 +405,9 @@ body.is-fullscreen{ padding-top:56px; }
           '<circle cx="'+mk[0].toFixed(2)+'" cy="'+mk[1].toFixed(2)+'" r="5.4" fill="#fff" stroke="var(--navy)" stroke-width="3.1"/>'+
         '</svg>'+
         '<div class="hs__center"><div class="hs__big">'+med1+'</div><div class="hs__unit">months</div><div class="hs__sub">median</div></div>'+
-      '</div>'+
-      '<div class="hs__lab"><span class="hs__sw" style="background:'+m.c+'"></span>'+esc(m.lab)+'</div>'+
-      '<div class="hs__range">range '+min2+'&ndash;'+max2+' months</div>';
+        '<div class="hs__min" aria-hidden="true">'+min2+'</div>'+
+        '<div class="hs__max" aria-hidden="true">'+max2+'</div>'+
+      '</div>';
     heroEl.appendChild(el);
   });
 
