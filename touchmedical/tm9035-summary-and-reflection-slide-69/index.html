@@ -50,12 +50,12 @@ body{ overflow:hidden; background:#eef4f7; color:var(--navy); font-family:var(--
 
 /* ---------- decorative drifting backdrop (state-independent) ---------- */
 .bg{ position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; background:linear-gradient(135deg,#e7f3f9 0%, #d6e7f0 48%, #e2eef4 100%); }
-.bg__blob{ position:absolute; border-radius:50%; filter:blur(40px); opacity:.82; will-change:transform; }
-.bg__b1{ width:480px; height:480px; left:-110px; top:-120px; background:radial-gradient(circle at 50% 50%, rgba(0,152,190,.52), rgba(0,152,190,0) 68%); animation:drift1 24s ease-in-out infinite; }
-.bg__b2{ width:560px; height:560px; right:-150px; top:-70px; background:radial-gradient(circle at 50% 50%, rgba(34,47,85,.32), rgba(34,47,85,0) 68%); animation:drift2 30s ease-in-out infinite; }
-.bg__b3{ width:520px; height:520px; left:32%; bottom:-200px; background:radial-gradient(circle at 50% 50%, rgba(79,159,196,.52), rgba(79,159,196,0) 68%); animation:drift3 27s ease-in-out infinite; }
+.bg__blob{ position:absolute; border-radius:50%; filter:blur(38px); opacity:.96; will-change:transform; }
+.bg__b1{ width:480px; height:480px; left:-110px; top:-120px; background:radial-gradient(circle at 50% 50%, rgba(0,152,190,.72), rgba(0,152,190,0) 70%); animation:drift1 24s ease-in-out infinite; }
+.bg__b2{ width:560px; height:560px; right:-150px; top:-70px; background:radial-gradient(circle at 50% 50%, rgba(34,47,85,.5), rgba(34,47,85,0) 70%); animation:drift2 30s ease-in-out infinite; }
+.bg__b3{ width:520px; height:520px; left:32%; bottom:-200px; background:radial-gradient(circle at 50% 50%, rgba(79,159,196,.72), rgba(79,159,196,0) 70%); animation:drift3 27s ease-in-out infinite; }
 .bg__dots{ position:absolute; inset:0; }
-.bg__dots i{ position:absolute; width:10px; height:10px; border-radius:50%; background:rgba(0,152,190,.30); box-shadow:0 0 0 5px rgba(0,152,190,.06); animation:floatY 13s ease-in-out infinite; }
+.bg__dots i{ position:absolute; width:11px; height:11px; border-radius:50%; background:rgba(0,152,190,.52); box-shadow:0 0 0 5px rgba(0,152,190,.12); animation:floatY 13s ease-in-out infinite; }
 @keyframes drift1{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(120px,80px) scale(1.12); } }
 @keyframes drift2{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(-100px,92px) scale(1.08); } }
 @keyframes drift3{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(94px,-78px) scale(1.1); } }
@@ -63,7 +63,7 @@ body{ overflow:hidden; background:#eef4f7; color:var(--navy); font-family:var(--
 body.bg-off .bg__blob,body.bg-off .bg__dots i{ animation:none !important; }
 
 /* ---------- frame: white card, capped at 680, centred, backdrop peeks at the edge ---------- */
-.frame{ position:relative; z-index:1; width:calc(100% - 26px); height:calc(100% - 26px); max-width:1344px; max-height:658px; display:flex; flex-direction:column; overflow:hidden; background:rgba(255,255,255,.5); border:1px solid rgba(255,255,255,.7); border-radius:16px; box-shadow:0 20px 52px rgba(16,26,38,.22); }
+.frame{ position:relative; z-index:1; width:calc(100% - 26px); height:calc(100% - 26px); max-width:1344px; max-height:658px; display:flex; flex-direction:column; overflow:hidden; background:rgba(255,255,255,.4); border:1px solid rgba(255,255,255,.7); border-radius:16px; box-shadow:0 20px 52px rgba(16,26,38,.22); }
 
 /* banner (chrome) */
 .banner{ flex:0 0 auto; text-align:center; padding:clamp(10px,1.6vh,16px) 16px; background:#fff; box-shadow:0 4px 11px rgba(34,47,85,0.07); border-bottom:1px solid var(--line); border-radius:14px 14px 0 0; }
@@ -93,10 +93,13 @@ body.bg-off .bg__blob,body.bg-off .bg__dots i{ animation:none !important; }
 @keyframes stepInL{ from{ opacity:0; transform:translateX(-40px); } to{ opacity:1; transform:none; } }
 .step__lead{ flex:0 0 auto; margin:0 0 clamp(6px,1.1vh,11px); font-size:clamp(.8rem,1.4vw,.95rem); font-weight:600; color:var(--muted); line-height:1.35; text-align:center; }
 .step__lead b{ color:var(--navy); font-weight:700; }
+/* closing congratulations — final step sign-off */
+.congrats{ flex:0 0 auto; margin:0 0 clamp(6px,1.1vh,11px); padding:clamp(8px,1.4vh,13px) clamp(14px,2vw,24px); background:var(--good-soft); border:2px solid var(--good); border-radius:13px; color:var(--good); font-size:clamp(.84rem,1.45vw,1rem); font-weight:600; line-height:1.4; text-align:center; }
+.congrats b{ color:var(--good); font-weight:700; }
 
 /* ---------- step 1: summary cards ---------- */
-.sum{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; justify-content:center; gap:clamp(7px,1.3vh,12px); }
-.scard{ display:flex; align-items:center; gap:clamp(12px,1.8vw,20px); padding:clamp(9px,1.5vh,15px) clamp(14px,1.9vw,22px); background:#fff; border:2px solid var(--teal); border-radius:14px; box-shadow:0 5px 16px rgba(34,47,85,.07); opacity:0; transform:translateY(18px); }
+.sum{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; justify-content:center; gap:clamp(5px,1.1vh,11px); padding:2px 0; }
+.scard{ display:flex; align-items:center; gap:clamp(12px,1.8vw,20px); padding:clamp(5px,1.05vh,13px) clamp(14px,1.9vw,22px); background:#fff; border:2px solid var(--teal); border-radius:14px; box-shadow:0 5px 16px rgba(34,47,85,.07); opacity:0; transform:translateY(18px); }
 .scard.in{ opacity:1; transform:none; transition:opacity .55s cubic-bezier(.4,0,.2,1), transform .55s cubic-bezier(.4,0,.2,1); }
 .scard__no{ flex:0 0 auto; width:clamp(30px,3.4vw,40px); height:clamp(30px,3.4vw,40px); border-radius:50%; background:var(--teal); color:#fff; display:grid; place-items:center; font-size:clamp(.92rem,1.7vw,1.16rem); font-weight:700; }
 .scard__main{ flex:1 1 auto; min-width:0; }
@@ -180,6 +183,9 @@ body.bg-off .bg-toggle .bg-ic{ color:var(--faint); }
   .crow{ grid-template-columns:1fr; gap:8px; }
   .chips{ flex-wrap:wrap; }
   body.is-fullscreen{ padding-top:56px; }   /* clear the fixed Return-to-course bar */
+  .nudge{ font-size:13px; left:12px; right:12px; transform:none; max-width:none; justify-content:center; }
+  .nudge.is-on{ animation:none; }
+  .frame.nudge-shown{ padding-bottom:0; }
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
@@ -201,6 +207,26 @@ body.bg-off .bg-toggle .bg-ic{ color:var(--faint); }
 .xcard__status{ margin:12px 0 0; min-height:20px; font-size:.82rem; font-weight:600; color:var(--teal-strong); }
 .xcard__status.warn{ color:var(--amber); }
 @keyframes rise{ from{ opacity:0; transform:translateY(10px) scale(.99); } to{ opacity:1; transform:none; } }
+
+/* ===== Continue nudge — eased-in end-of-content reminder (house behaviour) ===== */
+.frame.nudge-shown{ padding-bottom:72px; }
+.nudge{ position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:40; display:none; align-items:center; gap:10px; max-width:calc(100% - 28px); padding:9px 17px; border-radius:999px; background:rgba(34,47,85,0.94); color:#fff; font-size:15px; font-weight:600; line-height:1.25; box-shadow:0 8px 22px rgba(16,26,38,0.30); }
+.nudge.is-on{ display:inline-flex; animation:nudgeIn .5s ease both; }
+.nudge b{ font-weight:700; }
+.nudge__chev{ flex:0 0 auto; display:inline-grid; place-items:center; }
+.nudge__chev svg{ width:20px; height:20px; transition:transform .3s ease; }
+.nudge.is-on .nudge__chev{ animation:nudgeBob 1.6s ease-in-out .6s infinite; }
+.nudge__m{ display:none; }
+body.is-fullscreen .nudge{ bottom:auto; top:60px; }
+body.is-fullscreen .nudge__d{ display:none; }
+body.is-fullscreen .nudge__m{ display:inline; }
+body.is-fullscreen .nudge__chev svg{ transform:rotate(180deg); }
+body.is-fullscreen .nudge.is-on .nudge__chev{ animation:nudgeBobUp 1.6s ease-in-out .6s infinite; }
+/* on the final full-screen step the returnhint already gives the mobile return guidance — avoid doubling it */
+body.is-fullscreen.is-laststep .nudge__m{ display:none; }
+@keyframes nudgeIn{ from{ opacity:0; transform:translateX(-50%) translateY(12px); } to{ opacity:1; transform:translateX(-50%) translateY(0); } }
+@keyframes nudgeBob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(3px); } }
+@keyframes nudgeBobUp{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-3px); } }
 
 /* ============================================================
    MOBILE/VISME — embedded-mobile launch card (approved 2026-06-25)
@@ -354,6 +380,7 @@ body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-wei
 
     <!-- STEP 4 — CPD RECORD -->
     <section class="step" data-step="4" aria-label="CPD record" hidden>
+      <p class="congrats"><b>Congratulations &mdash; you&rsquo;ve reached the end of this module.</b> We really hope you&rsquo;ve enjoyed it. This was your time to reflect &mdash; create your CPD record below to keep a note of it. You can also revisit the <b>references</b> page in the course whenever you need it.</p>
       <p class="step__lead">Here is your record. <b>Create your CPD record</b> to download or copy it for your CPD log &mdash; or step back to refine anything.</p>
       <div class="cpd">
         <div class="cpd__scroll" id="cpdScroll" tabindex="0" aria-label="CPD record preview"></div>
@@ -365,7 +392,7 @@ body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-wei
 
   <!-- footer controls -->
   <div class="controls">
-    <button class="btn secondary" id="backBtn" type="button" disabled>
+    <button class="btn secondary" id="backBtn" type="button" disabled style="visibility:hidden">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>Back
     </button>
     <span class="controls__mid" id="stepLabel" aria-hidden="true">Step 1 of 4</span>
@@ -382,6 +409,13 @@ body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-wei
 
   <p class="sr-only" id="live" aria-live="polite" aria-atomic="true"></p>
 </main>
+
+<!-- continue nudge — eases in once the learner has created their CPD record (the "done" moment) -->
+<div class="nudge" id="nudge" role="status" aria-live="polite">
+  <span class="nudge__chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+  <span class="nudge__d">All done &mdash; use the <b>&#9664;&nbsp;&#9654;</b> arrows at the bottom of the screen to continue when you&rsquo;re ready.</span>
+  <span class="nudge__m">Finished &mdash; tap <b>Return to course</b> to carry on.</span>
+</div>
 
 <!-- in-frame export modal: download (best-effort) + copy (always works) -->
 <div class="xmodal" id="exportModal" role="dialog" aria-modal="true" aria-labelledby="xTitle" hidden>
@@ -461,8 +495,8 @@ body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-wei
 
   /* ---------- content (verbatim) ---------- */
   var SUMMARY = [
-    { eyebrow:'Efficacy', html:'After &ge;3-years follow-up, tepotinib continued to demonstrate robust and durable efficacy in treatment-na&iuml;ve and previously treated patients with <em>MET</em>ex14 skipping NSCLC enrolled in VISION.' },
-    { eyebrow:'Safety &amp; HRQoL', html:'Tepotinib continued to demonstrate a manageable safety profile and stable HRQoL PRO scores in patients with &ge;3-years follow-up.' },
+    { eyebrow:'Efficacy', html:'Tepotinib continued to demonstrate robust and durable efficacy in treatment-na&iuml;ve and previously treated patients with <em>MET</em>ex14 skipping NSCLC enrolled in VISION.' },
+    { eyebrow:'Safety &amp; HRQoL', html:'Tepotinib continued to demonstrate a manageable safety profile and stable HRQoL PRO scores.' },
     { eyebrow:'Subgroups', html:'Efficacy outcomes were consistent irrespective of T+/L+ status, age, smoking history, or the presence of brain metastases at baseline.' },
     { eyebrow:'Treatment lines', html:'Efficacy outcomes with tepotinib across treatment lines were consistent with previous reports, particularly in the 1L setting.' },
     { eyebrow:'Asian patients', html:'In Asian patients, tepotinib demonstrated robust and durable long-term efficacy, particularly as a first-line treatment, consistent with outcomes in the overall population.' }
@@ -522,10 +556,13 @@ body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-wei
       host.appendChild(el);
     });
   })();
+  var summaryAnimated=false;
   function animateSummary(){
     var cards=document.querySelectorAll('#sum .scard');
+    if(summaryAnimated){ cards.forEach(function(c){ c.classList.add('in'); }); return; }  // on return, just settle — no re-stagger (avoids a brief layout flash)
+    summaryAnimated=true;
     cards.forEach(function(c){ c.classList.remove('in'); });
-    void $('sum').offsetWidth; // reflow so a re-entry re-runs the sequence
+    void $('sum').offsetWidth; // reflow so the first entry runs the sequence
     cards.forEach(function(c,i){
       if(reduceMotion){ c.classList.add('in'); return; }
       setTimeout(function(){ c.classList.add('in'); }, 175*i);
@@ -666,6 +703,14 @@ body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-wei
     else { fallback(); }
   }
 
+  /* ---------- completion nudge (fires once the CPD record has been created) ---------- */
+  function fireNudge(on){
+    var frame=document.querySelector('.frame');
+    var nudge=$('nudge');
+    if(frame) frame.classList.toggle('nudge-shown', on);
+    if(nudge) nudge.classList.toggle('is-on', on);
+  }
+
   /* ---------- export modal ---------- */
   var exportModal=$('exportModal'); var xLastFocus=null;
   function openExport(){
@@ -702,12 +747,15 @@ body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-wei
     });
     stepLabel.textContent='Step '+n+' of '+TOTAL;
     backBtn.disabled=(n===1);
+    backBtn.style.visibility=(n===1)?'hidden':'visible';   // no Back button on the first summary page
     document.body.classList.toggle('is-laststep', n===TOTAL);   // expand the return control + show the hint on the final step
     if(n===TOTAL){
       nextBtn.style.display='none'; exportBtn.style.display='';
       buildPreview();
+      fireNudge(true);    // reached the CPD-record step — show "all done" (even if they don't create the record)
     }else{
       nextBtn.style.display=''; exportBtn.style.display='none';
+      fireNudge(false);   // left the final step — clear the nudge + its reserved padding so earlier steps aren't squished
     }
     // swish/push the incoming panel in the travel direction
     if(!reduceMotion && dir){
