@@ -51,6 +51,7 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 .cap__title{ margin:0; font-size:clamp(30px,3.4vw,48px); font-weight:700; line-height:1.1; color:var(--navy); letter-spacing:-0.012em; text-shadow:var(--title-shadow-slim); }
 .cap__title em{ font-style:italic; }
 .cap__sub{ margin:3px 0 0; font-size:clamp(.78rem,1.5vw,.9rem); font-weight:500; color:var(--muted); }
+.cap__sub:empty{ display:none; margin:0; }
 .cap__back{
   flex:0 0 auto; display:none; align-items:center; gap:8px;
   padding:8px 15px; border:2px solid var(--teal); border-radius:999px;
@@ -405,7 +406,7 @@ body.is-fullscreen{ padding-top:56px; }
   <div class="cap">
     <div class="cap__text">
       <h1 class="cap__title">Long-term outcomes <span style="font-weight:600;color:var(--muted)">(VISION study)</span></h1>
-      <p class="cap__sub" id="capSub">Select an endpoint to explore its Kaplan&ndash;Meier data.</p>
+      <p class="cap__sub" id="capSub"></p>
     </div>
     <button class="cap__back" id="backBtn" type="button">
       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
@@ -785,7 +786,7 @@ body.is-fullscreen{ padding-top:56px; }
   function backToHub(){
     inExplorer=false;
     slide.classList.remove('is-explorer');
-    capSub.textContent='Select an endpoint to explore its Kaplan–Meier data.';
+    capSub.textContent='';
     refreshHubSource();
     replayHub();                        // replay the staged hub entrance each return
     cards[index].focus({preventScroll:true});
