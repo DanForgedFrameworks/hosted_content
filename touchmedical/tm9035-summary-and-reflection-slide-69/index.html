@@ -40,6 +40,7 @@
   --amber:#9a6a16; --amber-soft:#fbf0db;
   --flag:#b64457; --flag-soft:#fbe7ea;
   --backdrop:rgba(16,26,38,.68);
+  --title-shadow-slim:0 1px 2px rgba(34,47,85,.16);
   --c1:#222f55; --c2:#0098be; --c3:#4f9fc4; --c4:#86bdd8; --c5:#b9d8e8;
   --font:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
 }
@@ -65,8 +66,8 @@ body.bg-off .bg__blob,body.bg-off .bg__dots i{ animation:none !important; }
 .frame{ position:relative; z-index:1; width:calc(100% - 26px); height:calc(100% - 26px); max-width:1344px; max-height:658px; display:flex; flex-direction:column; overflow:hidden; background:rgba(255,255,255,.5); border:1px solid rgba(255,255,255,.7); border-radius:16px; box-shadow:0 20px 52px rgba(16,26,38,.22); }
 
 /* banner (chrome) */
-.banner{ flex:0 0 auto; text-align:center; padding:clamp(8px,1.6vh,14px) clamp(16px,3vw,40px) clamp(6px,1vh,10px); background:linear-gradient(180deg,var(--pale),#eef7fb); border-bottom:1px solid var(--line); border-radius:14px 14px 0 0; }
-.banner__title{ margin:0; font-size:clamp(1.02rem,2vw,1.34rem); font-weight:700; line-height:1.14; color:var(--navy); }
+.banner{ flex:0 0 auto; text-align:center; padding:clamp(10px,1.6vh,16px) 16px; background:#fff; box-shadow:0 4px 11px rgba(34,47,85,0.07); border-bottom:1px solid var(--line); border-radius:14px 14px 0 0; }
+.banner__title{ margin:0; font-size:clamp(30px,3.4vw,48px); font-weight:700; line-height:1.1; letter-spacing:-0.012em; color:var(--navy); text-shadow:var(--title-shadow-slim); }
 .banner__title em{ font-style:italic; }
 .banner__prompt{ margin:4px 0 0; font-size:clamp(.76rem,1.3vw,.9rem); font-weight:500; color:var(--muted); }
 
@@ -462,7 +463,7 @@ body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-wei
   var SUMMARY = [
     { eyebrow:'Efficacy', html:'After &ge;3-years follow-up, tepotinib continued to demonstrate robust and durable efficacy in treatment-na&iuml;ve and previously treated patients with <em>MET</em>ex14 skipping NSCLC enrolled in VISION.' },
     { eyebrow:'Safety &amp; HRQoL', html:'Tepotinib continued to demonstrate a manageable safety profile and stable HRQoL PRO scores in patients with &ge;3-years follow-up.' },
-    { eyebrow:'Subgroups', html:'Efficacy outcomes were consistent irrespective T+/L+ status, age, smoking history, or the presence of brain metastases at baseline.' },
+    { eyebrow:'Subgroups', html:'Efficacy outcomes were consistent irrespective of T+/L+ status, age, smoking history, or the presence of brain metastases at baseline.' },
     { eyebrow:'Treatment lines', html:'Efficacy outcomes with tepotinib across treatment lines were consistent with previous reports, particularly in the 1L setting.' },
     { eyebrow:'Asian patients', html:'In Asian patients, tepotinib demonstrated robust and durable long-term efficacy, particularly as a first-line treatment, consistent with outcomes in the overall population.' }
   ];

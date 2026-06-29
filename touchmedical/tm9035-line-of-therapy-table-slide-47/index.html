@@ -27,21 +27,26 @@
   --rowcomp:#eef1f6; --rowsub:#f7fafc;
   --backdrop:rgba(16,26,38,.68);
   --c1:#222f55; --c2:#0098be;
+  --title-shadow-slim:0 1px 2px rgba(34,47,85,.16);
   --font:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
 }
 *{ box-sizing:border-box; }
 html,body{ height:100%; margin:0; }
 body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--font); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; display:flex; align-items:center; justify-content:center; }
 
-.frame{ width:100%; height:auto; max-height:680px; display:flex; flex-direction:column; overflow:hidden; background:#fff; }
+.frame{ width:100%; height:auto; max-height:min(680px,100vh); display:flex; flex-direction:column; overflow:hidden; background:#fff; }
 
-.banner{ flex:0 0 auto; text-align:center; padding:clamp(7px,1.5vh,14px) clamp(16px,3vw,40px) clamp(5px,1vh,10px); background:var(--pale); }
-.banner__title{ margin:0; font-size:clamp(1.2rem,2.5vw,1.66rem); font-weight:700; line-height:1.16; color:var(--navy); }
+.banner{ flex:0 0 auto; text-align:center; padding:clamp(6px,1.1vh,11px) clamp(16px,3vw,40px) clamp(5px,0.9vh,8px); background:#fff; box-shadow:0 4px 11px rgba(34,47,85,0.07); }
+.banner__title{ margin:0; font-size:clamp(30px,3.4vw,48px); color:var(--navy); font-weight:700; line-height:1.1; letter-spacing:-0.012em; text-shadow:var(--title-shadow-slim); }
 .banner__title em{ font-style:italic; }
-.banner__prompt{ margin:4px 0 0; font-size:clamp(.76rem,1.3vw,.94rem); font-weight:500; color:var(--muted); }
+/* toolbar callout (under the table): CI toggle + interaction guide */
+.toolbar{ flex:0 0 auto; display:flex; justify-content:center; padding:clamp(7px,1.3vh,12px) clamp(14px,3vw,30px) 0; }
+.toolbar__box{ display:inline-flex; align-items:center; gap:clamp(10px,1.8vw,18px); flex-wrap:wrap; justify-content:center; max-width:1120px; padding:8px 18px; border:2px solid var(--teal); border-radius:14px; background:rgba(0,152,190,.06); }
+.toolbar__hint{ font-size:clamp(.8rem,1.35vw,.96rem); font-weight:600; color:var(--teal-strong); line-height:1.3; }
+.toolbar__hint b{ color:var(--navy); font-weight:700; }
 
 /* ---------- body ---------- */
-.body{ flex:0 0 auto; position:relative; z-index:1; display:flex; flex-direction:column; padding:clamp(8px,1.5vh,16px) clamp(16px,3vw,40px) clamp(4px,0.8vh,9px); gap:clamp(7px,1.3vh,12px); }
+.body{ flex:0 1 auto; min-height:0; overflow:auto; position:relative; z-index:1; display:flex; flex-direction:column; padding:clamp(8px,1.5vh,16px) clamp(16px,3vw,40px) clamp(4px,0.8vh,9px); gap:clamp(7px,1.3vh,12px); }
 .tools{ flex:0 0 auto; display:flex; align-items:center; justify-content:flex-end; gap:12px; flex-wrap:wrap; }
 .tools__hint{ font-size:clamp(.72rem,1.25vw,.84rem); font-weight:500; color:var(--muted); }
 .tools__hint b{ color:var(--navy); font-weight:700; }
@@ -58,7 +63,7 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 table.eff{ width:100%; border-collapse:collapse; table-layout:fixed; }
 .eff th,.eff td{ padding:clamp(6px,1.15vh,12px) clamp(8px,1vw,16px); text-align:center; vertical-align:middle; border-bottom:1px solid var(--line); font-size:clamp(.76rem,1.3vw,.92rem); }
 .eff thead th{ background:var(--navy); color:#fff; font-weight:700; line-height:1.2; border-bottom:0; }
-.eff col.c-out{ width:40%; } .eff col.c-n{ width:13%; } .eff col.c-orr{ width:24%; } .eff col.c-dor{ width:23%; }
+.eff col.c-out{ width:34%; } .eff col.c-n{ width:9%; } .eff col.c-orr{ width:20%; } .eff col.c-dor{ width:18.5%; } .eff col.c-pfs{ width:18.5%; }
 .eff td.out{ text-align:left; font-weight:700; color:var(--navy); }
 .eff td.out .sub{ display:block; font-weight:600; font-size:.86em; color:var(--muted); }
 .eff td.num{ font-weight:600; color:var(--navy); font-variant-numeric:tabular-nums; }
@@ -155,6 +160,44 @@ thead .fn{ background:rgba(255,255,255,.92); color:var(--navy); }
 @keyframes rise{ from{ opacity:0; transform:translateY(10px) scale(.99);} to{ opacity:1; transform:none; } }
 @keyframes prep{ 0%,100%{ transform:scale(.6); opacity:.4; } 50%{ transform:scale(1); opacity:1; } }
 
+/* ===== Continue nudge — eased-in end-of-content reminder (house behaviour) ===== */
+.frame.nudge-shown{ padding-bottom:72px; }
+.nudge{ position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:40; display:none; align-items:center; gap:10px; max-width:calc(100% - 28px); padding:9px 17px; border-radius:999px; background:rgba(34,47,85,0.94); color:#fff; font-size:15px; font-weight:600; line-height:1.25; box-shadow:0 8px 22px rgba(16,26,38,0.30); }
+.nudge.is-on{ display:inline-flex; animation:nudgeIn .5s ease both; }
+.nudge b{ font-weight:700; }
+.nudge__chev{ flex:0 0 auto; display:inline-grid; place-items:center; }
+.nudge__chev svg{ width:20px; height:20px; transition:transform .3s ease; }
+.nudge.is-on .nudge__chev{ animation:nudgeBob 1.6s ease-in-out .6s infinite; }
+.nudge__m{ display:none; }
+body.is-fullscreen .nudge{ bottom:auto; top:60px; }
+body.is-fullscreen .nudge__d{ display:none; }
+body.is-fullscreen .nudge__m{ display:inline; }
+body.is-fullscreen .nudge__chev svg{ transform:rotate(180deg); }
+body.is-fullscreen .nudge.is-on .nudge__chev{ animation:nudgeBobUp 1.6s ease-in-out .6s infinite; }
+@keyframes nudgeIn{ from{ opacity:0; transform:translateX(-50%) translateY(12px); } to{ opacity:1; transform:translateX(-50%) translateY(0); } }
+@keyframes nudgeBob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(3px); } }
+@keyframes nudgeBobUp{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-3px); } }
+
+/* ===== §4.2 Mobile/Visme launch card + return-to-course (single-screen variant) ===== */
+.mlaunch{ display:none; }
+.returnbar{ display:none; }
+body.is-embedded-mobile .frame{ display:none !important; }
+body.is-embedded-mobile{ display:block; }
+body.is-embedded-mobile .mlaunch{ display:flex; position:fixed; inset:0; z-index:50; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:42px; padding:90px 70px; background:linear-gradient(135deg,#0098be 0%, #007a98 55%, #222f55 100%); color:#fff; }
+.mlaunch__badge{ font-size:30px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; opacity:.9; }
+.mlaunch__title{ margin:0; font-size:52px; font-weight:700; line-height:1.08; }
+.mlaunch__title em{ font-style:italic; }
+.mlaunch__lead{ margin:0; max-width:1040px; font-size:36px; font-weight:500; line-height:1.4; opacity:.96; }
+.mlaunch__btn{ display:inline-flex; align-items:center; gap:26px; margin-top:6px; padding:44px 88px; border-radius:999px; background:#fff; color:#007a98; font:inherit; font-weight:700; font-size:46px; text-decoration:none; box-shadow:0 18px 54px rgba(16,26,38,.38); }
+.mlaunch__btn svg{ width:54px; height:54px; }
+.mlaunch__note{ margin:0; max-width:1040px; font-size:27px; line-height:1.4; opacity:.85; }
+body.is-fullscreen .returnbar{ display:inline-flex; align-items:center; justify-content:center; gap:9px; position:fixed; top:10px; left:10px; z-index:60; box-sizing:border-box; width:auto; height:44px; padding:0 18px 0 13px; border-radius:999px; background:rgba(34,47,85,.92); color:#fff; text-decoration:none; box-shadow:0 6px 16px rgba(16,26,38,.26); font:inherit; }
+body.is-fullscreen .returnbar__ic{ flex:0 0 auto; width:22px; height:22px; display:grid; place-items:center; }
+body.is-fullscreen .returnbar__ic svg{ width:22px; height:22px; }
+body.is-fullscreen .returnbar__lab{ font:inherit; font-weight:700; font-size:15px; white-space:nowrap; }
+body.is-fullscreen .returnbar:focus-visible{ outline:3px solid var(--teal); outline-offset:3px; }
+body.is-fullscreen{ padding-top:56px; }
+
 /* ---------- phone ---------- */
 @media (max-width:760px){
   html,body{ height:auto; }
@@ -163,6 +206,9 @@ thead .fn{ background:rgba(255,255,255,.92); color:var(--navy); }
   .body{ overflow:visible; }
   .eff th,.eff td{ font-size:.74rem; padding:7px 6px; }
   .eff col.c-out{ width:36%; }
+  .nudge{ font-size:13px; left:12px; right:12px; transform:none; max-width:none; justify-content:center; }
+  .nudge.is-on{ animation:none; }
+  .frame.nudge-shown{ padding-bottom:0; }
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
@@ -174,25 +220,28 @@ thead .fn{ background:rgba(255,255,255,.92); color:var(--navy); }
 
   <header class="banner">
     <h1 class="banner__title">Efficacy with tepotinib according to line of therapy</h1>
-    <p class="banner__prompt">Toggle <b>95% CI / IQR</b> for full intervals, expand the 2L+ breakdown, and select the <strong>*&nbsp;&dagger;&nbsp;&Dagger;</strong> markers for notes.</p>
   </header>
 
   <div class="body">
-    <div class="tools">
-      <button class="ci-toggle" id="ciToggle" type="button" aria-pressed="false"><span class="sw" aria-hidden="true"></span>Show 95% CI / IQR</button>
-    </div>
-
     <div class="twrap">
       <table class="eff" id="effTable">
-        <colgroup><col class="c-out"><col class="c-n"><col class="c-orr"><col class="c-dor"></colgroup>
+        <colgroup><col class="c-out"><col class="c-n"><col class="c-orr"><col class="c-dor"><col class="c-pfs"></colgroup>
         <thead><tr>
           <th scope="col" id="hOut" style="text-align:left">Outcomes with</th>
           <th scope="col">Patients, n</th>
           <th scope="col">ORR, %</th>
           <th scope="col"><span id="hDor">mDOR, months <button class="fn" type="button" data-fn="*" aria-label="Footnote about confidence intervals and IQR">*</button></span></th>
+          <th scope="col"><span id="hPfs">mPFS, months <button class="fn" type="button" data-fn="*" aria-label="Footnote about confidence intervals and IQR">*</button></span></th>
         </tr></thead>
         <tbody id="effBody"></tbody>
       </table>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="toolbar__box">
+      <button class="ci-toggle" id="ciToggle" type="button" aria-pressed="false"><span class="sw" aria-hidden="true"></span>Show 95% CI / IQR</button>
+      <span class="toolbar__hint">Expand the <b>2L+</b> breakdown, then select the <b>*&nbsp;&dagger;&nbsp;&Dagger;</b> markers for notes.</span>
     </div>
   </div>
 
@@ -206,6 +255,28 @@ thead .fn{ background:rgba(255,255,255,.92); color:var(--navy); }
 
   <p class="sr-only" id="live" aria-live="polite" aria-atomic="true"></p>
 </main>
+
+<!-- §4.2 return-to-course (shown only in the opened full-screen view) -->
+<a class="returnbar" id="returnBar" href="#" aria-label="Return to the course">
+  <span class="returnbar__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 5 4 10 9 15"/><path d="M4 10 H15 a5 5 0 0 1 5 5 V19"/></svg></span>
+  <span class="returnbar__lab">Return to course</span>
+</a>
+
+<!-- §4.2 embedded-mobile launch card (shown only when iframed on a phone) -->
+<div class="mlaunch" role="group" aria-label="Open the activity full screen">
+  <span class="mlaunch__badge">Touch Oncology &middot; CPD activity</span>
+  <h1 class="mlaunch__title">Line of therapy &amp; efficacy (VISION study)</h1>
+  <p class="mlaunch__lead">This data table is best viewed full screen on your phone. Tap below to open it.</p>
+  <a class="mlaunch__btn" id="mlaunchBtn" href="#" target="_blank" rel="noopener">Open the activity <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><polyline points="13 6 19 12 13 18"/></svg></a>
+  <p class="mlaunch__note">On a computer, the activity appears here directly.</p>
+</div>
+
+<!-- continue nudge — eases in once the learner has fully engaged (CI toggle used AND a row expanded) -->
+<div class="nudge" id="nudge" role="status" aria-live="polite">
+  <span class="nudge__chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+  <span class="nudge__d">All done &mdash; use the <b>&#9664;&nbsp;&#9654;</b> arrows at the bottom of the screen to continue when you&rsquo;re ready.</span>
+  <span class="nudge__m">Finished &mdash; tap <b>Return to course</b> to carry on.</span>
+</div>
 
 <div class="fntip" id="fntip" role="status"></div>
 
@@ -257,16 +328,16 @@ thead .fn{ background:rgba(255,255,255,.92); color:var(--navy); }
      orr.ci null = no CI reported (descriptive). dor.kind labels the interval. */
   const ROWS = [
     { cls:'comp', tag:'Before tepotinib', out:'All treatment lines prior to tepotinib', fn:'†',
-      n:149, orr:{v:'28.9', ci:null}, dor:{v:'6.0', ci:'4.0–12.0', kind:'IQR'} },
-    { cls:'line', out:'Tepotinib in 1L', fn:'‡', n:164, orr:{v:'57.9', ci:'50.0, 65.6'}, dor:{v:'31.7', ci:'13.8, 46.4'} },
-    { cls:'line', out:'Tepotinib in 2L', fn:'‡', n:92, orr:{v:'45.7', ci:'35.2, 56.4'}, dor:{v:'12.6', ci:'8.3, 18.5'} },
-    { cls:'line', out:'Tepotinib in 2L+', fn:'‡', n:149, orr:{v:'45.0', ci:'36.8, 53.3'}, dor:{v:'12.6', ci:'9.5, 18.5'} },
-    { cls:'line', out:'Tepotinib in 3L+', fn:'‡', n:57, orr:{v:'43.9', ci:'30.7, 57.6'}, dor:{v:'10.8', ci:'8.3, NE'} }
+      n:149, orr:{v:'28.9', ci:null}, dor:{v:'6.0', ci:'4.0–12.0', kind:'IQR'}, pfs:{v:'5.0', ci:'2.0–11.0', kind:'IQR'} },
+    { cls:'line', out:'Tepotinib in 1L', fn:'‡', n:164, orr:{v:'57.9', ci:'50.0, 65.6'}, dor:{v:'31.7', ci:'13.8, 46.4'}, pfs:{v:'12.6', ci:'9.7, 17.7'} },
+    { cls:'line', out:'Tepotinib in 2L', fn:'‡', n:92, orr:{v:'45.7', ci:'35.2, 56.4'}, dor:{v:'12.6', ci:'8.3, 18.5'}, pfs:{v:'10.9', ci:'8.2, 13.8'} },
+    { cls:'line', out:'Tepotinib in 2L+', fn:'‡', n:149, orr:{v:'45.0', ci:'36.8, 53.3'}, dor:{v:'12.6', ci:'9.5, 18.5'}, pfs:{v:'11.0', ci:'8.2, 13.7'} },
+    { cls:'line', out:'Tepotinib in 3L+', fn:'‡', n:57, orr:{v:'43.9', ci:'30.7, 57.6'}, dor:{v:'10.8', ci:'8.3, NE'}, pfs:{v:'11.0', ci:'5.7, 14.7'} }
   ];
   const SUBROWS = [
-    { out:'Platinum-based CT alone', fn:'‡', n:104, orr:{v:'48.1', ci:'38.2, 58.1'}, dor:{v:'15.4', ci:'8.3, 33.6'} },
-    { out:'IO monotherapy', fn:'‡', n:59, orr:{v:'33.9', ci:'22.1, 47.4'}, dor:{v:'12.6', ci:'8.3, NE'} },
-    { out:'IO-CT', fn:'‡', n:22, orr:{v:'54.5', ci:'32.2, 75.6'}, dor:{v:'10.1', ci:'4.2, NE'} }
+    { out:'Platinum-based CT alone', fn:'‡', n:104, orr:{v:'48.1', ci:'38.2, 58.1'}, dor:{v:'15.4', ci:'8.3, 33.6'}, pfs:{v:'11.0', ci:'7.2, 13.8'} },
+    { out:'IO monotherapy', fn:'‡', n:59, orr:{v:'33.9', ci:'22.1, 47.4'}, dor:{v:'12.6', ci:'8.3, NE'}, pfs:{v:'8.9', ci:'5.7, 13.8'} },
+    { out:'IO-CT', fn:'‡', n:22, orr:{v:'54.5', ci:'32.2, 75.6'}, dor:{v:'10.1', ci:'4.2, NE'}, pfs:{v:'11.5', ci:'5.5, 14.7'} }
   ];
   const SUBNOTE = 'These prior-treatment categories overlap (patients could receive more than one), so they are not mutually exclusive and do not sum to the 149 patients treated in 2L+.';
 
@@ -286,7 +357,10 @@ thead .fn{ background:rgba(255,255,255,.92); color:var(--navy); }
     const orrCI = r.orr.ci ? ' (95% CI '+r.orr.ci.replace(',',' to')+')' : '';
     const dorKind = r.dor.kind==='IQR' ? 'IQR ' : '95% CI ';
     const dorCI = r.dor.ci ? ' ('+dorKind+r.dor.ci.replace(',',' to').replace('–',' to ')+')' : '';
-    return r.out+': '+r.n+' patients; ORR '+r.orr.v+'%'+orrCI+'; median DOR '+r.dor.v+' months'+dorCI+'.';
+    const pfsKind = r.pfs && r.pfs.kind==='IQR' ? 'IQR ' : '95% CI ';
+    const pfsCI = r.pfs && r.pfs.ci ? ' ('+pfsKind+r.pfs.ci.replace(',',' to').replace('–',' to ')+')' : '';
+    const pfsTxt = r.pfs ? '; median PFS '+r.pfs.v+' months'+pfsCI : '';
+    return r.out+': '+r.n+' patients; ORR '+r.orr.v+'%'+orrCI+'; median DOR '+r.dor.v+' months'+dorCI+pfsTxt+'.';
   }
 
   /* ---------- render table ---------- */
@@ -295,7 +369,7 @@ thead .fn{ background:rgba(255,255,255,.92); color:var(--navy); }
     const tr=document.createElement('tr'); tr.className=r.cls;
     const tag = r.cls==='comp' ? '<span class="tag">'+esc(r.tag)+'</span>' : '';
     tr.innerHTML = '<td class="out">'+tag+esc(r.out)+(r.fn?fnMark(r.fn):'')+'</td>'+
-      '<td class="num">'+r.n+'</td>'+orrCell(r.orr)+dorCell(r.dor);
+      '<td class="num">'+r.n+'</td>'+orrCell(r.orr)+dorCell(r.dor)+dorCell(r.pfs);
     tr.setAttribute('aria-label', ariaRow(r));
     body.appendChild(tr);
   });
@@ -303,20 +377,30 @@ thead .fn{ background:rgba(255,255,255,.92); color:var(--navy); }
   const parent=document.createElement('tr'); parent.className='parent'; parent.id='subParent';
   parent.tabIndex=0; parent.setAttribute('role','button'); parent.setAttribute('aria-expanded','false'); parent.setAttribute('aria-controls','sub0 sub1 sub2');
   parent.innerHTML='<td class="out"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>Tepotinib in 2L+ by prior treatment received'+fnMark('‡')+'</td>'+
-    '<td class="num">&mdash;</td><td class="num">&mdash;</td><td class="num">&mdash;</td>';
+    '<td class="num">&mdash;</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td class="num">&mdash;</td>';
   body.appendChild(parent);
   const subEls=[];
   SUBROWS.forEach((r,i)=>{
     const tr=document.createElement('tr'); tr.className='sub'; tr.id='sub'+i; tr.hidden=true;
     tr.innerHTML='<td class="out">'+esc(r.out)+(r.fn?fnMark(r.fn):'')+'</td>'+
-      '<td class="num">'+r.n+'</td>'+orrCell(r.orr)+dorCell(r.dor);
+      '<td class="num">'+r.n+'</td>'+orrCell(r.orr)+dorCell(r.dor)+dorCell(r.pfs);
     tr.setAttribute('aria-label', ariaRow(r));
     body.appendChild(tr); subEls.push(tr);
   });
   // visible overlap caveat shown with the breakdown (honest: categories not mutually exclusive)
   const subnote=document.createElement('tr'); subnote.className='subnote'; subnote.id='subnote'; subnote.hidden=true;
-  subnote.innerHTML='<td colspan="4"><strong>Note:</strong> '+esc(SUBNOTE)+'</td>';
+  subnote.innerHTML='<td colspan="5"><strong>Note:</strong> '+esc(SUBNOTE)+'</td>';
   body.appendChild(subnote);
+
+  /* ---------- completion nudge (fires once CI toggle used AND a row expanded) ---------- */
+  const nudge=document.getElementById('nudge');
+  let ciUsed=false, rowExpanded=false, nudgeFired=false;
+  function maybeNudge(){
+    if(nudgeFired || !ciUsed || !rowExpanded) return;
+    nudgeFired=true;
+    frame.classList.add('nudge-shown');
+    if(nudge) nudge.classList.add('is-on');
+  }
 
   /* ---------- CI toggle ---------- */
   const ciToggle=document.getElementById('ciToggle');
@@ -327,6 +411,7 @@ thead .fn{ background:rgba(255,255,255,.92); color:var(--navy); }
     ciOn=!ciOn; frame.dataset.ci=ciOn?'on':'off'; ciToggle.setAttribute('aria-pressed',ciOn?'true':'false');
     ciToggle.lastChild.textContent = ciOn ? 'Hide 95% CI / IQR' : 'Show 95% CI / IQR';
     live.textContent = ciOn ? 'Confidence intervals and IQR shown.' : 'Confidence intervals hidden.';
+    ciUsed=true; maybeNudge();
   });
 
   /* ---------- expandable subrows (robust, no animation-gating) ---------- */
@@ -338,6 +423,7 @@ thead .fn{ background:rgba(255,255,255,.92); color:var(--navy); }
       subEls.forEach((tr,i)=>{ tr.hidden=false; tr.classList.remove('is-anim'); void tr.offsetWidth;
         tr.style.animationDelay=(reduceMotion?0:i*0.05)+'s'; tr.classList.add('is-anim'); });
       subnote.hidden=false;
+      rowExpanded=true; maybeNudge();
       live.textContent='2L+ prior-treatment breakdown expanded. '+SUBNOTE;
     } else {
       subEls.forEach(tr=>tr.classList.remove('is-anim'));
@@ -413,6 +499,43 @@ thead .fn{ background:rgba(255,255,255,.92); color:var(--navy); }
   },true);
 
 })();
+</script>
+
+<script>
+/* §4.2 — mobile/Visme: launch card + return-to-course (single-screen variant) */
+(function () {
+  "use strict";
+  var fullscreen = /[?&]fullscreen=1/.test(location.search);
+  var inIframe = true; try { inIframe = (window.self !== window.top); } catch (e) { inIframe = true; }
+  var isMobile = /Android|iPhone|iPad|iPod|Mobile|Silk/i.test(navigator.userAgent);
+  var btn = document.getElementById('mlaunchBtn');
+  var base = location.href.split('#')[0].split('?')[0];
+  var courseUrl = ''; try { courseUrl = document.referrer || ''; } catch (e) { courseUrl = ''; }
+  var target = base + '?fullscreen=1' + (courseUrl ? '&return=' + encodeURIComponent(courseUrl) : '');
+  if (btn) {
+    btn.href = target;
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      var w = null;
+      try { w = window.open(target, '_blank'); } catch (err) { w = null; }
+      if (!w) { try { window.top.location.href = target; } catch (err2) { window.location.href = target; } }
+    });
+  }
+  var rb = document.getElementById('returnBar');
+  var returnUrl = (function () { try { return new URLSearchParams(location.search).get('return'); } catch (e) { return null; } })();
+  if (rb) {
+    if (returnUrl) { rb.href = returnUrl; }
+    rb.addEventListener('click', function (e) {
+      e.preventDefault();
+      try { if (window.opener && !window.opener.closed) { window.close(); return; } } catch (err) {}
+      if (window.history.length > 1) { window.history.back(); return; }
+      if (returnUrl) { window.location.href = returnUrl; }
+    });
+  }
+  if (isMobile) { document.body.classList.add('is-mobile'); }
+  if (inIframe && isMobile && !fullscreen) { document.body.classList.add('is-embedded-mobile'); }
+  if (fullscreen) { document.body.classList.add('is-fullscreen'); }
+}());
 </script>
 </body>
 </html>

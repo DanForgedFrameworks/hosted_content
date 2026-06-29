@@ -27,6 +27,7 @@
   --backdrop:rgba(16,26,38,.68);
   --band:rgba(0,152,190,.12);
   --c1:#222f55; --c2:#0098be; --c3:#4f9fc4; --c4:#86bdd8; --c5:#b9d8e8;
+  --title-shadow-slim:0 1px 2px rgba(34,47,85,.16);   /* slim title variant */
   --font:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
 }
 *{ box-sizing:border-box; }
@@ -37,10 +38,22 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 .frame{ width:100%; height:100%; max-height:680px; display:flex; flex-direction:column; overflow:hidden; background:#fff; }
 
 /* banner */
-.banner{ flex:0 0 auto; text-align:center; padding:clamp(7px,1.5vh,13px) clamp(16px,3vw,40px) clamp(5px,1vh,9px); background:var(--pale); }
-.banner__title{ margin:0; font-size:clamp(1.2rem,2.5vw,1.66rem); font-weight:700; line-height:1.16; color:var(--navy); }
+.banner{ flex:0 0 auto; text-align:center; padding:clamp(7px,1.5vh,13px) clamp(16px,3vw,40px) clamp(5px,1vh,9px); background:#fff; box-shadow:0 4px 11px rgba(34,47,85,0.07); }
+.banner__title{ margin:0; font-size:clamp(30px,3.4vw,48px); color:var(--navy); font-weight:700; line-height:1.1; letter-spacing:-0.012em; text-shadow:var(--title-shadow-slim); }
 .banner__title em{ font-style:italic; }
-.banner__prompt{ margin:4px 0 0; font-size:clamp(.76rem,1.3vw,.92rem); font-weight:500; color:var(--muted); }
+
+/* navigation prompt — its own callout box (teal-accented; green is reserved for OOI questions) */
+.navprompt{ flex:0 0 auto; display:flex; justify-content:center; padding:clamp(6px,1.2vh,11px) clamp(14px,3vw,30px) 0; }
+.navprompt__box{ display:inline-flex; align-items:center; gap:10px; max-width:1000px; padding:9px 18px; border:2px solid var(--teal); border-radius:14px; background:rgba(0,152,190,.06); color:var(--teal-strong); font-size:clamp(.82rem,1.4vw,1rem); font-weight:600; line-height:1.32; text-align:left; }
+.navprompt__ic{ flex:0 0 auto; width:26px; height:26px; display:grid; place-items:center; color:var(--teal); }
+.navprompt__ic svg{ width:100%; height:100%; }
+
+/* ---------- footnote marker + tooltip (hover / focus / tap) ---------- */
+.fnote{ position:relative; display:inline-flex; vertical-align:baseline; }
+.fnote__btn{ display:inline-grid; place-items:center; min-width:15px; height:15px; margin-left:1px; padding:0 1px; border:0; background:transparent; color:var(--teal-strong); font:inherit; font-size:.78em; font-weight:700; line-height:1; vertical-align:super; cursor:help; }
+.fnote__btn:focus-visible{ outline:2px solid var(--navy); outline-offset:2px; border-radius:3px; }
+.fnote__pop{ position:absolute; left:0; bottom:calc(100% + 7px); width:max-content; max-width:min(280px,68vw); padding:9px 12px; border:2px solid var(--teal); border-radius:10px; background:#fff; box-shadow:0 12px 26px rgba(34,47,85,.22); color:#151515; font-size:clamp(.72rem,1.05vw,.84rem); font-weight:400; line-height:1.4; text-align:left; white-space:normal; opacity:0; visibility:hidden; transform:translateY(-4px); transition:opacity .15s ease, visibility .15s ease, transform .15s ease; z-index:9; }
+.fnote:hover .fnote__pop,.fnote:focus-within .fnote__pop,.fnote.open .fnote__pop{ opacity:1; visibility:visible; transform:translateY(0); }
 
 /* ---------- stage shell ---------- */
 .stage{ flex:1 1 auto; min-height:0; position:relative; }
@@ -197,6 +210,44 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 @keyframes rise{ from{ opacity:0; transform:translateY(10px) scale(.99);} to{ opacity:1; transform:none; } }
 @keyframes prep{ 0%,100%{ transform:scale(.6); opacity:.4; } 50%{ transform:scale(1); opacity:1; } }
 
+/* ===== Continue nudge — eased-in end-of-content reminder (fires once all 7 explored) ===== */
+.frame.nudge-shown{ padding-bottom:80px; }
+.nudge{ position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:38; display:none; align-items:center; gap:10px; max-width:calc(100% - 28px); padding:9px 17px; border-radius:999px; background:rgba(34,47,85,.94); color:#fff; font-size:15px; font-weight:600; line-height:1.25; box-shadow:0 8px 22px rgba(16,26,38,.30); }
+.nudge.is-on{ display:inline-flex; animation:nudgeIn .5s ease both; }
+.nudge b{ font-weight:700; }
+.nudge__chev{ flex:0 0 auto; display:inline-grid; place-items:center; }
+.nudge__chev svg{ width:20px; height:20px; transition:transform .3s ease; }
+.nudge.is-on .nudge__chev{ animation:nudgeBob 1.6s ease-in-out .6s infinite; }
+.nudge__m{ display:none; }
+body.is-fullscreen .nudge{ bottom:auto; top:60px; }
+body.is-fullscreen .nudge__d{ display:none; }
+body.is-fullscreen .nudge__m{ display:inline; }
+body.is-fullscreen .nudge__chev svg{ transform:rotate(180deg); }
+body.is-fullscreen .nudge.is-on .nudge__chev{ animation:nudgeBobUp 1.6s ease-in-out .6s infinite; }
+@keyframes nudgeIn{ from{ opacity:0; transform:translateX(-50%) translateY(12px);} to{ opacity:1; transform:translateX(-50%) translateY(0);} }
+@keyframes nudgeBob{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(3px);} }
+@keyframes nudgeBobUp{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-3px);} }
+
+/* ===== §4.2 Mobile/Visme launch card + return-to-course (single-screen variant) ===== */
+.mlaunch{ display:none; }
+.returnbar{ display:none; }
+body.is-embedded-mobile .frame{ display:none !important; }
+body.is-embedded-mobile{ display:block; }
+body.is-embedded-mobile .mlaunch{ display:flex; position:fixed; inset:0; z-index:50; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:42px; padding:90px 70px; background:linear-gradient(135deg,#0098be 0%, #007a98 55%, #222f55 100%); color:#fff; }
+.mlaunch__badge{ font-size:30px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; opacity:.9; }
+.mlaunch__title{ margin:0; font-size:50px; font-weight:700; line-height:1.08; }
+.mlaunch__title em{ font-style:italic; }
+.mlaunch__lead{ margin:0; max-width:1040px; font-size:36px; font-weight:500; line-height:1.4; opacity:.96; }
+.mlaunch__btn{ display:inline-flex; align-items:center; gap:26px; margin-top:6px; padding:44px 88px; border-radius:999px; background:#fff; color:#007a98; font:inherit; font-weight:700; font-size:46px; text-decoration:none; box-shadow:0 18px 54px rgba(16,26,38,.38); }
+.mlaunch__btn svg{ width:54px; height:54px; }
+.mlaunch__note{ margin:0; max-width:1040px; font-size:27px; line-height:1.4; opacity:.85; }
+body.is-fullscreen .returnbar{ display:inline-flex; align-items:center; justify-content:center; gap:9px; position:fixed; top:10px; left:10px; z-index:60; box-sizing:border-box; width:auto; height:44px; padding:0 18px 0 13px; border-radius:999px; background:rgba(34,47,85,.92); color:#fff; text-decoration:none; box-shadow:0 6px 16px rgba(16,26,38,.26); font:inherit; }
+body.is-fullscreen .returnbar__ic{ flex:0 0 auto; width:22px; height:22px; display:grid; place-items:center; }
+body.is-fullscreen .returnbar__ic svg{ width:22px; height:22px; }
+body.is-fullscreen .returnbar__lab{ font:inherit; font-weight:700; font-size:15px; white-space:nowrap; }
+body.is-fullscreen .returnbar:focus-visible{ outline:3px solid var(--teal); outline-offset:3px; }
+body.is-fullscreen{ padding-top:56px; }
+
 /* ---------- phone (<760px) ---------- */
 @media (max-width:760px){
   html,body{ height:auto; }
@@ -208,6 +259,9 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
   .hero{ flex-direction:column; }
   .cards{ grid-template-columns:1fr 1fr; }
   .forest{ font-size:.8rem; }
+  .frame.nudge-shown{ padding-bottom:0; }
+  .nudge{ font-size:13px; left:12px; right:12px; transform:none; max-width:none; justify-content:center; }
+  .nudge.is-on{ animation:none; }
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
@@ -219,8 +273,11 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 
   <header class="banner">
     <h1 class="banner__title">Long-term ORR across clinically relevant subgroups</h1>
-    <p class="banner__prompt" id="prompt">Select a subgroup to compare overall response rate, or view the full forest plot.</p>
   </header>
+
+  <div class="navprompt">
+    <p class="navprompt__box"><span class="navprompt__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>Select a subgroup to compare it against the overall estimate, or view the full forest plot.</p>
+  </div>
 
   <div class="stage">
 
@@ -276,6 +333,28 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 
   <p class="sr-only" id="live" aria-live="polite" aria-atomic="true"></p>
 </main>
+
+<!-- §4.2 return-to-course (shown only in the opened full-screen view) -->
+<a class="returnbar" id="returnBar" href="#" aria-label="Return to the course">
+  <span class="returnbar__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 5 4 10 9 15"/><path d="M4 10 H15 a5 5 0 0 1 5 5 V19"/></svg></span>
+  <span class="returnbar__lab">Return to course</span>
+</a>
+
+<!-- §4.2 embedded-mobile launch card (shown only when iframed on a phone) -->
+<div class="mlaunch" role="group" aria-label="Open the activity full screen">
+  <span class="mlaunch__badge">Touch Oncology &middot; CPD activity</span>
+  <h1 class="mlaunch__title">Long-term ORR across clinically relevant subgroups</h1>
+  <p class="mlaunch__lead">This interactive forest plot is best viewed full screen on your phone. Tap below to open it.</p>
+  <a class="mlaunch__btn" id="mlaunchBtn" href="#" target="_blank" rel="noopener">Open the activity <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><polyline points="13 6 19 12 13 18"/></svg></a>
+  <p class="mlaunch__note">On a computer, the activity appears here directly.</p>
+</div>
+
+<!-- continue nudge — eases in once all 7 subgroups have been explored -->
+<div class="nudge" id="nudge" role="status" aria-live="polite">
+  <span class="nudge__chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+  <span class="nudge__d">All done &mdash; use the <b>&#9664;&nbsp;&#9654;</b> arrows at the bottom of the screen to continue when you&rsquo;re ready.</span>
+  <span class="nudge__m">Finished &mdash; tap <b>Return to course</b> to carry on.</span>
+</div>
 
 <!-- citation modal -->
 <div class="cite-modal" id="citeModal" role="dialog" aria-modal="true" aria-labelledby="citeTitle" hidden>
@@ -333,16 +412,16 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
     { id:'age', name:'Age', icon:ICON.age, levels:[
       {lab:'<75 years', short:'<75', n:184, orr:55.4, lo:47.9, hi:62.7},
       {lab:'≥75 years', short:'≥75', n:129, orr:46.5, lo:37.7, hi:55.5} ] },
-    { id:'smoking', name:'Smoking history', icon:ICON.smoking, levels:[
+    { id:'smoking', name:'Smoking history', icon:ICON.smoking, foot:{mk:'*', txt:'Smoking history was missing for 10 patients.'}, levels:[
       {lab:'Yes', short:'Y', n:149, orr:56.4, lo:48.0, hi:64.5},
       {lab:'No', short:'N', n:154, orr:47.4, lo:39.3, hi:55.6} ] },
-    { id:'histology', name:'Histology', icon:ICON.histology, levels:[
+    { id:'histology', name:'Histology', icon:ICON.histology, foot:{mk:'†', txt:'33 patients had histology other than squamous and adenocarcinoma.'}, levels:[
       {lab:'Adenocarcinoma', short:'A', n:252, orr:54.0, lo:47.6, hi:60.2},
       {lab:'Squamous', short:'S', n:28, orr:35.7, lo:18.6, hi:55.9} ] },
-    { id:'ecog', name:'ECOG PS', icon:ICON.ecog, levels:[
+    { id:'ecog', name:'ECOG PS', icon:ICON.ecog, foot:{mk:'‡', txt:'One patient had ECOG PS 2.'}, levels:[
       {lab:'0', short:'0', n:81, orr:59.3, lo:47.8, hi:70.1},
       {lab:'1', short:'1', n:231, orr:49.4, lo:42.7, hi:56.0} ] },
-    { id:'brain', name:'Brain metastases at baseline', icon:ICON.brain, levels:[
+    { id:'brain', name:'Brain metastases at baseline', icon:ICON.brain, foot:{mk:'§', txt:'Identified at baseline (investigator or independent review).'}, levels:[
       {lab:'Yes', short:'Y', n:57, orr:56.1, lo:42.4, hi:69.3},
       {lab:'No', short:'N', n:256, orr:50.8, lo:44.5, hi:57.1} ] },
     { id:'line', name:'Line of therapy', icon:ICON.line, note:'2L is a subset of 2L+ (second line or later); the two rows are not mutually exclusive.', levels:[
@@ -352,6 +431,16 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
   ];
 
   function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  // Footnote marker (hover / focus / tap tooltip). Returns '' when the subgroup has no note.
+  function footMark(s){
+    if(!s||!s.foot) return '';
+    const mk=esc(s.foot.mk), txt=esc(s.foot.txt);
+    // span (not <button>) so it stays valid when nested inside the hub card <button>
+    return '<span class="fnote">'+
+      '<span class="fnote__btn" role="button" tabindex="0" aria-expanded="false" aria-label="Footnote: '+txt+'">'+mk+'</span>'+
+      '<span class="fnote__pop" role="note">'+txt+'</span>'+
+    '</span>';
+  }
   function markerR(n){ return 4 + 7*Math.sqrt(n/313); }     // px radius, area ~ n
   function fmt(v){ return v.toFixed(1); }
   // Hub dot-strips are zoomed to a window around the data (all points 35.7-59.3) so the
@@ -382,7 +471,9 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
       if(groupCol){
         const firstOfGroup = idx===0 || r.group!==rows[idx-1].group;
         const g=document.createElement('div'); g.className='flbl flbl--group'+(sep?' is-sep':'');
-        g.textContent = firstOfGroup ? (r.group||'') : ''; labels.appendChild(g);
+        if(firstOfGroup && r.group){ g.innerHTML = esc(r.group)+footMark(r); }
+        else { g.textContent=''; }
+        labels.appendChild(g);
       }
       const lv=document.createElement('div'); lv.className='flbl flbl--lvl'+(r.isOverall?' is-overall':'')+(sep?' is-sep':'');
       lv.textContent=r.lab; labels.appendChild(lv);
@@ -433,7 +524,7 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
     btn.setAttribute('aria-label', aria);
     btn.innerHTML =
       '<span class="hcard__tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>'+
-      '<span class="hcard__top"><span class="hcard__icon">'+s.icon+'</span><span class="hcard__name">'+esc(s.name)+'</span></span>'+
+      '<span class="hcard__top"><span class="hcard__icon">'+s.icon+'</span><span class="hcard__name">'+esc(s.name)+footMark(s)+'</span></span>'+
       '<span class="hcard__strip" aria-hidden="true"><span class="hcard__track"></span><span class="hcard__ovl" style="left:'+zx(OVERALL.orr).toFixed(1)+'%"></span>'+marks+'</span>'+
       '<span class="hcard__ends" aria-hidden="true"><span>'+ZMIN+'</span><span>ORR&nbsp;%</span><span>'+ZMAX+'</span></span>';
     cardsEl.appendChild(btn);
@@ -472,10 +563,15 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
     exDotEls.forEach((d,n)=>d.setAttribute('aria-current', n===i?'true':'false'));
     markVisited(i);
   }
+  const nudge=document.getElementById('nudge');
   function markVisited(i){
     if(!visited.has(i)){
       visited.add(i); hcards[i].classList.add('is-seen'); progNum.textContent=visited.size;
-      if(visited.size===SUBGROUPS.length){ unlockSource(); live.textContent=SUBGROUPS[i].name+' explored. All seven explored — the Source button is now available.'; return; }
+      if(visited.size===SUBGROUPS.length){
+        unlockSource();
+        frame.classList.add('nudge-shown'); if(nudge) nudge.classList.add('is-on');
+        live.textContent=SUBGROUPS[i].name+' explored. All seven explored — the Source button is now available.'; return;
+      }
     }
     live.textContent=SUBGROUPS[i].name+' shown. '+visited.size+' of '+SUBGROUPS.length+' explored.';
   }
@@ -483,7 +579,7 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
   /* ---------- FULL forest ---------- */
   const fuBody=document.getElementById('fuBody');
   const FULL_ROWS=(function(){ const rows=[Object.assign({group:''},OVERALL)];
-    SUBGROUPS.forEach(s=> s.levels.forEach(l=> rows.push(Object.assign({group:s.name},l))) ); return rows; })();
+    SUBGROUPS.forEach(s=> s.levels.forEach(l=> rows.push(Object.assign({group:s.name, foot:s.foot},l))) ); return rows; })();
   function renderFull(){
     if(matchMedia('(max-width:760px)').matches){ fuBody.innerHTML=''; fuBody.appendChild(buildForest(FULL_ROWS,{rowH:30, groupCol:true})); return; }
     const avail=fuBody.clientHeight||440;                                  // fit rows to the height we actually have
@@ -549,15 +645,65 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
   iStay.addEventListener('click',closeInter);
   inter.addEventListener('click',e=>{ if(e.target===inter) closeInter(); });
 
-  /* ---------- keyboard: interstitial > citation modal > back ---------- */
+  /* ---------- footnote tooltips (tap toggles; hover/focus handled by CSS) ---------- */
+  function toggleFnote(btn){ const note=btn.closest('.fnote'); const open=note.classList.toggle('open'); btn.setAttribute('aria-expanded',String(open)); }
+  document.addEventListener('click',e=>{
+    const btn=e.target.closest('.fnote__btn');
+    document.querySelectorAll('.fnote.open').forEach(n=>{ if(!btn||n!==btn.closest('.fnote')){ n.classList.remove('open'); const b=n.querySelector('.fnote__btn'); if(b) b.setAttribute('aria-expanded','false'); } });
+    if(btn){ e.preventDefault(); e.stopPropagation(); toggleFnote(btn); }
+  },true);
+  document.addEventListener('keydown',e=>{
+    const btn=e.target.closest&&e.target.closest('.fnote__btn');
+    if(btn && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); e.stopPropagation(); toggleFnote(btn); }
+  },true);
+
+  /* ---------- keyboard: interstitial > citation modal > footnote > back ---------- */
   function trap(e,container){ const f=container.querySelectorAll('a[href],button:not([disabled])'); if(!f.length) return; const first=f[0],last=f[f.length-1]; if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); } else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); } }
   document.addEventListener('keydown',e=>{
     if(inter.classList.contains('is-open')){ if(e.key==='Escape'){ e.preventDefault(); closeInter(); return; } if(e.key==='Tab'){ trap(e,inter); } return; }
     if(citeModal.classList.contains('is-open')){ if(e.key==='Escape'){ e.preventDefault(); closeCite(); return; } if(e.key==='Tab'){ trap(e,citeModal); } return; }
+    if(e.key==='Escape'){ const openNote=document.querySelector('.fnote.open'); if(openNote){ e.preventDefault(); openNote.classList.remove('open'); const b=openNote.querySelector('.fnote__btn'); if(b) b.setAttribute('aria-expanded','false'); return; } }
     if(e.key==='Escape' && frame.dataset.view!=='hub'){ e.preventDefault(); backToHub(); }
   },true);
 
 })();
+</script>
+
+<script>
+/* §4.2 — mobile/Visme: launch card + return-to-course (single-screen variant) */
+(function () {
+  "use strict";
+  var fullscreen = /[?&]fullscreen=1/.test(location.search);
+  var inIframe = true; try { inIframe = (window.self !== window.top); } catch (e) { inIframe = true; }
+  var isMobile = /Android|iPhone|iPad|iPod|Mobile|Silk/i.test(navigator.userAgent);
+  var btn = document.getElementById('mlaunchBtn');
+  var base = location.href.split('#')[0].split('?')[0];
+  var courseUrl = ''; try { courseUrl = document.referrer || ''; } catch (e) { courseUrl = ''; }
+  var target = base + '?fullscreen=1' + (courseUrl ? '&return=' + encodeURIComponent(courseUrl) : '');
+  if (btn) {
+    btn.href = target;
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      var w = null;
+      try { w = window.open(target, '_blank'); } catch (err) { w = null; }
+      if (!w) { try { window.top.location.href = target; } catch (err2) { window.location.href = target; } }
+    });
+  }
+  var rb = document.getElementById('returnBar');
+  var returnUrl = (function () { try { return new URLSearchParams(location.search).get('return'); } catch (e) { return null; } })();
+  if (rb) {
+    if (returnUrl) { rb.href = returnUrl; }
+    rb.addEventListener('click', function (e) {
+      e.preventDefault();
+      try { if (window.opener && !window.opener.closed) { window.close(); return; } } catch (err) {}
+      if (window.history.length > 1) { window.history.back(); return; }
+      if (returnUrl) { window.location.href = returnUrl; }
+    });
+  }
+  if (isMobile) { document.body.classList.add('is-mobile'); }
+  if (inIframe && isMobile && !fullscreen) { document.body.classList.add('is-embedded-mobile'); }
+  if (fullscreen) { document.body.classList.add('is-fullscreen'); }
+}());
 </script>
 </body>
 </html>
