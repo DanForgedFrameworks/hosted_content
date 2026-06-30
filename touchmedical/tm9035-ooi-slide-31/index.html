@@ -147,6 +147,15 @@
 
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
+    /* ===== Acronym glossary — hover/focus definition pill (mimics the course TRAE pop-out) ===== */
+    .gloss { font: inherit; color: inherit; font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; text-decoration-color: currentColor; cursor: help; }
+    .gloss:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; border-radius: 4px; }
+    .gtip { position: fixed; z-index: 95; max-width: min(340px, 80vw); padding: 11px 17px; border-radius: 14px; border: 2px solid #b7d2ef; background: #e9f1fc; color: var(--navy); font-family: var(--font); font-size: clamp(.92rem, 1.35vw, 1.08rem); font-weight: 600; line-height: 1.3; text-align: center; box-shadow: 0 16px 34px rgba(16,26,38,.24); opacity: 0; visibility: hidden; transform: translateY(4px); transition: opacity .14s ease, transform .14s ease, visibility .14s ease; pointer-events: none; }
+    .gtip.show { opacity: 1; visibility: visible; transform: translateY(0); }
+    .gtip::after { content: ""; position: absolute; left: var(--arrow, 50%); width: 12px; height: 12px; background: #e9f1fc; transform: translateX(-50%) rotate(45deg); }
+    .gtip.above::after { bottom: -7px; border-right: 2px solid #b7d2ef; border-bottom: 2px solid #b7d2ef; }   /* pill above term, arrow points down */
+    .gtip.below::after { top: -7px; border-left: 2px solid #b7d2ef; border-top: 2px solid #b7d2ef; }          /* pill below term, arrow points up   */
+
     @keyframes revealUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes celebrate { 0% { transform: scale(1); } 45% { transform: scale(1.05) translateY(-6px); } 100% { transform: scale(1); } }
@@ -213,7 +222,7 @@
 
     <div class="stage">
       <section class="question-band" aria-labelledby="question-text">
-        <div class="question"><span class="question-icon" aria-hidden="true">?</span><p id="question-text"><span class="lead">Consider:</span> Over 228 weeks, how did HRQoL PRO scores change from baseline in patients with <em>MET</em>ex14 skipping NSCLC, as exemplified by EORTC QLQ-C30 and EQ-5D-5L scores?</p></div>
+        <div class="question"><span class="question-icon" aria-hidden="true">?</span><p id="question-text"><span class="lead">Consider:</span> Over 228 weeks, how did HRQoL <abbr class="gloss" tabindex="0" data-def="patient-reported outcome">PRO<span class="sr-only"> (patient-reported outcome)</span></abbr> scores change from baseline in patients with <em>MET</em>ex14 skipping NSCLC, as exemplified by <abbr class="gloss" tabindex="0" data-def="European Organisation for Research and Treatment of Cancer Quality of Life Questionnaire-Core 30">EORTC QLQ-C30<span class="sr-only"> (European Organisation for Research and Treatment of Cancer Quality of Life Questionnaire-Core 30)</span></abbr> and <abbr class="gloss" tabindex="0" data-def="EuroQol 5-Dimension 5-Level">EQ-5D-5L<span class="sr-only"> (EuroQol 5-Dimension 5-Level)</span></abbr> scores?</p></div>
       </section>
       <section class="answers" role="group" aria-describedby="selection-status" aria-label="Answer options">
         <button class="answer" type="button" data-correct="false">Scores<span class="kw">declined</span></button>
@@ -224,8 +233,8 @@
       <section class="reveal" id="reveal" aria-live="polite" aria-atomic="true">
         <p class="result-line" id="result-line"></p>
         <div class="answer-final">Scores<span class="kw">remained stable</span></div>
-        <p class="data-summary">There was no meaningful change in <strong>EORTC QLQ-C30</strong> or <strong>EQ-5D-5L</strong> scores up to 228 weeks with tepotinib.</p>
-        <p class="data-overall">Overall, HRQoL PRO scores remained stable.</p>
+        <p class="data-summary">There was no meaningful change in <strong><abbr class="gloss" tabindex="0" data-def="European Organisation for Research and Treatment of Cancer Quality of Life Questionnaire-Core 30">EORTC QLQ-C30<span class="sr-only"> (European Organisation for Research and Treatment of Cancer Quality of Life Questionnaire-Core 30)</span></abbr></strong> or <strong><abbr class="gloss" tabindex="0" data-def="EuroQol 5-Dimension 5-Level">EQ-5D-5L<span class="sr-only"> (EuroQol 5-Dimension 5-Level)</span></abbr></strong> scores up to 228 weeks with tepotinib.</p>
+        <p class="data-overall">Overall, HRQoL <abbr class="gloss" tabindex="0" data-def="patient-reported outcome">PRO<span class="sr-only"> (patient-reported outcome)</span></abbr> scores remained stable.</p>
         <div class="cta-row"><button class="cta" type="button" id="open-graphs"><span class="plus" aria-hidden="true">+</span>Click here to view data graphs</button></div>
         <p class="sr-only" id="selection-status"></p>
       </section>
@@ -244,7 +253,7 @@
 
       <div class="viewer-body">
         <div class="gpanel active" role="tabpanel" id="panel-0" aria-labelledby="tab-0" tabindex="0">
-          <div class="gcaption">The mean change (&plusmn;SD) from baseline for EORTC QLQ-C30 GHS was <strong>&minus;7.1 (26.66)</strong> (n=174).</div>
+          <div class="gcaption">The mean change (&plusmn;SD) from baseline for <abbr class="gloss" tabindex="0" data-def="European Organisation for Research and Treatment of Cancer Quality of Life Questionnaire-Core 30">EORTC QLQ-C30<span class="sr-only"> (European Organisation for Research and Treatment of Cancer Quality of Life Questionnaire-Core 30)</span></abbr> GHS was <strong>&minus;7.1 (26.66)</strong> (n=174).</div>
           <div class="gfigure">
             <div class="gimg-wrap">
               <img src="assets/graph-c30.jpg" alt="Box plots of EORTC QLQ-C30 global health score change from baseline by time on treatment to 228 weeks and end of treatment; medians remain near zero within the minimal clinically important difference band.">
@@ -283,7 +292,7 @@
           </div>
         </div>
         <div class="gpanel" role="tabpanel" id="panel-4" aria-labelledby="tab-4" tabindex="0" hidden>
-          <div class="gcaption">The mean change (&plusmn;SD) from baseline in EQ-5D-5L EQ-VAS score was <strong>&minus;10 (23.7)</strong> (n=172).</div>
+          <div class="gcaption">The mean change (&plusmn;SD) from baseline in <abbr class="gloss" tabindex="0" data-def="EuroQol 5-Dimension 5-Level">EQ-5D-5L<span class="sr-only"> (EuroQol 5-Dimension 5-Level)</span></abbr> <abbr class="gloss" tabindex="0" data-def="EuroQol Visual Analogue Scale">EQ-VAS<span class="sr-only"> (EuroQol Visual Analogue Scale)</span></abbr> score was <strong>&minus;10 (23.7)</strong> (n=172).</div>
           <div class="gfigure">
             <div class="gimg-wrap">
               <img src="assets/EQ-VAS_Figure_HQRoL.png?v=2" alt="Box plots of EQ-5D-5L EQ-VAS score change from baseline by time on treatment from week 6 to end of treatment; the median at end of treatment falls below the minimal clinically important difference band, with an arrow indicating the direction of improvement." onerror="this.classList.add('img-missing')">
@@ -496,6 +505,48 @@
       if (isMobile) { document.body.classList.add('is-mobile'); }
       if (inIframe && isMobile && !fullscreen) { document.body.classList.add('is-embedded-mobile'); }
       if (fullscreen) { document.body.classList.add('is-fullscreen'); }
+    }());
+  </script>
+
+  <script>
+    /* Acronym glossary tooltip: one fixed pill, positioned per term with above/below flip and
+       horizontal clamp so it floats over content and never clips the embed frame. Hover + focus only. */
+    (function () {
+      var terms = Array.prototype.slice.call(document.querySelectorAll('.gloss'));
+      if (!terms.length) return;
+      var tip = document.createElement('div');
+      tip.className = 'gtip';
+      tip.setAttribute('role', 'tooltip');
+      document.body.appendChild(tip);
+      var current = null;
+
+      function place(el) {
+        var r = el.getBoundingClientRect();
+        tip.classList.remove('above', 'below');
+        var tw = tip.offsetWidth, th = tip.offsetHeight;
+        var vw = window.innerWidth, vh = window.innerHeight, m = 8, gap = 10;
+        var below = (r.top - th - gap) < m;            // not enough room above -> drop below
+        if (below && (r.bottom + gap + th) > (vh - m) && (r.top - th - gap) > 0) below = false;
+        tip.classList.add(below ? 'below' : 'above');
+        var top = below ? (r.bottom + gap) : (r.top - th - gap);
+        var cx = r.left + r.width / 2;
+        var left = Math.max(m, Math.min(cx - tw / 2, vw - tw - m));
+        tip.style.top = Math.round(top) + 'px';
+        tip.style.left = Math.round(left) + 'px';
+        var arrow = Math.max(16, Math.min(cx - left, tw - 16));
+        tip.style.setProperty('--arrow', arrow + 'px');
+      }
+      function show(el) { current = el; tip.textContent = el.getAttribute('data-def') || ''; tip.classList.add('show'); place(el); }
+      function hide() { current = null; tip.classList.remove('show'); }
+
+      terms.forEach(function (el) {
+        el.addEventListener('mouseenter', function () { show(el); });
+        el.addEventListener('mouseleave', hide);
+        el.addEventListener('focus', function () { show(el); });
+        el.addEventListener('blur', hide);
+      });
+      window.addEventListener('resize', function () { if (current) place(current); });
+      window.addEventListener('scroll', function () { if (current) place(current); }, true);
     }());
   </script>
 </body>
