@@ -140,9 +140,9 @@
     .img-fallback { display: none; flex-direction: column; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 100%; min-height: 180px; border: 2px dashed var(--teal); border-radius: 12px; color: var(--muted); font-size: 1rem; font-weight: 700; text-align: center; padding: 18px; }
     .gimg-wrap img.img-missing { display: none; }
     .gimg-wrap img.img-missing ~ .img-fallback { display: flex; }
-    /* EQ-VAS figure is small/low-res — tighten the frame + scale it up to reduce the empty box */
-    #panel-4 .gimg-wrap { padding: 5px; }
-    #panel-4 .gimg-wrap img { width: 100%; max-width: 920px; height: auto; max-height: 100%; }
+    /* EQ-VAS figure (992x427) — hug the bordered box to the image aspect so it fills (no empty side space) at any height */
+    #panel-4 .gimg-wrap { align-self: stretch; aspect-ratio: 992 / 427; width: auto; max-width: 100%; margin-inline: auto; padding: 6px; }
+    #panel-4 .gimg-wrap img { width: 100%; height: 100%; object-fit: contain; }
     .img-fallback code { font-size: .82em; font-weight: 600; color: var(--teal-strong); }
 
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
@@ -283,10 +283,10 @@
           </div>
         </div>
         <div class="gpanel" role="tabpanel" id="panel-4" aria-labelledby="tab-4" tabindex="0" hidden>
-          <div class="gcaption is-pending">Mean change (&plusmn;SD) from baseline in EQ-5D-5L EQ-VAS score: <strong>figure to be confirmed</strong><span class="pending-tag">pending</span></div>
+          <div class="gcaption">The mean change (&plusmn;SD) from baseline in EQ-5D-5L EQ-VAS score was <strong>&minus;10 (23.7)</strong> (n=172).</div>
           <div class="gfigure">
             <div class="gimg-wrap">
-              <img src="assets/EQ-VAS_Figure_HQRoL.png" alt="Box plots of EQ-5D-5L EQ-VAS score change from baseline by time on treatment from week 6 to end of treatment; medians remain near zero within the minimal clinically important difference band, with an arrow indicating improvement." onerror="this.classList.add('img-missing')">
+              <img src="assets/EQ-VAS_Figure_HQRoL.png?v=2" alt="Box plots of EQ-5D-5L EQ-VAS score change from baseline by time on treatment from week 6 to end of treatment; the median at end of treatment falls below the minimal clinically important difference band, with an arrow indicating the direction of improvement." onerror="this.classList.add('img-missing')">
               <div class="img-fallback" aria-hidden="true">EQ-VAS figure pending<span><code>add assets/EQ-VAS_Figure_HQRoL.png</code></span></div>
               <span class="note dagger"><button class="note-btn" type="button" aria-expanded="false" aria-label="What n dagger means">&dagger;</button><span class="note-pop" role="note">Number of patients who completed the questionnaire at each visit.</span></span>
             </div>
