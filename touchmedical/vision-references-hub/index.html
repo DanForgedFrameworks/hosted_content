@@ -445,6 +445,9 @@ const REFERENCES = [
     return Promise.resolve(fallbackCopy(t));
   }
 
+  /* italicise the gene symbol MET for display only (data stays plain so search still works); run on esc()'d text */
+  function italMET(s){ return String(s).replace(/\bMET\b/g,'<em>MET</em>').replace(/\bMET(?=ex14)/g,'<em>MET</em>'); }
+
   /* ---------- render ---------- */
   function render(){
     crumbs.innerHTML=''; grid.innerHTML='';
@@ -455,7 +458,7 @@ const REFERENCES = [
     crumbs.appendChild(home);
     if(inCategory){
       const sep=document.createElement('span'); sep.className='tmh-sep'; sep.textContent='›'; crumbs.appendChild(sep);
-      const c=document.createElement('span'); c.className='tmh-crumb tmh-crumb--static'; c.textContent=inCategory; crumbs.appendChild(c);
+      const c=document.createElement('span'); c.className='tmh-crumb tmh-crumb--static'; c.innerHTML=italMET(esc(inCategory)); crumbs.appendChild(c);
     }
     if(!inCategory){
       CATS.forEach(cat => grid.appendChild(folderCard(cat)));
@@ -474,7 +477,7 @@ const REFERENCES = [
     card.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } };
     card.innerHTML =
       '<div class="tmh-icon">'+(ICONS[FICON[cat]]||ICONS.article)+'</div>'+
-      '<h3 class="tmh-card__title">'+esc(cat)+'</h3>'+
+      '<h3 class="tmh-card__title">'+italMET(esc(cat))+'</h3>'+
       '<span class="tmh-tag tmh-tag--count">'+items.length+' reference'+(items.length>1?'s':'')+'</span>'+
       '<span class="tmh-card__cue">View references &rarr;</span>';
     return card;
@@ -490,7 +493,7 @@ const REFERENCES = [
     card.innerHTML =
       '<div class="tmh-icon">'+refIcon(r)+'</div>'+
       '<span class="tmh-tag">'+esc(r.type)+'</span>'+
-      '<h3 class="tmh-card__title">'+esc(r.title)+'</h3>'+
+      '<h3 class="tmh-card__title">'+italMET(esc(r.title))+'</h3>'+
       '<div class="tmh-card__meta">'+esc(r.code)+'</div>';
     return card;
   }
@@ -524,8 +527,8 @@ const REFERENCES = [
     modalTrigger=document.activeElement;
     document.getElementById('tmhModalType').textContent=r.type;
     document.getElementById('tmhModalType').style.setProperty('--theme', THEME[r.cat]||'var(--tm-accent)');
-    document.getElementById('tmhModalTitle').textContent=r.title;
-    document.getElementById('tmhModalCite').textContent=r.cite;
+    document.getElementById('tmhModalTitle').innerHTML=italMET(esc(r.title));
+    document.getElementById('tmhModalCite').innerHTML=italMET(esc(r.cite));
     const wrap=document.getElementById('tmhModalUrls');
     wrap.innerHTML='';
     const row=document.createElement('div'); row.className='tmh-url';

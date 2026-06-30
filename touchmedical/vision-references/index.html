@@ -449,11 +449,13 @@ const STATEMENTS = [
   }
 
   // ---- render statements ----
+  // italicise the gene symbol MET for display only (data/attributes stay plain); run on esc()'d text
+  function italMET(s){ return String(s).replace(/\bMET\b/g,'<em>MET</em>').replace(/\bMET(?=ex14)/g,'<em>MET</em>'); }
   // Each citation is a compact chip; full reference + URL + Open/Copy live in the launch dialog.
   function chipHTML(c){
     const label = c.short || c.ref;
     return '<button class="tm-chip" type="button" data-url="'+esc(c.url)+'" data-ref="'+esc(c.ref)+'" '+
-           'aria-label="Open source: '+esc(c.ref)+'">'+esc(label)+' <span aria-hidden="true">↗</span></button>';
+           'aria-label="Open source: '+esc(c.ref)+'">'+italMET(esc(label))+' <span aria-hidden="true">↗</span></button>';
   }
 
   body.innerHTML = '<div class="tm-stmts">' + STATEMENTS.map((s,i)=>{
@@ -461,7 +463,7 @@ const STATEMENTS = [
     return '<section class="tm-stmt">'+
       '<div class="tm-stmt__head">'+
         '<span class="tm-stmt__num">'+(i+1)+'</span>'+
-        '<p class="tm-stmt__text">'+esc(s.text)+'</p>'+
+        '<p class="tm-stmt__text">'+italMET(esc(s.text))+'</p>'+
       '</div>'+
       '<div class="tm-chips">'+chips+'</div>'+
     '</section>';
@@ -496,7 +498,7 @@ const STATEMENTS = [
     interTrigger = trigger;
     let host = url;
     try{ host = new URL(url).hostname; }catch(e){}
-    iDest.textContent   = ref;
+    iDest.innerHTML     = italMET(esc(ref));
     iOrg.textContent    = orgFromHost(host);
     iDomain.textContent = host;
     iUrl.textContent    = url;
