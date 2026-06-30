@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dose reductions and interruptions in METex14 skipping NSCLC in VISION</title>
+<style>
+/* ============================================================
+   TOUCH MEDICAL — TM9035 SLIDE 40  (fit-to-embed-box, 680 ceiling)
+   Dose reductions and interruptions — duration of tepotinib treatment
+   in patients who had dose reductions and/or interruptions, by line of
+   therapy. Two states: (A) charts [default], (B) full data table [toggle].
+   Horizontal house bars (slide 12) + hover callout; chrome from slide 24.
+   ALL bar widths BAKED inline as % (§6). Self-contained; no external deps.
+   Brand: Poppins (bundled), teal #0098be, navy #222f55.
+   ============================================================ */
+@font-face { font-family:"Poppins"; src:url("assets/poppins-400.ttf") format("truetype"); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-600.ttf") format("truetype"); font-weight:600; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-700.ttf") format("truetype"); font-weight:700; font-style:normal; font-display:swap; }
+
+:root{
+  --teal:#0098be; --teal-strong:#007a98;
+  --navy:#222f55; --on-accent:#ffffff;
+  --neutral:#c6d3e2;
+  --muted:#56608a; --faint:#8a91b0;
+  --title-shadow-slim:0 1px 2px rgba(34,47,85,.16);
+  --pale:#d9eff8; --mist:#f4f7f9; --line:#e3e8ee;
+  --backdrop:rgba(16,26,38,.68);
+  --c1:#222f55; --c2:#0098be; --c3:#4f9fc4; --c4:#86bdd8; --c5:#b9d8e8;
+  --font:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{ box-sizing:border-box; }
+html,body{ height:100%; margin:0; }
+body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--font); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; display:flex; align-items:center; justify-content:center; }
+
+/* ---------- frame: fill height but cap at 680, centred in the box ---------- */
+.frame{ width:100%; height:100%; max-height:680px; display:flex; flex-direction:column; overflow:hidden; background:#fff; }
+
+/* banner (chrome) — white-band heading */
+.banner{ flex:0 0 auto; text-align:center; padding:clamp(8px,1.7vh,15px) clamp(16px,3vw,40px) clamp(5px,1vh,10px); background:#fff; box-shadow:0 4px 11px rgba(34,47,85,0.07); }
+.banner__title{ margin:0; font-size:clamp(30px,3.4vw,48px); color:var(--navy); font-weight:700; line-height:1.1; letter-spacing:-0.012em; text-shadow:var(--title-shadow-slim); }
+.banner__title em{ font-style:italic; }
+
+/* ---------- body shell ---------- */
+.body{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; padding:clamp(7px,1.3vh,14px) clamp(14px,2.6vw,34px) clamp(5px,1vh,10px); gap:clamp(6px,1vh,11px); }
+
+/* key-message finding callout (navy text, teal-bordered) */
+.keymsg{ flex:0 0 auto; display:flex; justify-content:center; }
+.keymsg__box{ display:inline-flex; align-items:flex-start; gap:11px; max-width:1240px; padding:8px 22px; border:2px solid var(--teal); border-radius:14px; background:rgba(0,152,190,.06); color:var(--navy); font-size:clamp(.86rem,1.5vw,1.02rem); font-weight:600; line-height:1.3; text-align:left; }
+.keymsg__ic{ flex:0 0 auto; width:24px; height:24px; margin-top:1px; display:grid; place-items:center; color:var(--teal); }
+.keymsg__ic svg{ width:100%; height:100%; }
+
+/* shared cohort legend */
+.legend{ flex:0 0 auto; display:flex; flex-wrap:wrap; justify-content:center; gap:clamp(14px,2.4vw,30px); }
+.legend__item{ display:inline-flex; align-items:center; gap:7px; font-size:clamp(.76rem,1.35vw,.94rem); font-weight:600; color:var(--navy); }
+.legend__sw{ width:14px; height:14px; border-radius:4px; flex:0 0 auto; }
+
+/* ---------- regions: charts <-> table ---------- */
+.region{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; padding-bottom:clamp(8px,1.3vh,14px); }
+.region--table{ display:none; }
+body.is-table .region--charts{ display:none; }
+body.is-table .region--table{ display:flex; }
+
+/* ---------- charts region ---------- */
+/* tabbed measures — one chart at a time so each gets the full body */
+.tabs{ flex:0 0 auto; display:flex; flex-wrap:wrap; justify-content:center; gap:9px; margin-bottom:clamp(6px,1.2vh,13px); }
+.tab{ display:inline-flex; align-items:center; gap:7px; padding:7px 19px; border:2px solid var(--line); border-radius:999px; background:#fff; color:var(--muted); font:inherit; font-weight:700; font-size:clamp(.8rem,1.4vw,.96rem); cursor:pointer; transition:border-color .15s ease, color .15s ease, background .15s ease; }
+.tab:hover{ border-color:var(--teal); color:var(--teal-strong); }
+.tab[aria-selected="true"]{ border-color:var(--teal); background:var(--teal); color:#fff; }
+.tab:focus-visible{ outline:3px solid var(--navy); outline-offset:2px; }
+.charts{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; }
+.chart{ flex:1 1 auto; min-height:0; overflow:hidden; display:none; flex-direction:column; }
+.chart.is-active{ display:flex; animation:chartIn .4s cubic-bezier(.4,0,.2,1) both; }
+@keyframes chartIn{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+.chart__title{ flex:0 0 auto; margin:0 0 clamp(4px,0.9vh,9px); text-align:center; font-size:clamp(.9rem,1.65vw,1.12rem); font-weight:700; color:var(--navy); }
+.chart__body{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; justify-content:center; gap:clamp(8px,1.7vh,20px); }
+
+/* a labelled group of cohort bars (Mean / Median), or a single ungrouped block */
+.grp{ display:flex; flex-direction:column; gap:clamp(4px,0.9vh,9px); }
+.grp__cap{ font-size:clamp(.76rem,1.3vw,.92rem); font-weight:700; color:var(--muted); margin:0 0 1px; }
+
+/* horizontal house bars (lifted from slide 12 .bars/.bar) */
+.bars{ width:100%; display:flex; flex-direction:column; gap:clamp(5px,1.1vh,12px); }
+.bar{ display:block; cursor:pointer; border-radius:9px; }
+.bar:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+.bar__top{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-bottom:3px; }
+.bar__label{ font-size:clamp(.82rem,1.45vw,1rem); font-weight:600; color:var(--navy); }
+.bar__val{ flex:0 0 auto; font-size:clamp(.86rem,1.5vw,1.05rem); font-weight:700; color:var(--navy); font-variant-numeric:tabular-nums; }
+.bar__track{ position:relative; width:100%; height:clamp(18px,2.9vh,32px); background:#fff; border-radius:8px; box-shadow:inset 0 0 0 1px var(--line); overflow:hidden; }
+.bar__fill{ display:block; height:100%; min-width:3px; border-radius:7px; }
+
+/* axis: gridlines + ticks behind the bar block */
+.axis{ position:relative; }
+.axis__grid{ position:absolute; inset:0 0 18px 0; pointer-events:none; z-index:0; }
+.axis__line{ position:absolute; top:0; bottom:0; width:1px; background:var(--line); }
+.axis__ticks{ position:absolute; left:0; right:0; bottom:0; height:16px; pointer-events:none; }
+.axis__tick{ position:absolute; transform:translateX(-50%); font-size:clamp(.6rem,1.05vw,.72rem); font-weight:600; color:var(--faint); font-variant-numeric:tabular-nums; }
+.axis__bars{ position:relative; z-index:1; padding-bottom:18px; }
+
+/* ---------- dumbbell: mean vs median on a shared 0-20 axis (median/mean filter) ---------- */
+.dumb{ flex:1 1 auto; min-height:0; overflow:hidden; display:flex; flex-direction:column; --dlabel:clamp(52px,7vw,84px); --dgap:clamp(10px,1.6vw,18px); --dright:clamp(26px,3.4vw,48px); }
+.dfilter{ flex:0 0 auto; display:flex; justify-content:center; gap:10px; margin-bottom:clamp(6px,1.3vh,13px); }
+.dchip{ display:inline-flex; align-items:center; gap:7px; padding:5px 15px; border:2px solid var(--line); border-radius:999px; background:#fff; color:var(--muted); font:inherit; font-weight:700; font-size:clamp(.74rem,1.25vw,.88rem); cursor:pointer; transition:border-color .15s ease,color .15s ease,opacity .15s ease; }
+.dchip__sw{ width:13px; height:13px; flex:0 0 auto; border-radius:50%; }
+.dchip__sw.is-mean{ border-radius:2px; transform:rotate(45deg); }
+.dchip--median[aria-pressed="true"]{ border-color:var(--teal); color:var(--teal-strong); }
+.dchip--mean[aria-pressed="true"]{ border-color:var(--navy); color:var(--navy); }
+.dchip[aria-pressed="false"]{ opacity:.45; }
+.dchip:focus-visible{ outline:3px solid var(--navy); outline-offset:2px; }
+.dumb__plot{ flex:1 1 auto; min-height:0; position:relative; display:flex; flex-direction:column; justify-content:center; gap:clamp(8px,2vh,30px); }
+.dgrid{ position:absolute; left:calc(var(--dlabel) + var(--dgap)); right:var(--dright); top:0; bottom:0; pointer-events:none; z-index:0; }
+.dgl{ position:absolute; top:0; bottom:0; width:1px; background:var(--line); }
+.drow{ position:relative; z-index:1; display:grid; grid-template-columns:var(--dlabel) 1fr; gap:var(--dgap); align-items:center; padding-right:var(--dright); }
+.drow__lab{ text-align:right; line-height:1.12; }
+.drow__lab b{ display:block; font-size:clamp(.84rem,1.5vw,1.02rem); font-weight:700; color:var(--navy); }
+.drow__lab span{ font-size:clamp(.64rem,1.1vw,.76rem); color:var(--faint); }
+.dtrack{ position:relative; height:clamp(24px,4.2vh,42px); }
+.dconn{ position:absolute; top:50%; height:4px; transform:translateY(-50%); background:var(--neutral,#c6d3e2); border-radius:4px; z-index:1; }
+.dpt{ position:absolute; top:50%; transform:translate(-50%,-50%); cursor:pointer; z-index:2; }
+.dpt:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; border-radius:4px; }
+.dpt.is-median{ width:clamp(14px,1.9vw,18px); height:clamp(14px,1.9vw,18px); border-radius:50%; background:var(--teal); box-shadow:0 0 0 2px #fff; }
+.dpt.is-mean{ width:clamp(14px,1.9vw,18px); height:clamp(14px,1.9vw,18px); background:var(--navy); box-shadow:0 0 0 2px #fff; clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%); }
+.dval{ position:absolute; top:50%; font-size:clamp(.7rem,1.2vw,.86rem); font-weight:700; white-space:nowrap; z-index:2; font-variant-numeric:tabular-nums; }
+.dval--median{ transform:translate(-100%,-50%); margin-left:-11px; color:var(--teal-strong); }
+.dval--mean{ transform:translateY(-50%); margin-left:11px; color:var(--navy); }
+.dpt, .dconn, .dval{ transition:opacity .3s ease; }
+.dumb:not(.show-median) .is-median, .dumb:not(.show-median) .dval--median{ opacity:0; pointer-events:none; }
+.dumb:not(.show-mean) .is-mean, .dumb:not(.show-mean) .dval--mean{ opacity:0; pointer-events:none; }
+.dumb:not(.show-median) .dconn, .dumb:not(.show-mean) .dconn{ opacity:0; }
+.daxisrow{ flex:0 0 auto; position:relative; height:15px; margin-left:calc(var(--dlabel) + var(--dgap)); margin-right:var(--dright); margin-top:clamp(4px,0.8vh,8px); }
+.dtick{ position:absolute; transform:translateX(-50%); font-size:clamp(.62rem,1.05vw,.72rem); font-weight:600; color:var(--faint); font-variant-numeric:tabular-nums; }
+.daxislab{ flex:0 0 auto; text-align:center; font-size:clamp(.8rem,1.4vw,.98rem); font-weight:700; color:var(--navy); margin-top:2px; }
+
+/* ---------- toggle controls (chrome) ---------- */
+.controls{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:clamp(12px,2.4vw,26px); padding:clamp(6px,1.1vh,11px) clamp(12px,3vw,24px); }
+.toggle-btn{ display:inline-flex; align-items:center; gap:9px; min-height:42px; padding:10px 20px; border:2px solid var(--teal); border-radius:10px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.9rem; cursor:pointer; transition:filter .15s ease; }
+.toggle-btn:hover{ filter:brightness(.95); }
+.toggle-btn svg{ width:17px; height:17px; }
+.toggle-btn.is-back{ background:#fff; color:var(--teal); }
+.toggle-btn[hidden]{ display:none !important; }   /* class display was overriding the hidden attr → both buttons showed */
+.cite-src{ display:inline-flex; align-items:center; gap:8px; min-height:42px; padding:10px 18px; border:2px solid var(--teal); border-radius:10px; background:#fff; color:var(--teal); font:inherit; font-weight:700; font-size:.86rem; cursor:pointer; transition:filter .15s ease; }
+.cite-src:hover{ filter:brightness(.96); }
+.cite-src svg{ width:15px; height:15px; }
+.toggle-btn:focus-visible,.cite-src:focus-visible,.cite-dismiss:focus-visible,.inter__btn:focus-visible,.cite-view:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+.src-pending{ font-size:clamp(.66rem,1.15vw,.78rem); font-weight:600; font-style:italic; color:var(--warn,#b9772a); white-space:nowrap; }
+
+/* ---------- data table ---------- */
+.tablewrap{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.dtable{ width:min(100%,1000px); border-collapse:collapse; font-variant-numeric:tabular-nums; }
+.dtable th,.dtable td{ padding:clamp(9px,1.7vh,16px) clamp(10px,1.6vw,20px); text-align:center; font-size:clamp(.84rem,1.5vw,1.04rem); border:1px solid var(--line); }
+.dtable thead th{ font-weight:700; line-height:1.2; }
+.dtable thead th .n{ display:block; font-weight:600; font-size:.82em; opacity:.92; }
+.dtable thead th.h-row{ background:var(--mist); color:var(--navy); text-align:left; }
+.dtable thead th.h-overall{ background:var(--c1); color:#fff; }
+.dtable thead th.h-1l{ background:var(--c2); color:#fff; }
+.dtable thead th.h-2l{ background:var(--c4); color:var(--navy); }
+.dtable tbody th{ text-align:left; font-weight:700; color:var(--navy); background:var(--mist); }
+.dtable tbody td{ font-weight:600; color:var(--navy); }
+.dtable tbody tr:nth-child(even) td{ background:#fbfcfd; }
+
+/* ---------- hover/focus callout ---------- */
+.callout{ position:fixed; z-index:35; pointer-events:none; transform:translateX(-50%); max-width:260px; padding:9px 13px; border-radius:10px; background:var(--navy); color:#fff; font-size:clamp(.8rem,1.4vw,.9rem); line-height:1.3; box-shadow:0 10px 24px rgba(16,26,38,.34); visibility:hidden; opacity:0; transition:opacity .12s ease; }
+.callout.is-on{ visibility:visible; opacity:1; }
+.callout strong{ font-weight:700; font-variant-numeric:tabular-nums; }
+.callout__lab{ display:block; margin-top:2px; font-size:.78rem; font-weight:600; color:#bfe1f0; }
+.callout::after{ content:""; position:absolute; left:50%; transform:translateX(-50%); border:7px solid transparent; }
+.callout:not(.is-above)::after{ bottom:100%; border-bottom-color:var(--navy); }
+.callout.is-above::after{ top:100%; border-top-color:var(--navy); }
+
+/* ---------- citation modal (centred overlay) ---------- */
+.cite-modal{ position:fixed; inset:0; z-index:40; display:none; align-items:center; justify-content:center; padding:clamp(12px,4vw,40px); background:var(--backdrop); }
+.cite-modal.is-open{ display:flex; }
+.cite-card{ width:min(640px,100%); max-height:calc(100% - 24px); overflow:auto; background:#fff; border-radius:16px; box-shadow:0 24px 60px rgba(16,26,38,.4); padding:clamp(18px,3vw,26px); animation:rise .22s ease both; }
+.cite-card__eyebrow{ margin:0 0 4px; font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--teal); }
+.cite-card__title{ margin:0 0 8px; font-size:clamp(1.05rem,2vw,1.25rem); font-weight:700; color:var(--navy); }
+.cite-card__body{ margin:0; font-size:.92rem; line-height:1.5; color:var(--navy); }
+.cite-card__pending{ display:block; margin-top:12px; padding:10px 13px; border:2px dashed var(--warn,#e0a13c); border-radius:10px; background:var(--warn-pale,#fbf0db); font-size:.85rem; font-weight:600; line-height:1.45; color:#8a5a13; }
+.cite-card__actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+.cite-dismiss{ flex:0 0 auto; min-height:44px; padding:10px 18px; border:2px solid var(--teal); border-radius:10px; background:#fff; color:var(--teal); font:inherit; font-weight:700; font-size:.88rem; cursor:pointer; }
+
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+@keyframes rise{ from{ opacity:0; transform:translateY(10px) scale(.99);} to{ opacity:1; transform:none; } }
+
+/* ===== Continue nudge — eased-in end-of-content reminder (fires on first table open) ===== */
+.frame.nudge-shown{ padding-bottom:76px; }
+.nudge{ position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:38; display:none; align-items:center; gap:10px; max-width:calc(100% - 28px); padding:9px 17px; border-radius:999px; background:rgba(34,47,85,.94); color:#fff; font-size:15px; font-weight:600; line-height:1.25; box-shadow:0 8px 22px rgba(16,26,38,.30); }
+.nudge.is-on{ display:inline-flex; animation:nudgeIn .5s ease both; }
+.nudge b{ font-weight:700; }
+.nudge__chev{ flex:0 0 auto; display:inline-grid; place-items:center; }
+.nudge__chev svg{ width:20px; height:20px; transition:transform .3s ease; }
+.nudge.is-on .nudge__chev{ animation:nudgeBob 1.6s ease-in-out .6s infinite; }
+.nudge__m{ display:none; }
+body.is-fullscreen .nudge{ bottom:auto; top:60px; }
+body.is-fullscreen .nudge__d{ display:none; }
+body.is-fullscreen .nudge__m{ display:inline; }
+body.is-fullscreen .nudge__chev svg{ transform:rotate(180deg); }
+body.is-fullscreen .nudge.is-on .nudge__chev{ animation:nudgeBobUp 1.6s ease-in-out .6s infinite; }
+@keyframes nudgeIn{ from{ opacity:0; transform:translateX(-50%) translateY(12px);} to{ opacity:1; transform:translateX(-50%) translateY(0);} }
+@keyframes nudgeBob{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(3px);} }
+@keyframes nudgeBobUp{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-3px);} }
+
+/* ===== §4.2 Mobile/Visme launch card + return-to-course (single-screen variant) ===== */
+.mlaunch{ display:none; }
+.returnbar{ display:none; }
+body.is-embedded-mobile .frame{ display:none !important; }
+body.is-embedded-mobile{ display:block; }
+body.is-embedded-mobile .mlaunch{ display:flex; position:fixed; inset:0; z-index:50; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:42px; padding:90px 70px; background:linear-gradient(135deg,#0098be 0%, #007a98 55%, #222f55 100%); color:#fff; }
+.mlaunch__badge{ font-size:30px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; opacity:.9; }
+.mlaunch__title{ margin:0; font-size:50px; font-weight:700; line-height:1.08; }
+.mlaunch__title em{ font-style:italic; }
+.mlaunch__lead{ margin:0; max-width:1040px; font-size:36px; font-weight:500; line-height:1.4; opacity:.96; }
+.mlaunch__btn{ display:inline-flex; align-items:center; gap:26px; margin-top:6px; padding:44px 88px; border-radius:999px; background:#fff; color:#007a98; font:inherit; font-weight:700; font-size:46px; text-decoration:none; box-shadow:0 18px 54px rgba(16,26,38,.38); }
+.mlaunch__btn svg{ width:54px; height:54px; }
+.mlaunch__note{ margin:0; max-width:1040px; font-size:27px; line-height:1.4; opacity:.85; }
+body.is-fullscreen .returnbar{ display:inline-flex; align-items:center; justify-content:center; gap:9px; position:fixed; top:10px; left:10px; z-index:60; box-sizing:border-box; width:auto; height:44px; padding:0 18px 0 13px; border-radius:999px; background:rgba(34,47,85,.92); color:#fff; text-decoration:none; box-shadow:0 6px 16px rgba(16,26,38,.26); font:inherit; }
+body.is-fullscreen .returnbar__ic{ flex:0 0 auto; width:22px; height:22px; display:grid; place-items:center; }
+body.is-fullscreen .returnbar__ic svg{ width:22px; height:22px; }
+body.is-fullscreen .returnbar__lab{ font:inherit; font-weight:700; font-size:15px; white-space:nowrap; }
+body.is-fullscreen .returnbar:focus-visible{ outline:3px solid var(--teal); outline-offset:3px; }
+body.is-fullscreen{ padding-top:56px; }
+
+/* ---------- phone view (<760px): drop fixed-height, allow scroll ---------- */
+@media (max-width:760px){
+  html,body{ height:auto; }
+  body{ overflow:auto; display:block; }
+  .frame{ height:auto; min-height:100%; max-height:none; }
+  .frame.nudge-shown{ padding-bottom:0; }
+  .nudge{ font-size:13px; left:12px; right:12px; transform:none; max-width:none; justify-content:center; }
+  .nudge.is-on{ animation:none; }
+  .body{ overflow:visible; }
+  .controls{ flex-wrap:wrap; }
+  .dtable th,.dtable td{ padding:8px 8px; }
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+}
+</style>
+</head>
+<body>
+<main class="frame" aria-label="Dose reductions and interruptions in METex14 skipping NSCLC in VISION">
+
+  <header class="banner">
+    <h1 class="banner__title">Dose reductions and interruptions</h1>
+  </header>
+
+  <div class="body" id="body">
+
+    <!-- key-message finding callout (verbatim) -->
+    <div class="keymsg">
+      <p class="keymsg__box"><span class="keymsg__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>In patients who had a tepotinib dose reduction and/or interruption, the median treatment duration was 10.7&nbsp;months overall &mdash; use the tabs to compare measures by line of therapy.</p>
+    </div>
+
+    <!-- cohort legend -->
+    <div class="legend" aria-hidden="true">
+      <span class="legend__item"><span class="legend__sw" style="background:var(--c1)"></span>Overall (n=197)</span>
+      <span class="legend__item"><span class="legend__sw" style="background:var(--c2)"></span>1L (n=108)</span>
+      <span class="legend__item"><span class="legend__sw" style="background:var(--c4)"></span>2L+ (n=89)</span>
+    </div>
+
+    <!-- STATE A: charts (tabbed — one measure at a time) -->
+    <div class="region region--charts" id="regionCharts">
+      <div class="tabs" role="tablist" aria-label="Choose a measure to view">
+        <button class="tab" id="tab-dur" type="button" role="tab" aria-selected="true" aria-controls="chart-dur">Duration of treatment</button>
+        <button class="tab" id="tab-ong" type="button" role="tab" aria-selected="false" aria-controls="chart-ong">Treatment ongoing</button>
+      </div>
+      <div class="charts">
+
+        <!-- Tab 1: DURATION — dumbbell of mean vs median on a shared 0-20 axis -->
+        <section class="chart is-active" id="chart-dur" role="tabpanel" aria-labelledby="tab-dur" aria-label="Mean and median duration of treatment in months, by line of therapy">
+          <h2 class="chart__title">Mean &amp; median treatment duration (months)</h2>
+          <div class="dumb show-median show-mean" id="dumb">
+            <div class="dfilter" role="group" aria-label="Show or hide measures">
+              <button class="dchip dchip--median" id="chip-median" type="button" aria-pressed="true"><span class="dchip__sw" style="background:var(--teal)"></span>Median</button>
+              <button class="dchip dchip--mean" id="chip-mean" type="button" aria-pressed="true"><span class="dchip__sw is-mean" style="background:var(--navy)"></span>Mean</button>
+            </div>
+            <div class="dumb__plot">
+              <div class="dgrid" aria-hidden="true"><span class="dgl" style="left:0%"></span><span class="dgl" style="left:25%"></span><span class="dgl" style="left:50%"></span><span class="dgl" style="left:75%"></span><span class="dgl" style="left:100%"></span></div>
+              <div class="drow">
+                <div class="drow__lab"><b>Overall</b><span>n=197</span></div>
+                <div class="dtrack">
+                  <span class="dconn" style="left:53.5%;width:29.5%"></span>
+                  <span class="dval dval--median" style="left:53.5%">10.7</span>
+                  <span class="dval dval--mean" style="left:83%">16.6</span>
+                  <span class="dpt is-median" style="left:53.5%" role="button" tabindex="0" data-callout="<strong>Median 10.7 (0.7&ndash;83.1) months</strong><span class=&quot;callout__lab&quot;>Overall &middot; n=197</span>" aria-label="Overall: median duration 10.7 months, range 0.7 to 83.1"></span>
+                  <span class="dpt is-mean" style="left:83%" role="button" tabindex="0" data-callout="<strong>Mean 16.6 &plusmn; 16.3 months</strong><span class=&quot;callout__lab&quot;>Overall &middot; n=197</span>" aria-label="Overall: mean duration 16.6 plus or minus 16.3 months"></span>
+                </div>
+              </div>
+              <div class="drow">
+                <div class="drow__lab"><b>1L</b><span>n=108</span></div>
+                <div class="dtrack">
+                  <span class="dconn" style="left:55.5%;width:38.5%"></span>
+                  <span class="dval dval--median" style="left:55.5%">11.1</span>
+                  <span class="dval dval--mean" style="left:94%">18.8</span>
+                  <span class="dpt is-median" style="left:55.5%" role="button" tabindex="0" data-callout="<strong>Median 11.1 (0.7&ndash;71.5) months</strong><span class=&quot;callout__lab&quot;>1L &middot; n=108</span>" aria-label="1L: median duration 11.1 months, range 0.7 to 71.5"></span>
+                  <span class="dpt is-mean" style="left:94%" role="button" tabindex="0" data-callout="<strong>Mean 18.8 &plusmn; 17.2 months</strong><span class=&quot;callout__lab&quot;>1L &middot; n=108</span>" aria-label="1L: mean duration 18.8 plus or minus 17.2 months"></span>
+                </div>
+              </div>
+              <div class="drow">
+                <div class="drow__lab"><b>2L+</b><span>n=89</span></div>
+                <div class="dtrack">
+                  <span class="dconn" style="left:47%;width:23%"></span>
+                  <span class="dval dval--median" style="left:47%">9.4</span>
+                  <span class="dval dval--mean" style="left:70%">14.0</span>
+                  <span class="dpt is-median" style="left:47%" role="button" tabindex="0" data-callout="<strong>Median 9.4 (0.7&ndash;83.1) months</strong><span class=&quot;callout__lab&quot;>2L+ &middot; n=89</span>" aria-label="2L plus: median duration 9.4 months, range 0.7 to 83.1"></span>
+                  <span class="dpt is-mean" style="left:70%" role="button" tabindex="0" data-callout="<strong>Mean 14.0 &plusmn; 14.8 months</strong><span class=&quot;callout__lab&quot;>2L+ &middot; n=89</span>" aria-label="2L plus: mean duration 14.0 plus or minus 14.8 months"></span>
+                </div>
+              </div>
+            </div>
+            <div class="daxisrow" aria-hidden="true"><span class="dtick" style="left:0%">0</span><span class="dtick" style="left:25%">5</span><span class="dtick" style="left:50%">10</span><span class="dtick" style="left:75%">15</span><span class="dtick" style="left:100%">20</span></div>
+          </div>
+        </section>
+
+        <!-- Tab 2: patients with treatment ongoing (%), 0-11 axis -->
+        <section class="chart" id="chart-ong" role="tabpanel" aria-labelledby="tab-ong" hidden aria-label="Patients with treatment ongoing, percent, by cohort">
+          <h2 class="chart__title">Patients with treatment ongoing (%)</h2>
+          <div class="chart__body axis">
+            <div class="axis__grid" aria-hidden="true">
+              <span class="axis__line" style="left:0%"></span>
+              <span class="axis__line" style="left:45.4545%"></span>
+              <span class="axis__line" style="left:90.9091%"></span>
+            </div>
+            <div class="axis__bars">
+              <div class="bars">
+                <div class="bar" role="button" tabindex="0" data-callout="<strong>15 of 197 (7.6%)</strong><span class=&quot;callout__lab&quot;>Treatment ongoing &middot; Overall</span>" aria-label="Treatment ongoing, Overall: 15 of 197, 7.6 percent">
+                  <div class="bar__top"><span class="bar__label">Overall</span><span class="bar__val">7.6%</span></div>
+                  <div class="bar__track"><span class="bar__fill" style="width:69.091%;background:var(--c1)"></span></div>
+                </div>
+                <div class="bar" role="button" tabindex="0" data-callout="<strong>11 of 108 (10.2%)</strong><span class=&quot;callout__lab&quot;>Treatment ongoing &middot; 1L</span>" aria-label="Treatment ongoing, 1L: 11 of 108, 10.2 percent">
+                  <div class="bar__top"><span class="bar__label">1L</span><span class="bar__val">10.2%</span></div>
+                  <div class="bar__track"><span class="bar__fill" style="width:92.727%;background:var(--c2)"></span></div>
+                </div>
+                <div class="bar" role="button" tabindex="0" data-callout="<strong>4 of 89 (4.5%)</strong><span class=&quot;callout__lab&quot;>Treatment ongoing &middot; 2L+</span>" aria-label="Treatment ongoing, 2L plus: 4 of 89, 4.5 percent">
+                  <div class="bar__top"><span class="bar__label">2L+</span><span class="bar__val">4.5%</span></div>
+                  <div class="bar__track"><span class="bar__fill" style="width:40.909%;background:var(--c4)"></span></div>
+                </div>
+              </div>
+            </div>
+            <div class="axis__ticks" aria-hidden="true">
+              <span class="axis__tick" style="left:0%">0</span>
+              <span class="axis__tick" style="left:45.4545%">5</span>
+              <span class="axis__tick" style="left:90.9091%">10</span>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- STATE B: data table -->
+    <div class="region region--table" id="regionTable">
+      <div class="tablewrap">
+        <table class="dtable" aria-label="Duration of tepotinib treatment in patients with dose reductions and/or interruptions, by line of therapy">
+          <thead>
+            <tr>
+              <th class="h-row" scope="col">&nbsp;</th>
+              <th class="h-overall" scope="col">Overall<span class="n">(n=197)</span></th>
+              <th class="h-1l" scope="col">1L<span class="n">(n=108)</span></th>
+              <th class="h-2l" scope="col">2L+<span class="n">(n=89)</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Mean &plusmn; std dev., months</th>
+              <td>16.6 &plusmn;16.3</td>
+              <td>18.8 &plusmn;17.2</td>
+              <td>14.0 &plusmn;14.8</td>
+            </tr>
+            <tr>
+              <th scope="row">Median (range), months</th>
+              <td>10.7 (0.7&ndash;83.1)</td>
+              <td>11.1 (0.7&ndash;71.5)</td>
+              <td>9.4 (0.7&ndash;83.1)</td>
+            </tr>
+            <tr>
+              <th scope="row">Treatment ongoing, n (%)</th>
+              <td>15 (7.6)</td>
+              <td>11 (10.2)</td>
+              <td>4 (4.5)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="toggle-btn" id="toTable" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 4v16"/></svg>
+      View data table
+    </button>
+    <button class="toggle-btn is-back" id="toCharts" type="button" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      Back to charts
+    </button>
+  </div>
+
+  <p class="sr-only" id="live" aria-live="polite" aria-atomic="true"></p>
+</main>
+
+<!-- §4.2 return-to-course (shown only in the opened full-screen view) -->
+<a class="returnbar" id="returnBar" href="#" aria-label="Return to the course">
+  <span class="returnbar__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 5 4 10 9 15"/><path d="M4 10 H15 a5 5 0 0 1 5 5 V19"/></svg></span>
+  <span class="returnbar__lab">Return to course</span>
+</a>
+
+<!-- §4.2 embedded-mobile launch card (shown only when iframed on a phone) -->
+<div class="mlaunch" role="group" aria-label="Open the activity full screen">
+  <span class="mlaunch__badge">Touch Oncology &middot; CPD activity</span>
+  <h1 class="mlaunch__title">Dose reductions &amp; interruptions (VISION study)</h1>
+  <p class="mlaunch__lead">This interactive activity is best viewed full screen on your phone. Tap below to open it.</p>
+  <a class="mlaunch__btn" id="mlaunchBtn" href="#" target="_blank" rel="noopener">Open the activity <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><polyline points="13 6 19 12 13 18"/></svg></a>
+  <p class="mlaunch__note">On a computer, the activity appears here directly.</p>
+</div>
+
+<!-- continue nudge — eases in on first data-table open (completion hook) -->
+<div class="nudge" id="nudge" role="status" aria-live="polite">
+  <span class="nudge__chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+  <span class="nudge__d">All done &mdash; use the <b>&#9664;&nbsp;&#9654;</b> arrows at the bottom of the screen to continue when you&rsquo;re ready.</span>
+  <span class="nudge__m">Finished &mdash; tap <b>Return to course</b> to carry on.</span>
+</div>
+
+<div class="callout" id="callout" role="status" aria-hidden="true"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- state toggle: charts <-> table (body class .is-table, §6 state-driven) ---------- */
+  var body = document.body;
+  var toTable = document.getElementById('toTable');
+  var toCharts = document.getElementById('toCharts');
+  var live = document.getElementById('live');
+  var tableOpened = false;
+
+  function showTable(){
+    body.classList.add('is-table');
+    toTable.hidden = true; toCharts.hidden = false;
+    toCharts.focus();
+    live.textContent = 'Data table shown. Full figures for Overall, 1L and 2L+ cohorts.';
+    if(!tableOpened){
+      tableOpened = true;
+      var frame = document.querySelector('.frame'); if(frame) frame.classList.add('nudge-shown');
+      var nudge = document.getElementById('nudge'); if(nudge) nudge.classList.add('is-on');
+    }
+  }
+  function showCharts(){
+    body.classList.remove('is-table');
+    toCharts.hidden = true; toTable.hidden = false;
+    toTable.focus();
+    live.textContent = 'Charts shown.';
+  }
+  toTable.addEventListener('click', showTable);
+  toCharts.addEventListener('click', showCharts);
+
+  /* ---------- measure tabs: one chart at a time ---------- */
+  var TABS = [{t:'tab-dur', p:'chart-dur'}, {t:'tab-ong', p:'chart-ong'}];
+  function selectTab(tabId){
+    TABS.forEach(function(o){
+      var tab=document.getElementById(o.t), panel=document.getElementById(o.p), on=(o.t===tabId);
+      if(tab) tab.setAttribute('aria-selected', on?'true':'false');
+      if(panel){ panel.classList.toggle('is-active', on); if(on){ panel.removeAttribute('hidden'); } else { panel.setAttribute('hidden',''); } }
+    });
+  }
+  TABS.forEach(function(o){
+    var tab=document.getElementById(o.t);
+    if(tab) tab.addEventListener('click', function(){ selectTab(o.t); });
+  });
+  // arrow-key roving between tabs
+  var tabEls = TABS.map(function(o){ return document.getElementById(o.t); });
+  tabEls.forEach(function(tab,i){ if(!tab) return; tab.addEventListener('keydown', function(e){
+    var n = e.key==='ArrowRight'?i+1 : e.key==='ArrowLeft'?i-1 : -1;
+    if(n<0) return; e.preventDefault(); var t=tabEls[(n+tabEls.length)%tabEls.length]; if(t){ selectTab(t.id); t.focus(); }
+  }); });
+
+  /* ---------- dumbbell median/mean filter (keep at least one on) ---------- */
+  var dumb = document.getElementById('dumb');
+  function setMeasure(m, on){
+    var chip = document.getElementById('chip-'+m);
+    if(chip) chip.setAttribute('aria-pressed', on ? 'true' : 'false');
+    if(dumb) dumb.classList.toggle('show-'+m, on);
+  }
+  ['median','mean'].forEach(function(m){
+    var chip = document.getElementById('chip-'+m);
+    if(!chip) return;
+    chip.addEventListener('click', function(){
+      var on = chip.getAttribute('aria-pressed') === 'true';
+      if(on){ var other = document.getElementById('chip-'+(m==='median'?'mean':'median')); if(other && other.getAttribute('aria-pressed') !== 'true') return; }
+      setMeasure(m, !on);
+    });
+  });
+
+  /* ---------- hover/focus callout on bars ---------- */
+  var callout = document.getElementById('callout');
+  function showCallout(el, html){
+    callout.innerHTML = html;
+    callout.style.left = '0px'; callout.style.top = '0px'; callout.classList.remove('is-above');
+    var r = el.getBoundingClientRect(), cw = callout.offsetWidth, ch = callout.offsetHeight;
+    var top = r.bottom + 11;
+    if(top + ch > window.innerHeight - 6){ top = r.top - ch - 11; callout.classList.add('is-above'); }
+    var left = Math.max(cw/2 + 6, Math.min(window.innerWidth - cw/2 - 6, r.left + r.width/2));
+    callout.style.left = left + 'px'; callout.style.top = top + 'px';
+    callout.classList.add('is-on');
+  }
+  function hideCallout(){ callout.classList.remove('is-on'); }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-callout]'), function(el){
+    var html = el.getAttribute('data-callout');
+    var enter = function(){ showCallout(el, html); };
+    el.addEventListener('mouseenter', enter); el.addEventListener('focus', enter);
+    el.addEventListener('mouseleave', hideCallout); el.addEventListener('blur', hideCallout);
+    el.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); showCallout(el, html); } });
+  });
+  window.addEventListener('resize', hideCallout);
+
+})();
+</script>
+
+<script>
+/* §4.2 — mobile/Visme: launch card + return-to-course (single-screen variant) */
+(function () {
+  "use strict";
+  var fullscreen = /[?&]fullscreen=1/.test(location.search);
+  var inIframe = true; try { inIframe = (window.self !== window.top); } catch (e) { inIframe = true; }
+  var isMobile = /Android|iPhone|iPad|iPod|Mobile|Silk/i.test(navigator.userAgent);
+  var btn = document.getElementById('mlaunchBtn');
+  var base = location.href.split('#')[0].split('?')[0];
+  var courseUrl = ''; try { courseUrl = document.referrer || ''; } catch (e) { courseUrl = ''; }
+  var target = base + '?fullscreen=1' + (courseUrl ? '&return=' + encodeURIComponent(courseUrl) : '');
+  if (btn) {
+    btn.href = target;
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      var w = null;
+      try { w = window.open(target, '_blank'); } catch (err) { w = null; }
+      if (!w) { try { window.top.location.href = target; } catch (err2) { window.location.href = target; } }
+    });
+  }
+  var rb = document.getElementById('returnBar');
+  var returnUrl = (function () { try { return new URLSearchParams(location.search).get('return'); } catch (e) { return null; } })();
+  if (rb) {
+    if (returnUrl) { rb.href = returnUrl; }
+    rb.addEventListener('click', function (e) {
+      e.preventDefault();
+      try { if (window.opener && !window.opener.closed) { window.close(); return; } } catch (err) {}
+      if (window.history.length > 1) { window.history.back(); return; }
+      if (returnUrl) { window.location.href = returnUrl; }
+    });
+  }
+  if (isMobile) { document.body.classList.add('is-mobile'); }
+  if (inIframe && isMobile && !fullscreen) { document.body.classList.add('is-embedded-mobile'); }
+  if (fullscreen) { document.body.classList.add('is-fullscreen'); }
+}());
+</script>
+</body>
+</html>
