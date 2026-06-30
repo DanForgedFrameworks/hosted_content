@@ -97,10 +97,11 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 .donut-stack svg{ width:100%; height:100%; display:block; }
 .donut__seg{ cursor:pointer; transition:opacity .16s ease; }
 .donut__seg:hover,.donut__seg.is-active{ opacity:.82; }
-.donut__center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; pointer-events:none; padding:18%; }
-.donut__big{ font-size:clamp(1.3rem,3vw,2rem); font-weight:700; color:var(--navy); line-height:1; font-variant-numeric:tabular-nums; }
-.donut__sub{ margin-top:3px; font-size:clamp(.66rem,1.3vw,.82rem); font-weight:600; color:var(--muted); line-height:1.2; }
-.donut__lab{ margin-top:2px; font-size:clamp(.66rem,1.3vw,.82rem); font-weight:700; color:var(--teal); line-height:1.15; }
+/* centre text lives INSIDE the svg (scales with the donut at any size — never clips) */
+.donut-stack svg text{ font-family:var(--font); text-anchor:middle; }
+.dc__big{ font-size:6px; font-weight:700; fill:var(--navy); font-variant-numeric:tabular-nums; }
+.dc__sub{ font-size:2.55px; font-weight:600; fill:var(--muted); }
+.dc__lab{ font-size:2.7px; font-weight:700; fill:var(--teal); }
 .legend{ flex:0 1 auto; display:flex; flex-direction:column; gap:clamp(5px,1.2vh,10px); max-width:46%; }
 .legend__item{ display:flex; align-items:center; gap:9px; border:0; background:transparent; font:inherit; text-align:left; cursor:pointer; padding:3px 5px; border-radius:8px; color:var(--navy); transition:background .15s ease; }
 .legend__item:hover,.legend__item.is-active{ background:var(--mist); }
@@ -433,12 +434,29 @@ body.is-fullscreen{ padding-top:56px; }
         '<span class="legend__sw" style="background:'+SEG[Math.min(idx,4)]+'"></span>'+
         '<span class="legend__txt">'+esc(it.label)+'</span><span class="legend__pct">'+it.pct+'%</span></button>';
     }).join('');
+    // wrap a long centre label onto two lines (e.g. "Line of treatment")
+    const _lab=String(c.label); const _w=_lab.split(' '); let labSVG;
+    if(_lab.length<=10||_w.length<2){
+      labSVG='<text class="dc__lab" x="21" y="28.6">'+esc(_lab)+'</text>';
+    }else{
+      let _best=1;  // split words into two lines, balancing line lengths
+      for(let _i=1;_i<_w.length;_i++){
+        const _da=Math.abs(_w.slice(0,_i).join(' ').length-_w.slice(_i).join(' ').length);
+        const _db=Math.abs(_w.slice(0,_best).join(' ').length-_w.slice(_best).join(' ').length);
+        if(_da<_db) _best=_i;
+      }
+      labSVG='<text class="dc__lab" x="21" y="27.3">'+esc(_w.slice(0,_best).join(' '))+'</text><text class="dc__lab" x="21" y="30.6">'+esc(_w.slice(_best).join(' '))+'</text>';
+    }
     return '<div class="panel__visual">'+
-      '<div class="donut-stack">'+
-        '<svg viewBox="0 0 42 42" aria-hidden="true"><g transform="rotate(-90 21 21)">'+
-          '<circle r="15.915" cx="21" cy="21" fill="none" stroke="var(--mist)" stroke-width="6"></circle>'+segs+
-        '</g></svg>'+
-        '<div class="donut__center" data-reveal-center><div class="donut__big">'+N+'</div><div class="donut__sub">patients</div><div class="donut__lab">'+esc(c.label)+'</div></div>'+
+      '<div class="donut-stack" role="img" aria-label="'+N+' patients — '+esc(c.label)+'">'+
+        '<svg viewBox="0 0 42 42">'+
+          '<g transform="rotate(-90 21 21)">'+
+            '<circle r="15.915" cx="21" cy="21" fill="none" stroke="var(--mist)" stroke-width="6"></circle>'+segs+
+          '</g>'+
+          '<text class="dc__big" x="21" y="19.2">'+N+'</text>'+
+          '<text class="dc__sub" x="21" y="24">patients</text>'+
+          labSVG+
+        '</svg>'+
       '</div>'+
       '<div class="legend">'+legend+'</div>'+
     '</div>';
