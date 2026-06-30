@@ -94,8 +94,9 @@
     .viewer-back:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
 
     .viewer-body { position: relative; z-index: 1; flex: 1 1 auto; min-height: 0; border-top: 3px solid var(--teal); background: var(--pale); padding: clamp(10px,1.6vw,18px) clamp(12px,2vw,22px); }
-    .gpanel { display: none; height: 100%; }
-    .gpanel.active { display: grid; grid-template-columns: minmax(170px,230px) minmax(0,1fr); gap: clamp(12px,1.8vw,24px); align-items: center; height: 100%; animation: gpanelIn 360ms cubic-bezier(.22,.61,.36,1) both; }
+    /* Panels stacked + cross-faded (old eases out as new eases in); reverts to in-flow on mobile (below) */
+    .gpanel { position: absolute; inset: 0; display: grid; grid-template-columns: minmax(170px,230px) minmax(0,1fr); gap: clamp(12px,1.8vw,24px); align-items: center; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 360ms cubic-bezier(.22,.61,.36,1), visibility 0s linear 360ms; }
+    .gpanel.active { opacity: 1; visibility: visible; pointer-events: auto; z-index: 1; transition: opacity 360ms cubic-bezier(.22,.61,.36,1), visibility 0s; }
     .gcaption { align-self: center; background: #fff; border: 2px solid var(--teal); border-radius: 16px; padding: 14px 16px; color: var(--navy); font-size: clamp(.92rem,1.35vw,1.12rem); font-weight: 600; line-height: 1.35; text-align: center; }
     .gcaption strong { color: var(--teal); font-weight: 700; }
     .gfigure { display: flex; flex-direction: column; min-height: 0; height: 100%; }
@@ -157,7 +158,6 @@
     .gtip.below::after { top: -7px; border-left: 2px solid #b7d2ef; border-top: 2px solid #b7d2ef; }          /* pill below term, arrow points up   */
 
     @keyframes revealUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes gpanelIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes celebrate { 0% { transform: scale(1); } 45% { transform: scale(1.05) translateY(-6px); } 100% { transform: scale(1); } }
     @keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-10px); } 40% { transform: translateX(9px); } 60% { transform: translateX(-6px); } 80% { transform: translateX(4px); } }
 
@@ -209,7 +209,8 @@
       .answers { grid-template-columns: minmax(0,1fr); gap: 14px; }
       .answer { min-height: 88px; }
       .vtab-rail { grid-template-columns: repeat(2, minmax(0,1fr)); }
-      .gpanel.active { grid-template-columns: minmax(0,1fr); }
+      .gpanel { position: static; display: none; opacity: 1; visibility: visible; transition: none; }
+      .gpanel.active { display: grid; grid-template-columns: minmax(0,1fr); }
       .gimg-wrap img { max-height: none; }
       .note-pop { width: min(86vw, 460px); }
     }
@@ -262,7 +263,7 @@
           </div>
         </div>
 
-        <div class="gpanel" role="tabpanel" id="panel-1" aria-labelledby="tab-1" tabindex="0" hidden>
+        <div class="gpanel" role="tabpanel" id="panel-1" aria-labelledby="tab-1" tabindex="0">
           <div class="gcaption">The mean change (&plusmn;SD) from baseline in EORTC QLQ-LC13 symptom scores for cough was <strong>&minus;6.1 (28.16)</strong> (n=175).</div>
           <div class="gfigure">
             <div class="gimg-wrap">
@@ -272,7 +273,7 @@
           </div>
         </div>
 
-        <div class="gpanel" role="tabpanel" id="panel-2" aria-labelledby="tab-2" tabindex="0" hidden>
+        <div class="gpanel" role="tabpanel" id="panel-2" aria-labelledby="tab-2" tabindex="0">
           <div class="gcaption">The mean change (&plusmn;SD) from baseline in EORTC QLQ-LC13 symptom scores for dyspnea was <strong>7.1 (21.05)</strong> (n=175).</div>
           <div class="gfigure">
             <div class="gimg-wrap">
@@ -282,7 +283,7 @@
           </div>
         </div>
 
-        <div class="gpanel" role="tabpanel" id="panel-3" aria-labelledby="tab-3" tabindex="0" hidden>
+        <div class="gpanel" role="tabpanel" id="panel-3" aria-labelledby="tab-3" tabindex="0">
           <div class="gcaption">The mean change (&plusmn;SD) from baseline in EORTC QLQ-LC13 symptom scores for chest pain was <strong>&minus;2.3 (28.13)</strong> (n=174).</div>
           <div class="gfigure">
             <div class="gimg-wrap">
@@ -291,7 +292,7 @@
             </div>
           </div>
         </div>
-        <div class="gpanel" role="tabpanel" id="panel-4" aria-labelledby="tab-4" tabindex="0" hidden>
+        <div class="gpanel" role="tabpanel" id="panel-4" aria-labelledby="tab-4" tabindex="0">
           <div class="gcaption">The mean change (&plusmn;SD) from baseline in EQ-5D-5L EQ-VAS score was <strong>&minus;10 (23.7)</strong> (n=172).</div>
           <div class="gfigure">
             <div class="gimg-wrap">
@@ -407,7 +408,7 @@
           t.setAttribute('aria-selected', String(on));
           t.tabIndex = on ? 0 : -1;
         });
-        panels.forEach((p, k) => { p.classList.toggle('active', k === i); p.hidden = k !== i; });
+        panels.forEach((p, k) => { p.classList.toggle('active', k === i); p.setAttribute('aria-hidden', String(k !== i)); });
         markSeen(i);
         const cl = document.getElementById('cyc-label');
         if (cl) cl.textContent = 'Graph ' + (i + 1) + ' of 5';
