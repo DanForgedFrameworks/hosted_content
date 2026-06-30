@@ -48,22 +48,8 @@
 html,body{ height:100%; margin:0; }
 body{ overflow:hidden; background:#eef4f7; color:var(--navy); font-family:var(--font); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; display:flex; align-items:center; justify-content:center; }
 
-/* ---------- decorative drifting backdrop (state-independent) ---------- */
-.bg{ position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; background:linear-gradient(135deg,#e7f3f9 0%, #d6e7f0 48%, #e2eef4 100%); }
-.bg__blob{ position:absolute; border-radius:50%; filter:blur(38px); opacity:.96; will-change:transform; }
-.bg__b1{ width:480px; height:480px; left:-110px; top:-120px; background:radial-gradient(circle at 50% 50%, rgba(0,152,190,.72), rgba(0,152,190,0) 70%); animation:drift1 24s ease-in-out infinite; }
-.bg__b2{ width:560px; height:560px; right:-150px; top:-70px; background:radial-gradient(circle at 50% 50%, rgba(34,47,85,.5), rgba(34,47,85,0) 70%); animation:drift2 30s ease-in-out infinite; }
-.bg__b3{ width:520px; height:520px; left:32%; bottom:-200px; background:radial-gradient(circle at 50% 50%, rgba(79,159,196,.72), rgba(79,159,196,0) 70%); animation:drift3 27s ease-in-out infinite; }
-.bg__dots{ position:absolute; inset:0; }
-.bg__dots i{ position:absolute; width:11px; height:11px; border-radius:50%; background:rgba(0,152,190,.52); box-shadow:0 0 0 5px rgba(0,152,190,.12); animation:floatY 13s ease-in-out infinite; }
-@keyframes drift1{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(120px,80px) scale(1.12); } }
-@keyframes drift2{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(-100px,92px) scale(1.08); } }
-@keyframes drift3{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(94px,-78px) scale(1.1); } }
-@keyframes floatY{ 0%,100%{ transform:translateY(0); opacity:.4; } 50%{ transform:translateY(-30px); opacity:.85; } }
-body.bg-off .bg__blob,body.bg-off .bg__dots i{ animation:none !important; }
-
-/* ---------- frame: white card, capped at 680, centred, backdrop peeks at the edge ---------- */
-.frame{ position:relative; z-index:1; width:calc(100% - 26px); height:calc(100% - 26px); max-width:1344px; max-height:658px; display:flex; flex-direction:column; overflow:hidden; background:rgba(255,255,255,.4); border:1px solid rgba(255,255,255,.7); border-radius:16px; box-shadow:0 20px 52px rgba(16,26,38,.22); }
+/* ---------- frame: white card, capped at 680, centred ---------- */
+.frame{ position:relative; z-index:1; width:100%; height:100%; max-width:1370px; max-height:680px; display:flex; flex-direction:column; overflow:hidden; background:#fff; border-radius:16px; box-shadow:0 20px 52px rgba(16,26,38,.18); }
 
 /* banner (chrome) */
 .banner{ flex:0 0 auto; text-align:center; padding:clamp(10px,1.6vh,16px) 16px; background:#fff; box-shadow:0 4px 11px rgba(34,47,85,0.07); border-bottom:1px solid var(--line); border-radius:14px 14px 0 0; }
@@ -159,16 +145,8 @@ body.bg-off .bg__blob,body.bg-off .bg__dots i{ animation:none !important; }
 .btn.secondary{ background:#fff; color:var(--teal); }
 .btn.secondary:hover:not(:disabled){ background:var(--mist); filter:none; }
 .btn:disabled{ background:#fff; color:var(--faint); border-color:var(--line); cursor:not-allowed; }
-.btn:focus-visible,.chip:focus-visible,.bg-toggle:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+.btn:focus-visible,.chip:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
 .controls__mid{ font-size:clamp(.72rem,1.2vw,.84rem); font-weight:700; color:var(--teal); white-space:nowrap; font-variant-numeric:tabular-nums; }
-
-/* ---------- background-animation toggle ---------- */
-.bg-toggle{ position:absolute; top:9px; right:12px; z-index:6; display:inline-flex; align-items:center; gap:7px; padding:5px 11px; border:1.5px solid var(--teal); border-radius:999px; background:rgba(255,255,255,.94); color:var(--teal-strong); font:inherit; font-weight:700; font-size:.7rem; cursor:pointer; transition:border-color .15s ease, color .15s ease, background .15s ease; }
-.bg-toggle:hover{ background:#fff; }
-.bg-toggle .bg-ic{ width:15px; height:15px; display:grid; place-items:center; color:var(--teal); }
-.bg-toggle .bg-ic svg{ width:100%; height:100%; }
-body.bg-off .bg-toggle{ border-color:var(--neutral); color:var(--faint); background:rgba(255,255,255,.82); }
-body.bg-off .bg-toggle .bg-ic{ color:var(--faint); }
 
 .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 
@@ -189,7 +167,6 @@ body.bg-off .bg-toggle .bg-ic{ color:var(--faint); }
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
-  .bg__blob,.bg__dots i{ animation:none !important; }
   .scard{ opacity:1; transform:none; }
 }
 
@@ -259,9 +236,6 @@ body.is-embedded-mobile .mlaunch{
 .mlaunch__btn svg{ width:56px; height:56px; }
 .mlaunch__note{ margin:0; max-width:1040px; font-size:27px; line-height:1.4; opacity:.85; }
 
-/* MOBILE/VISME — mobile: background animation off by default, hide its chip */
-body.is-mobile .bg-toggle{ display:none; }
-
 /* MOBILE/VISME — "Return to course" control (full-screen view only): a minimal
    corner bracket on steps 1-3, expanding to a labelled pill on the final step. */
 .returnbar{ display:none; }
@@ -315,19 +289,7 @@ body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-wei
   <p class="mlaunch__note">On a computer, the activity appears here directly.</p>
 </div>
 
-<!-- decorative drifting backdrop -->
-<div class="bg" aria-hidden="true">
-  <span class="bg__blob bg__b1"></span>
-  <span class="bg__blob bg__b2"></span>
-  <span class="bg__blob bg__b3"></span>
-  <div class="bg__dots" id="bgDots"></div>
-</div>
-
 <main class="frame" aria-label="Summary and reflection for the VISION study">
-
-  <button class="bg-toggle" id="bgToggle" type="button" aria-pressed="true" aria-label="Background animation on">
-    <span class="bg-ic" id="bgIc" aria-hidden="true"></span>Background animation: <span id="bgState">On</span>
-  </button>
 
   <header class="banner">
     <h1 class="banner__title">Summary &amp; reflection</h1>
@@ -529,20 +491,6 @@ body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-wei
   ];
 
   var ratings = {}; // topicIndex -> 'good' | 'amber' | 'flag'
-
-  /* ---------- backdrop dots ---------- */
-  (function(){
-    var wrap = $('bgDots');
-    var pos = [[8,18],[16,64],[26,38],[34,82],[44,14],[52,56],[60,30],[68,76],[76,22],[84,52],[90,72],[40,46]];
-    for(var i=0;i<pos.length;i++){
-      var d=document.createElement('i');
-      d.style.left=pos[i][0]+'%'; d.style.top=pos[i][1]+'%';
-      var sz=7+(i%4)*4; d.style.width=sz+'px'; d.style.height=sz+'px';
-      d.style.animationDelay=(i*1.05)+'s';
-      d.style.animationDuration=(11+(i%5)*2.5)+'s';
-      wrap.appendChild(d);
-    }
-  })();
 
   /* ---------- step 1: summary cards ---------- */
   (function(){
@@ -775,19 +723,6 @@ body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-wei
   });
 
   /* ---------- background-animation toggle ---------- */
-  var IC_ON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9c3 0 3-3.2 6-3.2S12 9 15 9s3-3.2 6-3.2"/><path d="M3 15c3 0 3-3.2 6-3.2S12 15 15 15s3-3.2 6-3.2" opacity=".5"/></svg>';
-  var IC_OFF='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9c3 0 3-3.2 6-3.2S12 9 15 9s3-3.2 6-3.2"/><line x1="4" y1="20" x2="20" y2="4"/></svg>';
-  var bgBtn=$('bgToggle'), bgState=$('bgState'), bgIc=$('bgIc');
-  function setBg(off){
-    document.body.classList.toggle('bg-off',off);
-    bgState.textContent=off?'Off':'On';
-    bgBtn.setAttribute('aria-pressed', String(!off));
-    bgBtn.setAttribute('aria-label','Background animation '+(off?'off':'on'));
-    bgIc.innerHTML=off?IC_OFF:IC_ON;
-  }
-  setBg(reduceMotion || document.body.classList.contains('is-mobile'));   // background animation off by default on mobile
-  bgBtn.addEventListener('click',function(){ setBg(!document.body.classList.contains('bg-off')); });
-
   // initial paint
   animateSummary();
 })();
