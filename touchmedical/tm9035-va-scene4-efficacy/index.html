@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Long-term efficacy (VISION study) — tepotinib in METex14 skipping NSCLC</title>
+<style>
+/* ============================================================
+   TOUCH MEDICAL — TM9035 · VISUAL ABSTRACT · SCENE 4
+   Long-term efficacy (VISION, >=3-year follow-up).
+   Reveal: ORR ring -> DOR/PFS/OS bars -> split by prior treatment.
+   Source opens from a bottom-corner pill (D16 interstitial -> DOI).
+   Self-contained. No external runtime dependencies (Visme/Rise safe).
+   Brand: Poppins (bundled), teal #0098be, navy #222f55.
+   ============================================================ */
+@font-face { font-family:"Poppins"; src:url("assets/poppins-400.ttf") format("truetype"); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-600.ttf") format("truetype"); font-weight:600; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-700.ttf") format("truetype"); font-weight:700; font-style:normal; font-display:swap; }
+
+:root{
+  --teal:#0098be; --teal-strong:#007a98;
+  --navy:#222f55; --on-accent:#ffffff;
+  --muted:#56608a; --faint:#8a91b0;
+  --pale:#d9eff8; --mist:#f4f7f9; --line:#e3e8ee;
+  --backdrop:rgba(16,26,38,.68);
+  --pink:#e0408e; --pink-soft:#fbe4f0;
+  --green:#2f9e6f; --green-soft:#e2f3ea;
+  --title-shadow-slim:0 1px 2px rgba(34,47,85,.16);
+  --font:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --radius:18px;
+}
+*{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; height:100%; }
+body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; overflow:hidden; }
+
+.slide{ position:relative; width:min(100%,1370px); height:100%; margin:0 auto; background:#fff; display:flex; flex-direction:column; overflow:hidden; }
+.slide::before{ content:""; position:absolute; inset:0; z-index:0; background:url("assets/s4.jpg") center/cover no-repeat; opacity:.10; }
+.slide > *{ position:relative; z-index:1; }
+
+/* ---------- heading — title + teal I-beam divider + subheading ---------- */
+.hd{ flex:0 0 auto; text-align:center; padding:clamp(10px,1.7vh,17px) 20px clamp(8px,1.3vh,13px); background:#fff; box-shadow:0 4px 11px rgba(34,47,85,.07); }
+.hd__title{ margin:0; font-size:clamp(27px,3.2vw,45px); font-weight:700; line-height:1.08; letter-spacing:-.012em; color:var(--navy); text-shadow:var(--title-shadow-slim); }
+.hd__title em{ font-style:italic; }
+.hd__rule{ display:flex; align-items:center; justify-content:center; width:min(76%,840px); margin:clamp(6px,1vh,10px) auto clamp(5px,.8vh,8px); }
+.hd__rule i{ width:3px; height:15px; background:var(--teal); border-radius:2px; flex:0 0 auto; }
+.hd__rule b{ flex:1 1 auto; height:2.5px; background:var(--teal); border-radius:2px; }
+.hd__sub{ margin:0; font-size:clamp(.78rem,1.5vw,.92rem); font-weight:600; color:var(--muted); }
+
+/* ---------- body ---------- */
+.eff{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; gap:clamp(8px,1.4vh,14px); padding:clamp(10px,1.8vh,18px) clamp(16px,3vw,30px) clamp(12px,2vh,20px); }
+.navprompt{ flex:0 0 auto; display:flex; justify-content:center; width:100%; }
+.navprompt__box{ display:inline-flex; align-items:center; gap:11px; padding:9px 18px; border:2px solid var(--teal); border-radius:14px; background:rgba(0,152,190,.06); color:var(--teal-strong); font-size:clamp(.82rem,1.4vw,.98rem); font-weight:600; line-height:1.35; text-align:left; }
+.navprompt__ic{ flex:0 0 auto; width:24px; height:24px; display:grid; place-items:center; color:var(--teal); }
+.navprompt__ic svg{ width:100%; height:100%; }
+.navprompt sup{ color:var(--teal); font-weight:700; font-size:.62em; }
+
+.eff__cols{ flex:1 1 auto; min-height:0; display:grid; grid-template-columns:0.92fr 1.15fr; gap:clamp(14px,2.2vw,26px); align-items:stretch; }
+.panel{ min-height:0; display:flex; flex-direction:column; }
+
+/* ----- ORR hero ----- */
+.orr{ flex:1 1 auto; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:clamp(7px,1.3vh,13px); }
+.orr__eyebrow{ font-size:.7rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--faint); }
+.orr__eyebrow sup{ color:var(--teal); }
+.ring{
+  position:relative; width:clamp(150px,22vh,200px); aspect-ratio:1; border-radius:50%;
+  background:conic-gradient(var(--teal) 0 51.8%, var(--line) 51.8% 100%);
+  display:grid; place-items:center; border:0; padding:0; cursor:pointer; font:inherit;
+  transition:transform .16s ease, box-shadow .18s ease;
+}
+.ring:hover{ transform:scale(1.02); }
+.ring:focus-visible{ outline:3px solid var(--navy); outline-offset:4px; }
+.ring__hole{ width:70%; height:70%; border-radius:50%; background:#fff; display:grid; place-items:center; box-shadow:inset 0 0 0 1px var(--line); }
+.ring__val{ display:block; font-size:clamp(1.9rem,4vh,2.4rem); font-weight:700; color:var(--teal-strong); line-height:1; }
+.ring__ci{ display:block; font-size:.7rem; font-weight:600; color:var(--muted); margin-top:3px; }
+.orr__cap{ font-size:clamp(.82rem,1.45vw,.95rem); line-height:1.45; color:var(--muted); max-width:36ch; }
+.orr__cap b{ color:var(--navy); font-weight:700; }
+
+/* ----- time-to-event panel (right) ----- */
+.tte{ flex:1 1 auto; border:2px solid var(--line); border-radius:16px; background:#fff; padding:clamp(12px,1.8vw,18px); display:flex; flex-direction:column; min-height:0; }
+.tte__head{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+.tte__title{ font-size:clamp(.9rem,1.6vw,1.05rem); font-weight:700; color:var(--navy); }
+.tte__title span{ font-weight:600; color:var(--muted); font-size:.82em; }
+.tteCTA{ flex:1 1 auto; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; text-align:center; padding:14px; }
+.tteCTA p{ margin:0; font-size:.86rem; color:var(--muted); max-width:32ch; line-height:1.5; }
+.reveal-btn{ display:inline-flex; align-items:center; gap:10px; min-height:46px; padding:11px 22px; border:2px solid var(--teal); border-radius:12px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.92rem; cursor:pointer; transition:filter .15s ease, transform .14s ease, box-shadow .16s ease; box-shadow:0 8px 20px rgba(0,152,190,.22); }
+.reveal-btn:hover{ filter:brightness(.96); transform:translateY(-1px); }
+.reveal-btn:active{ transform:scale(.97); }
+.reveal-btn:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+.reveal-btn svg{ width:18px; height:18px; }
+.split{ display:inline-flex; align-items:center; gap:8px; padding:7px 13px; border-radius:999px; border:2px solid var(--teal); background:#fff; color:var(--teal-strong); font:inherit; font-weight:700; font-size:.76rem; cursor:pointer; transition:background .15s ease, color .15s ease, transform .14s ease; }
+.split[disabled]{ opacity:.45; cursor:not-allowed; border-color:var(--line); color:var(--faint); }
+.split:not([disabled]):hover{ background:var(--pale); }
+.split:not([disabled]):active{ transform:scale(.96); }
+.split:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+.split.is-on{ background:var(--teal); color:#fff; border-color:var(--teal); }
+.split .dot{ width:9px; height:9px; border-radius:50%; }
+
+.bars{ flex:1 1 auto; min-height:0; display:none; flex-direction:column; justify-content:center; gap:clamp(9px,1.6vh,15px); margin-top:12px; }
+.tte.is-revealed .tteCTA{ display:none; }
+.tte.is-revealed .bars{ display:flex; }
+.metric{ display:flex; flex-direction:column; gap:5px; }
+.metric__top{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; }
+.metric__name{ font-size:.82rem; font-weight:700; color:var(--navy); }
+.metric__name span{ font-weight:600; color:var(--faint); font-size:.82em; }
+.metric__val{ font-size:.86rem; font-weight:700; color:var(--teal-strong); font-variant-numeric:tabular-nums; }
+.metric__val small{ font-weight:600; color:var(--muted); }
+.track{ position:relative; height:11px; border-radius:6px; background:var(--mist); box-shadow:inset 0 0 0 1px var(--line); overflow:hidden; }
+.fill{ position:absolute; left:0; top:0; height:100%; border-radius:6px; background:var(--teal); }
+.subs{ display:none; flex-direction:column; gap:6px; margin-top:2px; padding-left:2px; }
+.tte.is-split .subs{ display:flex; }
+.tte.is-split .metric > .track{ opacity:.28; }
+.sub{ display:grid; grid-template-columns:78px 1fr auto; align-items:center; gap:9px; }
+.sub__lab{ font-size:.68rem; font-weight:700; }
+.sub__lab.naive{ color:var(--pink); }
+.sub__lab.treated{ color:var(--green); }
+.sub__track{ position:relative; height:9px; border-radius:5px; background:var(--mist); box-shadow:inset 0 0 0 1px var(--line); overflow:hidden; }
+.sub__fill{ position:absolute; left:0; top:0; height:100%; border-radius:5px; }
+.sub__fill.naive{ background:var(--pink); }
+.sub__fill.treated{ background:var(--green); }
+.sub__val{ font-size:.7rem; font-weight:700; font-variant-numeric:tabular-nums; }
+.sub__val.naive{ color:var(--pink); }
+.sub__val.treated{ color:var(--green); }
+.sub__val small{ color:var(--muted); font-weight:600; }
+.tte__foot{ flex:0 0 auto; margin-top:9px; font-size:.68rem; color:var(--faint); line-height:1.4; }
+
+/* ----- source pill (bottom inner corner) ----- */
+.srcpill{ position:absolute; left:clamp(12px,2vw,22px); bottom:clamp(11px,1.7vh,17px); z-index:7; display:inline-flex; align-items:center; gap:7px; padding:8px 15px; border-radius:999px; border:1.5px solid var(--teal); background:#fff; color:var(--teal-strong); font:inherit; font-weight:700; font-size:.76rem; cursor:pointer; box-shadow:0 5px 14px rgba(34,47,85,.12); transition:background .15s ease, transform .14s ease; }
+.srcpill:hover{ background:var(--pale); transform:translateY(-1px); }
+.srcpill:active{ transform:scale(.97); }
+.srcpill:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+.srcpill svg{ width:15px; height:15px; }
+
+/* ---------- D16 external-link interstitial (Touch Medical skin) ---------- */
+.inter{ position:fixed; inset:0; z-index:60; display:none; align-items:center; justify-content:center; padding:clamp(12px,4vw,40px); background:var(--backdrop); }
+.inter.is-open{ display:flex; }
+.inter__panel{ width:min(460px,100%); max-height:calc(100% - 24px); overflow:auto; background:#fff; border-radius:var(--radius); box-shadow:0 24px 60px rgba(16,26,38,.4); padding:22px; animation:rise .2s ease both; }
+.inter__title{ font-size:1.05rem; font-weight:700; margin:0 0 8px; color:var(--navy); }
+.inter__p{ font-size:.82rem; line-height:1.5; color:var(--muted); margin:0 0 10px; }
+.inter__p strong{ color:var(--navy); font-weight:600; }
+.inter__p em{ font-style:italic; }
+.inter__url{ font-family:var(--font); font-size:.72rem; line-height:1.45; color:var(--muted); background:var(--mist); border:1px solid var(--line); border-radius:8px; padding:9px 11px; word-break:break-all; }
+.inter__status{ margin-top:12px; display:flex; align-items:center; gap:9px; min-height:22px; font-size:.76rem; font-style:italic; color:var(--muted); }
+.prep{ display:inline-flex; gap:5px; }
+.prep i{ width:8px; height:8px; border-radius:50%; background:var(--teal); display:inline-block; animation:prep 1s infinite ease-in-out; }
+.prep i:nth-child(2){ animation-delay:.15s; }
+.prep i:nth-child(3){ animation-delay:.3s; }
+.inter__actions{ display:flex; flex-wrap:wrap; gap:9px; margin-top:16px; }
+.inter__btn{ min-height:44px; padding:10px 18px; border:2px solid var(--teal); border-radius:10px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.82rem; cursor:pointer; }
+.inter__btn.secondary{ background:#fff; color:var(--teal); }
+.inter__btn:disabled{ background:#c3c8d2; border-color:#c3c8d2; color:#fff; cursor:not-allowed; }
+.inter__btn:hover:not(:disabled){ filter:brightness(.96); }
+
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+@keyframes rise{ from{ opacity:0; transform:translateY(10px) scale(.99);} to{ opacity:1; transform:none; } }
+@keyframes prep{ 0%,100%{ transform:scale(.6); opacity:.4; } 50%{ transform:scale(1); opacity:1; } }
+@keyframes fadeUp{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+@keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
+
+.hd{ animation:fadeUp .5s ease both; }
+.navprompt{ animation:fadeUp .5s ease .06s both; }
+.eff__cols .panel:nth-child(1){ animation:fadeUp .5s ease .14s both; }
+.eff__cols .panel:nth-child(2){ animation:fadeUp .5s ease .22s both; }
+
+/* ===== Continue nudge ===== */
+.slide.nudge-shown{ padding-bottom:64px; }
+.nudge{ position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:38; display:none; align-items:center; gap:10px; max-width:calc(100% - 28px); padding:9px 17px; border-radius:999px; background:rgba(34,47,85,.94); color:#fff; font-size:15px; font-weight:600; line-height:1.25; box-shadow:0 8px 22px rgba(16,26,38,.30); }
+.nudge.is-on{ display:inline-flex; animation:nudgeIn .5s ease both; }
+.nudge b{ font-weight:700; }
+.nudge__chev{ flex:0 0 auto; display:inline-grid; place-items:center; }
+.nudge__chev svg{ width:20px; height:20px; }
+.nudge.is-on .nudge__chev{ animation:nudgeBob 1.6s ease-in-out .6s infinite; }
+.nudge__m{ display:none; }
+body.is-fullscreen .nudge{ bottom:auto; top:60px; }
+body.is-fullscreen .nudge__d{ display:none; }
+body.is-fullscreen .nudge__m{ display:inline; }
+@keyframes nudgeIn{ from{ opacity:0; transform:translateX(-50%) translateY(12px);} to{ opacity:1; transform:translateX(-50%) translateY(0);} }
+@keyframes nudgeBob{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(3px);} }
+
+/* ===== Mobile/Visme launch card + return-to-course ===== */
+.mlaunch{ display:none; }
+.returnbar{ display:none; }
+body.is-embedded-mobile .slide{ display:none !important; }
+body.is-embedded-mobile{ display:block; }
+body.is-embedded-mobile .mlaunch{ display:flex; position:fixed; inset:0; z-index:50; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:42px; padding:90px 70px; background:linear-gradient(135deg,#0098be 0%, #007a98 55%, #222f55 100%); color:#fff; }
+.mlaunch__badge{ font-size:30px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; opacity:.9; }
+.mlaunch__title{ margin:0; font-size:50px; font-weight:700; line-height:1.08; }
+.mlaunch__title em{ font-style:italic; }
+.mlaunch__lead{ margin:0; max-width:1040px; font-size:36px; font-weight:500; line-height:1.4; opacity:.96; }
+.mlaunch__btn{ display:inline-flex; align-items:center; gap:26px; margin-top:6px; padding:44px 88px; border-radius:999px; background:#fff; color:#007a98; font:inherit; font-weight:700; font-size:46px; text-decoration:none; box-shadow:0 18px 54px rgba(16,26,38,.38); }
+.mlaunch__btn svg{ width:54px; height:54px; }
+.mlaunch__note{ margin:0; max-width:1040px; font-size:27px; line-height:1.4; opacity:.85; }
+body.is-fullscreen .returnbar{ display:inline-flex; align-items:center; justify-content:center; gap:9px; position:fixed; top:10px; left:10px; z-index:60; box-sizing:border-box; width:auto; height:44px; padding:0 18px 0 13px; border-radius:999px; background:rgba(34,47,85,.92); color:#fff; text-decoration:none; box-shadow:0 6px 16px rgba(16,26,38,.26); font:inherit; }
+body.is-fullscreen .returnbar__ic{ flex:0 0 auto; width:22px; height:22px; display:grid; place-items:center; }
+body.is-fullscreen .returnbar__ic svg{ width:22px; height:22px; }
+body.is-fullscreen .returnbar__lab{ font:inherit; font-weight:700; font-size:15px; white-space:nowrap; }
+body.is-fullscreen{ padding-top:56px; }
+
+/* Short embed heights: degrade cleanly — trim heading + hero, compact the split view. */
+@media (min-width:761px) and (max-height:648px){
+  .hd{ padding:7px 20px 6px; }
+  .hd__title{ font-size:clamp(23px,2.5vw,32px); }
+  .hd__rule{ margin:5px auto 4px; }
+  .hd__rule i{ height:12px; }
+  .eff{ gap:clamp(5px,.9vh,9px); padding-top:clamp(7px,1.2vh,11px); padding-bottom:clamp(7px,1.2vh,11px); }
+  .navprompt__box{ padding:6px 14px; font-size:.8rem; }
+  .orr{ gap:clamp(5px,1vh,9px); }
+  .orr__cap{ font-size:.78rem; max-width:38ch; }
+  .ring{ width:clamp(120px,17.5vh,158px); }
+  .tte{ padding:clamp(10px,1.5vw,15px); }
+  .srcpill{ bottom:9px; }
+  /* keep the split view fitting: 1-line header, top-aligned + compacted bars */
+  .tte__head{ flex-wrap:nowrap; gap:8px; }
+  .tte__title{ font-size:.82rem; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .tte__title span{ display:none; }
+  .split{ padding:5px 10px; font-size:.71rem; white-space:nowrap; }
+  .bars{ gap:clamp(5px,.8vh,8px); justify-content:flex-start; overflow:hidden; margin-top:6px; }
+  .metric{ gap:2px; }
+  .metric__top{ line-height:1.05; }
+  .metric__name, .metric__val{ font-size:.78rem; }
+  .track{ height:8px; }
+  .subs{ gap:3px; margin-top:0; }
+  .sub{ grid-template-columns:56px 1fr auto; gap:7px; }
+  .sub__track{ height:6px; }
+  .sub__lab, .sub__val{ font-size:.66rem; }
+  .tte__foot{ margin-top:5px; font-size:.62rem; line-height:1.3; }
+}
+
+@media (max-width:760px){
+  html,body{ height:auto; }
+  body{ overflow:auto; }
+  .slide{ height:auto; min-height:100%; }
+  .slide.nudge-shown{ padding-bottom:0; }
+  .slide::before{ position:fixed; }
+  .nudge{ font-size:13px; left:12px; right:12px; transform:none; max-width:none; justify-content:center; }
+  .nudge.is-on{ animation:none; }
+  .eff__cols{ grid-template-columns:1fr; }
+  .ring{ width:clamp(150px,44vw,190px); }
+  .srcpill{ position:static; align-self:flex-start; margin-top:4px; }
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+}
+</style>
+</head>
+<body>
+<main class="slide" id="slide" aria-label="Long-term efficacy in the VISION study — interactive summary">
+
+  <header class="hd">
+    <h1 class="hd__title">Long-term efficacy</h1>
+    <div class="hd__rule" aria-hidden="true"><i></i><b></b><i></i></div>
+    <p class="hd__sub">VISION study &middot; &ge;3-year follow-up &middot; overall population (N&nbsp;=&nbsp;313)</p>
+  </header>
+
+  <div class="eff">
+    <div class="navprompt">
+      <p class="navprompt__box">
+        <span class="navprompt__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+        <span>After &ge;3 years, tepotinib showed robust, durable efficacy.<sup>1</sup> Reveal each outcome to explore.</span>
+      </p>
+    </div>
+
+    <div class="eff__cols">
+      <!-- ORR hero -->
+      <section class="panel" aria-label="Overall response rate">
+        <div class="orr">
+          <div class="orr__eyebrow">Overall response rate<sup>1</sup></div>
+          <button class="ring" id="ring" type="button" aria-label="Overall response rate 51.8 percent, 95% confidence interval 46.1 to 57.4">
+            <span class="ring__hole">
+              <span>
+                <span class="ring__val" id="ringVal">51.8%</span>
+                <span class="ring__ci" id="ringCi">95% CI 46.1&ndash;57.4</span>
+              </span>
+            </span>
+          </button>
+          <p class="orr__cap">Around <b>half of patients</b> achieved an objective response, sustained with long-term follow-up.</p>
+        </div>
+      </section>
+
+      <!-- time-to-event -->
+      <section class="panel" aria-label="Time-to-event outcomes">
+        <div class="tte" id="tte">
+          <div class="tte__head">
+            <span class="tte__title">Time-to-event outcomes <span>median (95% CI), months</span></span>
+            <button class="split" id="splitBtn" type="button" disabled aria-pressed="false">
+              <span class="dot" style="background:var(--pink)"></span><span class="dot" style="background:var(--green)"></span>
+              Split by prior treatment
+            </button>
+          </div>
+
+          <div class="tteCTA" id="tteCTA">
+            <p>Three time-to-event outcomes were sustained after &ge;3 years&rsquo; follow-up.</p>
+            <button class="reveal-btn" id="revealBtn" type="button">
+              Reveal DOR &middot; PFS &middot; OS
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><polyline points="13 6 19 12 13 18"/></svg>
+            </button>
+          </div>
+
+          <div class="bars" id="bars" aria-live="polite">
+            <div class="metric">
+              <div class="metric__top">
+                <span class="metric__name">DOR <span>duration of response</span></span>
+                <span class="metric__val">18.0 <small>(12.6&ndash;31.8)</small></span>
+              </div>
+              <div class="track"><span class="fill" style="width:50.0%"></span></div>
+              <div class="subs">
+                <div class="sub"><span class="sub__lab naive">Naïve</span><span class="sub__track"><span class="sub__fill naive" style="width:88.1%"></span></span><span class="sub__val naive">31.7 <small>(13.8&ndash;46.4)</small></span></div>
+                <div class="sub"><span class="sub__lab treated">Treated</span><span class="sub__track"><span class="sub__fill treated" style="width:35.0%"></span></span><span class="sub__val treated">12.6 <small>(9.5&ndash;18.5)</small></span></div>
+              </div>
+            </div>
+            <div class="metric">
+              <div class="metric__top">
+                <span class="metric__name">PFS <span>progression-free survival</span></span>
+                <span class="metric__val">11.2 <small>(9.5&ndash;13.8)</small></span>
+              </div>
+              <div class="track"><span class="fill" style="width:31.1%"></span></div>
+              <div class="subs">
+                <div class="sub"><span class="sub__lab naive">Naïve</span><span class="sub__track"><span class="sub__fill naive" style="width:35.0%"></span></span><span class="sub__val naive">12.6 <small>(9.7&ndash;17.7)</small></span></div>
+                <div class="sub"><span class="sub__lab treated">Treated</span><span class="sub__track"><span class="sub__fill treated" style="width:30.6%"></span></span><span class="sub__val treated">11.0 <small>(8.2&ndash;13.7)</small></span></div>
+              </div>
+            </div>
+            <div class="metric">
+              <div class="metric__top">
+                <span class="metric__name">OS <span>overall survival</span></span>
+                <span class="metric__val">19.7 <small>(16.2&ndash;22.3)</small></span>
+              </div>
+              <div class="track"><span class="fill" style="width:54.7%"></span></div>
+              <div class="subs">
+                <div class="sub"><span class="sub__lab naive">Naïve</span><span class="sub__track"><span class="sub__fill naive" style="width:58.6%"></span></span><span class="sub__val naive">21.1 <small>(14.2&ndash;24.5)</small></span></div>
+                <div class="sub"><span class="sub__lab treated">Treated</span><span class="sub__track"><span class="sub__fill treated" style="width:53.6%"></span></span><span class="sub__val treated">19.3 <small>(15.6&ndash;21.0)</small></span></div>
+              </div>
+            </div>
+          </div>
+
+          <p class="tte__foot" id="tteFoot">Median months, axis 0&ndash;36. Treatment-naïve n&nbsp;=&nbsp;164 &middot; previously treated n&nbsp;=&nbsp;149. ORR is reported for the overall population only.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- source: bottom inner-corner pill -->
+  <button class="srcpill" id="srcPill" type="button" aria-haspopup="dialog">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M14 3v6h6"/></svg>
+    Source
+  </button>
+
+  <p class="sr-only" id="live" aria-live="polite" aria-atomic="true"></p>
+</main>
+
+<!-- return-to-course -->
+<a class="returnbar" id="returnBar" href="#" aria-label="Return to the course">
+  <span class="returnbar__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 5 4 10 9 15"/><path d="M4 10 H15 a5 5 0 0 1 5 5 V19"/></svg></span>
+  <span class="returnbar__lab">Return to course</span>
+</a>
+
+<!-- embedded-mobile launch card -->
+<div class="mlaunch" role="group" aria-label="Open the activity full screen">
+  <span class="mlaunch__badge">touchONCOLOGY &middot; CPD activity</span>
+  <h1 class="mlaunch__title">Long-term efficacy <span style="font-weight:600;opacity:.85">(VISION study)</span></h1>
+  <p class="mlaunch__lead">This interactive efficacy summary is best viewed full screen on your phone. Tap below to open it.</p>
+  <a class="mlaunch__btn" id="mlaunchBtn" href="#" target="_blank" rel="noopener">Open the activity <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><polyline points="13 6 19 12 13 18"/></svg></a>
+  <p class="mlaunch__note">On a computer, the activity appears here directly.</p>
+</div>
+
+<!-- continue nudge -->
+<div class="nudge" id="nudge" role="status" aria-live="polite">
+  <span class="nudge__chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+  <span class="nudge__d">All done &mdash; use the <b>&#9664;&nbsp;&#9654;</b> arrows at the bottom of the screen to continue when you&rsquo;re ready.</span>
+  <span class="nudge__m">Finished &mdash; tap <b>Return to course</b> to carry on.</span>
+</div>
+
+<!-- ============ D16 EXTERNAL-LINK INTERSTITIAL ============ -->
+<div class="inter" id="inter" role="dialog" aria-modal="true" aria-labelledby="interTitle" aria-describedby="interReason" hidden>
+  <div class="inter__panel" role="document">
+    <h2 class="inter__title" id="interTitle">You are leaving this activity</h2>
+    <p class="inter__p" id="interReason">This link opens an external source in a new tab.</p>
+    <p class="inter__p"><strong>Source:</strong> <span id="interDest"></span><br><strong>Organisation:</strong> <span id="interOrg"></span></p>
+    <p class="inter__p">The source opens in a new tab. Check the address is expected before continuing.</p>
+    <div class="inter__url" id="interUrl"></div>
+    <div class="inter__status" aria-live="polite"><span class="prep" aria-hidden="true"><i></i><i></i><i></i></span><span id="interStatus">Preparing the link&hellip;</span></div>
+    <div class="inter__actions">
+      <button class="inter__btn" id="interOpen" type="button" disabled>Open source</button>
+      <button class="inter__btn secondary" id="interCopy" type="button">Copy link</button>
+      <button class="inter__btn secondary" id="interStay" type="button">Stay here</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $ = function(id){ return document.getElementById(id); };
+  var slide=$('slide'), live=$('live');
+
+  /* ---------- ORR ring count-up (timer-safe; final value baked) ---------- */
+  var ringVal=$('ringVal'), ring=$('ring');
+  var ORR=51.8;
+  (function countUp(){
+    if(reduceMotion){ ringVal.textContent='51.8%'; ring.style.background='conic-gradient(var(--teal) 0 '+ORR+'%, var(--line) '+ORR+'% 100%)'; return; }
+    var start=null, dur=900;
+    var step=function(ts){
+      if(start===null) start=ts;
+      var p=Math.min(1,(ts-start)/dur), e=1-Math.pow(1-p,3), v=ORR*e;
+      ringVal.textContent=v.toFixed(1)+'%';
+      ring.style.background='conic-gradient(var(--teal) 0 '+v+'%, var(--line) '+v+'% 100%)';
+      if(p<1){ setTimeout(function(){ step(performance.now()); },16); }
+      else { ringVal.textContent='51.8%'; ring.style.background='conic-gradient(var(--teal) 0 '+ORR+'%, var(--line) '+ORR+'% 100%)'; }
+    };
+    setTimeout(function(){ step(performance.now()); },260);
+  })();
+  ring.addEventListener('click',function(){ live.textContent='Overall response rate was 51.8 percent, 95% confidence interval 46.1 to 57.4.'; if(ring.animate) ring.animate([{transform:'scale(1)'},{transform:'scale(1.04)'},{transform:'scale(1)'}],{duration:260}); });
+
+  /* ---------- reveal + split ---------- */
+  var tte=$('tte'), revealBtn=$('revealBtn'), splitBtn=$('splitBtn');
+  var nudgeShown=false;
+  function fireNudge(){ if(nudgeShown) return; nudgeShown=true; slide.classList.add('nudge-shown'); var n=$('nudge'); if(n) n.classList.add('is-on'); }
+
+  revealBtn.addEventListener('click',function(){
+    tte.classList.add('is-revealed');
+    splitBtn.disabled=false;
+    live.textContent='DOR 18.0, PFS 11.2 and OS 19.7 months revealed. You can now split by prior treatment.';
+    fireNudge();
+  });
+  splitBtn.addEventListener('click',function(){
+    var on=tte.classList.toggle('is-split');
+    splitBtn.classList.toggle('is-on',on);
+    splitBtn.setAttribute('aria-pressed', on?'true':'false');
+    live.textContent = on
+      ? 'Split by prior treatment. Treatment-naïve DOR 31.7, PFS 12.6, OS 21.1 months; previously treated DOR 12.6, PFS 11.0, OS 19.3 months.'
+      : 'Combined view.';
+  });
+
+  /* ============ D16 INTERSTITIAL (source pill -> DOI) ============ */
+  var inter=$('inter'), iDest=$('interDest'), iOrg=$('interOrg'), iUrl=$('interUrl'),
+      iStatus=$('interStatus'), iDots=inter.querySelector('.prep'),
+      iOpen=$('interOpen'), iCopy=$('interCopy'), iStay=$('interStay');
+  var pendingURL=null, interTrigger=null, launchTimer=null;
+  function orgFromHost(h){ return ({'doi.org':'Publisher (resolved via doi.org)'})[h]||h; }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); }
+  function italMET(s){ return String(s).replace(/\bMET\b/g,'<em>MET</em>').replace(/\bMET(?=ex14)/g,'<em>MET</em>'); }
+  var SRC = { url:'https://doi.org/10.1016/S1556-0864(25)00276-X', ref:'Mazieres J, et al. Tepotinib in patients with METex14 skipping NSCLC from the VISION study: ≥3-year follow-up. J Thorac Oncol. 2025;20(3 Suppl 1):S59–S60 (poster 81P).' };
+  function openInter(url,ref,trigger){
+    pendingURL=url; interTrigger=trigger;
+    var host=url; try{ host=new URL(url).hostname; }catch(e){}
+    iDest.innerHTML=italMET(esc(ref)); iOrg.textContent=orgFromHost(host); iUrl.textContent=url;
+    if(iDots) iDots.style.display=''; iStatus.textContent='Preparing the link…'; iOpen.disabled=true;
+    inter.hidden=false; inter.classList.add('is-open'); iStay.focus();
+    if(launchTimer) clearTimeout(launchTimer);
+    launchTimer=setTimeout(function(){ if(iDots) iDots.style.display='none'; iStatus.textContent='Ready to open.'; iOpen.disabled=false; iOpen.focus(); }, reduceMotion?250:1300);
+  }
+  function closeInter(){ if(launchTimer) clearTimeout(launchTimer); inter.classList.remove('is-open'); inter.hidden=true; if(interTrigger&&interTrigger.focus){ try{ interTrigger.focus(); }catch(e){} } }
+  $('srcPill').addEventListener('click',function(){ openInter(SRC.url,SRC.ref,this); });
+  iOpen.addEventListener('click',function(){ if(!pendingURL) return; window.open(pendingURL,'_blank','noopener,noreferrer'); iStatus.textContent='Link opened in a new tab. Nothing opened? Copy the link and open it manually.'; });
+  iCopy.addEventListener('click',function(){ if(!pendingURL) return; var ta=document.createElement('textarea'); ta.value=pendingURL; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select(); var ok=false; try{ ok=document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); iStatus.textContent=ok?'Link copied. Paste it into a fresh browser tab.':'Copying is unavailable. Select and copy the visible URL manually.'; });
+  iStay.addEventListener('click',closeInter);
+  inter.addEventListener('click',function(e){ if(e.target===inter) closeInter(); });
+  document.addEventListener('keydown',function(e){
+    if(inter.classList.contains('is-open')){
+      if(e.key==='Escape'){ e.preventDefault(); closeInter(); return; }
+      if(e.key==='Tab'){ trap(inter,e); }
+    }
+  },true);
+  function trap(container,e){
+    var f=container.querySelectorAll('button:not([disabled]),a[href],[tabindex]:not([tabindex="-1"])');
+    if(!f.length) return; var first=f[0], last=f[f.length-1];
+    if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); }
+  }
+})();
+</script>
+
+<script>
+/* mobile/Visme: launch card + return-to-course */
+(function () {
+  "use strict";
+  var fullscreen = /[?&]fullscreen=1/.test(location.search);
+  var inIframe = true; try { inIframe = (window.self !== window.top); } catch (e) { inIframe = true; }
+  var isMobile = /Android|iPhone|iPad|iPod|Mobile|Silk/i.test(navigator.userAgent);
+  var btn = document.getElementById('mlaunchBtn');
+  var base = location.href.split('#')[0].split('?')[0];
+  var courseUrl = ''; try { courseUrl = document.referrer || ''; } catch (e) { courseUrl = ''; }
+  var target = base + '?fullscreen=1' + (courseUrl ? '&return=' + encodeURIComponent(courseUrl) : '');
+  if (btn) {
+    btn.href = target;
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      var w = null;
+      try { w = window.open(target, '_blank'); } catch (err) { w = null; }
+      if (!w) { try { window.top.location.href = target; } catch (err2) { window.location.href = target; } }
+    });
+  }
+  var rb = document.getElementById('returnBar');
+  var returnUrl = (function () { try { return new URLSearchParams(location.search).get('return'); } catch (e) { return null; } })();
+  if (rb) {
+    if (returnUrl) { rb.href = returnUrl; }
+    rb.addEventListener('click', function (e) {
+      e.preventDefault();
+      try { if (window.opener && !window.opener.closed) { window.close(); return; } } catch (err) {}
+      if (window.history.length > 1) { window.history.back(); return; }
+      if (returnUrl) { window.location.href = returnUrl; }
+    });
+  }
+  if (isMobile) { document.body.classList.add('is-mobile'); }
+  if (inIframe && isMobile && !fullscreen) { document.body.classList.add('is-embedded-mobile'); }
+  if (fullscreen) { document.body.classList.add('is-fullscreen'); }
+}());
+</script>
+</body>
+</html>

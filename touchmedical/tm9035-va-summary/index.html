@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Summary &amp; reflection — VISION (tepotinib, METex14 skipping NSCLC)</title>
+<style>
+/* ============================================================
+   TOUCH MEDICAL — TM9035 · VISUAL ABSTRACT · SCENE 8 (Summary)
+   Four-step wizard in one fixed box, no scroll:
+     1 Summary        — five VISION headline findings (verbatim, Scene-8B)
+     2 Where you stand — one confidence self-rating (4 levels)
+     3 Your reflection — one free-text prompt (editable, no storage)
+     4 CPD record      — review + IN-FRAME export (copy primary + download)
+   Export is sandbox-safe (contract §0.5): copy-to-clipboard (guaranteed) +
+   best-effort Blob download; NEVER window.print()/open() (Visme blocks them).
+   Decorative ambient backdrop (D24 toggle + reduced-motion safe, off on mobile);
+   no content is ever gated behind animation (§6). No citations (inherits S1-6).
+   Self-contained. No external runtime dependencies. Poppins bundled.
+   Brand: teal #0098be, navy #222f55.
+   ============================================================ */
+@font-face { font-family:"Poppins"; src:url("assets/poppins-400.ttf") format("truetype"); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-600.ttf") format("truetype"); font-weight:600; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-700.ttf") format("truetype"); font-weight:700; font-style:normal; font-display:swap; }
+
+:root{
+  --teal:#0098be; --teal-strong:#007a98;
+  --navy:#222f55; --on-accent:#ffffff;
+  --neutral:#c6d3e2;
+  --muted:#56608a; --faint:#8a91b0;
+  --good:#1f9d6b; --good-soft:#e3f5ec;
+  --pale:#d9eff8; --mist:#f4f7f9; --line:#e3e8ee;
+  --backdrop:rgba(16,26,38,.68);
+  --title-shadow-slim:0 1px 2px rgba(34,47,85,.16);
+  --font:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{ box-sizing:border-box; }
+html,body{ height:100%; margin:0; }
+body{ overflow:hidden; background:#eef4f7; color:var(--navy); font-family:var(--font); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; display:flex; align-items:center; justify-content:center; }
+
+/* ---------- frame (opaque white) ---------- */
+.frame{ position:relative; z-index:1; width:100%; height:100%; max-width:1370px; max-height:680px; display:flex; flex-direction:column; overflow:hidden; background:#fff; border-radius:16px; box-shadow:0 20px 52px rgba(16,26,38,.18); }
+
+/* ---------- heading — title + teal I-beam divider + subheading ---------- */
+.hd{ flex:0 0 auto; text-align:center; padding:clamp(10px,1.6vh,16px) 20px clamp(8px,1.3vh,12px); background:#fff; box-shadow:0 4px 11px rgba(34,47,85,0.07); border-bottom:1px solid var(--line); border-radius:14px 14px 0 0; }
+.hd__title{ margin:0; font-size:clamp(28px,3.3vw,46px); font-weight:700; line-height:1.1; letter-spacing:-.012em; color:var(--navy); text-shadow:var(--title-shadow-slim); }
+.hd__title em{ font-style:italic; }
+.hd__rule{ display:flex; align-items:center; justify-content:center; width:min(72%,760px); margin:clamp(5px,.9vh,9px) auto clamp(4px,.7vh,7px); }
+.hd__rule i{ width:3px; height:14px; background:var(--teal); border-radius:2px; flex:0 0 auto; }
+.hd__rule b{ flex:1 1 auto; height:2.5px; background:var(--teal); border-radius:2px; }
+.hd__sub{ margin:0; font-size:clamp(.76rem,1.3vw,.9rem); font-weight:600; color:var(--muted); }
+
+/* step rail */
+.rail{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:clamp(6px,1.4vw,16px); padding:clamp(7px,1.3vh,12px) clamp(12px,3vw,28px) clamp(5px,1vh,9px); background:rgba(255,255,255,.85); }
+.rail__step{ display:inline-flex; align-items:center; gap:8px; font-size:clamp(.7rem,1.2vw,.82rem); font-weight:700; color:var(--faint); }
+.rail__num{ width:23px; height:23px; flex:0 0 auto; border-radius:50%; display:grid; place-items:center; background:#fff; border:2px solid var(--line); color:var(--faint); font-size:.78rem; font-weight:700; }
+.rail__step.is-active .rail__num{ background:var(--teal); border-color:var(--teal); color:#fff; }
+.rail__step.is-active{ color:var(--navy); }
+.rail__step.is-done .rail__num{ background:var(--teal-strong); border-color:var(--teal-strong); color:#fff; }
+.rail__step.is-done{ color:var(--muted); }
+.rail__line{ width:clamp(14px,3vw,40px); height:2px; background:var(--line); border-radius:2px; }
+.rail__step.is-done + .rail__line{ background:var(--teal-strong); }
+@media (max-width:880px){ .rail__lab{ display:none; } }
+
+/* body shell */
+.body{ flex:1 1 auto; min-height:0; position:relative; padding:clamp(8px,1.4vh,14px) clamp(16px,2.8vw,40px) clamp(8px,1.3vh,14px); }
+.step{ position:absolute; inset:0; padding:inherit; display:none; flex-direction:column; min-height:0; }
+.step.is-on{ display:flex; }
+.step.anim-right{ animation:stepInR .36s cubic-bezier(.4,0,.2,1); }
+.step.anim-left{ animation:stepInL .36s cubic-bezier(.4,0,.2,1); }
+@keyframes stepInR{ from{ opacity:0; transform:translateX(40px); } to{ opacity:1; transform:none; } }
+@keyframes stepInL{ from{ opacity:0; transform:translateX(-40px); } to{ opacity:1; transform:none; } }
+.step__lead{ flex:0 0 auto; margin:0 0 clamp(6px,1.1vh,11px); font-size:clamp(.8rem,1.4vw,.95rem); font-weight:600; color:var(--muted); line-height:1.35; text-align:center; }
+.step__lead b{ color:var(--navy); font-weight:700; }
+.congrats{ flex:0 0 auto; margin:0 0 clamp(6px,1.1vh,11px); padding:clamp(8px,1.4vh,13px) clamp(14px,2vw,24px); background:var(--good-soft); border:2px solid var(--good); border-radius:13px; color:#186b49; font-size:clamp(.84rem,1.45vw,1rem); font-weight:600; line-height:1.4; text-align:center; }
+.congrats b{ color:#186b49; font-weight:700; }
+
+/* step 1: summary cards */
+.sum{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; justify-content:center; gap:clamp(5px,1.1vh,11px); padding:2px 0; }
+.scard{ display:flex; align-items:center; gap:clamp(12px,1.8vw,20px); padding:clamp(6px,1.05vh,13px) clamp(14px,1.9vw,22px); background:#fff; border:2px solid var(--teal); border-radius:14px; box-shadow:0 5px 16px rgba(34,47,85,.08); opacity:0; transform:translateY(18px); }
+.scard.in{ opacity:1; transform:none; transition:opacity .55s cubic-bezier(.4,0,.2,1), transform .55s cubic-bezier(.4,0,.2,1); }
+.scard__no{ flex:0 0 auto; width:clamp(30px,3.4vw,40px); height:clamp(30px,3.4vw,40px); border-radius:50%; background:var(--teal); color:#fff; display:grid; place-items:center; font-size:clamp(.92rem,1.7vw,1.16rem); font-weight:700; }
+.scard__main{ flex:1 1 auto; min-width:0; }
+.scard__eyebrow{ display:block; font-size:clamp(.6rem,1.05vw,.72rem); font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--teal-strong); margin-bottom:2px; }
+.scard__text{ margin:0; font-size:clamp(.82rem,1.42vw,.98rem); font-weight:500; line-height:1.34; color:var(--navy); }
+.scard__text em{ font-style:italic; }
+
+/* step 2: single confidence rating (4 levels) */
+.conf{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:clamp(14px,2.6vh,26px); }
+.conf__q{ font-size:clamp(1rem,1.9vw,1.35rem); font-weight:700; color:var(--navy); text-align:center; max-width:26ch; line-height:1.3; }
+.conf__opts{ display:flex; gap:clamp(9px,1.4vw,16px); flex-wrap:wrap; justify-content:center; }
+.copt{ display:flex; flex-direction:column; align-items:center; gap:9px; min-width:clamp(120px,15vw,168px); padding:clamp(13px,2vh,20px) clamp(12px,1.6vw,20px); border:2px solid var(--line); border-radius:16px; background:#fff; color:var(--muted); font:inherit; font-weight:700; font-size:clamp(.82rem,1.4vw,.98rem); cursor:pointer; transition:border-color .15s ease, color .15s ease, transform .14s ease, box-shadow .15s ease; }
+.copt:hover{ border-color:var(--teal); color:var(--navy); transform:translateY(-2px); }
+.copt:active{ transform:scale(.98); }
+.copt:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+.copt__dots{ display:inline-flex; gap:4px; }
+.copt__dots i{ width:9px; height:9px; border-radius:50%; background:var(--line); }
+.copt[data-lvl="1"] .copt__dots i:nth-child(-n+1),
+.copt[data-lvl="2"] .copt__dots i:nth-child(-n+2),
+.copt[data-lvl="3"] .copt__dots i:nth-child(-n+3),
+.copt[data-lvl="4"] .copt__dots i:nth-child(-n+4){ background:var(--teal); }
+.copt[aria-checked="true"]{ border-color:var(--teal); background:var(--pale); color:var(--teal-strong); box-shadow:0 6px 16px rgba(0,152,190,.16); }
+.copt[aria-checked="true"] .copt__dots i{ background:var(--teal-strong); }
+
+/* step 3: single reflection */
+.refl{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; justify-content:center; gap:10px; max-width:760px; width:100%; margin:0 auto; }
+.rfield__lab{ display:flex; align-items:baseline; gap:9px; font-size:clamp(.86rem,1.5vw,1.02rem); font-weight:700; color:var(--navy); }
+.rfield__lab span{ font-size:.8em; font-weight:600; color:var(--faint); }
+.refl textarea{ width:100%; resize:none; font:inherit; font-size:clamp(.82rem,1.35vw,.94rem); line-height:1.45; color:var(--navy); padding:12px 14px; border:1.5px solid var(--line); border-radius:12px; background:#fff; height:clamp(96px,20vh,150px); }
+.refl textarea:focus{ outline:none; border-color:var(--teal); box-shadow:0 0 0 3px rgba(0,152,190,.16); }
+.refl textarea::placeholder{ color:var(--faint); }
+.refl__hint{ margin:0; font-size:clamp(.72rem,1.2vw,.82rem); color:var(--faint); }
+
+/* step 4: CPD record */
+.cpd{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; gap:clamp(6px,1vh,10px); }
+.cpd__scroll{ flex:1 1 auto; min-height:0; overflow:auto; border:1.5px solid var(--line); border-radius:12px; background:#fff; padding:clamp(11px,1.7vw,18px); }
+.cpd__sec + .cpd__sec{ margin-top:clamp(9px,1.5vh,15px); }
+.cpd__h{ margin:0 0 6px; font-size:clamp(.66rem,1.1vw,.75rem); font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--teal-strong); }
+.cpd__find{ margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:5px; }
+.cpd__find li{ position:relative; padding-left:26px; font-size:clamp(.76rem,1.24vw,.87rem); line-height:1.34; color:var(--navy); }
+.cpd__find li b{ color:var(--teal-strong); }
+.cpd__find li::before{ counter-increment:f; content:counter(f); position:absolute; left:0; top:1px; width:18px; height:18px; border-radius:50%; background:var(--pale); color:var(--teal-strong); font-size:.66rem; font-weight:700; display:grid; place-items:center; }
+.cpd__find{ counter-reset:f; }
+.cpd__pill{ display:inline-flex; align-items:center; gap:8px; padding:6px 13px; border-radius:999px; border:1.5px solid var(--teal); background:var(--pale); color:var(--teal-strong); font-size:clamp(.76rem,1.2vw,.86rem); font-weight:700; }
+.cpd__pill[data-v="none"]{ border-color:var(--line); background:#fff; color:var(--faint); }
+.cpd__ans{ margin:0; font-size:clamp(.76rem,1.24vw,.87rem); color:var(--muted); line-height:1.4; white-space:pre-wrap; }
+.cpd__ans.empty{ font-style:italic; color:var(--faint); }
+.cpd__note{ flex:0 0 auto; font-size:clamp(.68rem,1.08vw,.76rem); color:var(--faint); line-height:1.35; margin:0; }
+.cpd__note em{ font-style:italic; }
+
+/* footer controls (opaque chrome) */
+.controls{ flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:clamp(7px,1.2vh,12px) clamp(16px,3vw,30px); border-top:1px solid var(--line); background:rgba(255,255,255,.85); border-radius:0 0 14px 14px; }
+.btn{ display:inline-flex; align-items:center; gap:8px; min-height:42px; padding:9px clamp(14px,1.8vw,22px); border:2px solid var(--teal); border-radius:10px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:clamp(.8rem,1.3vw,.9rem); cursor:pointer; transition:filter .15s ease, opacity .15s ease; }
+.btn svg{ width:17px; height:17px; }
+.btn:hover:not(:disabled){ filter:brightness(.95); }
+.btn.secondary{ background:#fff; color:var(--teal); }
+.btn.secondary:hover:not(:disabled){ background:var(--mist); filter:none; }
+.btn:disabled{ background:#fff; color:var(--faint); border-color:var(--line); cursor:not-allowed; }
+.btn:focus-visible,.copt:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+.controls__mid{ font-size:clamp(.72rem,1.2vw,.84rem); font-weight:700; color:var(--teal); white-space:nowrap; font-variant-numeric:tabular-nums; }
+
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+/* export modal (in-frame; sandbox-safe copy + download) */
+.xmodal{ position:fixed; inset:0; z-index:40; display:none; align-items:center; justify-content:center; padding:clamp(12px,4vw,40px); background:var(--backdrop); }
+.xmodal.is-open{ display:flex; }
+.xcard{ width:min(560px,100%); max-height:calc(100% - 24px); overflow:auto; background:#fff; border-radius:16px; box-shadow:0 24px 60px rgba(16,26,38,.4); padding:clamp(18px,3vw,26px); animation:rise .22s ease both; }
+.xcard__check{ width:38px; height:38px; border-radius:50%; background:var(--teal); color:#fff; display:grid; place-items:center; margin-bottom:12px; }
+.xcard__check svg{ width:20px; height:20px; }
+.xcard__eyebrow{ margin:0 0 4px; font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--teal-strong); }
+.xcard__title{ margin:0 0 8px; font-size:clamp(1.05rem,2vw,1.25rem); font-weight:700; color:var(--navy); }
+.xcard__body{ margin:0; font-size:.9rem; line-height:1.5; color:var(--muted); }
+.xcard__body strong{ color:var(--navy); font-weight:700; }
+.xcard__actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+.xcard__status{ margin:12px 0 0; min-height:20px; font-size:.82rem; font-weight:600; color:var(--teal-strong); }
+.xcard__status.warn{ color:#9a6a16; }
+@keyframes rise{ from{ opacity:0; transform:translateY(10px) scale(.99); } to{ opacity:1; transform:none; } }
+
+/* ===== Continue nudge ===== */
+.frame.nudge-shown{ padding-bottom:72px; }
+.nudge{ position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:41; display:none; align-items:center; gap:10px; max-width:calc(100% - 28px); padding:9px 17px; border-radius:999px; background:rgba(34,47,85,0.94); color:#fff; font-size:15px; font-weight:600; line-height:1.25; box-shadow:0 8px 22px rgba(16,26,38,0.30); }
+.nudge.is-on{ display:inline-flex; animation:nudgeIn .5s ease both; }
+.nudge b{ font-weight:700; }
+.nudge__chev{ flex:0 0 auto; display:inline-grid; place-items:center; }
+.nudge__chev svg{ width:20px; height:20px; transition:transform .3s ease; }
+.nudge.is-on .nudge__chev{ animation:nudgeBob 1.6s ease-in-out .6s infinite; }
+.nudge__m{ display:none; }
+body.is-fullscreen .nudge{ bottom:auto; top:60px; }
+body.is-fullscreen .nudge__d{ display:none; }
+body.is-fullscreen .nudge__m{ display:inline; }
+body.is-fullscreen .nudge__chev svg{ transform:rotate(180deg); }
+body.is-fullscreen.is-laststep .nudge__m{ display:none; }
+@keyframes nudgeIn{ from{ opacity:0; transform:translateX(-50%) translateY(12px); } to{ opacity:1; transform:translateX(-50%) translateY(0); } }
+@keyframes nudgeBob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(3px); } }
+
+/* ===== Mobile/Visme launch card + return-to-course ===== */
+.mlaunch{ display:none; }
+body.is-embedded-mobile .frame{ display:none !important; }
+body.is-embedded-mobile{ display:block; }
+body.is-embedded-mobile .mlaunch{ display:flex; position:fixed; inset:0; z-index:50; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:42px; padding:90px 70px; background:linear-gradient(135deg,#0098be 0%, #007a98 55%, #222f55 100%); color:#fff; }
+.mlaunch__badge{ font-size:30px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; opacity:.9; }
+.mlaunch__title{ margin:0; font-size:56px; font-weight:700; line-height:1.08; }
+.mlaunch__lead{ margin:0; max-width:1040px; font-size:36px; font-weight:500; line-height:1.4; opacity:.96; }
+.mlaunch__btn{ display:inline-flex; align-items:center; gap:26px; margin-top:6px; padding:46px 90px; border-radius:999px; background:#fff; color:#007a98; font:inherit; font-weight:700; font-size:47px; text-decoration:none; box-shadow:0 18px 54px rgba(16,26,38,.38); }
+.mlaunch__btn svg{ width:55px; height:55px; }
+.mlaunch__note{ margin:0; max-width:1040px; font-size:27px; line-height:1.4; opacity:.85; }
+.returnbar{ display:none; }
+body.is-fullscreen .returnbar{ display:inline-flex; align-items:center; justify-content:center; gap:0; position:fixed; top:10px; left:10px; z-index:60; box-sizing:border-box; width:44px; height:44px; padding:0; overflow:hidden; border-radius:13px; background:rgba(34,47,85,.92); color:#fff; text-decoration:none; box-shadow:0 6px 16px rgba(16,26,38,.26); transition:width .28s cubic-bezier(.4,0,.2,1), padding .28s cubic-bezier(.4,0,.2,1), gap .28s ease, border-radius .28s ease; }
+body.is-fullscreen .returnbar__ic{ flex:0 0 auto; width:22px; height:22px; display:grid; place-items:center; }
+body.is-fullscreen .returnbar__ic svg{ width:22px; height:22px; }
+body.is-fullscreen .returnbar__lab{ font:inherit; font-weight:700; font-size:15px; white-space:nowrap; max-width:0; opacity:0; transition:max-width .28s ease, opacity .2s ease; }
+body.is-fullscreen .returnbar:focus-visible{ outline:3px solid var(--teal); outline-offset:3px; }
+body.is-fullscreen.is-laststep .returnbar{ width:auto; gap:9px; padding:0 18px 0 13px; border-radius:999px; }
+body.is-fullscreen.is-laststep .returnbar__lab{ max-width:220px; opacity:1; }
+.returnhint{ display:none; }
+body.is-fullscreen.is-laststep .returnhint{ display:block; flex:0 0 auto; margin:0; padding:10px clamp(16px,3vw,30px) 4px; font-size:13px; line-height:1.42; color:var(--muted); text-align:center; }
+body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-weight:700; }
+
+/* phone view */
+@media (max-width:760px){
+  html,body{ height:auto; }
+  body{ overflow:auto; display:block; }
+  .bg{ position:fixed; }
+  .frame{ width:auto; height:auto; min-height:100%; max-height:none; margin:0; border-radius:0; background:#fff; }
+  .body{ position:static; }
+  .step{ position:static; }
+  .rail__lab{ display:none; }
+  .conf__opts{ flex-direction:column; width:100%; }
+  .copt{ width:100%; flex-direction:row; justify-content:space-between; }
+  body.is-fullscreen{ padding-top:56px; }
+  .nudge{ font-size:13px; left:12px; right:12px; transform:none; max-width:none; justify-content:center; }
+  .nudge.is-on{ animation:none; }
+  .frame.nudge-shown{ padding-bottom:0; }
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+  .scard{ opacity:1; transform:none; }
+}
+</style>
+</head>
+<body>
+
+<!-- return-to-course (opened full-screen view only) -->
+<a class="returnbar" id="returnBar" href="#" aria-label="Return to the course">
+  <span class="returnbar__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 5 4 10 9 15"/><path d="M4 10 H15 a5 5 0 0 1 5 5 V19"/></svg></span>
+  <span class="returnbar__lab">Return to course</span>
+</a>
+
+<!-- embedded-mobile launch card -->
+<div class="mlaunch" role="group" aria-label="Open the activity full screen">
+  <span class="mlaunch__badge">touchONCOLOGY &middot; CPD activity</span>
+  <h1 class="mlaunch__title">Summary &amp; reflection</h1>
+  <p class="mlaunch__lead">This interactive summary is best viewed full screen on your phone. Tap below to open it.</p>
+  <a class="mlaunch__btn" id="mlaunchBtn" href="#" target="_blank" rel="noopener">Open the activity <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><polyline points="13 6 19 12 13 18"/></svg></a>
+  <p class="mlaunch__note">On a computer, the activity appears here directly.</p>
+</div>
+
+<main class="frame" aria-label="Summary and reflection for the VISION study">
+
+  <header class="hd">
+    <h1 class="hd__title">Summary &amp; reflection</h1>
+    <div class="hd__rule" aria-hidden="true"><i></i><b></b><i></i></div>
+    <p class="hd__sub">Review the findings, gauge your confidence, then capture a reflection to export.</p>
+  </header>
+
+  <!-- step rail -->
+  <nav class="rail" id="rail" aria-label="Activity steps">
+    <span class="rail__step is-active" data-rs="1"><span class="rail__num">1</span><span class="rail__lab">Summary</span></span>
+    <span class="rail__line"></span>
+    <span class="rail__step" data-rs="2"><span class="rail__num">2</span><span class="rail__lab">Where you stand</span></span>
+    <span class="rail__line"></span>
+    <span class="rail__step" data-rs="3"><span class="rail__num">3</span><span class="rail__lab">Your reflection</span></span>
+    <span class="rail__line"></span>
+    <span class="rail__step" data-rs="4"><span class="rail__num">4</span><span class="rail__lab">CPD record</span></span>
+  </nav>
+
+  <div class="body">
+
+    <!-- STEP 1 — SUMMARY -->
+    <section class="step is-on" data-step="1" aria-label="Summary">
+      <p class="step__lead">After <b>&ge;3 years&rsquo; follow-up</b> in VISION, five headline findings stood out:</p>
+      <div class="sum" id="sum"></div>
+    </section>
+
+    <!-- STEP 2 — CONFIDENCE -->
+    <section class="step" data-step="2" aria-label="Where you stand" hidden>
+      <p class="step__lead"><b>There are no wrong answers</b> &mdash; this simply flags what you might want to revisit.</p>
+      <div class="conf">
+        <div class="conf__q" id="confQ">How confident are you applying this evidence in practice?</div>
+        <div class="conf__opts" id="confOpts" role="radiogroup" aria-labelledby="confQ"></div>
+      </div>
+    </section>
+
+    <!-- STEP 3 — REFLECTION -->
+    <section class="step" data-step="3" aria-label="Your reflection" hidden>
+      <p class="step__lead">Capture your thinking. Your words stay editable and feed your CPD record.</p>
+      <div class="refl">
+        <label class="rfield__lab" for="r1">Note one change you&rsquo;ll make in practice <span>&mdash; a concrete next step</span></label>
+        <textarea id="r1" placeholder="e.g. I will review our MET testing pathway so eligible patients are identified earlier&hellip;"></textarea>
+        <p class="refl__hint">Optional &mdash; but a specific, concrete change is the most useful thing to record.</p>
+      </div>
+    </section>
+
+    <!-- STEP 4 — CPD RECORD -->
+    <section class="step" data-step="4" aria-label="CPD record" hidden>
+      <p class="congrats"><b>That&rsquo;s the visual abstract complete.</b> Create your CPD record below to keep a note of your reflection &mdash; or step back to refine anything.</p>
+      <div class="cpd">
+        <div class="cpd__scroll" id="cpdScroll" tabindex="0" aria-label="CPD record preview"></div>
+        <p class="cpd__note">A personal reflective record, not clinical guidance. Figures relate to the 313 patients with <em>MET</em>ex14 skipping NSCLC in the Phase&nbsp;2 VISION trial; full references appear in the activity.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- footer controls -->
+  <div class="controls">
+    <button class="btn secondary" id="backBtn" type="button" disabled style="visibility:hidden">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>Back
+    </button>
+    <span class="controls__mid" id="stepLabel" aria-hidden="true">Step 1 of 4</span>
+    <button class="btn" id="nextBtn" type="button">
+      Next<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+    <button class="btn" id="exportBtn" type="button" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Copy my CPD record
+    </button>
+  </div>
+
+  <p class="returnhint">Once you have created your CPD record, you can return to the course using the <b>Return to course</b> button at the top.</p>
+
+  <p class="sr-only" id="live" aria-live="polite" aria-atomic="true"></p>
+</main>
+
+<!-- continue nudge -->
+<div class="nudge" id="nudge" role="status" aria-live="polite">
+  <span class="nudge__chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+  <span class="nudge__d">All done &mdash; use the <b>&#9664;&nbsp;&#9654;</b> arrows at the bottom of the screen to continue when you&rsquo;re ready.</span>
+  <span class="nudge__m">Finished &mdash; tap <b>Return to course</b> to carry on.</span>
+</div>
+
+<!-- in-frame export modal: copy (primary) + download (best-effort) -->
+<div class="xmodal" id="exportModal" role="dialog" aria-modal="true" aria-labelledby="xTitle" hidden>
+  <div class="xcard" role="document">
+    <span class="xcard__check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+    <p class="xcard__eyebrow">CPD record</p>
+    <h2 class="xcard__title" id="xTitle">Your CPD record is ready</h2>
+    <p class="xcard__body"><strong>Copy to clipboard</strong> puts the full record on your clipboard to paste into Word or your CPD system. <strong>Download</strong> keeps a copy as a file you can open and save as a PDF &mdash; use Copy if the download is blocked where this is embedded.</p>
+    <div class="xcard__actions">
+      <button class="btn" id="cpBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Copy to clipboard
+      </button>
+      <button class="btn secondary" id="dlBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><polyline points="8 11 12 15 16 11"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Download record
+      </button>
+      <button class="btn secondary" id="xClose" type="button">Close</button>
+    </div>
+    <p class="xcard__status" id="xStatus" aria-live="polite"></p>
+  </div>
+</div>
+
+<script>
+/* mobile/Visme: launch card + return-to-course */
+(function(){
+  "use strict";
+  var fullscreen = /[?&]fullscreen=1/.test(location.search);
+  var inIframe = true; try { inIframe = (window.self !== window.top); } catch(e){ inIframe = true; }
+  var isMobile = /Android|iPhone|iPad|iPod|Mobile|Silk/i.test(navigator.userAgent);
+  var btn = document.getElementById('mlaunchBtn');
+  var base = location.href.split('#')[0].split('?')[0];
+  var courseUrl = ''; try { courseUrl = document.referrer || ''; } catch(e){ courseUrl = ''; }
+  var target = base + '?fullscreen=1' + (courseUrl ? '&return=' + encodeURIComponent(courseUrl) : '');
+  if(btn){
+    btn.href = target;
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      var w = null;
+      try { w = window.open(target, '_blank'); } catch(err){ w = null; }
+      if(!w){ try { window.top.location.href = target; } catch(err2){ window.location.href = target; } }
+    });
+  }
+  var rb = document.getElementById('returnBar');
+  var returnUrl = (function(){ try { return new URLSearchParams(location.search).get('return'); } catch(e){ return null; } })();
+  if(rb){
+    if(returnUrl){ rb.href = returnUrl; }
+    rb.addEventListener('click', function(e){
+      e.preventDefault();
+      try { if(window.opener && !window.opener.closed){ window.close(); return; } } catch(err){}
+      if(window.history.length > 1){ window.history.back(); return; }
+      if(returnUrl){ window.location.href = returnUrl; }
+    });
+  }
+  if(isMobile){ document.body.classList.add('is-mobile'); }
+  if(inIframe && isMobile && !fullscreen){ document.body.classList.add('is-embedded-mobile'); }
+  if(fullscreen){ document.body.classList.add('is-fullscreen'); }
+}());
+</script>
+
+<script>
+(function(){
+  "use strict";
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); }
+  function $(id){ return document.getElementById(id); }
+
+  /* ---------- content (verbatim, Scene-8B) ---------- */
+  var SUMMARY = [
+    { eyebrow:'Efficacy', html:'Robust and durable efficacy in treatment-na&iuml;ve and previously treated patients.' },
+    { eyebrow:'Safety &amp; HRQoL', html:'A manageable safety profile with stable patient-reported outcome scores.' },
+    { eyebrow:'Subgroups', html:'Consistent across biopsy method, age, smoking history and brain metastases.' },
+    { eyebrow:'Treatment lines', html:'Consistent with prior reports, particularly first-line.' },
+    { eyebrow:'Asian patients', html:'Robust long-term efficacy, particularly first-line.' }
+  ];
+  var CONF = ['Not yet','Building','Confident','Very confident'];
+  var confidence = null;
+  var PLAIN = { 'Efficacy':'Efficacy — robust and durable in treatment-naive and previously treated patients.',
+    'Safety & HRQoL':'Safety & HRQoL — manageable profile, stable PRO scores.',
+    'Subgroups':'Subgroups — consistent across biopsy method, age, smoking history and brain metastases.',
+    'Treatment lines':'Treatment lines — consistent with prior reports, particularly first-line.',
+    'Asian patients':'Asian patients — robust long-term efficacy, particularly first-line.' };
+
+  /* ---------- step 1: summary cards ---------- */
+  (function(){
+    var host=$('sum');
+    SUMMARY.forEach(function(s,i){
+      var el=document.createElement('div'); el.className='scard';
+      el.innerHTML='<span class="scard__no">'+(i+1)+'</span>'+
+        '<div class="scard__main"><span class="scard__eyebrow">'+s.eyebrow+'</span>'+
+        '<p class="scard__text">'+s.html+'</p></div>';
+      host.appendChild(el);
+    });
+  })();
+  var summaryAnimated=false;
+  function animateSummary(){
+    var cards=document.querySelectorAll('#sum .scard');
+    if(summaryAnimated){ cards.forEach(function(c){ c.classList.add('in'); }); return; }
+    summaryAnimated=true;
+    cards.forEach(function(c){ c.classList.remove('in'); });
+    void $('sum').offsetWidth;
+    cards.forEach(function(c,i){ if(reduceMotion){ c.classList.add('in'); return; } setTimeout(function(){ c.classList.add('in'); }, 165*i); });
+  }
+
+  /* ---------- step 2: confidence (single, 4 levels) ---------- */
+  (function(){
+    var host=$('confOpts');
+    CONF.forEach(function(label,i){
+      var b=document.createElement('button');
+      b.className='copt'; b.type='button'; b.setAttribute('role','radio'); b.setAttribute('aria-checked','false');
+      b.dataset.lvl=(i+1); b.dataset.v=label;
+      b.setAttribute('aria-label','Confidence: '+label);
+      b.innerHTML='<span class="copt__dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>'+label+'</span>';
+      host.appendChild(b);
+    });
+    var opts=Array.prototype.slice.call(host.querySelectorAll('.copt'));
+    function selectConf(i){
+      opts.forEach(function(o,n){ var on=n===i; o.setAttribute('aria-checked', on?'true':'false'); o.tabIndex = on?0:-1; });
+      confidence=CONF[i];
+      $('live').textContent='Confidence: '+confidence+'.';
+    }
+    opts.forEach(function(o,i){ o.tabIndex = i===0?0:-1; o.addEventListener('click',function(){ selectConf(i); }); });
+    host.addEventListener('keydown',function(e){
+      var cur=opts.findIndex(function(o){ return o.getAttribute('aria-checked')==='true'; });
+      if(cur<0) cur=0; var to=null;
+      if(e.key==='ArrowRight'||e.key==='ArrowDown') to=(cur+1)%opts.length;
+      else if(e.key==='ArrowLeft'||e.key==='ArrowUp') to=(cur-1+opts.length)%opts.length;
+      else if(e.key==='Home') to=0; else if(e.key==='End') to=opts.length-1;
+      if(to!==null){ e.preventDefault(); selectConf(to); opts[to].focus(); }
+    });
+  })();
+
+  /* ---------- dates ---------- */
+  function dateStr(){ try{ return new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}); }catch(e){ return ''; } }
+  function fileDate(){ try{ var d=new Date(); function p(n){ return (n<10?'0':'')+n; } return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }catch(e){ return ''; } }
+  function reflectionVal(){ return $('r1').value.trim(); }
+
+  /* ---------- step 4: CPD record preview ---------- */
+  function buildPreview(){
+    var host=$('cpdScroll');
+    var finds=SUMMARY.map(function(s){ return '<li><b>'+s.eyebrow+'</b> &mdash; '+s.html+'</li>'; }).join('');
+    var conf = confidence ? '<span class="cpd__pill">Applying this in practice: '+esc(confidence)+'</span>'
+                          : '<span class="cpd__pill" data-v="none">Not yet rated</span>';
+    var refl=reflectionVal();
+    var reflHtml = refl ? '<p class="cpd__ans">'+esc(refl)+'</p>' : '<p class="cpd__ans empty">(not yet completed)</p>';
+    host.innerHTML=
+      '<div class="cpd__sec"><h3 class="cpd__h">Key findings &mdash; VISION, &ge;3-year follow-up</h3><ul class="cpd__find">'+finds+'</ul></div>'+
+      '<div class="cpd__sec"><h3 class="cpd__h">My confidence</h3>'+conf+'</div>'+
+      '<div class="cpd__sec"><h3 class="cpd__h">One change I&rsquo;ll make in practice</h3>'+reflHtml+'</div>';
+  }
+
+  /* ---------- export builders ---------- */
+  function buildPlainText(){
+    var L=[];
+    L.push('CPD REFLECTION RECORD');
+    L.push('TM9035 — Tepotinib in METex14 skipping NSCLC (VISION study, >=3-year follow-up)');
+    L.push('Date: '+dateStr());
+    L.push('');
+    L.push('KEY FINDINGS');
+    Object.keys(PLAIN).forEach(function(k,i){ L.push((i+1)+'. '+PLAIN[k]); });
+    L.push('');
+    L.push('MY CONFIDENCE APPLYING THIS IN PRACTICE');
+    L.push(confidence || '(not rated)');
+    L.push('');
+    L.push('ONE CHANGE I WILL MAKE IN PRACTICE');
+    L.push(reflectionVal() || '(not completed)');
+    L.push('');
+    L.push('— A personal reflective CPD record, not clinical guidance. Figures relate to the 313 patients with METex14 skipping NSCLC in the Phase 2 VISION trial.');
+    return L.join('\n');
+  }
+  function buildHtmlDoc(){
+    var finds=Object.keys(PLAIN).map(function(k,i){ return '<p class="row">'+(i+1)+'. '+esc(PLAIN[k])+'</p>'; }).join('');
+    var refl=reflectionVal();
+    return '<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'+
+      '<title>CPD reflection record — VISION (tepotinib)</title><style>'+
+      'body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#222f55;max-width:720px;margin:32px auto;padding:0 22px;line-height:1.5}'+
+      'h1{font-size:22px;margin:0 0 2px}.meta{color:#56608a;font-size:13px;margin:0 0 8px}.hint{color:#8a91b0;font-size:12px;margin:0 0 20px}'+
+      'h2{font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:#007a98;border-bottom:1px solid #e3e8ee;padding-bottom:4px;margin:22px 0 8px}'+
+      '.row{margin:0 0 4px;font-size:14px}.ans{margin:0;font-size:14px;white-space:pre-wrap}.ans.empty{font-style:italic;color:#8a91b0}'+
+      '.pill{display:inline-block;font-size:14px;font-weight:700;color:#007a98}'+
+      '.foot{margin-top:24px;border-top:1px solid #e3e8ee;padding-top:8px;color:#8a91b0;font-size:11px}@media print{.hint{display:none}@page{margin:16mm}}'+
+      '</style></head><body>'+
+      '<h1>CPD reflection record</h1>'+
+      '<p class="meta">Tepotinib in <em>MET</em>ex14 skipping NSCLC &mdash; VISION study summary &middot; '+esc(dateStr())+'</p>'+
+      '<p class="hint">To save as a PDF: open your browser&rsquo;s Print (Ctrl/Cmd&nbsp;+&nbsp;P) and choose &ldquo;Save as PDF&rdquo;.</p>'+
+      '<h2>Key findings</h2>'+finds+
+      '<h2>My confidence applying this in practice</h2><p class="pill">'+esc(confidence||'(not rated)')+'</p>'+
+      '<h2>One change I will make in practice</h2><p class="ans'+(refl?'':' empty')+'">'+(refl?esc(refl):'(not completed)')+'</p>'+
+      '<p class="foot">A personal reflective CPD record, not clinical guidance. Figures relate to the 313 patients with <em>MET</em>ex14 skipping NSCLC in the Phase&nbsp;2 VISION trial.</p>'+
+      '</body></html>';
+  }
+
+  /* ---------- export actions (copy primary + download best-effort; §0.5) ---------- */
+  function copyRecord(){
+    var status=$('xStatus'); status.classList.remove('warn');
+    var text=buildPlainText();
+    function ok(){ status.textContent='Copied. Paste it into Word or your CPD system to save.'; $('live').textContent='CPD record copied to clipboard.'; }
+    function fallback(){
+      var ta=document.createElement('textarea'); ta.value=text; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.left='-9999px';
+      document.body.appendChild(ta); ta.select(); var done=false; try{ done=document.execCommand('copy'); }catch(e){} document.body.removeChild(ta);
+      if(done){ ok(); } else { status.classList.add('warn'); status.textContent='Copy was blocked. Select the text in your record and copy it manually.'; }
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(ok, fallback); } else { fallback(); }
+  }
+  function downloadRecord(){
+    var status=$('xStatus'); status.classList.remove('warn');
+    try{
+      var blob=new Blob([buildHtmlDoc()],{type:'text/html'});
+      var url=URL.createObjectURL(blob);
+      var a=document.createElement('a'); a.href=url; a.download='CPD-reflection-VISION-tepotinib-'+fileDate()+'.html';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+      status.textContent='Download started. If nothing downloaded, use Copy to clipboard instead.'; $('live').textContent='CPD record download started.';
+    }catch(e){ status.classList.add('warn'); status.textContent='Download was blocked here. Use Copy to clipboard instead.'; }
+  }
+
+  /* ---------- export modal ---------- */
+  var exportModal=$('exportModal'); var xLastFocus=null;
+  function openExport(){
+    buildPreview(); xLastFocus=document.activeElement;
+    $('xStatus').textContent=''; $('xStatus').classList.remove('warn');
+    exportModal.hidden=false; exportModal.classList.add('is-open');
+    setTimeout(function(){ $('cpBtn').focus(); }, 30);
+  }
+  function closeExport(){ exportModal.classList.remove('is-open'); exportModal.hidden=true; if(xLastFocus&&xLastFocus.focus){ try{ xLastFocus.focus(); }catch(e){} } }
+  $('cpBtn').addEventListener('click',copyRecord);
+  $('dlBtn').addEventListener('click',downloadRecord);
+  $('xClose').addEventListener('click',closeExport);
+  exportModal.addEventListener('click',function(e){ if(e.target===exportModal) closeExport(); });
+  document.addEventListener('keydown',function(e){
+    if(!exportModal.classList.contains('is-open')) return;
+    if(e.key==='Escape'){ e.preventDefault(); closeExport(); return; }
+    if(e.key==='Tab'){ var f=exportModal.querySelectorAll('button:not([disabled])'); if(!f.length) return; var first=f[0],last=f[f.length-1]; if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); } else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); } }
+  });
+
+  /* ---------- continue nudge ---------- */
+  function fireNudge(on){ var frame=document.querySelector('.frame'), nudge=$('nudge'); if(frame) frame.classList.toggle('nudge-shown',on); if(nudge) nudge.classList.toggle('is-on',on); }
+
+  /* ---------- step navigation ---------- */
+  var current=1, TOTAL=4;
+  var steps=Array.prototype.slice.call(document.querySelectorAll('.step'));
+  var railSteps=Array.prototype.slice.call(document.querySelectorAll('.rail__step'));
+  var backBtn=$('backBtn'), nextBtn=$('nextBtn'), exportBtn=$('exportBtn'), stepLabel=$('stepLabel');
+  function show(n, dir){
+    current=n;
+    steps.forEach(function(s){ var on=(+s.dataset.step===n); s.classList.toggle('is-on',on); s.hidden=!on; s.classList.remove('anim-right','anim-left'); });
+    railSteps.forEach(function(r){ var rs=+r.dataset.rs; r.classList.toggle('is-active',rs===n); r.classList.toggle('is-done',rs<n); });
+    stepLabel.textContent='Step '+n+' of '+TOTAL;
+    backBtn.disabled=(n===1); backBtn.style.visibility=(n===1)?'hidden':'visible';
+    document.body.classList.toggle('is-laststep', n===TOTAL);
+    if(n===TOTAL){ nextBtn.style.display='none'; exportBtn.style.display=''; buildPreview(); fireNudge(true); }
+    else { nextBtn.style.display=''; exportBtn.style.display='none'; fireNudge(false); }
+    if(!reduceMotion && dir){ var active=document.querySelector('.step.is-on'); if(active){ void active.offsetWidth; active.classList.add(dir==='left'?'anim-left':'anim-right'); } }
+    if(n===1) animateSummary();
+    $('live').textContent='Step '+n+' of '+TOTAL+'.';
+  }
+  nextBtn.addEventListener('click',function(){ if(current<TOTAL) show(current+1,'right'); });
+  backBtn.addEventListener('click',function(){ if(current>1) show(current-1,'left'); });
+  exportBtn.addEventListener('click',openExport);
+  railSteps.forEach(function(r){ r.style.cursor='pointer'; r.addEventListener('click',function(){ var rs=+r.dataset.rs; if(rs<current) show(rs,'left'); }); });
+
+  /* ---------- init ---------- */
+  animateSummary();
+})();
+</script>
+</body>
+</html>

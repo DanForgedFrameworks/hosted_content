@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Consistency across subgroups (VISION study) — tepotinib in METex14 skipping NSCLC</title>
+<style>
+/* ============================================================
+   TOUCH MEDICAL — TM9035 · VISUAL ABSTRACT · SCENE 6
+   Consistency across subgroups (VISION, >=3-year follow-up).
+   Segmented three-lens switcher: Subgroups · Line of therapy · Asian,
+   anchored to overall ORR (callout box on the cohort image);
+   sources open from a bottom-corner pill.
+   Self-contained. No external runtime dependencies (Visme/Rise safe).
+   Brand: Poppins (bundled), teal #0098be, navy #222f55.
+   ============================================================ */
+@font-face { font-family:"Poppins"; src:url("assets/poppins-400.ttf") format("truetype"); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-600.ttf") format("truetype"); font-weight:600; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-700.ttf") format("truetype"); font-weight:700; font-style:normal; font-display:swap; }
+
+:root{
+  --teal:#0098be; --teal-strong:#007a98;
+  --navy:#222f55; --on-accent:#ffffff;
+  --muted:#56608a; --faint:#8a91b0;
+  --pale:#d9eff8; --mist:#f4f7f9; --line:#e3e8ee;
+  --backdrop:rgba(16,26,38,.68);
+  --c1:#222f55; --c2:#0098be; --c3:#4f9fc4; --c4:#86bdd8; --c5:#b9d8e8;
+  --green:#2f9e6f; --green-soft:#e2f3ea;
+  --title-shadow-slim:0 1px 2px rgba(34,47,85,.16);
+  --font:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --radius:18px;
+}
+*{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; height:100%; }
+body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; overflow:hidden; }
+
+.slide{ position:relative; width:min(100%,1370px); height:100%; margin:0 auto; background:#fff; display:flex; flex-direction:column; overflow:hidden; }
+
+/* ---------- heading — title + teal I-beam divider + subheading ---------- */
+.hd{ flex:0 0 auto; text-align:center; padding:clamp(10px,1.7vh,17px) 20px clamp(8px,1.3vh,13px); background:#fff; box-shadow:0 4px 11px rgba(34,47,85,.07); }
+.hd__title{ margin:0; font-size:clamp(27px,3.2vw,45px); font-weight:700; line-height:1.08; letter-spacing:-.012em; color:var(--navy); text-shadow:var(--title-shadow-slim); }
+.hd__title em{ font-style:italic; }
+.hd__rule{ display:flex; align-items:center; justify-content:center; width:min(76%,840px); margin:clamp(6px,1vh,10px) auto clamp(5px,.8vh,8px); }
+.hd__rule i{ width:3px; height:15px; background:var(--teal); border-radius:2px; flex:0 0 auto; }
+.hd__rule b{ flex:1 1 auto; height:2.5px; background:var(--teal); border-radius:2px; }
+.hd__sub{ margin:0; font-size:clamp(.78rem,1.5vw,.92rem); font-weight:600; color:var(--muted); }
+
+/* ---------- body ---------- */
+.sg{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; gap:clamp(8px,1.4vh,14px); padding:clamp(10px,1.8vh,18px) clamp(16px,3vw,30px) clamp(12px,2vh,20px); }
+.navprompt{ flex:0 0 auto; display:flex; justify-content:center; width:100%; }
+.navprompt__box{ display:inline-flex; align-items:center; gap:11px; padding:9px 18px; border:2px solid var(--teal); border-radius:14px; background:rgba(0,152,190,.06); color:var(--teal-strong); font-size:clamp(.82rem,1.4vw,.98rem); font-weight:600; line-height:1.35; text-align:left; }
+.navprompt__ic{ flex:0 0 auto; width:24px; height:24px; display:grid; place-items:center; color:var(--teal); }
+.navprompt__ic svg{ width:100%; height:100%; }
+
+.sg__cols{ flex:1 1 auto; min-height:0; display:grid; grid-template-columns:0.82fr 1.18fr; gap:clamp(14px,2.2vw,26px); align-items:stretch; }
+
+/* ----- media panel: dimmed cohort image with the overall ORR callout box ----- */
+.sg__media{ position:relative; margin:0; min-height:0; border-radius:16px; overflow:hidden; background:var(--navy); display:flex; }
+.sg__media img{ width:100%; height:100%; object-fit:cover; display:block; opacity:.9; }
+.sg__media::after{ content:""; position:absolute; inset:0; z-index:1; background:linear-gradient(180deg,rgba(20,32,54,.42),rgba(20,32,54,.62)); }
+.sg__center{ position:absolute; inset:0; z-index:2; display:flex; align-items:center; justify-content:center; padding:16px; }
+.orrbox{ text-align:center; background:rgba(255,255,255,.82); border:1.5px solid rgba(255,255,255,.7); border-radius:18px; padding:clamp(13px,2.1vw,20px) clamp(18px,2.8vw,32px); box-shadow:0 14px 36px rgba(16,26,38,.34); }
+@supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){ .orrbox{ background:rgba(255,255,255,.62); -webkit-backdrop-filter:blur(5px); backdrop-filter:blur(5px); } }
+.orrbox__lab{ font-size:clamp(.64rem,1.15vw,.76rem); font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--teal-strong); }
+.orrbox__val{ font-size:clamp(2.4rem,5.4vw,3.5rem); font-weight:700; color:var(--teal-strong); line-height:1.02; }
+.orrbox__ci{ font-size:clamp(.78rem,1.4vw,.95rem); font-weight:600; color:var(--navy); margin-top:3px; }
+.sg__media figcaption{ position:absolute; left:0; right:0; bottom:0; z-index:3; padding:30px 16px 11px; background:linear-gradient(180deg,rgba(13,22,38,0),rgba(13,22,38,.86)); color:#fff; font-size:clamp(.76rem,1.3vw,.9rem); font-weight:600; line-height:1.35; text-align:center; }
+
+/* ----- lens switcher: segmented control + separate content card ----- */
+.lens{ min-height:0; display:flex; flex-direction:column; }
+.seg{ align-self:center; display:inline-flex; max-width:100%; background:var(--mist); border:1.5px solid var(--line); border-radius:999px; padding:4px; gap:3px; }
+.seg__btn{ border:0; background:transparent; border-radius:999px; padding:9px clamp(12px,1.7vw,20px); font:inherit; font-weight:700; font-size:clamp(.76rem,1.35vw,.9rem); color:var(--muted); cursor:pointer; white-space:nowrap; transition:background .16s ease, color .16s ease, box-shadow .16s ease; }
+.seg__btn:hover:not([aria-selected="true"]){ color:var(--navy); }
+.seg__btn:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+.seg__btn[aria-selected="true"]{ background:var(--teal); color:#fff; box-shadow:0 4px 12px rgba(0,152,190,.28); }
+.card{ flex:1 1 auto; min-height:0; margin-top:clamp(10px,1.6vh,14px); border:1.5px solid var(--line); border-radius:16px; background:linear-gradient(180deg,#fbfdff,#fff); box-shadow:0 3px 12px rgba(34,47,85,.05); padding:clamp(13px,2vw,20px); display:flex; }
+.panel{ flex:1 1 auto; min-width:0; display:none; flex-direction:column; justify-content:center; gap:clamp(9px,1.5vh,15px); }
+.panel.is-active{ display:flex; animation:fadeIn .34s ease both; }
+.panel--center{ align-items:center; text-align:center; }
+.panel__lead{ margin:0; font-size:clamp(.86rem,1.5vw,1rem); font-weight:600; color:var(--navy); line-height:1.45; }
+.panel__lead b{ color:var(--teal-strong); }
+.panel__note{ margin:0; font-size:clamp(.76rem,1.3vw,.86rem); color:var(--muted); line-height:1.45; }
+
+/* Lens 1 — subgroup consistency chips (centred 3-column grid) */
+.chips{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px 10px; width:100%; max-width:600px; margin:0 auto; }
+.chip{ display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:9px 12px; border-radius:999px; background:var(--green-soft); border:1.5px solid #bfe6d3; color:#1c6b4c; font-size:clamp(.74rem,1.3vw,.88rem); font-weight:700; text-align:center; }
+.chip svg{ width:15px; height:15px; flex:0 0 auto; }
+.consist{ display:inline-flex; align-items:center; gap:9px; padding:9px 16px; border-radius:12px; background:var(--pale); border:2px solid var(--teal); color:var(--teal-strong); font-weight:700; font-size:clamp(.82rem,1.4vw,.96rem); align-self:center; }
+.consist svg{ width:20px; height:20px; }
+
+/* Lens 2 — line-of-therapy bars (neutral scale; overall marker on the axis) */
+.lot{ position:relative; display:flex; flex-direction:column; gap:clamp(9px,1.6vh,14px); margin-top:8px; padding-top:2px; }
+.lot__row{ position:relative; z-index:2; display:flex; flex-direction:column; gap:4px; }
+.lot__top{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; }
+.lot__name{ font-size:.84rem; font-weight:700; color:var(--navy); }
+.lot__name span{ font-weight:600; color:var(--faint); font-size:.82em; }
+.lot__val{ font-size:.9rem; font-weight:700; color:var(--teal-strong); font-variant-numeric:tabular-nums; }
+.lot__track{ position:relative; height:13px; border-radius:7px; background:var(--mist); box-shadow:inset 0 0 0 1px var(--line); overflow:hidden; }
+.lot__fill{ position:absolute; left:0; top:0; height:100%; border-radius:7px; }
+.lot__ref{ position:absolute; left:51.8%; top:2px; bottom:26px; width:2px; margin-left:-1px; background:repeating-linear-gradient(180deg,var(--navy) 0 4px,transparent 4px 8px); z-index:3; }
+.lot__axis{ position:relative; display:flex; justify-content:space-between; font-size:.64rem; color:var(--faint); font-weight:600; margin-top:2px; }
+.lot__reflab{ position:absolute; left:51.8%; transform:translateX(-50%); top:-1px; white-space:nowrap; font-size:.62rem; font-weight:700; color:var(--navy); background:#fff; padding:0 5px; }
+
+/* Lens 3 — Asian snapshot */
+.asian{ display:flex; align-items:center; gap:clamp(14px,2.4vw,26px); flex-wrap:wrap; justify-content:center; }
+.asian__big{ flex:0 0 auto; text-align:center; }
+.asian__val{ font-size:clamp(2.1rem,4.6vw,3rem); font-weight:700; color:var(--teal-strong); line-height:1; }
+.asian__ci{ font-size:.74rem; font-weight:600; color:var(--muted); margin-top:4px; }
+.asian__lab{ font-size:.72rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--faint); margin-bottom:5px; }
+.asian__side{ flex:1 1 200px; min-width:180px; max-width:340px; display:flex; flex-direction:column; gap:9px; }
+.asian__stat{ display:flex; align-items:center; gap:11px; padding:10px 14px; border:1.5px solid var(--line); border-left:4px solid var(--teal); border-radius:11px; background:#fff; text-align:left; }
+.asian__stat b{ font-size:1.05rem; color:var(--teal-strong); font-weight:700; }
+.asian__stat span{ font-size:.8rem; color:var(--muted); font-weight:600; }
+
+/* ----- source pill (bottom inner corner) + modal ----- */
+.srcpill{ position:absolute; right:clamp(12px,2vw,20px); bottom:clamp(11px,1.7vh,17px); z-index:7; display:inline-flex; align-items:center; gap:7px; padding:8px 15px; border-radius:999px; border:1.5px solid var(--teal); background:#fff; color:var(--teal-strong); font:inherit; font-weight:700; font-size:.76rem; cursor:pointer; box-shadow:0 5px 14px rgba(34,47,85,.12); transition:background .15s ease, color .15s ease, transform .14s ease; }
+.srcpill:hover{ background:var(--pale); transform:translateY(-1px); }
+.srcpill:active{ transform:scale(.97); }
+.srcpill:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+.srcpill svg{ width:15px; height:15px; }
+.srcmodal{ position:fixed; inset:0; z-index:60; display:none; align-items:center; justify-content:center; padding:clamp(12px,4vw,40px); background:var(--backdrop); }
+.srcmodal.is-open{ display:flex; }
+.srcmodal__panel{ width:min(560px,100%); max-height:calc(100% - 24px); overflow:auto; background:#fff; border-radius:var(--radius); box-shadow:0 24px 60px rgba(16,26,38,.4); padding:clamp(18px,3vw,26px); animation:rise .22s ease both; }
+.srcmodal__head{ display:flex; align-items:flex-start; gap:14px; margin:0 0 14px; }
+.srcmodal__title{ flex:1 1 auto; margin:0; font-size:clamp(1.05rem,2.2vw,1.28rem); font-weight:700; color:var(--navy); }
+.srcmodal__close{ flex:0 0 auto; width:40px; height:40px; border-radius:10px; border:2px solid var(--line); background:#fff; color:var(--muted); cursor:pointer; display:grid; place-items:center; }
+.srcmodal__close:hover{ color:var(--navy); border-color:var(--muted); }
+.srcmodal__close:focus-visible{ outline:3px solid var(--navy); outline-offset:2px; }
+.srclist{ margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:11px; }
+.srclist li{ position:relative; padding-left:20px; font-size:clamp(.8rem,1.4vw,.9rem); color:var(--navy); line-height:1.5; }
+.srclist li::before{ content:""; position:absolute; left:5px; top:9px; width:6px; height:6px; border-radius:50%; background:var(--teal); }
+.srclist em{ font-style:italic; }
+.srcmodal__note{ margin:14px 0 0; font-size:.74rem; color:var(--faint); line-height:1.45; }
+
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+@keyframes fadeUp{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+@keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
+@keyframes rise{ from{ opacity:0; transform:translateY(10px) scale(.99);} to{ opacity:1; transform:none; } }
+
+.hd{ animation:fadeUp .5s ease both; }
+.navprompt{ animation:fadeUp .5s ease .06s both; }
+.sg__media{ animation:fadeUp .5s ease .14s both; }
+.lens{ animation:fadeUp .5s ease .22s both; }
+
+/* ===== Continue nudge ===== */
+.slide.nudge-shown{ padding-bottom:72px; }
+.nudge{ position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:38; display:none; align-items:center; gap:10px; max-width:calc(100% - 28px); padding:9px 17px; border-radius:999px; background:rgba(34,47,85,.94); color:#fff; font-size:15px; font-weight:600; line-height:1.25; box-shadow:0 8px 22px rgba(16,26,38,.30); }
+.nudge.is-on{ display:inline-flex; animation:nudgeIn .5s ease both; }
+.nudge b{ font-weight:700; }
+.nudge__chev{ flex:0 0 auto; display:inline-grid; place-items:center; }
+.nudge__chev svg{ width:20px; height:20px; }
+.nudge.is-on .nudge__chev{ animation:nudgeBob 1.6s ease-in-out .6s infinite; }
+.nudge__m{ display:none; }
+body.is-fullscreen .nudge{ bottom:auto; top:60px; }
+body.is-fullscreen .nudge__d{ display:none; }
+body.is-fullscreen .nudge__m{ display:inline; }
+@keyframes nudgeIn{ from{ opacity:0; transform:translateX(-50%) translateY(12px);} to{ opacity:1; transform:translateX(-50%) translateY(0);} }
+@keyframes nudgeBob{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(3px);} }
+
+/* ===== Mobile/Visme launch card + return-to-course ===== */
+.mlaunch{ display:none; }
+.returnbar{ display:none; }
+body.is-embedded-mobile .slide{ display:none !important; }
+body.is-embedded-mobile{ display:block; }
+body.is-embedded-mobile .mlaunch{ display:flex; position:fixed; inset:0; z-index:50; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:42px; padding:90px 70px; background:linear-gradient(135deg,#0098be 0%, #007a98 55%, #222f55 100%); color:#fff; }
+.mlaunch__badge{ font-size:30px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; opacity:.9; }
+.mlaunch__title{ margin:0; font-size:50px; font-weight:700; line-height:1.08; }
+.mlaunch__lead{ margin:0; max-width:1040px; font-size:36px; font-weight:500; line-height:1.4; opacity:.96; }
+.mlaunch__btn{ display:inline-flex; align-items:center; gap:26px; margin-top:6px; padding:44px 88px; border-radius:999px; background:#fff; color:#007a98; font:inherit; font-weight:700; font-size:46px; text-decoration:none; box-shadow:0 18px 54px rgba(16,26,38,.38); }
+.mlaunch__btn svg{ width:54px; height:54px; }
+.mlaunch__note{ margin:0; max-width:1040px; font-size:27px; line-height:1.4; opacity:.85; }
+body.is-fullscreen .returnbar{ display:inline-flex; align-items:center; justify-content:center; gap:9px; position:fixed; top:10px; left:10px; z-index:60; box-sizing:border-box; width:auto; height:44px; padding:0 18px 0 13px; border-radius:999px; background:rgba(34,47,85,.92); color:#fff; text-decoration:none; box-shadow:0 6px 16px rgba(16,26,38,.26); font:inherit; }
+body.is-fullscreen .returnbar__ic{ flex:0 0 auto; width:22px; height:22px; display:grid; place-items:center; }
+body.is-fullscreen .returnbar__ic svg{ width:22px; height:22px; }
+body.is-fullscreen .returnbar__lab{ font:inherit; font-weight:700; font-size:15px; white-space:nowrap; }
+body.is-fullscreen{ padding-top:56px; }
+
+@media (min-width:761px) and (max-height:648px){
+  .hd{ padding:7px 20px 6px; }
+  .hd__title{ font-size:clamp(23px,2.5vw,32px); }
+  .hd__rule{ margin:5px auto 4px; }
+  .hd__rule i{ height:12px; }
+  .sg{ gap:clamp(5px,.9vh,9px); padding-top:clamp(7px,1.2vh,11px); padding-bottom:clamp(7px,1.2vh,11px); }
+  .navprompt__box{ padding:6px 14px; font-size:.8rem; }
+  .card{ padding:clamp(11px,1.6vw,16px); margin-top:9px; }
+  .srcpill{ bottom:9px; }
+}
+
+@media (max-width:760px){
+  html,body{ height:auto; }
+  body{ overflow:auto; }
+  .slide{ height:auto; min-height:100%; }
+  .slide.nudge-shown{ padding-bottom:0; }
+  .nudge{ font-size:13px; left:12px; right:12px; transform:none; max-width:none; justify-content:center; }
+  .nudge.is-on{ animation:none; }
+  .sg__cols{ grid-template-columns:1fr; }
+  .sg__media{ min-height:190px; height:210px; }
+  .seg{ flex-wrap:wrap; justify-content:center; }
+  .srcpill{ position:static; align-self:center; margin-top:6px; }
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+}
+</style>
+</head>
+<body>
+<main class="slide" id="slide" aria-label="Consistency of tepotinib efficacy across subgroups in the VISION study">
+
+  <header class="hd">
+    <h1 class="hd__title">Consistency across subgroups</h1>
+    <div class="hd__rule" aria-hidden="true"><i></i><b></b><i></i></div>
+    <p class="hd__sub">VISION study &middot; &ge;3-year follow-up &middot; overall response rate (ORR)</p>
+  </header>
+
+  <div class="sg">
+    <div class="navprompt">
+      <p class="navprompt__box">
+        <span class="navprompt__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+        <span>Select each lens to see how consistent the response was.</span>
+      </p>
+    </div>
+
+    <div class="sg__cols">
+      <!-- diverse cohort image + overall ORR callout -->
+      <figure class="sg__media">
+        <img src="assets/s6.jpg" alt="A grid of portraits of diverse adults across ages, ethnicities and sexes — consistent outcomes across subgroups." />
+        <div class="sg__center">
+          <div class="orrbox">
+            <div class="orrbox__lab">Overall response rate</div>
+            <div class="orrbox__val">51.8%</div>
+            <div class="orrbox__ci">95% CI 46.1&ndash;57.4</div>
+          </div>
+        </div>
+        <figcaption>Efficacy held across a broad, diverse patient population.</figcaption>
+      </figure>
+
+      <!-- lens switcher -->
+      <section class="lens" aria-label="Consistency lenses">
+        <div class="seg" role="tablist" aria-label="Choose a lens">
+          <button class="seg__btn" id="tab0" role="tab" aria-selected="true" aria-controls="p0" tabindex="0" type="button">Subgroups</button>
+          <button class="seg__btn" id="tab1" role="tab" aria-selected="false" aria-controls="p1" tabindex="-1" type="button">Line of therapy</button>
+          <button class="seg__btn" id="tab2" role="tab" aria-selected="false" aria-controls="p2" tabindex="-1" type="button">Asian patients</button>
+        </div>
+
+        <div class="card">
+          <!-- Lens 1 -->
+          <div class="panel panel--center is-active" id="p0" role="tabpanel" aria-labelledby="tab0" tabindex="0">
+            <div class="consist">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+              ORR was consistent across every subgroup assessed
+            </div>
+            <p class="panel__note">Overall ORR 51.8% (95% CI 46.1&ndash;57.4) held irrespective of the clinical subgroups below.</p>
+            <div class="chips">
+              <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Sex</span>
+              <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Age</span>
+              <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Smoking history</span>
+              <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Histology</span>
+              <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>ECOG PS</span>
+              <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Brain metastases</span>
+            </div>
+          </div>
+
+          <!-- Lens 2 -->
+          <div class="panel" id="p1" role="tabpanel" aria-labelledby="tab1" tabindex="0" hidden>
+            <p class="panel__lead">Efficacy across lines was consistent with prior reports &mdash; <b>particularly first-line</b>.</p>
+            <div class="lot">
+              <span class="lot__ref" aria-hidden="true"></span>
+              <div class="lot__row">
+                <div class="lot__top"><span class="lot__name">1L <span>first-line tepotinib</span></span><span class="lot__val">57.9%</span></div>
+                <div class="lot__track"><span class="lot__fill" style="width:57.9%;background:var(--c2)"></span></div>
+              </div>
+              <div class="lot__row">
+                <div class="lot__top"><span class="lot__name">2L+ <span>second-line or later</span></span><span class="lot__val">45.0%</span></div>
+                <div class="lot__track"><span class="lot__fill" style="width:45.0%;background:var(--c3)"></span></div>
+              </div>
+              <div class="lot__row">
+                <div class="lot__top"><span class="lot__name">Before tepotinib <span>all lines</span></span><span class="lot__val">28.9%</span></div>
+                <div class="lot__track"><span class="lot__fill" style="width:28.9%;background:var(--c4)"></span></div>
+              </div>
+              <div class="lot__axis"><span>0%</span><span class="lot__reflab">Overall 51.8%</span><span>100%</span></div>
+            </div>
+          </div>
+
+          <!-- Lens 3 -->
+          <div class="panel" id="p2" role="tabpanel" aria-labelledby="tab2" tabindex="0" hidden>
+            <div class="asian">
+              <div class="asian__big">
+                <div class="asian__lab">Asian patients &middot; n&nbsp;=&nbsp;106</div>
+                <div class="asian__val">56.6%</div>
+                <div class="asian__ci">ORR (95% CI 46.6&ndash;66.2)</div>
+              </div>
+              <div class="asian__side">
+                <div class="asian__stat"><b>64.0%</b><span>ORR in first-line (1L) Asian patients</span></div>
+                <div class="asian__stat"><b>&#10003;</b><span>Robust, durable long-term efficacy and a manageable safety profile</span></div>
+              </div>
+            </div>
+            <p class="panel__note">Asian patients showed robust, durable long-term efficacy &mdash; particularly first-line.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- sources: bottom inner-corner pill -->
+  <button class="srcpill" id="srcPill" type="button" aria-haspopup="dialog">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M14 3v6h6"/></svg>
+    Sources
+  </button>
+
+  <p class="sr-only" id="live" aria-live="polite" aria-atomic="true"></p>
+</main>
+
+<!-- sources modal -->
+<div class="srcmodal" id="srcModal" role="dialog" aria-modal="true" aria-labelledby="srcModalTitle" hidden>
+  <div class="srcmodal__panel" role="document">
+    <div class="srcmodal__head">
+      <h2 class="srcmodal__title" id="srcModalTitle">Sources</h2>
+      <button class="srcmodal__close" id="srcModalClose" type="button" aria-label="Close sources">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <ul class="srclist">
+      <li>Griesinger F, et al. <em>Ann Oncol.</em> 2025;36(Suppl):S1061&ndash;S1062.</li>
+      <li>Viteri S, et al. <em>Ann Oncol.</em> 2025;36(Suppl):S1060&ndash;S1061.</li>
+      <li>Yang J, et al. <em>Ann Oncol.</em> 2025;36(Suppl):S2121&ndash;S2122.</li>
+    </ul>
+    <p class="srcmodal__note">VISION study, &ge;3-year follow-up. Subgroup, line-of-therapy and Asian-population analyses.</p>
+  </div>
+</div>
+
+<!-- return-to-course -->
+<a class="returnbar" id="returnBar" href="#" aria-label="Return to the course">
+  <span class="returnbar__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 5 4 10 9 15"/><path d="M4 10 H15 a5 5 0 0 1 5 5 V19"/></svg></span>
+  <span class="returnbar__lab">Return to course</span>
+</a>
+
+<!-- embedded-mobile launch card -->
+<div class="mlaunch" role="group" aria-label="Open the activity full screen">
+  <span class="mlaunch__badge">touchONCOLOGY &middot; CPD activity</span>
+  <h1 class="mlaunch__title">Consistency across subgroups</h1>
+  <p class="mlaunch__lead">This interactive subgroup summary is best viewed full screen on your phone. Tap below to open it.</p>
+  <a class="mlaunch__btn" id="mlaunchBtn" href="#" target="_blank" rel="noopener">Open the activity <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><polyline points="13 6 19 12 13 18"/></svg></a>
+  <p class="mlaunch__note">On a computer, the activity appears here directly.</p>
+</div>
+
+<!-- continue nudge -->
+<div class="nudge" id="nudge" role="status" aria-live="polite">
+  <span class="nudge__chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+  <span class="nudge__d">All done &mdash; use the <b>&#9664;&nbsp;&#9654;</b> arrows at the bottom of the screen to continue when you&rsquo;re ready.</span>
+  <span class="nudge__m">Finished &mdash; tap <b>Return to course</b> to carry on.</span>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $ = function(id){ return document.getElementById(id); };
+  var slide=$('slide'), live=$('live');
+  var tabs=[$('tab0'),$('tab1'),$('tab2')];
+  var panels=[$('p0'),$('p1'),$('p2')];
+  var LABELS=['Subgroups','Line of therapy','Asian patients'];
+  var viewed=new Set([0]);
+  var nudgeShown=false;
+
+  function maybeNudge(){
+    if(viewed.size>=3 && !nudgeShown){ nudgeShown=true; slide.classList.add('nudge-shown'); var nd=$('nudge'); if(nd) nd.classList.add('is-on'); }
+  }
+  function select(i, focus){
+    tabs.forEach(function(t,n){ var on=n===i; t.setAttribute('aria-selected', on?'true':'false'); t.tabIndex = on?0:-1; });
+    panels.forEach(function(p,n){ var on=n===i; p.hidden=!on; p.classList.toggle('is-active', on); });
+    viewed.add(i);
+    if(focus) tabs[i].focus();
+    live.textContent = LABELS[i]+' lens shown.';
+    maybeNudge();
+  }
+  tabs.forEach(function(t,i){ t.addEventListener('click',function(){ select(i,false); }); });
+  document.querySelector('.seg').addEventListener('keydown',function(e){
+    var cur=tabs.findIndex(function(t){ return t.getAttribute('aria-selected')==='true'; });
+    var to=null;
+    if(e.key==='ArrowRight'||e.key==='ArrowDown') to=(cur+1)%tabs.length;
+    else if(e.key==='ArrowLeft'||e.key==='ArrowUp') to=(cur-1+tabs.length)%tabs.length;
+    else if(e.key==='Home') to=0; else if(e.key==='End') to=tabs.length-1;
+    if(to!==null){ e.preventDefault(); select(to,true); }
+  });
+
+  /* ---- sources modal ---- */
+  var srcModal=$('srcModal'), srcPill=$('srcPill'), srcClose=$('srcModalClose'); var srcReturn=null;
+  function openSrc(){ srcReturn=document.activeElement; srcModal.hidden=false; srcModal.classList.add('is-open'); srcClose.focus(); }
+  function closeSrc(){ srcModal.classList.remove('is-open'); srcModal.hidden=true; if(srcReturn&&srcReturn.focus){ try{ srcReturn.focus(); }catch(e){} } }
+  srcPill.addEventListener('click',openSrc);
+  srcClose.addEventListener('click',closeSrc);
+  srcModal.addEventListener('click',function(e){ if(e.target===srcModal) closeSrc(); });
+  document.addEventListener('keydown',function(e){
+    if(!srcModal.classList.contains('is-open')) return;
+    if(e.key==='Escape'){ e.preventDefault(); closeSrc(); return; }
+    if(e.key==='Tab'){ var f=srcModal.querySelectorAll('button:not([disabled]),a[href]'); if(!f.length) return; var first=f[0],last=f[f.length-1]; if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); } else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); } }
+  },true);
+}());
+</script>
+
+<script>
+/* mobile/Visme: launch card + return-to-course */
+(function () {
+  "use strict";
+  var fullscreen = /[?&]fullscreen=1/.test(location.search);
+  var inIframe = true; try { inIframe = (window.self !== window.top); } catch (e) { inIframe = true; }
+  var isMobile = /Android|iPhone|iPad|iPod|Mobile|Silk/i.test(navigator.userAgent);
+  var btn = document.getElementById('mlaunchBtn');
+  var base = location.href.split('#')[0].split('?')[0];
+  var courseUrl = ''; try { courseUrl = document.referrer || ''; } catch (e) { courseUrl = ''; }
+  var target = base + '?fullscreen=1' + (courseUrl ? '&return=' + encodeURIComponent(courseUrl) : '');
+  if (btn) {
+    btn.href = target;
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      var w = null;
+      try { w = window.open(target, '_blank'); } catch (err) { w = null; }
+      if (!w) { try { window.top.location.href = target; } catch (err2) { window.location.href = target; } }
+    });
+  }
+  var rb = document.getElementById('returnBar');
+  var returnUrl = (function () { try { return new URLSearchParams(location.search).get('return'); } catch (e) { return null; } })();
+  if (rb) {
+    if (returnUrl) { rb.href = returnUrl; }
+    rb.addEventListener('click', function (e) {
+      e.preventDefault();
+      try { if (window.opener && !window.opener.closed) { window.close(); return; } } catch (err) {}
+      if (window.history.length > 1) { window.history.back(); return; }
+      if (returnUrl) { window.location.href = returnUrl; }
+    });
+  }
+  if (isMobile) { document.body.classList.add('is-mobile'); }
+  if (inIframe && isMobile && !fullscreen) { document.body.classList.add('is-embedded-mobile'); }
+  if (fullscreen) { document.body.classList.add('is-fullscreen'); }
+}());
+</script>
+</body>
+</html>
