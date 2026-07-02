@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Long-term efficacy &amp; safety of tepotinib in METex14 skipping NSCLC — visual abstract</title>
+<style>
+/* ============================================================
+   TOUCH MEDICAL — TM9035 · VISUAL ABSTRACT · FULL DECK
+   1920x1080 (16:9) scaled to fit (embed 1366x768). Guided
+   staged entrances, click-to-open references, hover acronyms
+   (first-appearance only, whole-deck), pulsing affordances.
+   Content VERBATIM from the PDF. Exemplar = cover/LO/TOC/S1;
+   S2-CTA are navigable placeholders pending rollout.
+   ============================================================ */
+@font-face{ font-family:"Poppins"; src:url("assets/poppins-400.ttf") format("truetype"); font-weight:400; font-display:swap; }
+@font-face{ font-family:"Poppins"; src:url("assets/poppins-600.ttf") format("truetype"); font-weight:600; font-display:swap; }
+@font-face{ font-family:"Poppins"; src:url("assets/poppins-700.ttf") format("truetype"); font-weight:700; font-display:swap; }
+:root{
+  --teal:#0098be; --teal-strong:#007a98; --navy:#222f55; --muted:#56608a; --faint:#8a91b0;
+  --pale:#d9eff8; --mist:#f4f7f9; --line:#e3e8ee; --pink:#e0408e; --green:#2f9e6f;
+  --amber-box:#ffe08a; --amber-soft:#fff3cf; --amber-ink:#7a5a12; --refbox:#0a6f88;
+  --title-shadow:0 2px 10px rgba(0,152,190,.30); --ease:cubic-bezier(.4,0,.2,1);
+  --font:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{ box-sizing:border-box; }
+html,body{ margin:0; height:100%; }
+body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-font-smoothing:antialiased; overflow:hidden; }
+.gene{ font-style:italic; margin-right:-.04em; }   /* gene MET — closes italic->roman kerning gap */
+.amber__lab{ display:inline; }                      /* keep MET+ex14 in normal flow (not flex items) */
+.cs.cs--right{ grid-template-columns:1fr 820px; }   /* image on the right (S2) */
+.cs.cs--right .cs__media{ transform:translateX(-490px) scale(1.14); }        /* fade in centred */
+.cs.cs--right.img-in .cs__media{ transform:translateX(-490px) scale(1.14); }   /* hold centred */
+.cs.cs--right.laid .cs__media{ transform:none; }                               /* drift to right rest */
+.eu{ background:var(--mist); border:1.5px solid #d7dee6; border-left:5px solid var(--teal); border-radius:16px; padding:14px 22px; font-size:21px; line-height:1.34; color:var(--navy); box-shadow:0 4px 14px rgba(34,47,85,.05); max-width:640px; align-self:center; display:flex; align-items:center; gap:14px; }
+.eu__ic{ flex:0 0 auto; width:36px; height:36px; color:var(--teal); } .eu__ic svg{ width:100%; height:100%; display:block; }
+.eu b{ color:var(--teal-strong); } .eu .sup{ color:var(--teal); }
+.tabs{ display:flex; flex-direction:column; width:100%; }
+.s3 .cs__body{ justify-content:center; }
+.tabs__hint{ align-self:center; display:inline-flex; align-items:center; gap:8px; background:var(--pale); color:var(--teal-strong); font-weight:600; font-size:16px; padding:7px 18px; border-radius:999px; margin-bottom:10px; }
+.tabs__hint .tabs__hintchev{ color:var(--teal); animation:tabPulse 1.8s ease-in-out infinite; }
+.tabs__bar{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
+.tab{ position:relative; font-family:inherit; font-weight:700; font-size:23px; color:var(--teal); background:#eaf2fb; border:1.5px solid #bcd6ee; border-bottom:none; border-radius:14px 14px 0 0; padding:15px 8px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:8px; transition:background .25s,color .25s; }
+.tab .tab__chev{ font-size:15px; color:var(--teal); animation:tabPulse 1.8s ease-in-out infinite; }
+.tab.is-active{ background:#fff; color:var(--teal-strong); box-shadow:0 -3px 0 var(--teal) inset; z-index:2; }
+.tab:not(.is-active):hover{ background:#dfeaf7; }
+.tabs__panels{ position:relative; background:#f4f9fd; border:1.5px solid #bcd6ee; border-radius:0 0 16px 16px; padding:26px 32px; min-height:322px; display:flex; flex-direction:column; justify-content:center; }
+.tabpanel{ display:none; }
+.tabpanel.is-active{ display:block; width:100%; animation:tabFade .42s ease both; }
+.tabpanel__h{ font-size:26px; font-weight:700; color:var(--teal-strong); margin:0 0 14px; }
+.tabpanel__p{ font-size:24px; line-height:1.5; color:var(--navy); margin:0; }
+.tabpanel__p b{ color:var(--teal-strong); }
+@keyframes tabPulse{ 0%,100%{ transform:translateY(0); opacity:.7 } 50%{ transform:translateY(2px); opacity:1 } }
+@keyframes tabFade{ from{ opacity:0; transform:translateY(8px) } to{ opacity:1; transform:none } }
+/* ================= S4 · LONG-TERM EFFICACY ================= */
+.s4::before{ content:""; position:absolute; inset:0; z-index:0; background:url("assets/s4.jpg") center/cover no-repeat; opacity:.10; }
+.s4 > *{ position:relative; z-index:1; }
+.eff{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; gap:20px; padding:6px 84px 30px; }
+.navprompt{ display:flex; justify-content:center; }
+.navprompt__box{ display:inline-flex; align-items:center; gap:14px; margin:0; padding:14px 26px; border:2px solid var(--teal); border-radius:16px; background:rgba(0,152,190,.06); color:var(--teal-strong); font-size:23px; font-weight:600; line-height:1.35; max-width:1180px; }
+.navprompt__ic{ flex:0 0 auto; width:30px; height:30px; color:var(--teal); } .navprompt__ic svg{ width:100%; height:100%; }
+.navprompt .sup{ color:var(--teal); }
+.eff__cols{ flex:1 1 auto; min-height:0; display:grid; grid-template-columns:0.9fr 1.15fr; gap:34px; align-items:stretch; }
+.panel{ min-height:0; display:flex; flex-direction:column; }
+.orr{ flex:1 1 auto; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:18px; background:#eaf4fc; border:1.5px solid #bcd6ee; border-radius:16px; padding:24px; }
+.orr__eyebrow{ font-size:18px; font-weight:700; letter-spacing:.11em; text-transform:uppercase; color:var(--faint); }
+.orr__eyebrow .sup{ color:var(--teal); }
+.ring{ position:relative; width:280px; height:280px; border-radius:50%; background:conic-gradient(var(--teal) 0 51.8%, var(--line) 51.8% 100%); display:grid; place-items:center; border:0; padding:0; cursor:pointer; font:inherit; --pc:rgba(0,152,190,.5); transition:transform .16s ease; }
+.ring:hover{ transform:scale(1.02); } .ring:focus-visible{ outline:3px solid var(--navy); outline-offset:4px; }
+.ring__hole{ width:70%; height:70%; border-radius:50%; background:#fff; display:grid; place-items:center; box-shadow:inset 0 0 0 1px var(--line); }
+.ring__val{ display:block; font-size:52px; font-weight:700; color:var(--teal-strong); line-height:1; }
+.ring__ci{ display:block; font-size:18px; font-weight:600; color:var(--muted); margin-top:6px; }
+.orr__cap{ font-size:23px; line-height:1.45; color:var(--muted); max-width:34ch; margin:0; } .orr__cap b{ color:var(--navy); font-weight:700; }
+.tte{ flex:1 1 auto; border:1.5px solid #bcd6ee; border-radius:16px; background:#fff; padding:22px 28px; display:flex; flex-direction:column; min-height:0; box-shadow:0 4px 14px rgba(34,47,85,.05); }
+.tte__head{ display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.tte__title{ font-size:24px; font-weight:700; color:var(--navy); } .tte__title span{ font-weight:600; color:var(--muted); font-size:.7em; }
+.tteCTA{ flex:1 1 auto; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px; text-align:center; }
+.tteCTA p{ margin:0; font-size:22px; color:var(--muted); max-width:34ch; line-height:1.5; }
+.reveal-btn{ display:inline-flex; align-items:center; gap:12px; padding:16px 30px; border:2px solid var(--teal); border-radius:12px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:23px; cursor:pointer; box-shadow:0 8px 20px rgba(0,152,190,.22); transition:filter .15s ease, transform .14s ease; --pc:rgba(0,152,190,.5); animation:pulseRing 2.6s ease-in-out 1.2s infinite; }
+.reveal-btn:hover{ filter:brightness(.96); transform:translateY(-1px); } .reveal-btn svg{ width:22px; height:22px; }
+.tte.is-revealed .reveal-btn{ animation:none; }
+.split{ display:inline-flex; align-items:center; gap:9px; padding:9px 16px; border-radius:999px; border:2px solid var(--teal); background:#fff; color:var(--teal-strong); font:inherit; font-weight:700; font-size:17px; cursor:pointer; transition:background .15s ease; }
+.split[disabled]{ opacity:.42; cursor:not-allowed; border-color:var(--line); color:var(--faint); }
+.split:not([disabled]):hover{ background:var(--pale); } .split.is-on{ background:var(--teal); color:#fff; }
+.split .dot{ width:11px; height:11px; border-radius:50%; }
+.bars{ flex:1 1 auto; min-height:0; display:none; flex-direction:column; justify-content:center; gap:18px; margin-top:14px; }
+.tte.is-revealed .tteCTA{ display:none; } .tte.is-revealed .bars{ display:flex; }
+.metric{ display:flex; flex-direction:column; gap:7px; }
+.metric__top{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+.metric__name{ font-size:22px; font-weight:700; color:var(--navy); } .metric__name span{ font-weight:600; color:var(--faint); font-size:.72em; }
+.metric__val{ font-size:22px; font-weight:700; color:var(--teal-strong); font-variant-numeric:tabular-nums; } .metric__val small{ font-weight:600; color:var(--muted); }
+.track{ position:relative; height:14px; border-radius:7px; background:var(--mist); box-shadow:inset 0 0 0 1px var(--line); overflow:hidden; }
+.fill{ position:absolute; left:0; top:0; height:100%; border-radius:7px; background:var(--teal); transform-origin:left; }
+.subs{ display:none; flex-direction:column; gap:8px; margin-top:4px; }
+.tte.is-split .subs{ display:flex; } .tte.is-split .metric > .track{ opacity:.28; }
+.sub{ display:grid; grid-template-columns:96px 1fr auto; align-items:center; gap:12px; }
+.sub__lab{ font-size:16px; font-weight:700; } .sub__lab.naive{ color:var(--pink); } .sub__lab.treated{ color:var(--green); }
+.sub__track{ position:relative; height:11px; border-radius:6px; background:var(--mist); box-shadow:inset 0 0 0 1px var(--line); overflow:hidden; }
+.sub__fill{ position:absolute; left:0; top:0; height:100%; border-radius:6px; transform-origin:left; } .sub__fill.naive{ background:var(--pink); } .sub__fill.treated{ background:var(--green); }
+@keyframes fillGrow{ 0%{ transform:scaleX(0); } 72%{ transform:scaleX(1.05); } 100%{ transform:scaleX(1); } }
+.tte.is-revealed .bars .track > .fill{ animation:fillGrow .75s cubic-bezier(.16,1,.3,1) both; }
+.tte.is-revealed .bars .metric:nth-child(1) .track > .fill{ animation-delay:.14s; }
+.tte.is-revealed .bars .metric:nth-child(2) .track > .fill{ animation-delay:.32s; }
+.tte.is-revealed .bars .metric:nth-child(3) .track > .fill{ animation-delay:.5s; }
+.tte.is-split .subs .sub__fill{ animation:fillGrow .68s cubic-bezier(.16,1,.3,1) both; }
+.tte.is-split .metric:nth-child(1) .sub__fill{ animation-delay:.06s; }
+.tte.is-split .metric:nth-child(2) .sub__fill{ animation-delay:.2s; }
+.tte.is-split .metric:nth-child(3) .sub__fill{ animation-delay:.34s; }
+/* ================= S5 · LONG-TERM SAFETY (progressive reveal) ================= */
+.qa{ align-self:stretch; display:flex; flex-direction:column; margin-top:18px; }
+.qa__btn{ width:100%; display:flex; align-items:center; justify-content:center; gap:14px; padding:15px 24px; border:1.5px solid #bcd6ee; border-radius:16px; background:var(--mist); color:var(--teal-strong); font:inherit; font-weight:700; font-size:24px; line-height:1.25; cursor:pointer; box-shadow:0 4px 14px rgba(34,47,85,.05); transition:background .15s ease, transform .14s ease; --pc:rgba(0,152,190,.42); }
+.qa__btn .gene{ font-style:italic; }
+.qa__btn:hover{ background:#eef4fa; transform:translateY(-1px); }
+.qa__btn:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+#s5q1{ animation:pulseRing 2.6s ease-in-out 1.4s infinite; } .qa.is-1 #s5q1{ animation:none; }
+.qa.is-1 #s5q2{ animation:pulseRing 2.6s ease-in-out .4s infinite; } .qa.is-2 #s5q2{ animation:none; }
+.qa__chev{ color:var(--teal); font-size:18px; flex:0 0 auto; }
+.qa__btn--sub{ font-size:22px; padding:12px 22px; }
+.qa__a1, .qa__a2{ display:none; }
+.qa.is-1 .qa__a1{ display:block; animation:fadeUp .7s cubic-bezier(.16,1,.3,1) both; }
+.qa.is-2 .qa__a2{ display:block; }
+.qa__ans{ text-align:center; font-size:25px; font-weight:700; color:#c0396b; background:#fce8ee; border:1.5px solid #eeaec6; border-radius:12px; padding:12px 20px; margin:14px 0 12px; box-shadow:0 4px 14px rgba(192,57,107,.10); }
+.edema-stats{ display:flex; gap:14px; margin-top:14px; }
+.estat{ flex:1 1 0; background:var(--pale); border:1.5px solid #bcd6ee; border-radius:12px; padding:13px 8px; text-align:center; }
+.estat b{ display:block; font-size:24px; font-weight:700; color:var(--teal-strong); line-height:1.1; }
+.estat span{ font-size:15px; color:var(--muted); }
+.s5 .stat__ic{ width:40px; height:40px; margin:0 auto 8px; display:grid; place-items:center; } .s5 .stat__ic svg{ width:100%; height:100%; display:block; }
+.estat__ic{ width:26px; height:26px; margin:0 auto 4px; display:block; } .estat__ic svg{ width:100%; height:100%; display:block; }
+.qa__hint{ align-self:center; margin-top:14px; display:inline-flex; align-items:center; gap:8px; padding:8px 18px; border:1.5px solid var(--navy); border-radius:999px; background:#fff; color:var(--navy); font-size:15px; font-style:italic; font-weight:600; }
+.qa__hint span{ font-style:normal; color:var(--teal); }
+/* S5 entrance: stat boxes appear one-by-one with a pause, then question/hint/takeaway */
+@keyframes statSlide{ from{ transform:translateY(20px); } to{ transform:none; } }
+/* ================= S6 · CONSISTENCY ACROSS SUBGROUPS ================= */
+.s6 .cs__body{ justify-content:center; gap:22px; }
+.sglist{ display:flex; flex-direction:column; gap:16px; }
+.sgbullet{ display:flex; gap:16px; align-items:flex-start; font-size:22px; line-height:1.38; color:var(--navy); }
+.sgbullet .gene{ font-style:italic; }
+.sgbullet__ic{ flex:0 0 auto; width:40px; height:40px; border-radius:10px; background:var(--pale); display:grid; place-items:center; margin-top:2px; } .sgbullet__ic svg{ width:60%; height:60%; display:block; }
+.sgbullet .sup{ color:var(--teal); }
+.sgcards{ display:flex; flex-wrap:wrap; gap:16px; justify-content:center; }
+.sgcard{ flex:0 1 46%; min-width:0; background:#eaf4fc; border:1.5px solid #bcd6ee; border-left:5px solid var(--teal); border-radius:16px; padding:15px 20px; box-shadow:0 4px 14px rgba(34,47,85,.05); }
+.sgcard__h{ display:flex; align-items:center; gap:10px; font-size:19px; font-weight:700; color:var(--navy); }
+.sgcard__ic{ flex:0 0 auto; width:26px; height:26px; } .sgcard__ic svg{ width:100%; height:100%; display:block; }
+.sgcard__v{ font-size:26px; font-weight:700; color:var(--teal-strong); margin-top:4px; } .sgcard__v .ac{ color:inherit; }
+.sgcard__sub{ font-size:15px; color:var(--muted); margin-top:1px; }
+/* safe staggered reveal: containers forced visible, items slide (never opacity-hidden) */
+.s6 .cs.laid .sglist, .s6 .cs.laid .sgcards{ animation:none; opacity:1; }
+.s6 .cs.laid .sgbullet{ animation:fadeUp .5s cubic-bezier(.16,1,.3,1) both; }
+.s6 .cs.laid .sgcard{ animation:fadeUp .6s cubic-bezier(.16,1,.3,1) both; }
+.s6 .cs.laid .sglist .sgbullet:nth-child(1){ animation-delay:.85s; }
+.s6 .cs.laid .sglist .sgbullet:nth-child(2){ animation-delay:1.1s; }
+.s6 .cs.laid .sglist .sgbullet:nth-child(3){ animation-delay:1.35s; }
+.s6 .cs.laid .sgcards .sgcard:nth-child(1){ animation-delay:1.75s; }
+.s6 .cs.laid .sgcards .sgcard:nth-child(2){ animation-delay:2.3s; }
+.s6 .cs.laid .sgcards .sgcard:nth-child(3){ animation-delay:2.85s; }
+.s5 .cs.laid .stats{ animation:none; opacity:1 !important; }
+.s5 .cs.laid .stats .stat{ animation:statSlide .55s cubic-bezier(.16,1,.3,1) both; }
+.s5 .cs.laid .stats .stat:nth-child(1){ animation-delay:.4s; }
+.s5 .cs.laid .stats .stat:nth-child(2){ animation-delay:.7s; }
+.s5 .cs.laid .stats .stat:nth-child(3){ animation-delay:1.0s; }
+.s5 .cs.laid .cs__body > *:nth-child(3){ animation-delay:1.4s; }
+.s5 .cs.laid .cs__body > *:nth-child(4){ animation-delay:1.65s; }
+.s5 .cs.laid .cs__body > *:nth-child(5){ animation-delay:1.9s; }
+/* edema breakdown boxes ease in one-by-one */
+.qa.is-2 .edema-stats .estat{ animation:statSlide .5s cubic-bezier(.16,1,.3,1) both; }
+.qa.is-2 .edema-stats .estat:nth-child(1){ animation-delay:.15s; }
+.qa.is-2 .edema-stats .estat:nth-child(2){ animation-delay:.55s; }
+.qa.is-2 .edema-stats .estat:nth-child(3){ animation-delay:.95s; }
+.sub__val{ font-size:17px; font-weight:700; font-variant-numeric:tabular-nums; } .sub__val.naive{ color:var(--pink); } .sub__val.treated{ color:var(--green); } .sub__val small{ color:var(--muted); font-weight:600; }
+.tte__foot{ flex:0 0 auto; margin:14px 0 0; font-size:16px; color:var(--faint); line-height:1.4; }
+.s4.play .navprompt{ animation:fadeUp .6s cubic-bezier(.16,1,.3,1) both; }
+.s4.play .eff__cols .panel:nth-child(1){ animation:fadeUp .6s cubic-bezier(.16,1,.3,1) .12s both; }
+.s4.play .eff__cols .panel:nth-child(2){ animation:fadeUp .6s cubic-bezier(.16,1,.3,1) .22s both; }
+/* ORR reveal gate */
+.orr .ring, .orr .orr__cap{ display:none; }
+.orrCTA{ display:flex; flex-direction:column; align-items:center; gap:16px; }
+.orrCTA__p{ margin:0; font-size:22px; color:var(--muted); max-width:26ch; line-height:1.45; text-align:center; }
+.orr.is-open .orrCTA{ display:none; }
+.orr.is-open .ring{ display:grid; animation:fadeUp .55s cubic-bezier(.16,1,.3,1) both; }
+.orr.is-open .orr__cap{ display:block; animation:fadeUp .5s cubic-bezier(.16,1,.3,1) .28s both; }
+/* DOR/PFS/OS staggered fade-in on reveal */
+.tte.is-revealed .bars .metric{ animation:fadeUp .45s cubic-bezier(.16,1,.3,1) both; }
+.tte.is-revealed .bars .metric:nth-child(1){ animation-delay:.04s; }
+.tte.is-revealed .bars .metric:nth-child(2){ animation-delay:.20s; }
+.tte.is-revealed .bars .metric:nth-child(3){ animation-delay:.36s; }
+/* split ease-in */
+.tte.is-split .subs{ animation:fadeUp .4s cubic-bezier(.16,1,.3,1) both; }
+/* month axis: gridlines in every track + labels row */
+.track, .sub__track{ background-image:repeating-linear-gradient(90deg, transparent 0, transparent calc(33.333% - 1px), rgba(34,47,85,.14) calc(33.333% - 1px), rgba(34,47,85,.14) 33.333%); }
+.axis{ display:flex; justify-content:space-between; margin-top:8px; font-size:14px; font-weight:600; color:var(--faint); letter-spacing:.01em; }
+
+.stage{ position:fixed; inset:0; overflow:hidden; background:#0b1622; }
+.deck{ position:absolute; top:50%; left:50%; width:1920px; height:1080px; overflow:hidden; background:#fff; transform:translate(-50%,-50%) scale(1); transform-origin:center center; box-shadow:0 30px 80px rgba(0,0,0,.5); }
+
+.scene{ position:absolute; inset:0; display:none; flex-direction:column; background:#fff; }
+.scene.is-on{ display:flex; }
+.scene.in-right{ animation:inRight .5s var(--ease) both; }
+.scene.in-left{ animation:inLeft .5s var(--ease) both; }
+@keyframes inRight{ from{ opacity:0; transform:translateX(60px);} to{ opacity:1; transform:none; } }
+@keyframes inLeft{ from{ opacity:0; transform:translateX(-60px);} to{ opacity:1; transform:none; } }
+
+/* heading */
+.hd{ flex:0 0 auto; position:relative; padding:30px 60px 8px; transition:opacity .5s ease; }
+.hd__title{ margin:0; font-size:54px; font-weight:700; line-height:1.04; letter-spacing:-.01em; color:var(--navy); text-shadow:var(--title-shadow); }
+.hd__title em,.hd__title .gene{ font-style:italic; }
+.hd__rule{ display:flex; align-items:center; margin:12px 0 0; }
+.hd__rule i{ width:4px; height:18px; background:var(--teal); border-radius:2px; }
+.hd__rule b{ flex:1 1 auto; height:3px; background:var(--teal); border-radius:2px; }
+.scene.is-on:not(.playing) .hd__rule{ animation:dividerPush .8s cubic-bezier(.16,1,.3,1) both; transform-origin:center; }
+@keyframes dividerPush{ 0%{ transform:scaleX(0); opacity:.3; } 78%{ transform:scaleX(1.04); opacity:1; } 100%{ transform:scaleX(1); opacity:1; } }
+.scene.playing .hd{ opacity:0; }   /* heading held back during a content-scene intro */
+
+/* top-right controls */
+.topctl{ position:absolute; top:34px; right:44px; z-index:22; display:flex; gap:12px; }
+.tbtn{ display:inline-flex; align-items:center; gap:8px; padding:9px 20px; border-radius:999px; border:1.5px solid #6f9fd6; background:#a9c6e8; color:var(--navy); font:inherit; font-weight:600; font-size:17px; cursor:pointer; box-shadow:0 5px 15px rgba(34,47,85,.22); transition:transform .14s var(--ease), filter .15s ease, box-shadow .15s ease; }
+.tbtn:hover{ transform:translateY(-1px); }
+.tbtn svg{ width:18px; height:18px; }
+.tbtn:hover{ filter:brightness(1.05); transform:translateY(-1px); } .tbtn:active{ transform:scale(.97); }
+.tbtn:focus-visible{ outline:3px solid var(--navy); outline-offset:2px; }
+.tbtn svg{ width:16px; height:16px; } .tbtn.back{ background:#eef2f7; border-color:#c3ceda; }
+.tbtn[hidden]{ display:none; }
+/* ---------- how-to walkthrough (opened by the pill) ---------- */
+.wt{ position:absolute; inset:0; z-index:60; display:none; align-items:center; justify-content:center; background:rgba(16,26,38,.55); }
+.wt.is-open{ display:flex; animation:fadeIn .2s ease both; }
+.wt__card{ width:660px; max-width:92%; background:#fff; border-radius:26px; box-shadow:0 34px 80px rgba(16,26,38,.45); overflow:hidden; animation:pop .3s cubic-bezier(.16,1,.3,1) both; }
+.wt__head{ display:flex; align-items:center; justify-content:space-between; padding:20px 28px; background:var(--mist); border-bottom:1px solid var(--line); }
+.wt__kicker{ font-size:15px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--faint); }
+.wt__close{ border:0; background:transparent; color:var(--muted); cursor:pointer; width:42px; height:42px; border-radius:50%; display:grid; place-items:center; font-size:28px; line-height:1; }
+.wt__close:hover{ background:#e7edf3; color:var(--navy); }
+.wt__body{ padding:40px 44px 14px; text-align:center; min-height:264px; }
+.wt__ic{ width:92px; height:92px; margin:0 auto 22px; border-radius:24px; background:var(--pale); display:grid; place-items:center; color:var(--teal); }
+.wt__ic svg{ width:48px; height:48px; }
+.wt__title{ margin:0 0 10px; font-size:31px; font-weight:700; color:var(--navy); }
+.wt__desc{ margin:0 auto; max-width:40ch; font-size:22px; line-height:1.5; color:var(--muted); } .wt__desc b{ color:var(--navy); }
+.wt__foot{ display:flex; align-items:center; justify-content:space-between; padding:20px 32px 28px; }
+.wt__dots{ display:flex; gap:10px; } .wt__dots i{ width:10px; height:10px; border-radius:50%; background:var(--line); transition:background .2s ease, transform .2s ease; } .wt__dots i.on{ background:var(--teal); transform:scale(1.25); }
+.wt__nav{ display:flex; gap:12px; }
+.wt__btn{ border:2px solid var(--teal); background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:19px; padding:12px 28px; border-radius:14px; cursor:pointer; } .wt__btn.ghost{ background:#fff; color:var(--teal); } .wt__btn:disabled{ opacity:.4; cursor:not-allowed; }
+.wt__body.swap{ animation:wswap .3s ease both; } @keyframes wswap{ from{opacity:0; transform:translateX(14px)} to{opacity:1; transform:none} }
+
+/* nav — hidden until a scene's content has loaded */
+.chev{ position:absolute; top:50%; z-index:30; width:60px; height:60px; border:0; background:transparent; color:var(--teal); cursor:pointer; display:grid; place-items:center; opacity:0; transform:translateY(-50%); transition:opacity .45s ease, color .15s ease; pointer-events:none; }
+.deck.nav-ready .chev:not(:disabled){ opacity:1; pointer-events:auto; }
+.deck.nav-ready .chev.prev{ animation:navL .5s var(--ease) both; }
+.deck.nav-ready .chev.next{ animation:navR .5s var(--ease) both; }
+@keyframes navL{ from{ transform:translateY(-50%) translateX(-14px);} to{ transform:translateY(-50%) translateX(0);} }
+@keyframes navR{ from{ transform:translateY(-50%) translateX(14px);} to{ transform:translateY(-50%) translateX(0);} }
+.chev svg{ width:46px; height:46px; transition:transform .18s var(--ease); }
+.chev.prev{ left:8px; } .chev.next{ right:8px; }
+.chev:hover:not(:disabled){ color:var(--teal-strong); }
+.chev.next:hover:not(:disabled) svg{ transform:translateX(4px); }
+.chev.prev:hover:not(:disabled) svg{ transform:translateX(-4px); }
+.chev:disabled{ opacity:0 !important; }
+.chev:focus-visible{ outline:3px solid var(--navy); outline-offset:2px; border-radius:14px; }
+.deck.nav-ready .chev.next:not(:disabled){ animation:navR .5s var(--ease) both, nudge 2.4s ease-in-out 1s 2; }
+@keyframes nudge{ 0%,100%{ transform:translateY(-50%) translateX(0);} 50%{ transform:translateY(-50%) translateX(6px);} }
+.progress{ position:absolute; bottom:14px; left:50%; transform:translateX(-50%); z-index:20; display:flex; gap:8px; opacity:0; transition:opacity .45s ease; }
+.deck.nav-ready .progress{ opacity:1; }
+.progress i{ width:10px; height:10px; border-radius:50%; background:var(--line); transition:background .25s var(--ease), transform .25s var(--ease); }
+.progress i.on{ background:var(--teal); transform:scale(1.25); }
+.sr-only{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); }
+
+/* superscript reference trigger (click to open) */
+.sup{ color:var(--teal); font-weight:700; font-size:.6em; vertical-align:super; cursor:pointer; padding:0 1px; }
+.sup:hover,.sup:focus-visible{ text-decoration:underline; outline:none; }
+
+/* acronym term (hover; only the first-appearance is interactive) */
+.ac{ text-decoration:underline dotted; text-decoration-color:var(--teal); text-underline-offset:3px; cursor:help; }
+.ac--plain{ text-decoration:none; cursor:auto; }
+.ac .gene{ font-style:italic; }
+
+/* floating tips */
+.floaty{ position:absolute; z-index:80; max-width:460px; padding:12px 16px; border-radius:12px; font-size:17px; font-weight:600; line-height:1.4; opacity:0; transform:translateY(6px); transition:opacity .14s ease, transform .14s ease; box-shadow:0 12px 30px rgba(6,49,61,.34); }
+.floaty.on{ opacity:1; transform:none; }
+.floaty.ref{ background:var(--refbox); color:#fff; border:2px solid #06313d; font-weight:700; }
+.floaty.gloss{ background:#eef4fb; color:var(--navy); border:2px solid var(--navy); pointer-events:none; }
+.floaty em,.floaty .gene{ font-style:italic; }
+
+/* ================= COVER ================= */
+.cover{ background:#33424f; }
+.cover__bg{ position:absolute; inset:0; background:url("assets/cover.jpg") center/cover no-repeat; opacity:.85; }
+.cover.is-on .cover__bg{ animation:kenburns 12s ease-out both; }
+@keyframes kenburns{ from{ transform:scale(1.06);} to{ transform:scale(1);} }
+.cover__scrim{ position:absolute; inset:0; background:linear-gradient(180deg,rgba(40,55,70,.32),rgba(40,55,70,.5)); }
+.cover__in{ position:relative; z-index:2; flex:1 1 auto; display:flex; flex-direction:column; justify-content:center; padding:0 96px; }
+.cover__title{ margin:0; max-width:21ch; font-size:62px; font-weight:700; line-height:1.08; color:#fff; text-shadow:0 5px 24px rgba(0,0,0,.55); }
+.cover__title .gene{ font-style:italic; }
+.cover.is-on .cover__title{ animation:fadeUp .7s var(--ease) .15s both; }
+.cover__rule{ display:flex; align-items:center; margin:24px 0 0; width:min(80%,940px); }
+.cover.is-on .cover__rule{ animation:growRule .7s var(--ease) .4s both; transform-origin:left; }
+@keyframes growRule{ from{ transform:scaleX(0); opacity:0;} to{ transform:none; opacity:1;} }
+.cover__rule i{ width:4px; height:20px; background:#fff; border-radius:2px; } .cover__rule b{ flex:1; height:2px; background:#fff; opacity:.9; }
+.cover__bar{ position:relative; z-index:2; flex:0 0 auto; height:120px; background:var(--teal); display:flex; align-items:center; justify-content:space-between; padding:0 44px; }
+.cover__bar .brand{ background:#fff; border-radius:14px; padding:10px 18px; box-shadow:0 7px 18px rgba(0,0,0,.32); display:inline-flex; align-items:center; }
+.cover__bar .brand img{ display:block; height:42px; width:auto; }
+.cover.is-on .cover__bar{ animation:fadeUp .6s var(--ease) .5s both; }
+.brand{ display:flex; align-items:center; }
+.brand img{ height:64px; width:auto; display:block; }
+.cta-btn{ display:inline-flex; align-items:center; gap:26px; opacity:0; }
+.cover.is-on .cta-btn{ animation:fadeUp .6s var(--ease) 1.15s both; }   /* delayed ease-in */
+.cta-btn__b{ padding:18px 44px; border-radius:12px; background:#e7edf3; border:1.5px solid rgba(34,47,85,.25); color:var(--navy); font:inherit; font-weight:600; font-size:27px; cursor:pointer; transition:transform .15s var(--ease), filter .15s ease; }
+.cta-btn__b:hover{ filter:brightness(.97); transform:translateY(-2px); }
+.cta-btn__chev{ color:#fff; } .cta-btn__chev svg{ width:50px; height:60px; }
+.cover.is-on .cta-btn__chev{ animation:bobX 1.8s ease-in-out 1.9s infinite; }
+@keyframes bobX{ 0%,100%{ transform:translateX(0);} 50%{ transform:translateX(7px);} }
+
+/* ================= LEARNING OBJECTIVES ================= */
+.lo{ background:#dcecfb; }
+.lo__wrap{ flex:1 1 auto; display:flex; align-items:center; justify-content:center; padding:30px 60px 80px; }
+.lo__card{ width:min(1360px,100%); border:3px solid var(--navy); border-radius:22px; overflow:hidden; box-shadow:0 14px 36px rgba(16,26,38,.16); }
+.lo__head{ background:#f4f7fa; padding:26px 46px; text-align:center; }
+.lo__head h2{ margin:0; font-size:40px; font-weight:700; color:var(--teal); line-height:1.2; }
+.lo__body{ background:#fff; padding:30px 50px; display:flex; flex-direction:column; gap:20px; }
+.lo__item{ font-size:26px; line-height:1.4; color:var(--navy); opacity:0; }
+.lo.play .lo__item{ animation:rollIn .9s cubic-bezier(.16,1,.3,1) both; }
+.lo.play .lo__item:nth-child(1){animation-delay:.2s}.lo.play .lo__item:nth-child(2){animation-delay:.9s}.lo.play .lo__item:nth-child(3){animation-delay:1.6s}.lo.play .lo__item:nth-child(4){animation-delay:2.3s}
+@keyframes rollIn{ from{ opacity:1; clip-path:inset(0 0 100% 0); } to{ opacity:1; clip-path:inset(0 0 0 0); } }
+.lo__item em,.lo__item .gene{ font-style:italic; }
+.lo__foot{ position:absolute; left:0; right:0; bottom:0; height:70px; background:var(--teal); z-index:5; }
+
+/* ================= TABLE OF CONTENTS ================= */
+.toc__wrap{ flex:1 1 auto; display:flex; flex-direction:column; justify-content:center; padding:0 150px 50px; }
+.toc h2{ text-align:center; margin:0 0 26px; font-size:56px; font-weight:700; color:var(--navy); text-shadow:var(--title-shadow); }
+.toc__list{ display:flex; flex-direction:column; gap:14px; }
+.toc__item{ display:flex; align-items:center; gap:20px; width:100%; text-align:left; background:#eaf4fc; border:1.5px solid #bcd6ee; font:inherit; cursor:pointer; padding:12px 18px; border-radius:16px; transition:background .16s ease, transform .16s var(--ease), box-shadow .16s ease; }
+.toc.play .toc__item{ animation:fadeUp .7s cubic-bezier(.16,1,.3,1) both; }
+.toc.play .toc__item:nth-child(1){animation-delay:.1s}.toc.play .toc__item:nth-child(2){animation-delay:.22s}.toc.play .toc__item:nth-child(3){animation-delay:.34s}.toc.play .toc__item:nth-child(4){animation-delay:.46s}.toc.play .toc__item:nth-child(5){animation-delay:.58s}.toc.play .toc__item:nth-child(6){animation-delay:.7s}.toc.play .toc__item:nth-child(7){animation-delay:.82s}.toc.play .toc__item:nth-child(8){animation-delay:.94s}
+.toc__item:hover{ background:#dcecfb; border-color:var(--teal); transform:translateX(4px); box-shadow:0 6px 16px rgba(0,152,190,.14); }
+.toc__item:focus-visible{ outline:3px solid var(--navy); outline-offset:2px; }
+.toc__n{ flex:0 0 auto; width:60px; height:60px; border-radius:50%; background:var(--teal); color:#fff; display:grid; place-items:center; font-size:28px; font-weight:700; }
+.toc__t{ font-size:28px; font-weight:700; color:var(--navy); line-height:1.15; } .toc__t em,.toc__t .gene{ font-style:italic; }
+/* ================= S7 · SUMMARY + REFLECTION (4-step wizard) ================= */
+/* step 1 cards */
+.scard{ display:flex; align-items:center; gap:22px; padding:15px 28px; background:#fff; border:2px solid var(--teal); border-radius:15px; box-shadow:0 6px 16px rgba(34,47,85,.08); opacity:0; transform:translateY(16px); }
+.scard.in{ opacity:1; transform:none; transition:opacity .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1); }
+.scard__no{ flex:0 0 auto; width:46px; height:46px; border-radius:50%; background:var(--teal); color:#fff; display:grid; place-items:center; font-size:23px; font-weight:700; }
+.scard__main{ flex:1 1 auto; min-width:0; }
+.scard__eyebrow{ display:block; font-size:14px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--teal-strong); margin-bottom:2px; } .scard__eyebrow .ac{ color:inherit; }
+.scard__text{ margin:0; font-size:21px; line-height:1.32; color:var(--navy); font-weight:500; } .scard__text .gene{ font-style:italic; }
+/* step rail */
+.sw-rail{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:12px; padding:2px 40px 8px; }
+.sw-rstep{ display:inline-flex; align-items:center; gap:9px; font-size:17px; font-weight:700; color:var(--faint); }
+.sw-rnum{ width:33px; height:33px; flex:0 0 auto; border-radius:50%; display:grid; place-items:center; background:#fff; border:2px solid var(--line); color:var(--faint); font-size:16px; font-weight:700; }
+.sw-rstep.is-active .sw-rnum{ background:var(--teal); border-color:var(--teal); color:#fff; } .sw-rstep.is-active{ color:var(--navy); }
+.sw-rstep.is-done .sw-rnum{ background:var(--teal-strong); border-color:var(--teal-strong); color:#fff; } .sw-rstep.is-done{ color:var(--muted); }
+.sw-rline{ width:46px; height:2px; background:var(--line); border-radius:2px; } .sw-rstep.is-done + .sw-rline{ background:var(--teal-strong); }
+/* body shell */
+.sw-body{ flex:1 1 auto; min-height:0; position:relative; padding:6px 90px 4px; }
+.sw-step{ position:absolute; inset:0; padding:inherit; display:none; flex-direction:column; min-height:0; }
+.sw-step.is-on{ display:flex; }
+.sw-step.anim-r{ animation:swInR .36s cubic-bezier(.4,0,.2,1); } .sw-step.anim-l{ animation:swInL .36s cubic-bezier(.4,0,.2,1); }
+@keyframes swInR{ from{ opacity:0; transform:translateX(40px);} to{ opacity:1; transform:none; } }
+@keyframes swInL{ from{ opacity:0; transform:translateX(-40px);} to{ opacity:1; transform:none; } }
+.sw-lead{ flex:0 0 auto; margin:0 0 14px; font-size:22px; font-weight:600; color:var(--muted); text-align:center; line-height:1.35; } .sw-lead b{ color:var(--navy); font-weight:700; }
+.sw-sum{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; justify-content:center; gap:13px; max-width:1240px; width:100%; margin:0 auto; }
+/* step 2 confidence */
+.sw-conf{ flex:1 1 auto; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:34px; }
+.sw-cq{ font-size:30px; font-weight:700; color:var(--navy); text-align:center; max-width:28ch; line-height:1.3; }
+.sw-copts{ display:flex; gap:18px; flex-wrap:wrap; justify-content:center; }
+.sw-copt{ display:flex; flex-direction:column; align-items:center; gap:12px; min-width:200px; padding:24px 22px; border:2px solid var(--line); border-radius:18px; background:#fff; color:var(--muted); font:inherit; font-weight:700; font-size:21px; cursor:pointer; transition:border-color .15s ease, color .15s ease, transform .14s ease, box-shadow .15s ease; }
+.sw-copt:hover{ border-color:var(--teal); color:var(--navy); transform:translateY(-3px); }
+.sw-copt__dots{ display:inline-flex; gap:5px; } .sw-copt__dots i{ width:11px; height:11px; border-radius:50%; background:var(--line); }
+.sw-copt[data-lvl="1"] .sw-copt__dots i:nth-child(-n+1), .sw-copt[data-lvl="2"] .sw-copt__dots i:nth-child(-n+2), .sw-copt[data-lvl="3"] .sw-copt__dots i:nth-child(-n+3), .sw-copt[data-lvl="4"] .sw-copt__dots i:nth-child(-n+4){ background:var(--teal); }
+.sw-copt[aria-checked="true"]{ border-color:var(--teal); background:var(--pale); color:var(--teal-strong); box-shadow:0 8px 20px rgba(0,152,190,.18); }
+.sw-copt[aria-checked="true"] .sw-copt__dots i{ background:var(--teal-strong); }
+/* step 3 reflection */
+.sw-refl{ flex:1 1 auto; display:flex; flex-direction:column; justify-content:center; gap:12px; max-width:1040px; width:100%; margin:0 auto; }
+.sw-rlab{ display:flex; align-items:baseline; gap:10px; font-size:24px; font-weight:700; color:var(--navy); } .sw-rlab span{ font-size:.78em; font-weight:600; color:var(--faint); }
+.sw-refl textarea{ width:100%; resize:none; font:inherit; font-size:22px; line-height:1.5; color:var(--navy); padding:18px 22px; border:2px solid var(--line); border-radius:14px; background:#fff; height:230px; }
+.sw-refl textarea:focus{ outline:none; border-color:var(--teal); box-shadow:0 0 0 4px rgba(0,152,190,.16); }
+.sw-refl textarea::placeholder{ color:var(--faint); }
+.sw-rhint{ margin:0; font-size:18px; color:var(--faint); }
+/* step 4 cpd record */
+.sw-congrats{ flex:0 0 auto; margin:0 0 12px; padding:15px 26px; background:#e7f6ee; border:2px solid #2f9e6f; border-radius:14px; color:#186b49; font-size:21px; font-weight:600; line-height:1.4; text-align:center; } .sw-congrats b{ color:#186b49; font-weight:700; }
+.sw-cpd{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; gap:10px; }
+.sw-cpd__scroll{ flex:1 1 auto; min-height:0; overflow:auto; border:2px solid var(--line); border-radius:14px; background:#fff; padding:20px 26px; }
+.sw-cpd__sec + .sw-cpd__sec{ margin-top:16px; }
+.sw-cpd__h{ margin:0 0 8px; font-size:15px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--teal-strong); }
+.sw-cpd__find{ margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:7px; counter-reset:f; }
+.sw-cpd__find li{ position:relative; padding-left:32px; font-size:19px; line-height:1.34; color:var(--navy); } .sw-cpd__find li b{ color:var(--teal-strong); }
+.sw-cpd__find li::before{ counter-increment:f; content:counter(f); position:absolute; left:0; top:1px; width:23px; height:23px; border-radius:50%; background:var(--pale); color:var(--teal-strong); font-size:13px; font-weight:700; display:grid; place-items:center; }
+.sw-cpd__pill{ display:inline-flex; align-items:center; gap:8px; padding:8px 16px; border-radius:999px; border:2px solid var(--teal); background:var(--pale); color:var(--teal-strong); font-size:18px; font-weight:700; } .sw-cpd__pill[data-v="none"]{ border-color:var(--line); background:#fff; color:var(--faint); }
+.sw-cpd__ans{ margin:0; font-size:19px; color:var(--muted); line-height:1.4; white-space:pre-wrap; } .sw-cpd__ans.empty{ font-style:italic; color:var(--faint); }
+.sw-cpd__note{ flex:0 0 auto; margin:0; font-size:16px; color:var(--faint); line-height:1.35; } .sw-cpd__note em{ font-style:italic; }
+/* controls */
+.sw-controls{ flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:12px 90px 20px; }
+.sw-btn{ display:inline-flex; align-items:center; gap:10px; min-height:52px; padding:12px 30px; border:2px solid var(--teal); border-radius:12px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:20px; cursor:pointer; transition:filter .15s ease; } .sw-btn svg{ width:20px; height:20px; }
+.sw-btn:hover:not(:disabled){ filter:brightness(.96); }
+.sw-btn.ghost{ background:#fff; color:var(--teal); } .sw-btn.ghost:hover:not(:disabled){ background:var(--mist); filter:none; }
+.sw-btn:disabled{ background:#fff; color:var(--faint); border-color:var(--line); cursor:not-allowed; }
+.sw-btn:focus-visible, .sw-copt:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+.sw-mid{ font-size:19px; font-weight:700; color:var(--teal); white-space:nowrap; font-variant-numeric:tabular-nums; }
+.s7.play .sw-rail, .s7.play .sw-controls{ animation:fadeIn .5s ease both; }
+/* export modal (deck overlay) */
+.sw-xmodal{ position:absolute; inset:0; z-index:76; display:none; align-items:center; justify-content:center; padding:50px; background:rgba(16,26,38,.62); }
+.sw-xmodal.is-open{ display:flex; animation:fadeIn .2s ease both; }
+.sw-xcard{ width:640px; max-width:92%; max-height:calc(100% - 80px); overflow:auto; background:#fff; border-radius:24px; box-shadow:0 40px 90px rgba(16,26,38,.5); padding:34px 40px; animation:launchPop .3s cubic-bezier(.16,1,.3,1) both; }
+.sw-xcheck{ width:56px; height:56px; border-radius:50%; background:var(--teal); color:#fff; display:grid; place-items:center; margin-bottom:16px; } .sw-xcheck svg{ width:30px; height:30px; }
+.sw-xeyebrow{ margin:0 0 5px; font-size:15px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--teal-strong); }
+.sw-xtitle{ margin:0 0 10px; font-size:28px; font-weight:700; color:var(--navy); }
+.sw-xbody{ margin:0; font-size:19px; line-height:1.5; color:var(--muted); } .sw-xbody strong{ color:var(--navy); font-weight:700; }
+.sw-xactions{ display:flex; flex-wrap:wrap; gap:12px; margin-top:22px; }
+.sw-xstatus{ margin:14px 0 0; min-height:24px; font-size:17px; font-weight:600; color:var(--teal-strong); } .sw-xstatus.warn{ color:#9a6a16; }
+/* ================= S8 · CALL TO ACTION ================= */
+.s8.scene{ background:#128ba0; }
+.s8--cta .cta2{ position:absolute; inset:0; overflow:hidden; }
+.cta2__bg{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.s8.play .cta2__bg{ animation:kenburns 15s ease-out both; }
+.cta2__scrim{ position:absolute; inset:0; background:linear-gradient(90deg, rgba(8,60,74,.52) 0%, rgba(8,60,74,.22) 34%, rgba(8,60,74,0) 55%); }
+.cta2__content{ position:absolute; left:0; top:0; height:100%; width:53%; padding:0 66px 0 90px; display:flex; flex-direction:column; justify-content:center; gap:12px; z-index:2; }
+.cta2__title{ margin:0; font-size:62px; font-weight:700; line-height:1.05; letter-spacing:-.015em; color:#fff; text-shadow:0 2px 12px rgba(8,40,50,.3); }
+.cta2__rule{ display:flex; align-items:center; width:min(74%,520px); margin:6px 0 8px; }
+.cta2__rule i{ width:4px; height:20px; background:#fff; border-radius:2px; flex:0 0 auto; }
+.cta2__rule b{ flex:1 1 auto; height:3px; background:rgba(255,255,255,.85); border-radius:2px; }
+.cta2__h{ margin:2px 0; font-size:40px; font-weight:700; line-height:1.1; color:#fff; text-shadow:0 2px 9px rgba(8,40,50,.28); }
+.cta2__lead{ margin:0 0 6px; font-size:24px; line-height:1.5; color:#fff; max-width:40ch; text-shadow:0 1px 7px rgba(8,40,50,.26); } .cta2__lead .gene{ font-style:italic; }
+.cta__chips{ display:flex; flex-wrap:wrap; gap:12px; margin:6px 0 4px; }
+.cta__chip{ display:inline-flex; align-items:center; gap:10px; padding:11px 20px; border-radius:13px; background:var(--teal-strong); color:#fff; font-size:19px; font-weight:600; line-height:1.15; box-shadow:0 5px 14px rgba(34,47,85,.16); }
+.cta__chip svg{ width:21px; height:21px; flex:0 0 auto; }
+.cta__btn{ align-self:flex-start; display:inline-flex; align-items:center; gap:12px; margin-top:10px; padding:16px 36px; border:0; border-radius:16px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:23px; cursor:pointer; box-shadow:0 12px 30px rgba(0,152,190,.34); transition:transform .15s var(--ease), filter .15s ease; }
+.cta__btn:hover{ transform:translateY(-2px); filter:brightness(1.03); }
+.cta__btn:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+.cta__btn svg{ width:26px; height:26px; }
+.s8 .cta__chips{ flex-direction:column; align-items:flex-start; gap:16px; margin:14px 0 12px; }
+.s8 .cta__chip{ background:#0e6b80; color:#fff; padding:13px 24px; border-radius:14px; font-size:20px; box-shadow:-7px 7px 0 0 rgba(255,255,255,.92), 0 9px 20px rgba(8,40,50,.22); }
+.s8 .cta__chip svg{ width:22px; height:22px; color:#fff; }
+.s8 .cta__btn{ background:#fff; color:var(--teal-strong); box-shadow:0 14px 32px rgba(8,40,50,.36); }
+.s8 .cta__btn:hover{ filter:none; background:#eefaff; }
+.s8:not(.play) .cta2__content > *{ opacity:0; }
+.s8.play .cta2__content > *{ animation:fadeUp .7s cubic-bezier(.16,1,.3,1) both; }
+.s8.play .cta2__content > *:nth-child(1){ animation-delay:.15s; }
+.s8.play .cta2__content > *:nth-child(2){ animation-delay:.3s; }
+.s8.play .cta2__content > *:nth-child(3){ animation-delay:.5s; }
+.s8.play .cta2__content > *:nth-child(4){ animation-delay:.7s; }
+.s8.play .cta2__content > *:nth-child(5){ animation:none; opacity:1; }
+.s8.play .cta2__content > *:nth-child(6){ animation-delay:1.7s; }
+.s8:not(.play) .cta__chip{ opacity:0; }
+.s8.play .cta__chip{ animation:fadeUp .55s cubic-bezier(.16,1,.3,1) both; }
+.s8.play .cta__chip:nth-child(1){ animation-delay:1.0s; }
+.s8.play .cta__chip:nth-child(2){ animation-delay:1.22s; }
+.s8.play .cta__chip:nth-child(3){ animation-delay:1.44s; }
+/* ---- launch interstitial (D16 "Preparing the link…") ---- */
+.launch{ position:absolute; inset:0; z-index:70; display:none; align-items:center; justify-content:center; background:rgba(16,26,38,.62); }
+.launch.is-open{ display:flex; animation:fadeIn .25s ease both; }
+.launch__card{ position:relative; width:640px; max-width:92%; background:#fff; border-radius:28px; box-shadow:0 40px 90px rgba(16,26,38,.5); padding:54px 56px 46px; text-align:center; animation:launchPop .35s cubic-bezier(.16,1,.3,1) both; }
+@keyframes launchPop{ from{ opacity:0; transform:translateY(14px) scale(.98); } to{ opacity:1; transform:none; } }
+.launch__x{ position:absolute; top:16px; right:18px; width:42px; height:42px; border:0; background:transparent; color:var(--muted); font-size:30px; line-height:1; border-radius:50%; cursor:pointer; display:grid; place-items:center; }
+.launch__x:hover{ background:var(--mist); color:var(--navy); }
+.launch__spin{ width:66px; height:66px; margin:6px auto 26px; border-radius:50%; border:6px solid var(--pale); border-top-color:var(--teal); animation:spin 1s linear infinite; }
+@keyframes spin{ to{ transform:rotate(360deg); } }
+.launch__title{ margin:0 0 10px; font-size:32px; font-weight:700; color:var(--navy); }
+.launch__sub{ margin:0 auto; max-width:34ch; font-size:21px; line-height:1.45; color:var(--muted); }
+.launch__check{ width:74px; height:74px; margin:2px auto 22px; border-radius:50%; background:var(--teal); color:#fff; display:grid; place-items:center; animation:launchPop .4s cubic-bezier(.16,1,.3,1) both; }
+.launch__check svg{ width:40px; height:40px; }
+.launch__go{ display:inline-flex; align-items:center; gap:12px; margin:28px 0 0; padding:17px 40px; border-radius:16px; background:var(--teal); color:#fff; font-weight:700; font-size:22px; text-decoration:none; box-shadow:0 12px 30px rgba(0,152,190,.32); transition:transform .15s var(--ease), filter .15s ease; }
+.launch__go:hover{ transform:translateY(-2px); filter:brightness(1.03); }
+.launch__go svg{ width:24px; height:24px; }
+.launch__go.is-disabled{ background:#fff; color:var(--faint); border:2px solid var(--line); box-shadow:none; cursor:not-allowed; pointer-events:none; }
+.launch__back{ display:block; margin:18px auto 0; border:0; background:transparent; color:var(--muted); font:inherit; font-weight:600; font-size:18px; cursor:pointer; text-decoration:underline; }
+.launch__back:hover{ color:var(--navy); }
+@keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
+
+/* ================= CONTENT SCENE (S1) ================= */
+.cs{ flex:1 1 auto; min-height:0; position:relative; display:grid; grid-template-columns:820px 1fr; gap:20px; padding:2px 84px 26px 84px; align-items:center; }
+.cs__media{ position:relative; height:88%; align-self:center; border-radius:26px; overflow:hidden; background:var(--navy); box-shadow:0 26px 64px rgba(16,26,38,.36); opacity:0; transition:transform .7s var(--ease), box-shadow .6s ease, opacity .8s ease; }
+.cs__media img{ width:100%; height:100%; object-fit:cover; display:block; }
+.cs__media::after{ content:""; position:absolute; inset:0; z-index:1; background:linear-gradient(140deg, rgba(0,152,190,.15) 0%, rgba(34,47,85,.27) 100%); pointer-events:none; }
+.cs__hero{ position:absolute; inset:0; z-index:2; display:flex; align-items:flex-end; padding:46px; background:linear-gradient(180deg,rgba(20,30,48,0) 42%,rgba(20,30,48,.74)); opacity:0; transition:opacity .55s ease; pointer-events:none; }
+.cs__hero h1{ margin:0; font-size:62px; font-weight:700; color:#fff; line-height:1.06; text-shadow:0 3px 16px rgba(0,0,0,.4); } .cs__hero h1 .gene{ font-style:italic; }
+.cs__body{ display:flex; flex-direction:column; gap:18px; height:88%; align-self:center; padding:8px 6px; }
+/* content blocks share the Contents "boxed" theme: pale-blue fill, soft navy border, rounded */
+.cs__copy{ font-size:25px; line-height:1.36; color:var(--navy); margin:0; background:#eaf4fc; border:1.5px solid #bcd6ee; border-radius:16px; padding:17px 24px; box-shadow:0 4px 14px rgba(34,47,85,.05); } .cs__copy .gene{ font-style:italic; }
+.stats{ display:flex; gap:22px; }
+.stat{ flex:1 1 0; background:var(--mist); border:1.5px solid #bcd6ee; border-left:5px solid var(--teal); border-radius:16px; padding:16px 22px; text-align:center; box-shadow:0 4px 14px rgba(34,47,85,.05); }
+.stat__v{ font-size:34px; font-weight:700; color:var(--teal); } .stat__l{ font-size:17px; color:var(--teal-strong); line-height:1.3; margin-top:2px; }
+
+@keyframes pulseRing{ 0%{ box-shadow:0 6px 16px rgba(0,0,0,.08), 0 0 0 0 var(--pc);} 70%{ box-shadow:0 6px 16px rgba(0,0,0,.08), 0 0 0 14px transparent;} 100%{ box-shadow:0 6px 16px rgba(0,0,0,.08), 0 0 0 0 transparent;} }
+/* amber — centred horizontally */
+.amber{ align-self:center; text-align:center; }
+.amber__btn{ display:inline-flex; align-items:center; gap:16px; padding:16px 30px; border-radius:14px; border:0; background:var(--amber-box); color:var(--amber-ink); font:inherit; font-weight:600; font-size:26px; cursor:pointer; --pc:rgba(224,161,60,.55); animation:pulseRing 2.6s ease-in-out 1.2s infinite; transition:transform .15s var(--ease), filter .15s ease; }
+.amber__btn:hover{ filter:brightness(1.03); transform:translateY(-2px); animation:none; } .amber.is-open .amber__btn{ animation:none; }
+.amber__btn:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; } .amber__btn .gene{ font-style:italic; }
+.amber__ic{ width:36px; height:36px; color:var(--teal); flex:0 0 auto; }
+.amber__pop{ display:none; margin:14px auto 0; width:min(820px,100%); text-align:left; background:var(--amber-soft); border:2px solid var(--amber-box); border-radius:16px; padding:18px 24px; color:var(--amber-ink); font-size:21px; line-height:1.4; box-shadow:0 12px 30px rgba(122,90,18,.18); }
+.amber__pop .gene{ font-style:italic; } .amber__pop b{ display:block; margin:10px 0 2px; }
+.amber.is-open .amber__pop{ display:block; animation:pop .3s var(--ease) both; }
+@keyframes pop{ from{ opacity:0; transform:translateY(-8px);} to{ opacity:1; transform:none; } }
+/* takeaway — pinned to the bottom with room for its pop-out */
+.takeaway{ margin-top:auto; align-self:center; text-align:center; width:100%; }
+.takeaway__btn{ position:relative; z-index:2; display:inline-flex; align-items:center; padding:16px 32px; border-radius:12px; border:0; background:var(--teal); color:#fff; font:inherit; font-weight:600; font-size:24px; cursor:pointer; --pc:rgba(0,152,190,.5); animation:pulseRing 2.6s ease-in-out 1.8s infinite; transition:transform .15s var(--ease), filter .15s ease; }
+.takeaway__btn b{ font-weight:700; } .takeaway__btn:hover{ filter:brightness(.97); transform:translateY(-2px); animation:none; } .takeaway.is-open .takeaway__btn{ animation:none; }
+.takeaway__btn:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+.takeaway.is-open .takeaway__btn{ border-bottom-left-radius:0; border-bottom-right-radius:0; }
+.takeaway__rev{ display:none; margin:0 auto; max-width:820px; padding:18px 30px 14px; background:var(--teal); border-radius:0 0 14px 14px; color:#fff; font-size:22px; font-style:italic; line-height:1.35; } .takeaway__rev .gene{ font-style:italic; font-weight:700; }
+.takeaway.is-open .takeaway__rev{ display:block; animation:pop .32s var(--ease) both; }
+
+/* S1 staged entrance */
+.cs.img-in .cs__media{ opacity:1; transform:translateX(300px) scale(1.14); }   /* image fades in, prominent */
+.cs.title-in .cs__hero{ opacity:1; }                                            /* title eases in on image */
+.cs.laid .cs__media{ opacity:.88; transform:none; }                               /* both settle to resting */
+.cs.laid .cs__hero{ opacity:0; }
+.cs__body > *{ opacity:0; transform:translateY(18px); }
+.cs.laid .cs__body > *{ animation:fadeUp .85s cubic-bezier(.16,1,.3,1) both; }
+.cs.laid .cs__body > *:nth-child(1){animation-delay:.2s}.cs.laid .cs__body > *:nth-child(2){animation-delay:.75s}.cs.laid .cs__body > *:nth-child(3){animation-delay:1.3s}.cs.laid .cs__body > *:nth-child(4){animation-delay:1.85s}.cs.laid .cs__body > *:nth-child(5){animation-delay:2.4s}
+@keyframes fadeUp{ from{ opacity:0; transform:translateY(18px);} to{ opacity:1; transform:none; } }
+
+/* placeholders */
+.ph__body{ flex:1 1 auto; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; color:var(--faint); }
+.ph__body svg{ width:64px; height:64px; color:var(--line); } .ph__body p{ font-size:24px; font-weight:600; margin:0; }
+
+/* ================= HOW-TO ================= */
+.howto{ background:#dcecfb; }
+.howto__wrap{ flex:1 1 auto; display:flex; align-items:center; justify-content:center; padding:6px 70px 74px; }
+.howto__grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; width:min(1560px,100%); }
+.howto__row{ display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px; background:#fff; border:1.5px solid #bcd6ee; border-radius:18px; padding:26px 22px; box-shadow:0 4px 14px rgba(34,47,85,.05); opacity:0; transform:translateY(16px); }
+.howto.play .howto__row{ animation:fadeUp .8s cubic-bezier(.16,1,.3,1) both; }
+.howto.play .howto__row:nth-child(1){animation-delay:.2s}.howto.play .howto__row:nth-child(2){animation-delay:.55s}.howto.play .howto__row:nth-child(3){animation-delay:.9s}.howto.play .howto__row:nth-child(4){animation-delay:1.25s}.howto.play .howto__row:nth-child(5){animation-delay:1.6s}.howto.play .howto__row:nth-child(6){animation-delay:1.95s}
+.howto__ic{ flex:0 0 auto; width:82px; height:82px; border-radius:50%; background:#d9eff8; display:grid; place-items:center; } .howto__ic svg{ width:52%; height:52%; display:block; }
+.howto__row:nth-child(1) .howto__ic{ background:#e8eff8; }
+.howto__row:nth-child(2) .howto__ic{ background:#d3e9ee; }
+.howto__row:nth-child(3) .howto__ic{ background:#d4edf6; }
+.howto__row:nth-child(4) .howto__ic{ background:#fff3cf; }
+.howto__row:nth-child(5) .howto__ic{ background:#d9eff8; }
+.howto__row:nth-child(6) .howto__ic{ background:#e9f2fb; }
+.howto__tx b{ display:block; font-size:24px; font-weight:700; color:var(--navy); } .howto__tx b .gene{ font-style:italic; }
+.howto__tx span{ display:block; font-size:18.5px; color:var(--muted); line-height:1.36; margin-top:2px; } .howto__tx .gene{ font-style:italic; }
+/* duotone stat icon (DNA) + rotating takeaway plus */
+.stat{ position:relative; }
+.stat__ic{ position:absolute; top:12px; right:14px; width:42px; height:42px; opacity:.92; } .stat__ic svg{ width:100%; height:100%; }
+.takeaway__plus{ display:inline-flex; margin-left:16px; color:#fff; transition:transform .32s var(--ease); }
+.takeaway__plus svg{ width:24px; height:24px; }
+.takeaway.is-open .takeaway__plus{ transform:rotate(135deg); }
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+  .cs__media,.cs__body > *,.lo__item,.toc__item,.cta-btn,.howto__row{ opacity:1 !important; transform:none !important; }
+  .cs__media{ transform:none !important; } .cs__hero{ opacity:0 !important; }
+}
+</style>
+</head>
+<body>
+<div class="stage">
+  <main class="deck" id="deck" aria-label="TM9035 visual abstract — tepotinib in METex14 skipping NSCLC">
+
+    <!-- 1 · COVER -->
+    <section class="scene cover" data-scene="cover" aria-label="Cover">
+      <div class="cover__bg" aria-hidden="true"></div><div class="cover__scrim" aria-hidden="true"></div>
+      <div class="cover__in">
+        <h1 class="cover__title">Long-term efficacy &amp; safety of tepotinib in <span class="gene">MET</span>ex14 skipping NSCLC</h1>
+        <div class="cover__rule" aria-hidden="true"><i></i><b></b><i></i></div>
+      </div>
+      <div class="cover__bar">
+        <div class="brand"><img src="assets/touch-onc.png" alt="touchONCOLOGY" /></div>
+        <div class="cta-btn"><button class="cta-btn__b" data-go="1" type="button">Let's Get Started</button>
+          <span class="cta-btn__chev" aria-hidden="true"><svg viewBox="0 0 24 32" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 5 18 16 7 27"/></svg></span></div>
+      </div>
+    </section>
+
+    <!-- 2 · HOW TO USE THIS ACTIVITY -->
+    <section class="scene howto" data-scene="howto" aria-label="How to use this activity">
+      <header class="hd"><h1 class="hd__title">How to use this activity</h1><div class="hd__rule" aria-hidden="true"><i></i><b></b><i></i></div></header>
+      <div class="howto__wrap"><div class="howto__grid">
+        <div class="howto__row">
+          <span class="howto__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#4f9fc4" aria-hidden="true"><path fill="currentColor" d="M42.34 85.66a8 8 0 0 1 0-11.32l32-32A8 8 0 0 1 88 48v24h120a8 8 0 0 1 0 16H88v24a8 8 0 0 1-13.66 5.66Zm171.32 84.68l-32-32A8 8 0 0 0 168 144v24H48a8 8 0 0 0 0 16h120v24a8 8 0 0 0 13.66 5.66l32-32a8 8 0 0 0 0-11.32"/></svg></span>
+          <span class="howto__tx"><b>Move between screens</b><span>Use the <b>&#8249; &#8250;</b> arrows on screen, or your keyboard arrows.</span></span>
+        </div>
+        <div class="howto__row">
+          <span class="howto__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#007a98" aria-hidden="true"><path fill="currentColor" d="m220.49 207.8l-12.69 12.69a12 12 0 0 1-17 0l-56.57-56.57L115 214.08l-.13.33a15.84 15.84 0 0 1-14.61 9.59h-.78a15.82 15.82 0 0 1-14.41-11L32.8 52.92A15.95 15.95 0 0 1 52.92 32.8L213 85.07a16 16 0 0 1 1.41 29.8l-.33.13l-50.16 19.27l56.57 56.56a12 12 0 0 1 0 16.97"/></svg></span>
+          <span class="howto__tx"><b>See definitions</b><span>Hover a <span class="ac" style="text-decoration-color:var(--teal)">dotted term</span> to see what an acronym means.</span></span>
+        </div>
+        <div class="howto__row">
+          <span class="howto__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#0098be" aria-hidden="true"><path fill="currentColor" d="M116 72v88a48.05 48.05 0 0 1-48 48a8 8 0 0 1 0-16a32 32 0 0 0 32-32v-8H40a16 16 0 0 1-16-16V72a16 16 0 0 1 16-16h60a16 16 0 0 1 16 16m100-16h-60a16 16 0 0 0-16 16v64a16 16 0 0 0 16 16h60v8a32 32 0 0 1-32 32a8 8 0 0 0 0 16a48.05 48.05 0 0 0 48-48V72a16 16 0 0 0-16-16"/></svg></span>
+          <span class="howto__tx"><b>Open references</b><span>Select a superscript number for its citation; select away to close.</span></span>
+        </div>
+        <div class="howto__row">
+          <span class="howto__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#e3a51e" aria-hidden="true"><path fill="currentColor" d="M176 232a8 8 0 0 1-8 8H88a8 8 0 0 1 0-16h80a8 8 0 0 1 8 8m40-128a87.55 87.55 0 0 1-33.64 69.21A16.24 16.24 0 0 0 176 186v6a16 16 0 0 1-16 16H96a16 16 0 0 1-16-16v-6a16 16 0 0 0-6.23-12.66A87.59 87.59 0 0 1 40 104.49C39.74 56.83 78.26 17.14 125.88 16A88 88 0 0 1 216 104m-32.11-9.34a57.6 57.6 0 0 0-46.56-46.55a8 8 0 0 0-2.66 15.78c16.57 2.79 30.63 16.85 33.44 33.45A8 8 0 0 0 176 104a9 9 0 0 0 1.35-.11a8 8 0 0 0 6.54-9.23"/></svg></span>
+          <span class="howto__tx"><b>Reveal explainers</b><span>Select the lightbulb for a quick &ldquo;what is&hellip;&rdquo; explainer.</span></span>
+        </div>
+        <div class="howto__row">
+          <span class="howto__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#0098be" aria-hidden="true"><path fill="currentColor" d="M208 32H48a16 16 0 0 0-16 16v160a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16m-24 104h-48v48a8 8 0 0 1-16 0v-48H72a8 8 0 0 1 0-16h48V72a8 8 0 0 1 16 0v48h48a8 8 0 0 1 0 16"/></svg></span>
+          <span class="howto__tx"><b>Get the takeaway</b><span>Select the <b>Takeaway +</b> to reveal the key message for a scene.</span></span>
+        </div>
+        <div class="howto__row">
+          <span class="howto__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#6aa9cf" aria-hidden="true"><path fill="currentColor" d="M208 32H48a16 16 0 0 0-16 16v160a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16M68 188a12 12 0 1 1 12-12a12 12 0 0 1-12 12m0-48a12 12 0 1 1 12-12a12 12 0 0 1-12 12m0-48a12 12 0 1 1 12-12a12 12 0 0 1-12 12m124 92h-88a8 8 0 0 1 0-16h88a8 8 0 0 1 0 16m0-48h-88a8 8 0 0 1 0-16h88a8 8 0 0 1 0 16m0-48h-88a8 8 0 0 1 0-16h88a8 8 0 0 1 0 16"/></svg></span>
+          <span class="howto__tx"><b>Jump around</b><span>Use <b>Contents</b> to jump to any section, and <b>Back</b> to return where you were.</span></span>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- 3 · LEARNING OBJECTIVES -->
+    <section class="scene lo" data-scene="lo" aria-label="Learning objectives">
+      <div class="lo__wrap"><div class="lo__card">
+        <div class="lo__head"><h2>After completing this touchINTERACTIVE, you should be better able to:</h2></div>
+        <div class="lo__body">
+          <p class="lo__item">1. Recognize the role of <span class="ac" data-gloss="MET"><span class="gene">MET</span></span> pathway dysregulation and <span class="ac" data-gloss="METex14"><span class="gene">MET</span>ex14</span> skipping as an oncogenic driver in <span class="ac" data-gloss="NSCLC">NSCLC</span>, and its prognostic and therapeutic significance.</p>
+          <p class="lo__item">2. Summarize the long-term (&ge;3-year) efficacy of tepotinib in <span class="ac" data-gloss="METex14"><span class="gene">MET</span>ex14</span> skipping <span class="ac" data-gloss="NSCLC">NSCLC</span> in VISION - in treatment-na&iuml;ve and previously treated patients.</p>
+          <p class="lo__item">3. Evaluate the long-term safety and tolerability profile of tepotinib and its practical management.</p>
+          <p class="lo__item">4. Assess the consistency of outcomes across clinically relevant subgroups, lines of therapy and in Asian patients.</p>
+        </div>
+      </div></div>
+      <div class="lo__foot" aria-hidden="true"></div>
+    </section>
+
+    <!-- 3 · TABLE OF CONTENTS -->
+    <section class="scene toc" data-scene="toc" aria-label="Table of contents">
+      <div class="toc__wrap"><h2>Table of Contents</h2><div class="toc__list" id="tocList"></div></div>
+    </section>
+
+    <!-- 4 · SCENE 1 -->
+    <section class="scene s1" data-scene="s1" aria-label="Scene 1 — NSCLC and the MET driver">
+      <header class="hd"><h1 class="hd__title">NSCLC &amp; the <span class="gene">MET</span> driver</h1><div class="hd__rule" aria-hidden="true"><i></i><b></b><i></i></div></header>
+      <div class="cs">
+        <figure class="cs__media"><img src="assets/s1.jpg" alt="Clinician viewing a chest X-ray with highlighted lung nodules." />
+          <div class="cs__hero"><h1>NSCLC &amp; the <span class="gene">MET</span> driver</h1></div>
+        </figure>
+        <div class="cs__body">
+          <p class="cs__copy">The <span class="ac" data-gloss="MET"><span class="gene">MET</span></span> pathway is critical for normal physiology; its dysregulation - most notably <span class="ac" data-gloss="METex14"><span class="gene">MET</span>ex14</span> skipping, but also <span class="ac" data-gloss="MET"><span class="gene">MET</span></span> amplification and fusions - drives proliferation, survival, invasion and metastasis in <span class="ac" data-gloss="NSCLC">NSCLC</span>.<span class="sup" data-ref="r-1" tabindex="0" role="button" aria-label="Reference 1">1</span></p>
+          <p class="cs__copy">It is a primary oncogenic driver associated with poor prognosis, but one that confers sensitivity to selective <span class="ac" data-gloss="MET"><span class="gene">MET</span></span> <span class="ac" data-gloss="TKI">TKIs</span>.<span class="sup" data-ref="r-35" tabindex="0" role="button" aria-label="References 3 to 5">3&ndash;5</span></p>
+          <div class="stats">
+            <div class="stat"><span class="stat__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#0098be" aria-hidden="true"><path fill="currentColor" d="M200 204.5V232a8 8 0 0 1-16 0v-27.5a63.67 63.67 0 0 0-35.38-57.25l-48.4-24.19A79.58 79.58 0 0 1 56 51.5V24a8 8 0 0 1 16 0v27.5a63.67 63.67 0 0 0 35.38 57.25l48.4 24.19A79.58 79.58 0 0 1 200 204.5M163.18 192H83.91a8 8 0 0 1-8-8.53a8.18 8.18 0 0 1 8.27-7.47h65.52a4 4 0 0 0 2.75-6.9a48.2 48.2 0 0 0-11-7.53L94.8 138.23a4 4 0 0 0-4.08.3A79.51 79.51 0 0 0 56 204.5v27.23a8.17 8.17 0 0 0 7.47 8.27a8 8 0 0 0 8.53-8v-16h92a4 4 0 0 0 4-4v-7.5a49 49 0 0 0-.9-9.32a4 4 0 0 0-3.92-3.18m28.29-176a8.17 8.17 0 0 0-7.47 8.27V40H92a4 4 0 0 0-4 4v7.5a49 49 0 0 0 .9 9.32A4 4 0 0 0 92.82 64h79a8.18 8.18 0 0 1 8.25 7.47a8 8 0 0 1-8 8.53H106.3a4 4 0 0 0-2.75 6.9a48.2 48.2 0 0 0 11 7.53l46.67 23.34a4 4 0 0 0 4.08-.3A79.51 79.51 0 0 0 200 51.5V24a8 8 0 0 0-8.53-8"/></svg></span><div class="stat__v">~35%</div><div class="stat__l">of <span class="ac" data-gloss="NSCLC">NSCLC</span> carry actionable genomic alterations <span class="sup" data-ref="r-26" tabindex="0" role="button" aria-label="References 2 and 6">2,6</span></div></div>
+            <div class="stat"><span class="stat__ic" aria-hidden="true"><svg viewBox="0 0 24 24" style="color:#0098be" aria-hidden="true"><path fill="currentColor" d="M4 2h2v2c0 1.44.68 2.61 1.88 3.78c.86.83 2.01 1.63 3.21 2.42l-1.83 1.19C8.27 10.72 7.31 10 6.5 9.21C5.07 7.82 4 6.1 4 4zm14 0h2v2c0 2.1-1.07 3.82-2.5 5.21c-1.41 1.38-3.21 2.52-4.96 3.63c-1.75 1.12-3.45 2.21-4.66 3.38C6.68 17.39 6 18.56 6 20v2H4v-2c0-2.1 1.07-3.82 2.5-5.21c1.41-1.38 3.21-2.52 4.96-3.63c1.75-1.12 3.45-2.21 4.66-3.38C17.32 6.61 18 5.44 18 4zm-3.26 10.61c.99.67 1.95 1.39 2.76 2.18C18.93 16.18 20 17.9 20 20v2h-2v-2c0-1.44-.68-2.61-1.88-3.78c-.86-.83-2.01-1.63-3.21-2.42zM7 3h10v1l-.06.5H7.06L7 4zm.68 3h8.64c-.24.34-.52.69-.9 1.06l-.51.44H9.07l-.49-.44c-.38-.37-.66-.72-.9-1.06m1.41 10.5h5.84l.49.44c.38.37.66.72.9 1.06H7.68c.24-.34.52-.69.9-1.06zm-2.03 3h9.88l.06.5v1H7v-1z"/></svg></span><div class="stat__v">~2&ndash;4%</div><div class="stat__l"><span class="ac" data-gloss="METex14"><span class="gene">MET</span>ex14</span> skipping prevalence <span class="sup" data-ref="r-13" tabindex="0" role="button" aria-label="References 1 to 3">1&ndash;3</span></div></div>
+          </div>
+          <div class="amber" id="s1amber">
+            <button class="amber__btn" type="button" aria-expanded="false"><span class="amber__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#7a5a12" aria-hidden="true"><path fill="currentColor" d="M176 232a8 8 0 0 1-8 8H88a8 8 0 0 1 0-16h80a8 8 0 0 1 8 8m40-128a87.55 87.55 0 0 1-33.64 69.21A16.24 16.24 0 0 0 176 186v6a16 16 0 0 1-16 16H96a16 16 0 0 1-16-16v-6a16 16 0 0 0-6.23-12.66A87.59 87.59 0 0 1 40 104.49C39.74 56.83 78.26 17.14 125.88 16A88 88 0 0 1 216 104m-32.11-9.34a57.6 57.6 0 0 0-46.56-46.55a8 8 0 0 0-2.66 15.78c16.57 2.79 30.63 16.85 33.44 33.45A8 8 0 0 0 176 104a9 9 0 0 0 1.35-.11a8 8 0 0 0 6.54-9.23"/></svg></span><span class="amber__lab">What is <span class="gene">MET</span>ex14 skipping?</span></button>
+            <div class="amber__pop">A splicing alteration that skips <span class="gene">MET</span> exon 14, yielding a <span class="gene">MET</span> receptor that resists breakdown and signals continuously.<b>Why does it matter?</b>A primary oncogenic driver linked to poor prognosis, but one that is sensitive to selective <span class="gene">MET</span> TKIs.</div>
+          </div>
+          <div class="takeaway" id="s1take">
+            <button class="takeaway__btn" type="button" aria-expanded="false"><span>Select the takeaway</span><span class="takeaway__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button>
+            <div class="takeaway__rev"><span class="gene">MET</span>ex14 skipping is a rare but actionable oncogenic driver.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6-11 · placeholders -->
+    <section class="scene s2" data-scene="s2" aria-label="Scene 2 — Introducing tepotinib">
+      <header class="hd"><h1 class="hd__title">Introducing tepotinib</h1><div class="hd__rule" aria-hidden="true"><i></i><b></b><i></i></div></header>
+      <div class="cs cs--right">
+        <div class="cs__body">
+          <p class="cs__copy">Multiple <span class="ac" data-gloss="MET"><span class="gene">MET</span></span> <span class="ac" data-gloss="TKI">TKIs</span>; including tepotinib and capmatinib - are approved<span class="sup" data-ref="r2-15" tabindex="0" role="button" aria-label="References 1 to 5">1&ndash;5</span> and recommended as targeted options in key international guidelines, including <span class="ac" data-gloss="ESMO">ESMO</span>,<span class="sup" data-ref="r2-67" tabindex="0" role="button" aria-label="References 6 and 7">6,7</span> for advanced/metastatic <span class="ac" data-gloss="METex14"><span class="gene">MET</span>ex14</span> skipping <span class="ac" data-gloss="NSCLC">NSCLC</span>.</p>
+          <p class="cs__copy">Tepotinib is an oral, once-daily, highly selective <span class="ac" data-gloss="MET"><span class="gene">MET</span></span> <span class="ac" data-gloss="TKI">TKI</span> approved in multiple countries.<span class="sup" data-ref="r2-13" tabindex="0" role="button" aria-label="References 1 to 3">1&ndash;3</span></p>
+          <div class="eu"><span class="eu__ic" aria-hidden="true"><svg viewBox="0 0 256 256" aria-hidden="true"><path fill="currentColor" d="M225.86 102.82c-3.77-3.94-7.67-8-9.14-11.57c-1.36-3.27-1.44-8.69-1.52-13.94c-.15-9.76-.31-20.82-8-28.51s-18.75-7.85-28.51-8c-5.25-.08-10.67-.16-13.94-1.52c-3.56-1.47-7.63-5.37-11.57-9.14C146.28 23.51 138.44 16 128 16s-18.27 7.51-25.18 14.14c-3.94 3.77-8 7.67-11.57 9.14c-3.25 1.36-8.69 1.44-13.94 1.52c-9.76.15-20.82.31-28.51 8s-7.8 18.75-8 28.51c-.08 5.25-.16 10.67-1.52 13.94c-1.47 3.56-5.37 7.63-9.14 11.57C23.51 109.72 16 117.56 16 128s7.51 18.27 14.14 25.18c3.77 3.94 7.67 8 9.14 11.57c1.36 3.27 1.44 8.69 1.52 13.94c.15 9.76.31 20.82 8 28.51s18.75 7.85 28.51 8c5.25.08 10.67.16 13.94 1.52c3.56 1.47 7.63 5.37 11.57 9.14c6.9 6.63 14.74 14.14 25.18 14.14s18.27-7.51 25.18-14.14c3.94-3.77 8-7.67 11.57-9.14c3.27-1.36 8.69-1.44 13.94-1.52c9.76-.15 20.82-.31 28.51-8s7.85-18.75 8-28.51c.08-5.25.16-10.67 1.52-13.94c1.47-3.56 5.37-7.63 9.14-11.57c6.63-6.9 14.14-14.74 14.14-25.18s-7.51-18.27-14.14-25.18m-52.2 6.84l-56 56a8 8 0 0 1-11.32 0l-24-24a8 8 0 0 1 11.32-11.32L112 148.69l50.34-50.35a8 8 0 0 1 11.32 11.32"/></svg></span><span><b>EU indication:</b> for patients after immunotherapy and/or platinum-based chemotherapy.<span class="sup" data-ref="r2-3" tabindex="0" role="button" aria-label="Reference 3">3</span></span></div>
+          <div class="amber" id="s2amber">
+            <button class="amber__btn" type="button" aria-expanded="false"><span class="amber__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#7a5a12" aria-hidden="true"><path fill="currentColor" d="M176 232a8 8 0 0 1-8 8H88a8 8 0 0 1 0-16h80a8 8 0 0 1 8 8m40-128a87.55 87.55 0 0 1-33.64 69.21A16.24 16.24 0 0 0 176 186v6a16 16 0 0 1-16 16H96a16 16 0 0 1-16-16v-6a16 16 0 0 0-6.23-12.66A87.59 87.59 0 0 1 40 104.49C39.74 56.83 78.26 17.14 125.88 16A88 88 0 0 1 216 104m-32.11-9.34a57.6 57.6 0 0 0-46.56-46.55a8 8 0 0 0-2.66 15.78c16.57 2.79 30.63 16.85 33.44 33.45A8 8 0 0 0 176 104a9 9 0 0 0 1.35-.11a8 8 0 0 0 6.54-9.23"/></svg></span><span class="amber__lab">How does it work?</span></button>
+            <div class="amber__pop">Tepotinib selectively inhibits <span class="gene">MET</span>, switching off the constitutive signalling caused by <span class="gene">MET</span>ex14 skipping.</div>
+          </div>
+          <div class="takeaway" id="s2take">
+            <button class="takeaway__btn" type="button" aria-expanded="false"><span>Select the takeaway</span><span class="takeaway__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button>
+            <div class="takeaway__rev">Tepotinib is an oral, once-daily, selective <span class="gene">MET</span> TKI.</div>
+          </div>
+        </div>
+        <figure class="cs__media"><img src="assets/s2.jpg" alt="A tepotinib tablet and blister pack on a clinical surface." />
+          <div class="cs__hero"><h1>Introducing tepotinib</h1></div>
+        </figure>
+      </div>
+    </section>
+    <section class="scene s3" data-scene="s3" aria-label="Scene 3 — The VISION trial">
+      <header class="hd"><h1 class="hd__title">The VISION trial</h1><div class="hd__rule" aria-hidden="true"><i></i><b></b><i></i></div></header>
+      <div class="cs">
+        <figure class="cs__media"><img src="assets/s3.jpg" alt="Two clinicians in discussion in a hospital setting." />
+          <div class="cs__hero"><h1>The VISION trial</h1></div>
+        </figure>
+        <div class="cs__body">
+          <div class="tabs">
+            <div class="tabs__hint"><span>Select</span><span class="tabs__hintchev" aria-hidden="true">▾</span><span>to move tabs</span></div>
+            <div class="tabs__bar" role="tablist" aria-label="VISION trial details">
+              <button class="tab is-active" role="tab" aria-selected="true" data-tab="0" type="button">Design</button>
+              <button class="tab" role="tab" aria-selected="false" data-tab="1" type="button">Cohort <span class="tab__chev" aria-hidden="true">▾</span></button>
+              <button class="tab" role="tab" aria-selected="false" data-tab="2" type="button">Endpoints <span class="tab__chev" aria-hidden="true">▾</span></button>
+            </div>
+            <div class="tabs__panels">
+              <div class="tabpanel is-active" role="tabpanel" data-panel="0">
+                <h3 class="tabpanel__h">Study design</h3>
+                <p class="tabpanel__p">A Phase 2, single-arm, open-label study of tepotinib in advanced <span class="ac" data-gloss="NSCLC">NSCLC</span> with <span class="ac" data-gloss="MET"><span class="gene">MET</span></span> alterations.<span class="sup" data-ref="r3-1" tabindex="0" role="button" aria-label="Reference 1">1</span> 313 patients with <span class="ac" data-gloss="METex14"><span class="gene">MET</span>ex14</span> skipping <span class="ac" data-gloss="NSCLC">NSCLC</span> (liquid and/or tissue biopsy), now with ≥3-year follow-up (data cut-off 20 May 2024).<span class="sup" data-ref="r3-2" tabindex="0" role="button" aria-label="Reference 2">2</span></p>
+              </div>
+              <div class="tabpanel" role="tabpanel" data-panel="1">
+                <h3 class="tabpanel__h">Cohort &amp; dosing</h3>
+                <p class="tabpanel__p">Patients received tepotinib 500 mg (450 mg active moiety), orally once daily, continued until disease progression, intolerable toxicity, or withdrawal of consent.</p>
+              </div>
+              <div class="tabpanel" role="tabpanel" data-panel="2">
+                <h3 class="tabpanel__h">Endpoints</h3>
+                <p class="tabpanel__p"><b>Primary:</b> <span class="ac" data-gloss="ORR">ORR</span> by independent review committee (<span class="ac" data-gloss="RECIST">RECIST</span> v1.1).<br><b>Secondary:</b> <span class="ac" data-gloss="DOR">DOR</span>, <span class="ac" data-gloss="PFS">PFS</span>, <span class="ac" data-gloss="OS">OS</span> and safety.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="scene s4" data-scene="s4" aria-label="Scene 4 &mdash; Long-term efficacy">
+      <header class="hd"><h1 class="hd__title">Long-term efficacy</h1><div class="hd__rule" aria-hidden="true"><i></i><b></b><i></i></div></header>
+      <div class="eff">
+        <div class="navprompt"><p class="navprompt__box"><span class="navprompt__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span><span>After &ge;3 years&rsquo; follow-up in VISION (N&nbsp;=&nbsp;313), tepotinib showed robust, durable efficacy.<span class="sup" data-ref="r4-1" tabindex="0" role="button" aria-label="Reference 1">1</span> Reveal each outcome to explore.</span></p></div>
+        <div class="eff__cols">
+          <section class="panel" aria-label="Overall response rate">
+            <div class="orr" id="s4orr">
+              <div class="orr__eyebrow">Overall Response Rate (ORR)<span class="sup" data-ref="r4-1" tabindex="0" role="button" aria-label="Reference 1">1</span></div>
+              <div class="orrCTA">
+                <p class="orrCTA__p">The primary endpoint, sustained after &ge;3 years&rsquo; follow-up.</p>
+                <button class="reveal-btn" id="s4orrReveal" type="button">Reveal the response rate <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><polyline points="13 6 19 12 13 18"/></svg></button>
+              </div>
+              <button class="ring" id="s4ring" type="button" aria-label="Overall response rate 51.8 percent, 95% CI 46.1 to 57.4"><span class="ring__hole"><span><span class="ring__val" id="s4ringVal">51.8%</span><span class="ring__ci">95% CI 46.1&ndash;57.4</span></span></span></button>
+              <p class="orr__cap">Around <b>half of patients</b> achieved an objective response, sustained with long-term follow-up.</p>
+            </div>
+          </section>
+          <section class="panel" aria-label="Time-to-event outcomes">
+            <div class="tte" id="s4tte">
+              <div class="tte__head"><span class="tte__title">Time-to-event outcomes <span>median (95% CI), months</span></span><button class="split" id="s4split" type="button" disabled aria-pressed="false"><span class="dot" style="background:var(--pink)"></span><span class="dot" style="background:var(--green)"></span> Split by prior treatment</button></div>
+              <div class="tteCTA"><p>Three time-to-event outcomes were sustained after &ge;3 years&rsquo; follow-up.</p><button class="reveal-btn" id="s4reveal" type="button">Reveal DOR &middot; PFS &middot; OS <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><polyline points="13 6 19 12 13 18"/></svg></button></div>
+              <div class="bars">
+                <div class="metric"><div class="metric__top"><span class="metric__name">DOR <span>duration of response</span></span><span class="metric__val">18.0 <small>(12.6&ndash;31.8)</small></span></div><div class="track"><span class="fill" style="width:50.0%"></span></div><div class="subs"><div class="sub"><span class="sub__lab naive">Na&iuml;ve</span><span class="sub__track"><span class="sub__fill naive" style="width:88.1%"></span></span><span class="sub__val naive">31.7 <small>(13.8&ndash;46.4)</small></span></div><div class="sub"><span class="sub__lab treated">Treated</span><span class="sub__track"><span class="sub__fill treated" style="width:35.0%"></span></span><span class="sub__val treated">12.6 <small>(9.5&ndash;18.5)</small></span></div></div></div>
+                <div class="metric"><div class="metric__top"><span class="metric__name">PFS <span>progression-free survival</span></span><span class="metric__val">11.2 <small>(9.5&ndash;13.8)</small></span></div><div class="track"><span class="fill" style="width:31.1%"></span></div><div class="subs"><div class="sub"><span class="sub__lab naive">Na&iuml;ve</span><span class="sub__track"><span class="sub__fill naive" style="width:35.0%"></span></span><span class="sub__val naive">12.6 <small>(9.7&ndash;17.7)</small></span></div><div class="sub"><span class="sub__lab treated">Treated</span><span class="sub__track"><span class="sub__fill treated" style="width:30.6%"></span></span><span class="sub__val treated">11.0 <small>(8.2&ndash;13.7)</small></span></div></div></div>
+                <div class="metric"><div class="metric__top"><span class="metric__name">OS <span>overall survival</span></span><span class="metric__val">19.7 <small>(16.2&ndash;22.3)</small></span></div><div class="track"><span class="fill" style="width:54.7%"></span></div><div class="subs"><div class="sub"><span class="sub__lab naive">Na&iuml;ve</span><span class="sub__track"><span class="sub__fill naive" style="width:58.6%"></span></span><span class="sub__val naive">21.1 <small>(14.2&ndash;24.5)</small></span></div><div class="sub"><span class="sub__lab treated">Treated</span><span class="sub__track"><span class="sub__fill treated" style="width:53.6%"></span></span><span class="sub__val treated">19.3 <small>(15.6&ndash;21.0)</small></span></div></div></div>
+                <div class="axis" aria-hidden="true"><span>0</span><span>12</span><span>24</span><span>36 months</span></div>
+              </div>
+              <p class="tte__foot">Median months. Treatment-na&iuml;ve n&nbsp;=&nbsp;164 &middot; previously treated n&nbsp;=&nbsp;149. ORR is reported for the overall population only.</p>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+    <section class="scene s5" data-scene="s5" aria-label="Scene 5 &mdash; Long-term safety">
+      <header class="hd"><h1 class="hd__title">Long-term safety</h1><div class="hd__rule" aria-hidden="true"><i></i><b></b><i></i></div></header>
+      <div class="cs cs--right">
+        <div class="cs__body">
+          <p class="cs__copy">The safety profile of tepotinib remained manageable in patients with <span class="ac" data-gloss="METex14"><span class="gene">MET</span>ex14</span> skipping <span class="ac" data-gloss="NSCLC">NSCLC</span> after &ge;3 years of follow-up.<span class="sup" data-ref="r5-1" tabindex="0" role="button" aria-label="Reference 1">1</span> Most events were handled with dose modification rather than discontinuation.</p>
+          <div class="stats">
+            <div class="stat"><span class="stat__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#0098be" aria-hidden="true"><path fill="currentColor" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m37.66 117.66l-32 32a8 8 0 0 1-11.32 0l-32-32a8 8 0 0 1 11.32-11.32L120 148.69V88a8 8 0 0 1 16 0v60.69l18.34-18.35a8 8 0 0 1 11.32 11.32"/></svg></span><div class="stat__v">33.2%</div><div class="stat__l"><span class="ac" data-gloss="TRAE">TRAE</span> &rarr; dose reduction</div></div>
+            <div class="stat"><span class="stat__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#0098be" aria-hidden="true"><path fill="currentColor" d="M128 24a104 104 0 1 0 104 104A104.13 104.13 0 0 0 128 24m-16 136a8 8 0 0 1-16 0V96a8 8 0 0 1 16 0Zm48 0a8 8 0 0 1-16 0V96a8 8 0 0 1 16 0Z"/></svg></span><div class="stat__v">43.8%</div><div class="stat__l"><span class="ac" data-gloss="TRAE">TRAE</span> &rarr; interruption</div></div>
+            <div class="stat"><span class="stat__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#0098be" aria-hidden="true"><path fill="currentColor" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m37.66 130.34a8 8 0 0 1-11.32 11.32L128 139.31l-26.34 26.35a8 8 0 0 1-11.32-11.32L116.69 128l-26.35-26.34a8 8 0 0 1 11.32-11.32L128 116.69l26.34-26.35a8 8 0 0 1 11.32 11.32L139.31 128Z"/></svg></span><div class="stat__v">15.7%</div><div class="stat__l"><span class="ac" data-gloss="TRAE">TRAE</span> &rarr; discontinuation</div></div>
+          </div>
+          <div class="qa" id="s5qa">
+            <button class="qa__btn" id="s5q1" type="button" aria-expanded="false"><span>What was the most common <span class="ac" data-gloss="TRAE">TRAE</span>?</span><span class="qa__chev" aria-hidden="true">&#9662;</span></button>
+            <div class="qa__a1">
+              <div class="qa__ans">Peripheral edema</div>
+              <button class="qa__btn qa__btn--sub" id="s5q2" type="button" aria-expanded="false"><span>How was this managed?</span><span class="qa__chev" aria-hidden="true">&#9662;</span></button>
+              <div class="qa__a2">
+                <div class="edema-stats">
+                  <div class="estat"><span class="estat__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#0098be" aria-hidden="true"><path fill="currentColor" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m37.66 117.66l-32 32a8 8 0 0 1-11.32 0l-32-32a8 8 0 0 1 11.32-11.32L120 148.69V88a8 8 0 0 1 16 0v60.69l18.34-18.35a8 8 0 0 1 11.32 11.32"/></svg></span><b>15.3%</b><span>dose reduction</span></div>
+                  <div class="estat"><span class="estat__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#0098be" aria-hidden="true"><path fill="currentColor" d="M128 24a104 104 0 1 0 104 104A104.13 104.13 0 0 0 128 24m-16 136a8 8 0 0 1-16 0V96a8 8 0 0 1 16 0Zm48 0a8 8 0 0 1-16 0V96a8 8 0 0 1 16 0Z"/></svg></span><b>18.8%</b><span>interruption</span></div>
+                  <div class="estat"><span class="estat__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#0098be" aria-hidden="true"><path fill="currentColor" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m37.66 130.34a8 8 0 0 1-11.32 11.32L128 139.31l-26.34 26.35a8 8 0 0 1-11.32-11.32L116.69 128l-26.35-26.34a8 8 0 0 1 11.32-11.32L128 116.69l26.34-26.35a8 8 0 0 1 11.32 11.32L139.31 128Z"/></svg></span><b>6.1%</b><span>discontinuation</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="qa__hint" id="s5hint">Select <span aria-hidden="true">&#9662;</span> to show the answer</div>
+          <div class="takeaway" id="s5take">
+            <button class="takeaway__btn" type="button" aria-expanded="false"><span>Select the takeaway</span><span class="takeaway__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button>
+            <div class="takeaway__rev">Manageable over &ge;3 years: most treatment-related events, including peripheral edema, were handled with dose modification rather than discontinuation.</div>
+          </div>
+        </div>
+        <figure class="cs__media"><img src="assets/s5.jpg" alt="A patient holding a blister pack of tablets and a medicine information leaflet." />
+          <div class="cs__hero"><h1>Long-term safety</h1></div>
+        </figure>
+      </div>
+    </section>
+    <section class="scene s6" data-scene="s6" aria-label="Scene 6 &mdash; Consistency across subgroups">
+      <header class="hd"><h1 class="hd__title">Consistency across subgroups</h1><div class="hd__rule" aria-hidden="true"><i></i><b></b><i></i></div></header>
+      <div class="cs">
+        <figure class="cs__media"><img src="assets/s6.jpg" alt="A grid of diverse patients representing different subgroups." />
+          <div class="cs__hero"><h1>Consistency across subgroups</h1></div>
+        </figure>
+        <div class="cs__body">
+          <div class="sglist">
+            <div class="sgbullet"><span class="sgbullet__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#0098be" aria-hidden="true"><path fill="currentColor" d="M64.12 147.8a4 4 0 0 1-4 4.2H16a8 8 0 0 1-7.8-6.17a8.35 8.35 0 0 1 1.62-6.93A67.8 67.8 0 0 1 37 117.51a40 40 0 1 1 66.46-35.8a3.94 3.94 0 0 1-2.27 4.18A64.08 64.08 0 0 0 64 144c0 1.28 0 2.54.12 3.8m182-8.91A67.76 67.76 0 0 0 219 117.51a40 40 0 1 0-66.46-35.8a3.94 3.94 0 0 0 2.27 4.18A64.08 64.08 0 0 1 192 144c0 1.28 0 2.54-.12 3.8a4 4 0 0 0 4 4.2H240a8 8 0 0 0 7.8-6.17a8.33 8.33 0 0 0-1.63-6.94Zm-89 43.18a48 48 0 1 0-58.37 0A72.13 72.13 0 0 0 65.07 212A8 8 0 0 0 72 224h112a8 8 0 0 0 6.93-12a72.15 72.15 0 0 0-33.74-29.93Z"/></svg></span><span><span class="ac" data-gloss="ORR">ORR</span> was consistent across all subgroups assessed - sex, age, smoking history, histology, <span class="ac" data-gloss="ECOG PS">ECOG PS</span> and baseline brain metastases.<span class="sup" data-ref="r6-1" tabindex="0" role="button" aria-label="Reference 1">1</span></span></div>
+            <div class="sgbullet"><span class="sgbullet__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#007a98" aria-hidden="true"><g fill="currentColor"><path d="m12 111l112 64a8 8 0 0 0 7.94 0l112-64a8 8 0 0 0 0-13.9l-112-64a8 8 0 0 0-7.94 0l-112 64a8 8 0 0 0 0 13.9"/><path d="m236 137.05l-108 61.74l-108-61.74A8 8 0 1 0 12 151l112 64a8 8 0 0 0 7.94 0l112-64a8 8 0 1 0-7.94-13.9Z"/></g></svg></span><span>Across treatment lines, efficacy was consistent with previous reports, particularly first-line.<span class="sup" data-ref="r6-2" tabindex="0" role="button" aria-label="Reference 2">2</span></span></div>
+            <div class="sgbullet"><span class="sgbullet__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#3f8fbf" aria-hidden="true"><path fill="currentColor" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24M62.29 186.47l2.52-1.65A16 16 0 0 0 72 171.53l.21-36.23L93.17 104a4 4 0 0 0 .32.22l19.67 12.87a15.94 15.94 0 0 0 11.35 2.77l31.49-4.27a16 16 0 0 0 10-5.41l22.17-25.76A16 16 0 0 0 192 74v-6.33A87.87 87.87 0 0 1 211.77 155l-16.14-14.76a16 16 0 0 0-16.93-3l-30.46 12.65a16.08 16.08 0 0 0-9.68 12.45l-2.39 16.19a16 16 0 0 0 11.77 17.81L169.4 202l2.36 2.37a87.88 87.88 0 0 1-109.47-17.9"/></svg></span><span>In Asian patients (n=106), tepotinib showed robust, durable long-term efficacy and a manageable safety profile.<span class="sup" data-ref="r6-3" tabindex="0" role="button" aria-label="Reference 3">3</span></span></div>
+          </div>
+          <div class="sgcards">
+            <div class="sgcard"><div class="sgcard__h"><span class="sgcard__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#0098be" aria-hidden="true"><path fill="currentColor" d="M221.87 83.16A104.1 104.1 0 1 1 195.67 49l22.67-22.68a8 8 0 0 1 11.32 11.32L167.6 99.71l-37.71 37.71l-23.95 23.95a40 40 0 0 0 62-35.67a8 8 0 1 1 16-.9a56 56 0 0 1-95.5 42.79a56 56 0 0 1 73.13-84.43l22.73-22.77a87.88 87.88 0 1 0 23.13 29.67a8 8 0 0 1 14.44-6.9"/></svg></span>Overall <span class="ac" data-gloss="ORR">ORR</span></div><div class="sgcard__v">51.8%</div><div class="sgcard__sub">95% CI 46.1, 57.4 &middot; N=313</div></div>
+            <div class="sgcard"><div class="sgcard__h"><span class="sgcard__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#007a98" aria-hidden="true"><path fill="currentColor" d="M232 208a8 8 0 0 1-8 8H32a8 8 0 0 1 0-16h8v-64a8 8 0 0 1 8-8h24a8 8 0 0 1 8 8v64h16V88a8 8 0 0 1 8-8h32a8 8 0 0 1 8 8v112h16V40a8 8 0 0 1 8-8h40a8 8 0 0 1 8 8v160h8a8 8 0 0 1 8 8"/></svg></span>By line of therapy</div><div class="sgcard__v"><span class="ac" data-gloss="1L">1L</span> 57.9% &middot; <span class="ac" data-gloss="2L+">2L+</span> 45.0%</div><div class="sgcard__sub">before tepotinib 28.9%</div></div>
+            <div class="sgcard"><div class="sgcard__h"><span class="sgcard__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#3f8fbf" aria-hidden="true"><path fill="currentColor" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24M62.29 186.47l2.52-1.65A16 16 0 0 0 72 171.53l.21-36.23L93.17 104a4 4 0 0 0 .32.22l19.67 12.87a15.94 15.94 0 0 0 11.35 2.77l31.49-4.27a16 16 0 0 0 10-5.41l22.17-25.76A16 16 0 0 0 192 74v-6.33A87.87 87.87 0 0 1 211.77 155l-16.14-14.76a16 16 0 0 0-16.93-3l-30.46 12.65a16.08 16.08 0 0 0-9.68 12.45l-2.39 16.19a16 16 0 0 0 11.77 17.81L169.4 202l2.36 2.37a87.88 87.88 0 0 1-109.47-17.9"/></svg></span>Asian patients</div><div class="sgcard__v">56.6%</div><div class="sgcard__sub">95% CI 46.6, 66.2 &middot; 1L 64.0%</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="scene s7" data-scene="s7" aria-label="Scene 7 &mdash; Summary and reflection">
+      <header class="hd"><h1 class="hd__title">Summary</h1><div class="hd__rule" aria-hidden="true"><i></i><b></b><i></i></div></header>
+      <nav class="sw-rail" id="swRail" aria-label="Summary steps">
+        <span class="sw-rstep is-active" data-rs="1"><span class="sw-rnum">1</span><span>Summary</span></span>
+        <span class="sw-rline"></span>
+        <span class="sw-rstep" data-rs="2"><span class="sw-rnum">2</span><span>Where you stand</span></span>
+        <span class="sw-rline"></span>
+        <span class="sw-rstep" data-rs="3"><span class="sw-rnum">3</span><span>Your reflection</span></span>
+        <span class="sw-rline"></span>
+        <span class="sw-rstep" data-rs="4"><span class="sw-rnum">4</span><span>CPD record</span></span>
+      </nav>
+      <div class="sw-body">
+        <section class="sw-step is-on" data-step="1" aria-label="Summary">
+          <p class="sw-lead">After <b>&ge;3 years&rsquo; follow-up</b> in VISION, five headline findings stood out:</p>
+          <div class="sw-sum" id="swSum">
+            <div class="scard"><span class="scard__no">1</span><div class="scard__main"><span class="scard__eyebrow">Efficacy</span><p class="scard__text">Robust and durable efficacy in treatment-na&iuml;ve and previously treated patients.</p></div></div>
+            <div class="scard"><span class="scard__no">2</span><div class="scard__main"><span class="scard__eyebrow">Safety &amp; <span class="ac" data-gloss="HRQoL">HRQoL</span></span><p class="scard__text">A manageable safety profile with stable patient-reported outcome scores.</p></div></div>
+            <div class="scard"><span class="scard__no">3</span><div class="scard__main"><span class="scard__eyebrow">Subgroups</span><p class="scard__text">Consistent across biopsy method, age, smoking history and brain metastases.</p></div></div>
+            <div class="scard"><span class="scard__no">4</span><div class="scard__main"><span class="scard__eyebrow">Treatment lines</span><p class="scard__text">Consistent with prior reports, particularly first-line.</p></div></div>
+            <div class="scard"><span class="scard__no">5</span><div class="scard__main"><span class="scard__eyebrow">Asian patients</span><p class="scard__text">Robust long-term efficacy, particularly first-line.</p></div></div>
+          </div>
+        </section>
+        <section class="sw-step" data-step="2" aria-label="Where you stand" hidden>
+          <p class="sw-lead"><b>There are no wrong answers</b> &mdash; this simply flags what you might want to revisit.</p>
+          <div class="sw-conf">
+            <div class="sw-cq" id="swConfQ">How confident are you applying this evidence in practice?</div>
+            <div class="sw-copts" id="swConfOpts" role="radiogroup" aria-labelledby="swConfQ"></div>
+          </div>
+        </section>
+        <section class="sw-step" data-step="3" aria-label="Your reflection" hidden>
+          <p class="sw-lead">Capture your thinking. Your words stay editable and feed your CPD record.</p>
+          <div class="sw-refl">
+            <label class="sw-rlab" for="swR1">Note one change you&rsquo;ll make in practice <span>&mdash; a concrete next step</span></label>
+            <textarea id="swR1" placeholder="e.g. I will review our MET testing pathway so eligible patients are identified earlier&hellip;"></textarea>
+            <p class="sw-rhint">Optional &mdash; but a specific, concrete change is the most useful thing to record.</p>
+          </div>
+        </section>
+        <section class="sw-step" data-step="4" aria-label="CPD record" hidden>
+          <p class="sw-congrats"><b>That&rsquo;s the visual abstract complete.</b> Create your CPD record below to keep a note of your reflection &mdash; or step back to refine anything.</p>
+          <div class="sw-cpd">
+            <div class="sw-cpd__scroll" id="swCpd" tabindex="0" aria-label="CPD record preview"></div>
+            <p class="sw-cpd__note">A personal reflective record, not clinical guidance. Figures relate to the 313 patients with <em>MET</em>ex14 skipping NSCLC in the Phase&nbsp;2 VISION trial; full references appear in the activity.</p>
+          </div>
+        </section>
+      </div>
+      <div class="sw-controls">
+        <button class="sw-btn ghost" id="swBack" type="button" disabled style="visibility:hidden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>Back</button>
+        <span class="sw-mid" id="swMid" aria-hidden="true">Step 1 of 4</span>
+        <button class="sw-btn" id="swNext" type="button">Next<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+        <button class="sw-btn" id="swExport" type="button" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Copy my CPD record</button>
+      </div>
+    </section>
+    <section class="scene s8 s8--cta" data-scene="s8" aria-label="Scene 8 &mdash; Call to action">
+      <div class="cta2">
+        <img class="cta2__bg" src="assets/s7.jpg" alt="A hand holding a megaphone against a teal background." />
+        <div class="cta2__scrim" aria-hidden="true"></div>
+        <div class="cta2__content">
+          <h1 class="cta2__title">Call to Action</h1>
+          <div class="cta2__rule" aria-hidden="true"><i></i><b></b><i></i></div>
+          <h2 class="cta2__h">Explore the full activity</h2>
+          <p class="cta2__lead">In this interactive activity, learn more about the long-term efficacy and safety results of tepotinib in patients with <span class="ac" data-gloss="METex14"><span class="gene">MET</span>ex14</span> skipping <span class="ac" data-gloss="NSCLC">NSCLC</span>. This will cover:</p>
+          <div class="cta__chips">
+            <span class="cta__chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>&ge;3-year VISION data</span>
+            <span class="cta__chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2.5-7 4 14 2.5-7H21"/></svg>Efficacy &middot; safety &middot; subgroups</span>
+            <span class="cta__chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l4 4v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v4h4M9 13h6M9 17h4"/></svg>CPD reflection &amp; record</span>
+          </div>
+          <button class="cta__btn" id="launchBtn" type="button">Open the full activity <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6"/></svg></button>
+        </div>
+      </div>
+    </section>
+
+    <div class="topctl">
+      <button class="tbtn back" id="back" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>Back</button>
+      <button class="tbtn" id="pill" type="button" hidden>Contents</button>
+      <button class="tbtn" id="howtoPill" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>How to use</button>
+    </div>
+    <button class="chev prev" id="prev" type="button" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 5 8 12 15 19"/></svg></button>
+    <button class="chev next" id="next" type="button" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 5 16 12 9 19"/></svg></button>
+    <div class="progress" id="progress" aria-hidden="true"></div>
+
+    <div class="floaty ref" id="reftip" role="status"></div>
+    <div class="floaty gloss" id="glosstip" role="status"></div>
+    <div class="sw-xmodal" id="swXmodal" role="dialog" aria-modal="true" aria-labelledby="swXTitle" hidden>
+      <div class="sw-xcard" role="document">
+        <span class="sw-xcheck" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        <p class="sw-xeyebrow">CPD record</p>
+        <h2 class="sw-xtitle" id="swXTitle">Your CPD record is ready</h2>
+        <p class="sw-xbody"><strong>Copy to clipboard</strong> puts the full record on your clipboard to paste into Word or your CPD system. <strong>Download</strong> keeps a copy as a file you can open and save as a PDF &mdash; use Copy if the download is blocked where this is embedded.</p>
+        <div class="sw-xactions">
+          <button class="sw-btn" id="swCp" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Copy to clipboard</button>
+          <button class="sw-btn ghost" id="swDl" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><polyline points="8 11 12 15 16 11"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Download record</button>
+          <button class="sw-btn ghost" id="swXClose" type="button">Close</button>
+        </div>
+        <p class="sw-xstatus" id="swXStatus" aria-live="polite"></p>
+      </div>
+    </div>
+    <div class="launch" id="launch" role="dialog" aria-modal="true" aria-labelledby="launchTitle" aria-hidden="true">
+      <div class="launch__card">
+        <button class="launch__x" id="launchClose" type="button" aria-label="Close">&times;</button>
+        <div class="launch__load" id="launchLoad">
+          <div class="launch__spin" aria-hidden="true"></div>
+          <h2 class="launch__title" id="launchTitle">Preparing the link&hellip;</h2>
+          <p class="launch__sub">Loading the full interactive activity.</p>
+        </div>
+        <div class="launch__ready" id="launchReady" hidden>
+          <div class="launch__check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <h2 class="launch__title">Your activity is ready</h2>
+          <p class="launch__sub" id="launchReadySub">Select below to open it in a new tab.</p>
+          <a class="launch__go" id="launchGo" href="#" target="_blank" rel="noopener">Open the full activity <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6"/></svg></a>
+          <button class="launch__back" id="launchBack" type="button">Back to summary</button>
+        </div>
+      </div>
+    </div>
+    <div class="wt" id="wt" role="dialog" aria-modal="true" aria-labelledby="wtTitle" aria-hidden="true">
+      <div class="wt__card">
+        <div class="wt__head"><span class="wt__kicker">How to use this activity</span><button class="wt__close" id="wtClose" type="button" aria-label="Close">&times;</button></div>
+        <div class="wt__body" id="wtBody"><div class="wt__ic" id="wtIc" aria-hidden="true"></div><h2 class="wt__title" id="wtTitle"></h2><p class="wt__desc" id="wtDesc"></p></div>
+        <div class="wt__foot"><div class="wt__dots" id="wtDots" aria-hidden="true"></div><div class="wt__nav"><button class="wt__btn ghost" id="wtBack" type="button">Back</button><button class="wt__btn" id="wtNext" type="button">Next</button></div></div>
+      </div>
+    </div>
+    <p class="sr-only" id="live" aria-live="polite"></p>
+  </main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var deck=document.getElementById('deck');
+  var scenes=Array.prototype.slice.call(document.querySelectorAll('.scene'));
+  var idxByName={}; scenes.forEach(function(s,i){ idxByName[s.dataset.scene]=i; });
+  var TOC_INDEX=idxByName['toc'];
+  var CONTENT=['s1','s2','s3','s4','s5','s6','s7','s8'];
+
+  var REF={
+    'r-1':'1. Drilon A, et al. J Thorac Oncol. 2017;12(1):15&ndash;26.',
+    'r-35':'3. Awad MM, et al. J Clin Oncol. 2016;34(7):721&ndash;730.<br>4. Remon J, et al. J Thorac Oncol. 2023;18(4):419&ndash;435.<br>5. Tong JH, et al. Clin Cancer Res. 2016;22(12):3048&ndash;3056.',
+    'r-26':'2. Russo A, et al. J Thorac Oncol. 2026 (e-pub ahead of print). doi:10.1016/j.jtho.2026.103695.<br>6. Aggarwal C, et al. JCO Precis Oncol. 2023;e2300191. doi:10.1200/PO.23.00191.',
+    'r-13':'1. Drilon A, et al. J Thorac Oncol. 2017;12(1):15&ndash;26.<br>2. Russo A, et al. J Thorac Oncol. 2026 (e-pub ahead of print).<br>3. Awad MM, et al. J Clin Oncol. 2016;34(7):721&ndash;730.',
+    'r2-15':'1. US FDA. TEPMETKO (tepotinib) prescribing information. 2024.<br>2. Merck. TEPMETKO (tepotinib) approved in Japan for advanced NSCLC with METex14 skipping. 2020.<br>3. EMA. TEPMETKO (tepotinib) SmPC. 2026.<br>4. US FDA. Tabrecta (capmatinib) prescribing information. 2024.<br>5. EMA. Tabrecta (capmatinib) SmPC. 2025.',
+    'r2-67':'6. Hendriks LE, et al. Ann Oncol. 2023;34(4):339&ndash;357.<br>7. ESMO oncogene-addicted metastatic NSCLC living guideline, v1.3, 2026.',
+    'r2-13':'1. US FDA. TEPMETKO (tepotinib) prescribing information. 2024.<br>2. Merck. TEPMETKO (tepotinib) approved in Japan for advanced NSCLC with METex14 skipping. 2020.<br>3. EMA. TEPMETKO (tepotinib) SmPC. 2026.',
+    'r2-3':'3. EMA. TEPMETKO (tepotinib) SmPC. 2026.',
+    'r3-1':'1. Mazieres J, et al. JAMA Oncol. 2023;9(9):1260&ndash;1266.',
+    'r3-2':'2. Mazieres J, et al. J Thorac Oncol. 2025;20(3, S1):S59&ndash;S60 (81P).',
+    'r4-1':'1. Mazieres J, et al. J Thorac Oncol. 2025;20(3, S1):S59&ndash;S60 (81P).',
+    'r5-1':'1. Felip E, et al. J Thorac Oncol. 2025;20(10, S1):S483&ndash;S484.',
+    'r6-1':'1. Griesinger F, et al. Ann Oncol. 2025;36(Suppl):S1061&ndash;S1062.',
+    'r6-2':'2. Viteri S, et al. Ann Oncol. 2025;36(Suppl):S1060&ndash;S1061.',
+    'r6-3':'3. Yang J, et al. Ann Oncol. 2025;36(Suppl):S2121&ndash;S2122.'
+  };
+  var GLOSS={ 'NSCLC':'Non-small cell lung cancer', 'MET':'Mesenchymal-epithelial transition (a receptor tyrosine kinase gene)', 'METex14':'MET exon 14 skipping', 'TKI':'Tyrosine kinase inhibitor', 'ESMO':'European Society for Medical Oncology', 'ORR':'Objective response rate', 'RECIST':'Response Evaluation Criteria in Solid Tumours', 'DOR':'Duration of response', 'PFS':'Progression-free survival', 'OS':'Overall survival', 'TRAE':'Treatment-related adverse event', 'ECOG PS':'Eastern Cooperative Oncology Group performance status', '1L':'First-line therapy', '2L+':'Second-line or later therapy', 'HRQoL':'Health-related quality of life' };
+
+  var TOC=[
+    {n:1,html:'NSCLC &amp; the <em>MET</em> driver',go:'s1'},{n:2,html:'Introducing tepotinib',go:'s2'},
+    {n:3,html:'The VISION trial',go:'s3'},{n:4,html:'Long-term efficacy',go:'s4'},
+    {n:5,html:'Long-term safety',go:'s5'},{n:6,html:'Consistency across subgroups',go:'s6'},
+    {n:7,html:'Summary',go:'s7'},{n:8,html:'Call to action',go:'s8'}
+  ];
+  (function(){ var host=document.getElementById('tocList');
+    TOC.forEach(function(t){ var b=document.createElement('button'); b.className='toc__item'; b.type='button';
+      b.innerHTML='<span class="toc__n">'+t.n+'</span><span class="toc__t">'+t.html+'</span>';
+      b.addEventListener('click',function(){ if(idxByName[t.go]!=null) show(idxByName[t.go]); }); host.appendChild(b); }); })();
+
+  /* acronyms: only the FIRST appearance (whole deck, DOM order) stays interactive */
+  (function(){ var seen={};
+    Array.prototype.slice.call(document.querySelectorAll('.ac[data-gloss]')).forEach(function(a){
+      var k=a.dataset.gloss;
+      if(seen[k]){ a.classList.add('ac--plain'); a.removeAttribute('data-gloss'); }   // plain, no hover
+      else { seen[k]=1; }
+    }); })();
+
+  function fit(){ var s=Math.min(innerWidth/1920, innerHeight/1080); deck.style.transform='translate(-50%,-50%) scale('+s+')'; }
+  addEventListener('resize',fit); fit();
+
+  /* ---------- navigation ---------- */
+  var cur=0, lastBeforeToc=null, entryTimers=[];
+  var prev=document.getElementById('prev'), next=document.getElementById('next'),
+      pill=document.getElementById('pill'), back=document.getElementById('back'),
+      progress=document.getElementById('progress'), live=document.getElementById('live');
+  scenes.forEach(function(){ progress.appendChild(document.createElement('i')); });
+  var dots=Array.prototype.slice.call(progress.children);
+  function clearTimers(){ entryTimers.forEach(clearTimeout); entryTimers=[]; }
+  function revealNav(){ deck.classList.add('nav-ready'); }
+
+  function playScene(el){
+    deck.classList.remove('nav-ready'); clearTimers(); hideTips();
+    var cs=el.querySelector('.cs');
+    if(el.classList.contains('lo')||el.classList.contains('toc')||el.classList.contains('howto')||el.classList.contains('s4')||el.classList.contains('s7')||el.classList.contains('s8')){ el.classList.remove('play'); void el.offsetWidth; el.classList.add('play'); }
+    if(cs){
+      el.classList.add('playing'); cs.classList.remove('img-in','title-in','laid');   // reset (keep cs--right)
+      if(reduce){ cs.classList.add('laid'); el.classList.remove('playing'); revealNav(); return; }
+      requestAnimationFrame(function(){ cs.classList.add('img-in'); });                     // image long fade-in
+      entryTimers.push(setTimeout(function(){ cs.classList.add('title-in'); }, 1300));      // hold -> title on image
+      entryTimers.push(setTimeout(function(){ cs.classList.add('laid'); el.classList.remove('playing'); }, 2450)); // hold -> settle + content stagger
+      entryTimers.push(setTimeout(revealNav, 5700));                                        // nav after last (slower) content
+    } else {
+      // framing / placeholder scenes: reveal nav once their entrance settles
+      if(el.dataset.scene==='cover'){ /* nav stays hidden on cover */ }
+      else entryTimers.push(setTimeout(revealNav, reduce?0:650));
+    }
+  }
+  function show(n,dir){
+    n=Math.max(0,Math.min(scenes.length-1,n));
+    if(scenes[n].dataset.scene==='toc' && scenes[cur].dataset.scene!=='toc') lastBeforeToc=cur;
+    var d=dir||(n>cur?'in-right':'in-left');
+    scenes.forEach(function(s,i){ var on=i===n; s.classList.toggle('is-on',on); s.classList.remove('in-right','in-left'); if(on&&!reduce){ void s.offsetWidth; s.classList.add(d); } });
+    dots.forEach(function(x,i){ x.classList.toggle('on',i===n); });
+    cur=n;
+    var name=scenes[n].dataset.scene;
+    prev.disabled=(n===0); next.disabled=(n===scenes.length-1);
+    pill.hidden=(CONTENT.indexOf(name)<0);                 // Contents pill only on content scenes
+    { var _hp=document.getElementById('howtoPill'); if(_hp) _hp.hidden=(CONTENT.indexOf(name)<0); }
+    back.hidden=!(name==='toc' && lastBeforeToc!=null);
+    playScene(scenes[n]);
+    if(scenes[n].dataset.scene==='s7'&&window.__swReset) window.__swReset();
+    live.textContent='Scene '+(n+1)+' of '+scenes.length;
+  }
+  /* ---------- S8 launch interstitial (D16 "Preparing the link…") ---------- */
+  (function(){
+    var LAUNCH_URL = '';   /* <<< PLACEHOLDER — paste the full-activity URL here when ready */
+    var launch=document.getElementById('launch'); if(!launch) return;
+    var btn=document.getElementById('launchBtn'), closeB=document.getElementById('launchClose'),
+        loadEl=document.getElementById('launchLoad'), readyEl=document.getElementById('launchReady'),
+        go=document.getElementById('launchGo'), backB=document.getElementById('launchBack'),
+        readySub=document.getElementById('launchReadySub'), trigger=null, timer=null;
+    function resetState(){ if(timer){ clearTimeout(timer); timer=null; } loadEl.hidden=false; readyEl.hidden=true; }
+    function openL(){ trigger=document.activeElement; resetState(); launch.classList.add('is-open'); launch.setAttribute('aria-hidden','false'); timer=setTimeout(ready,1700); }
+    function ready(){
+      loadEl.hidden=true; readyEl.hidden=false;
+      if(LAUNCH_URL){
+        go.href=LAUNCH_URL; go.classList.remove('is-disabled'); go.removeAttribute('aria-disabled');
+        readySub.textContent='Select below to open it in a new tab.';
+        try{ window.open(LAUNCH_URL,'_blank','noopener'); }catch(e){}
+        try{ go.focus(); }catch(e){}
+      } else {
+        go.href='#'; go.classList.add('is-disabled'); go.setAttribute('aria-disabled','true');
+        readySub.textContent='The full activity link will be added here on publication.';
+        try{ backB.focus(); }catch(e){}
+      }
+    }
+    function closeL(){ launch.classList.remove('is-open'); launch.setAttribute('aria-hidden','true'); resetState(); if(trigger&&trigger.focus){ try{ trigger.focus(); }catch(e){} } }
+    if(btn) btn.addEventListener('click',openL);
+    if(closeB) closeB.addEventListener('click',closeL);
+    if(backB) backB.addEventListener('click',closeL);
+    launch.addEventListener('click',function(e){ if(e.target===launch) closeL(); });
+    if(go) go.addEventListener('click',function(e){ if(go.classList.contains('is-disabled')) e.preventDefault(); });
+    document.addEventListener('keydown',function(e){ if(launch.classList.contains('is-open')&&e.key==='Escape'){ e.stopPropagation(); closeL(); } },true);
+  })();
+  prev.addEventListener('click',function(){ show(cur-1); });
+  next.addEventListener('click',function(){ show(cur+1); });
+  pill.addEventListener('click',function(){ show(TOC_INDEX); });
+  /* ---------- how-to walkthrough ---------- */
+  (function(){
+    var Sv=function(v){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+v+'</svg>'; };
+    var WSTEPS=[
+      {ic:Sv('<polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/>'), t:'Move between screens', d:'Use the <b>&#9664; &#9654;</b> arrows on screen, or your keyboard arrows, to move through the activity.'},
+      {ic:Sv('<path d="M3 3l7 18 2-8 8-2z"/>'), t:'See definitions', d:'Hover a <b>dotted term</b> to see what an acronym means.'},
+      {ic:Sv('<rect x="6" y="7" width="5" height="7" rx="1"/><rect x="13" y="7" width="5" height="7" rx="1"/>'), t:'Open references', d:'Select a <b>superscript number</b> for its citation; select away to close.'},
+      {ic:Sv('<path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12c1 1 1 2 1 3h6c0-1 0-2 1-3a7 7 0 0 0-4-12z"/>'), t:'Reveal explainers', d:'Select the <b>lightbulb</b> or amber prompts for a quick &ldquo;what is&hellip;&rdquo; explainer.'},
+      {ic:Sv('<rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/>'), t:'Get the takeaway', d:'Select the <b>+</b> to reveal the key message for a scene.'},
+      {ic:Sv('<path d="M4 6h16M4 12h16M4 18h16"/>'), t:'Jump around', d:'Use <b>Contents</b> to jump to any section, and <b>Back</b> to return where you were.'}
+    ];
+    var wt=document.getElementById('wt'); if(!wt) return;
+    var wi=0, wdots=document.getElementById('wtDots'), wback=document.getElementById('wtBack'), wnext=document.getElementById('wtNext'), wtrigger=null;
+    WSTEPS.forEach(function(){ wdots.appendChild(document.createElement('i')); });
+    function wrender(anim){ var s=WSTEPS[wi]; document.getElementById('wtIc').innerHTML=s.ic; document.getElementById('wtTitle').textContent=s.t; document.getElementById('wtDesc').innerHTML=s.d;
+      Array.prototype.forEach.call(wdots.children,function(x,k){ x.classList.toggle('on',k===wi); }); wback.disabled=(wi===0); wnext.textContent=(wi===WSTEPS.length-1)?'Done':'Next';
+      var b=document.getElementById('wtBody'); if(anim){ b.classList.remove('swap'); void b.offsetWidth; b.classList.add('swap'); } }
+    function wopen(){ wi=0; wrender(false); wt.classList.add('is-open'); wt.setAttribute('aria-hidden','false'); }
+    function wclose(){ wt.classList.remove('is-open'); wt.setAttribute('aria-hidden','true'); if(wtrigger&&wtrigger.focus){ try{ wtrigger.focus(); }catch(e){} } }
+    var hp=document.getElementById('howtoPill'); if(hp) hp.addEventListener('click',function(){ wtrigger=this; wopen(); });
+    document.getElementById('wtClose').addEventListener('click',wclose);
+    wt.addEventListener('click',function(e){ if(e.target===wt) wclose(); });
+    wback.addEventListener('click',function(){ if(wi>0){ wi--; wrender(true);} });
+    wnext.addEventListener('click',function(){ if(wi<WSTEPS.length-1){ wi++; wrender(true);} else wclose(); });
+    document.addEventListener('keydown',function(e){ if(!wt.classList.contains('is-open'))return; if(e.key==='Escape')wclose(); else if(e.key==='ArrowRight'){e.stopPropagation(); wnext.click();} else if(e.key==='ArrowLeft'){e.stopPropagation(); wback.click();} },true);
+  })();
+  back.addEventListener('click',function(){ if(lastBeforeToc!=null){ var t=lastBeforeToc; lastBeforeToc=null; show(t); } });
+  document.querySelectorAll('[data-go]').forEach(function(b){ b.addEventListener('click',function(){ show(+b.dataset.go); }); });
+  addEventListener('keydown',function(e){
+    var _t=e.target;
+    if(_t&&(_t.tagName==='INPUT'||_t.tagName==='TEXTAREA'||_t.tagName==='SELECT'||_t.isContentEditable)) return;
+    if(_t&&_t.closest&&_t.closest('[role=radio],.sw-xmodal.is-open,.launch.is-open,.wt.is-open')) return;
+    if(e.key==='ArrowRight'||e.key==='PageDown'){ e.preventDefault(); show(cur+1); }
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); show(cur-1); }
+    else if(e.key==='Home'){ e.preventDefault(); show(0); } else if(e.key==='End'){ e.preventDefault(); show(scenes.length-1); }
+  });
+
+  /* ---------- floating tips ---------- */
+  var reftip=document.getElementById('reftip'), glosstip=document.getElementById('glosstip');
+  function scl(){ return Math.min(innerWidth/1920, innerHeight/1080); }
+  function place(tip,cx,cy){ var r=deck.getBoundingClientRect(), s=scl(); var x=(cx-r.left)/s, y=(cy-r.top)/s;
+    tip.style.left=Math.max(12,Math.min(x+16,1920-tip.offsetWidth-12))+'px'; tip.style.top=Math.max(12,y-tip.offsetHeight-14)+'px'; }
+  function hideTips(){ reftip.classList.remove('on'); glosstip.classList.remove('on'); }
+  // references: CLICK to open; close on next interaction / click-outside
+  document.querySelectorAll('.sup[data-ref]').forEach(function(sp){
+    sp.addEventListener('click',function(e){ e.stopPropagation();
+      var open=reftip.classList.contains('on') && reftip.dataset.for===sp.dataset.ref;
+      hideTips();
+      if(!open){ reftip.innerHTML=REF[sp.dataset.ref]||''; reftip.dataset.for=sp.dataset.ref; reftip.classList.add('on'); place(reftip,e.clientX,e.clientY); }
+    });
+    sp.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); sp.click(); } else if(e.key==='Escape'){ hideTips(); } });
+  });
+  document.addEventListener('click',function(e){ if(!e.target.closest('.sup[data-ref]') && !e.target.closest('#reftip')) reftip.classList.remove('on'); });
+  // acronyms: hover to show, hide on leave
+  document.querySelectorAll('.ac[data-gloss]').forEach(function(a){
+    var def=GLOSS[a.dataset.gloss]||'';
+    a.addEventListener('mouseenter',function(e){ glosstip.innerHTML=def; glosstip.classList.add('on'); place(glosstip,e.clientX,e.clientY); });
+    a.addEventListener('mousemove',function(e){ if(glosstip.classList.contains('on')) place(glosstip,e.clientX,e.clientY); });
+    a.addEventListener('mouseleave',function(){ glosstip.classList.remove('on'); });
+    a.setAttribute('tabindex','0');
+    a.addEventListener('focus',function(){ var r=a.getBoundingClientRect(); glosstip.innerHTML=def; glosstip.classList.add('on'); place(glosstip,r.left+r.width/2,r.top); });
+    a.addEventListener('blur',function(){ glosstip.classList.remove('on'); });
+  });
+
+  /* ---------- Reveals: amber / takeaway, mutually exclusive within a scene ---------- */
+  document.querySelectorAll('.amber').forEach(function(am){
+    var b=am.querySelector('.amber__btn'); if(!b) return;
+    b.addEventListener('click',function(){ var on=am.classList.toggle('is-open'); this.setAttribute('aria-expanded',on?'true':'false'); if(on){ var sc=am.closest('.scene'), tk=sc&&sc.querySelector('.takeaway'); if(tk){ tk.classList.remove('is-open'); var tb=tk.querySelector('.takeaway__btn'); if(tb) tb.setAttribute('aria-expanded','false'); } } });
+  });
+  document.querySelectorAll('.takeaway').forEach(function(tk){
+    var b=tk.querySelector('.takeaway__btn'); if(!b) return;
+    b.addEventListener('click',function(){ var on=tk.classList.toggle('is-open'); this.setAttribute('aria-expanded',on?'true':'false'); if(on){ var sc=tk.closest('.scene'), am=sc&&sc.querySelector('.amber'); if(am){ am.classList.remove('is-open'); var ab=am.querySelector('.amber__btn'); if(ab) ab.setAttribute('aria-expanded','false'); } } });
+  });
+
+  /* ---------- Tabs (VISION trial) ---------- */
+  document.querySelectorAll('.tabs').forEach(function(tabs){
+    var ts=[].slice.call(tabs.querySelectorAll('.tab')), ps=[].slice.call(tabs.querySelectorAll('.tabpanel'));
+    function activate(i){ ts.forEach(function(t,k){ var on=k===i; t.classList.toggle('is-active',on); t.setAttribute('aria-selected',on?'true':'false'); }); ps.forEach(function(p,k){ p.classList.toggle('is-active',k===i); }); }
+    ts.forEach(function(t,i){
+      t.addEventListener('click',function(){ activate(i); });
+      t.addEventListener('keydown',function(e){ var n=ts.length; if(e.key==='ArrowRight'||e.key==='ArrowDown'){ e.preventDefault(); activate((i+1)%n); ts[(i+1)%n].focus(); } else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){ e.preventDefault(); activate((i-1+n)%n); ts[(i-1+n)%n].focus(); } });
+    });
+  });
+
+  /* ---------- S4 long-term efficacy: ring count-up + reveal/split ---------- */
+  function s4countup(){
+    var rv=document.getElementById('s4ringVal'), rg=document.getElementById('s4ring'); if(!rv||!rg) return;
+    var ORR=51.8;
+    rv.textContent='0.0%'; rg.style.background='conic-gradient(var(--teal) 0 0%, var(--line) 0% 100%)';
+    if(reduce){ rv.textContent='51.8%'; rg.style.background='conic-gradient(var(--teal) 0 51.8%, var(--line) 51.8% 100%)'; return; }
+    var start=null, dur=1050;
+    function back(p){ var c1=1.2, c3=c1+1; return 1 + c3*Math.pow(p-1,3) + c1*Math.pow(p-1,2); }
+    function step(ts){ if(start===null) start=ts; var p=Math.min(1,(ts-start)/dur);
+      var vNum=Math.min(ORR, ORR*(1-Math.pow(1-p,3)));
+      var vFill=p<1 ? ORR*back(p) : ORR;
+      rv.textContent=vNum.toFixed(1)+'%';
+      rg.style.background='conic-gradient(var(--teal) 0 '+vFill+'%, var(--line) '+vFill+'% 100%)';
+      if(p<1){ entryTimers.push(setTimeout(function(){ step(performance.now()); },16)); }
+      else { rv.textContent='51.8%'; rg.style.background='conic-gradient(var(--teal) 0 51.8%, var(--line) 51.8% 100%)';
+        if(rg.animate) rg.animate([{transform:'scale(1)'},{transform:'scale(1.06)'},{transform:'scale(.98)'},{transform:'scale(1.02)'},{transform:'scale(1)'}],{duration:520,easing:'cubic-bezier(.2,1,.3,1)'}); }
+    }
+    entryTimers.push(setTimeout(function(){ step(performance.now()); },90));
+  }
+  (function(){
+    var tte=document.getElementById('s4tte'), rb=document.getElementById('s4reveal'), sb=document.getElementById('s4split'), rg=document.getElementById('s4ring');
+    if(rb&&tte) rb.addEventListener('click',function(){ tte.classList.add('is-revealed'); if(sb) sb.disabled=false; });
+    if(sb&&tte) sb.addEventListener('click',function(){ var on=tte.classList.toggle('is-split'); sb.classList.toggle('is-on',on); sb.setAttribute('aria-pressed',on?'true':'false'); });
+    if(rg) rg.addEventListener('click',function(){ if(rg.animate) rg.animate([{transform:'scale(1)'},{transform:'scale(1.04)'},{transform:'scale(1)'}],{duration:260}); });
+    var orr=document.getElementById('s4orr'), orrBtn=document.getElementById('s4orrReveal');
+    if(orrBtn&&orr) orrBtn.addEventListener('click',function(){ orr.classList.add('is-open'); s4countup(); });
+    var s5qa=document.getElementById('s5qa'), s5q1=document.getElementById('s5q1'), s5q2=document.getElementById('s5q2'), s5hint=document.getElementById('s5hint');
+    if(s5q1&&s5qa) s5q1.addEventListener('click',function(){ s5qa.classList.add('is-1'); this.setAttribute('aria-expanded','true'); if(s5hint) s5hint.style.display='none'; });
+    if(s5q2&&s5qa) s5q2.addEventListener('click',function(){ s5qa.classList.add('is-2'); this.setAttribute('aria-expanded','true'); });
+  })();
+
+  show(0);
+})();
+</script>
+<script>
+(function(){
+  "use strict";
+  var reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); }
+  function $(id){ return document.getElementById(id); }
+  if(!$('swConfOpts')) return;
+
+  var SUMMARY=[
+    {eyebrow:'Efficacy', html:'Robust and durable efficacy in treatment-naïve and previously treated patients.'},
+    {eyebrow:'Safety &amp; HRQoL', html:'A manageable safety profile with stable patient-reported outcome scores.'},
+    {eyebrow:'Subgroups', html:'Consistent across biopsy method, age, smoking history and brain metastases.'},
+    {eyebrow:'Treatment lines', html:'Consistent with prior reports, particularly first-line.'},
+    {eyebrow:'Asian patients', html:'Robust long-term efficacy, particularly first-line.'}
+  ];
+  var CONF=['Not yet','Building','Confident','Very confident'];
+  var confidence=null;
+  var PLAIN={ 'Efficacy':'Efficacy — robust and durable in treatment-naive and previously treated patients.',
+    'Safety & HRQoL':'Safety & HRQoL — manageable profile, stable PRO scores.',
+    'Subgroups':'Subgroups — consistent across biopsy method, age, smoking history and brain metastases.',
+    'Treatment lines':'Treatment lines — consistent with prior reports, particularly first-line.',
+    'Asian patients':'Asian patients — robust long-term efficacy, particularly first-line.' };
+
+  var summaryAnimated=false;
+  function animateSummary(){
+    var cards=document.querySelectorAll('#swSum .scard');
+    if(reduceMotion){ cards.forEach(function(c){ c.classList.add('in'); }); return; }
+    cards.forEach(function(c){ c.classList.remove('in'); });
+    void $('swSum').offsetWidth;
+    cards.forEach(function(c,i){ setTimeout(function(){ c.classList.add('in'); }, 150*i); });
+  }
+
+  (function(){
+    var host=$('swConfOpts');
+    CONF.forEach(function(label,i){
+      var b=document.createElement('button');
+      b.className='sw-copt'; b.type='button'; b.setAttribute('role','radio'); b.setAttribute('aria-checked','false');
+      b.dataset.lvl=(i+1); b.dataset.v=label; b.setAttribute('aria-label','Confidence: '+label);
+      b.innerHTML='<span class="sw-copt__dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>'+label+'</span>';
+      host.appendChild(b);
+    });
+    var opts=Array.prototype.slice.call(host.querySelectorAll('.sw-copt'));
+    function selectConf(i){ opts.forEach(function(o,n){ var on=n===i; o.setAttribute('aria-checked',on?'true':'false'); o.tabIndex=on?0:-1; }); confidence=CONF[i]; }
+    opts.forEach(function(o,i){ o.tabIndex=i===0?0:-1; o.addEventListener('click',function(){ selectConf(i); }); });
+    host.addEventListener('keydown',function(e){
+      var cur=opts.findIndex(function(o){ return o.getAttribute('aria-checked')==='true'; }); if(cur<0)cur=0; var to=null;
+      if(e.key==='ArrowRight'||e.key==='ArrowDown') to=(cur+1)%opts.length;
+      else if(e.key==='ArrowLeft'||e.key==='ArrowUp') to=(cur-1+opts.length)%opts.length;
+      else if(e.key==='Home') to=0; else if(e.key==='End') to=opts.length-1;
+      if(to!==null){ e.preventDefault(); e.stopPropagation(); selectConf(to); opts[to].focus(); }
+    });
+  })();
+
+  function reflectionVal(){ return $('swR1').value.trim(); }
+  function dateStr(){ try{ return new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}); }catch(e){ return ''; } }
+  function fileDate(){ try{ var d=new Date(); function p(n){ return (n<10?'0':'')+n; } return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }catch(e){ return ''; } }
+
+  function buildPreview(){
+    var host=$('swCpd');
+    var finds=SUMMARY.map(function(s){ return '<li><b>'+s.eyebrow+'</b> &mdash; '+s.html+'</li>'; }).join('');
+    var conf=confidence? '<span class="sw-cpd__pill">Applying this in practice: '+esc(confidence)+'</span>' : '<span class="sw-cpd__pill" data-v="none">Not yet rated</span>';
+    var refl=reflectionVal();
+    var reflHtml=refl? '<p class="sw-cpd__ans">'+esc(refl)+'</p>' : '<p class="sw-cpd__ans empty">(not yet completed)</p>';
+    host.innerHTML='<div class="sw-cpd__sec"><h3 class="sw-cpd__h">Key findings &mdash; VISION, &ge;3-year follow-up</h3><ul class="sw-cpd__find">'+finds+'</ul></div>'+
+      '<div class="sw-cpd__sec"><h3 class="sw-cpd__h">My confidence</h3>'+conf+'</div>'+
+      '<div class="sw-cpd__sec"><h3 class="sw-cpd__h">One change I&rsquo;ll make in practice</h3>'+reflHtml+'</div>';
+  }
+  function buildPlainText(){
+    var L=[]; L.push('CPD REFLECTION RECORD');
+    L.push('TM9035 — Tepotinib in METex14 skipping NSCLC (VISION study, >=3-year follow-up)');
+    L.push('Date: '+dateStr()); L.push(''); L.push('KEY FINDINGS');
+    Object.keys(PLAIN).forEach(function(k,i){ L.push((i+1)+'. '+PLAIN[k]); });
+    L.push(''); L.push('MY CONFIDENCE APPLYING THIS IN PRACTICE'); L.push(confidence||'(not rated)');
+    L.push(''); L.push('ONE CHANGE I WILL MAKE IN PRACTICE'); L.push(reflectionVal()||'(not completed)');
+    L.push(''); L.push('— A personal reflective CPD record, not clinical guidance. Figures relate to the 313 patients with METex14 skipping NSCLC in the Phase 2 VISION trial.');
+    return L.join('\n');
+  }
+  function buildHtmlDoc(){
+    var finds=Object.keys(PLAIN).map(function(k,i){ return '<p class="row">'+(i+1)+'. '+esc(PLAIN[k])+'</p>'; }).join('');
+    var refl=reflectionVal();
+    return '<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CPD reflection record — VISION (tepotinib)</title><style>body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#222f55;max-width:720px;margin:32px auto;padding:0 22px;line-height:1.5}h1{font-size:22px;margin:0 0 2px}.meta{color:#56608a;font-size:13px;margin:0 0 8px}.hint{color:#8a91b0;font-size:12px;margin:0 0 20px}h2{font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:#007a98;border-bottom:1px solid #e3e8ee;padding-bottom:4px;margin:22px 0 8px}.row{margin:0 0 4px;font-size:14px}.ans{margin:0;font-size:14px;white-space:pre-wrap}.ans.empty{font-style:italic;color:#8a91b0}.pill{display:inline-block;font-size:14px;font-weight:700;color:#007a98}.foot{margin-top:24px;border-top:1px solid #e3e8ee;padding-top:8px;color:#8a91b0;font-size:11px}@media print{.hint{display:none}@page{margin:16mm}}</style></head><body><h1>CPD reflection record</h1><p class="meta">Tepotinib in <em>MET</em>ex14 skipping NSCLC &mdash; VISION study summary &middot; '+esc(dateStr())+'</p><p class="hint">To save as a PDF: open your browser&rsquo;s Print (Ctrl/Cmd&nbsp;+&nbsp;P) and choose &ldquo;Save as PDF&rdquo;.</p><h2>Key findings</h2>'+finds+'<h2>My confidence applying this in practice</h2><p class="pill">'+esc(confidence||'(not rated)')+'</p><h2>One change I will make in practice</h2><p class="ans'+(refl?'':' empty')+'">'+(refl?esc(refl):'(not completed)')+'</p><p class="foot">A personal reflective CPD record, not clinical guidance. Figures relate to the 313 patients with <em>MET</em>ex14 skipping NSCLC in the Phase 2 VISION trial.</p></body></html>';
+  }
+  function copyRecord(){
+    var status=$('swXStatus'); status.classList.remove('warn'); var text=buildPlainText();
+    function ok(){ status.textContent='Copied. Paste it into Word or your CPD system to save.'; }
+    function fallback(){ var ta=document.createElement('textarea'); ta.value=text; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select(); var done=false; try{ done=document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); if(done){ ok(); } else { status.classList.add('warn'); status.textContent='Copy was blocked. Select the text in your record and copy it manually.'; } }
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(ok,fallback); } else { fallback(); }
+  }
+  function downloadRecord(){
+    var status=$('swXStatus'); status.classList.remove('warn');
+    try{ var blob=new Blob([buildHtmlDoc()],{type:'text/html'}); var url=URL.createObjectURL(blob); var a=document.createElement('a'); a.href=url; a.download='CPD-reflection-VISION-tepotinib-'+fileDate()+'.html'; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(function(){ URL.revokeObjectURL(url); },4000); status.textContent='Download started. If nothing downloaded, use Copy to clipboard instead.'; }catch(e){ status.classList.add('warn'); status.textContent='Download was blocked here. Use Copy to clipboard instead.'; }
+  }
+
+  var xmodal=$('swXmodal'), xLast=null;
+  function openExport(){ buildPreview(); xLast=document.activeElement; $('swXStatus').textContent=''; $('swXStatus').classList.remove('warn'); xmodal.hidden=false; xmodal.classList.add('is-open'); setTimeout(function(){ $('swCp').focus(); },30); }
+  function closeExport(){ xmodal.classList.remove('is-open'); xmodal.hidden=true; if(xLast&&xLast.focus){ try{ xLast.focus(); }catch(e){} } }
+  $('swCp').addEventListener('click',copyRecord); $('swDl').addEventListener('click',downloadRecord); $('swXClose').addEventListener('click',closeExport);
+  xmodal.addEventListener('click',function(e){ if(e.target===xmodal) closeExport(); });
+  document.addEventListener('keydown',function(e){ if(!xmodal.classList.contains('is-open'))return; if(e.key==='Escape'){ e.preventDefault(); e.stopPropagation(); closeExport(); return; } if(e.key==='Tab'){ var fb=xmodal.querySelectorAll('button:not([disabled])'); if(!fb.length)return; var first=fb[0],last=fb[fb.length-1]; if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); } else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); } } },true);
+
+  var current=1, TOTAL=4;
+  var steps=Array.prototype.slice.call(document.querySelectorAll('.sw-step'));
+  var railSteps=Array.prototype.slice.call(document.querySelectorAll('.sw-rstep'));
+  var backBtn=$('swBack'), nextBtn=$('swNext'), exportBtn=$('swExport'), midLabel=$('swMid');
+  function swShow(n,dir){
+    current=n;
+    steps.forEach(function(s){ var on=(+s.dataset.step===n); s.classList.toggle('is-on',on); s.hidden=!on; s.classList.remove('anim-r','anim-l'); });
+    railSteps.forEach(function(r){ var rs=+r.dataset.rs; r.classList.toggle('is-active',rs===n); r.classList.toggle('is-done',rs<n); });
+    midLabel.textContent='Step '+n+' of '+TOTAL;
+    backBtn.disabled=(n===1); backBtn.style.visibility=(n===1)?'hidden':'visible';
+    if(n===TOTAL){ nextBtn.style.display='none'; exportBtn.style.display=''; buildPreview(); }
+    else { nextBtn.style.display=''; exportBtn.style.display='none'; }
+    if(!reduceMotion&&dir){ var active=document.querySelector('.sw-step.is-on'); if(active){ void active.offsetWidth; active.classList.add(dir==='left'?'anim-l':'anim-r'); } }
+    if(n===1) animateSummary();
+    if(n===3){ setTimeout(function(){ try{ $('swR1').focus(); }catch(e){} },40); }
+  }
+  nextBtn.addEventListener('click',function(){ if(current<TOTAL) swShow(current+1,'right'); });
+  backBtn.addEventListener('click',function(){ if(current>1) swShow(current-1,'left'); });
+  exportBtn.addEventListener('click',openExport);
+  railSteps.forEach(function(r){ r.style.cursor='pointer'; r.addEventListener('click',function(){ var rs=+r.dataset.rs; if(rs<current) swShow(rs,'left'); }); });
+
+  window.__swReset=function(){ swShow(1); };
+  swShow(1);
+})();
+</script>
+</body>
+</html>
