@@ -254,6 +254,13 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
 .chev:focus-visible{ outline:3px solid var(--navy); outline-offset:2px; border-radius:14px; }
 .deck.nav-ready .chev.next:not(:disabled){ animation:navR .5s var(--ease) both, nudge 2.4s ease-in-out 1s 2; }
 @keyframes nudge{ 0%,100%{ transform:translateY(-50%) translateX(0);} 50%{ transform:translateY(-50%) translateX(6px);} }
+/* summary complete -> keep drawing the eye to the forward chevron */
+.deck.sum-nudge .chev.next:not(:disabled){ animation:navR .5s var(--ease) both, nudge 1.5s ease-in-out .3s infinite; color:var(--teal-strong); }
+.sw-navhint{ flex:0 0 auto; align-self:center; display:inline-flex; align-items:center; gap:11px; margin:7px 0 0; padding:11px 24px; border-radius:999px; background:var(--navy); color:#fff; font-size:18px; font-weight:600; box-shadow:0 8px 20px rgba(16,26,38,.24); }
+.sw-navhint b{ font-weight:700; color:#8fe3ff; }
+.sw-navhint__chev{ display:inline-grid; place-items:center; color:#8fe3ff; }
+.sw-navhint__chev svg{ width:20px; height:20px; animation:finbob 1.3s ease-in-out infinite; }
+@keyframes finbob{ 0%,100%{ transform:translateX(0);} 50%{ transform:translateX(6px);} }
 .progress{ position:absolute; bottom:14px; left:50%; transform:translateX(-50%); z-index:20; display:flex; gap:8px; opacity:0; transition:opacity .45s ease; }
 .deck.nav-ready .progress{ opacity:1; }
 .progress i{ width:10px; height:10px; border-radius:50%; background:var(--line); transition:background .25s var(--ease), transform .25s var(--ease); }
@@ -372,8 +379,8 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
 .sw-rhint{ margin:0; font-size:18px; color:var(--faint); }
 /* step 4 cpd record */
 .sw-congrats{ flex:0 0 auto; margin:0 0 12px; padding:15px 26px; background:#e7f6ee; border:2px solid #2f9e6f; border-radius:14px; color:#186b49; font-size:21px; font-weight:600; line-height:1.4; text-align:center; } .sw-congrats b{ color:#186b49; font-weight:700; }
-.sw-cpd{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; gap:10px; }
-.sw-cpd__scroll{ flex:1 1 auto; min-height:0; overflow:auto; border:2px solid var(--line); border-radius:14px; background:#fff; padding:20px 26px; }
+.sw-cpd{ flex:1 1 0; min-height:0; display:flex; flex-direction:column; gap:10px; }
+.sw-cpd__scroll{ flex:1 1 0; min-height:0; overflow:auto; border:2px solid var(--line); border-radius:14px; background:#fff; padding:20px 26px; }
 .sw-cpd__sec + .sw-cpd__sec{ margin-top:16px; }
 .sw-cpd__h{ margin:0 0 8px; font-size:15px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--teal-strong); }
 .sw-cpd__find{ margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:7px; counter-reset:f; }
@@ -816,6 +823,7 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
             <div class="sw-cpd__scroll" id="swCpd" tabindex="0" aria-label="CPD record preview"></div>
             <p class="sw-cpd__note">A personal reflective record, not clinical guidance. Figures relate to the 313 patients with <em>MET</em>ex14 skipping NSCLC in the Phase&nbsp;2 VISION trial; full references appear in the activity.</p>
           </div>
+          <div class="sw-navhint"><span>You&rsquo;re all set &mdash; use the arrow on the <b>right</b> to reach the final scene</span><span class="sw-navhint__chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 5 16 12 9 19"/></svg></span></div>
         </section>
       </div>
       <div class="sw-controls">
@@ -988,7 +996,7 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
     { var _hp=document.getElementById('howtoPill'); if(_hp) _hp.hidden=(CONTENT.indexOf(name)<0); }
     back.hidden=!(name==='toc' && lastBeforeToc!=null);
     playScene(scenes[n]);
-    if(scenes[n].dataset.scene==='s7'&&window.__swReset) window.__swReset();
+    if(scenes[n].dataset.scene==='s7'){ if(window.__swReset) window.__swReset(); } else { deck.classList.remove('sum-nudge'); }
     live.textContent='Scene '+(n+1)+' of '+scenes.length;
   }
   /* ---------- S8 launch interstitial (D16 "Preparing the link…") ---------- */
@@ -1256,6 +1264,7 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
     if(n===TOTAL){ nextBtn.style.display='none'; exportBtn.style.display=''; buildPreview(); }
     else { nextBtn.style.display=''; exportBtn.style.display='none'; }
     if(!reduceMotion&&dir){ var active=document.querySelector('.sw-step.is-on'); if(active){ void active.offsetWidth; active.classList.add(dir==='left'?'anim-l':'anim-r'); } }
+    try{ document.querySelector('.deck').classList.toggle('sum-nudge', n===TOTAL); }catch(e){}
     if(n===1) animateSummary();
     if(n===3){ setTimeout(function(){ try{ $('swR1').focus(); }catch(e){} },40); }
   }
