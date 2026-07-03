@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Efficacy outcomes in Asian patients — knowledge check (grouped forest)</title>
+  <style>
+    @font-face { font-family: "Poppins"; src: url("assets/poppins-400.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+    @font-face { font-family: "Poppins"; src: url("assets/poppins-600.ttf") format("truetype"); font-weight: 600; font-display: swap; }
+    @font-face { font-family: "Poppins"; src: url("assets/poppins-700.ttf") format("truetype"); font-weight: 700; font-display: swap; }
+    :root {
+      --teal:#0098be; --teal-strong:#007a98; --navy:#222f55; --on-accent:#fff;
+      --muted:#56608a; --pale:#d9eff8; --mist:#f4f7f9; --line:#e3e8ee;
+      --neutral:#c6d3e2; --pink:#e2abb5; --green:#90cbae; --good:#287d5c; --bad:#b64457;
+      --rowfill:#9fc1e0; --plot:#5b3f9c;
+      --title-shadow-slim:0 1px 2px rgba(34,47,85,.16);   /* slim title variant */
+      /* Green "Consider" question box — house OOI standard */
+      --consider:#56b78f; --consider-strong:#1c7a58; --consider-pale:#e9f6f0;
+      --font:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body { margin: 0; background: #f2f2f2; color: var(--navy); font-family: var(--font); overflow: hidden; }
+    .slide { position: relative; height: 100%; width: 100%; margin: 0; display: flex; flex-direction: column; overflow: hidden; background: #fff; }
+
+    .caption { flex: 0 0 auto; text-align: center; background: #fff; box-shadow: 0 4px 11px rgba(34,47,85,0.07); padding: clamp(10px,1.6vh,16px) 16px; }
+    .caption h1 { margin: 0; font-size: clamp(30px,3.4vw,48px); font-weight: 700; color: var(--navy); line-height: 1.1; letter-spacing: -0.012em; text-shadow: var(--title-shadow-slim); }
+    .caption .sub { margin: 4px 0 0; font-size: clamp(.82rem,1.3vw,1rem); font-weight: 600; font-style: italic; color: var(--muted); }
+
+    .flow { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+    .step { display: none; flex: 1 1 auto; min-height: 0; flex-direction: column; }
+    .step.active { display: flex; animation: viewerIn 320ms ease both; }
+
+    .question-band { flex: 0 0 auto; padding: 0 clamp(14px,3vw,28px); display: flex; justify-content: center; }
+    .question { display: grid; grid-template-columns: 54px minmax(0,1fr); gap: 14px; align-items: center; width: min(100%,980px); padding: 14px 26px; border: 3px solid var(--consider); border-radius: 18px; background: var(--consider-pale); color: var(--consider-strong); }
+    .question-icon { width: 54px; height: 54px; display: grid; place-items: center; border: 3px solid var(--consider); border-radius: 50%; font-size: 2.1rem; font-weight: 600; line-height: 1; }
+    .question .lead { font-weight: 700; }
+    .question p { margin: 0; font-size: clamp(1.05rem,1.9vw,1.45rem); line-height: 1.25; font-weight: 700; text-align: center; }
+
+    .stage { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: clamp(14px,2.4vw,28px); padding: clamp(8px,1.4vw,16px) clamp(14px,2.5vw,30px); }
+    .answers { width: 100%; display: grid; gap: clamp(11px,1.7vw,20px); align-items: stretch; }
+    .answers.cols-4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
+    .answers.cols-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .answer { display: flex; align-items: center; justify-content: center; text-align: center; min-height: clamp(110px,14vw,168px); padding: 14px; border: 0; border-radius: 18px; background: var(--neutral); color: var(--navy); font: inherit; font-size: clamp(.9rem,1.45vw,1.12rem); font-weight: 700; line-height: 1.2; cursor: pointer; box-shadow: 0 8px 18px rgba(34,47,85,.12); transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease; }
+    .answer:hover:not(:disabled) { transform: translateY(-6px); box-shadow: 0 14px 24px rgba(34,47,85,.2); }
+    .answer:active:not(:disabled) { transform: translateY(1px) scale(.985); }
+    .answer:focus-visible { outline: 4px solid var(--navy); outline-offset: 4px; }
+    .answer.is-correct { background: var(--green); color: #080808; animation: celebrate 600ms cubic-bezier(.22,1.35,.36,1) both; }
+    .answer.is-incorrect { background: var(--pink); color: #080808; animation: shake 560ms ease both; }
+    .answer:disabled { cursor: default; }
+    .answer .atext, .answer-final .atext { display: block; max-width: 100%; }
+    .hl { color: var(--teal); }
+    .answer.is-correct .hl, .answer.is-incorrect .hl, .answer-final .hl { color: var(--teal-strong); }
+    .stage.answered .answers { display: none; }
+
+    .reveal { display: none; width: 100%; max-width: 1000px; margin: 0 auto; text-align: center; }
+    .stage.answered .reveal { display: block; }
+    .result-line { margin: 0 0 clamp(8px,1.1vw,13px); font-size: clamp(.98rem,1.55vw,1.16rem); font-weight: 700; }
+    .result-line.is-correct { color: var(--good); }
+    .result-line.is-incorrect { color: var(--bad); }
+    .answer-final { display: inline-flex; align-items: center; justify-content: center; text-align: center; width: min(100%,760px); min-height: clamp(70px,8.5vw,104px); padding: 12px 22px; border-radius: 18px; background: var(--green); color: #080808; font-size: clamp(.98rem,1.55vw,1.22rem); font-weight: 700; line-height: 1.22; box-shadow: 0 12px 26px rgba(40,125,92,.26); }
+    .closing { margin: clamp(9px,1.4vw,16px) auto 0; max-width: 900px; padding: 10px 20px; border: 2px solid var(--teal); border-radius: 14px; background: var(--mist); font-size: clamp(.9rem,1.4vw,1.06rem); line-height: 1.3; font-weight: 600; color: var(--navy); }
+    .nav-row { margin-top: clamp(12px,1.7vw,20px); display: flex; justify-content: center; }
+    .nav-btn { display: inline-flex; align-items: center; gap: 12px; padding: 11px 22px; border: 3px solid var(--teal); border-radius: 16px; background: rgba(0,152,190,.06); color: var(--teal); font: inherit; font-size: clamp(.98rem,1.5vw,1.15rem); font-weight: 700; cursor: pointer; transition: background 180ms ease, transform 180ms ease, box-shadow 180ms ease; }
+    .nav-btn:hover { background: rgba(0,152,190,.13); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(34,47,85,.16); }
+    .nav-btn:focus-visible { outline: 3px solid var(--navy); outline-offset: 3px; }
+    .nav-btn .plus { width: 30px; height: 30px; flex: 0 0 auto; display: grid; place-items: center; border: 3px solid var(--teal); border-radius: 50%; font-size: 1.3rem; line-height: 1; font-weight: 600; }
+    .stage.answered .result-line { animation: revealUp 320ms ease both; }
+    .stage.answered .reveal > *:not(.result-line) { animation: revealUp 400ms ease 80ms both; }
+
+    /* ===== Forest viewer ===== */
+    #viewer .vhead { flex: 0 0 auto; padding: 4px clamp(14px,2.5vw,28px) 2px; text-align: center; }
+    #viewer .vhead h2 { margin: 0; color: var(--teal); font-size: clamp(1rem,1.7vw,1.3rem); font-weight: 700; }
+    #viewer .vbody { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: safe center; padding: clamp(4px,1vw,10px) clamp(14px,2.5vw,28px) 0; }
+    .forest-scope { width: min(100%, 1240px); margin: 0 auto; }
+    .forest-controls { display: flex; justify-content: flex-end; margin: 0 0 6px; }
+    .expand-all { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; border: 2px solid var(--teal); border-radius: 999px; background: #fff; color: var(--teal); font: inherit; font-size: clamp(.74rem,1.05vw,.86rem); font-weight: 700; cursor: pointer; transition: background 160ms ease; }
+    .expand-all:hover { background: var(--pale); }
+    .expand-all:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+    .fround { border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px var(--line); }
+    .forest { width: 100%; border-collapse: collapse; font-size: clamp(.72rem,1.12vw,.9rem); }
+    .forest th, .forest td { padding: clamp(1px,0.35vw,3px) 8px; border-bottom: 1px solid var(--line); vertical-align: middle; line-height: 1.12; }
+    .forest thead th { background: var(--navy); color: #fff; font-weight: 700; border-bottom: 0; text-align: center; }
+    .forest .c-sub { text-align: left; width: 26%; }
+    .forest .c-n { text-align: center; width: 7%; }
+    .forest .c-plot { width: 50%; }
+    /* Overall-ORR reference (mean) line — dotted vertical at 56.6%, continuous down the plot column (screen + PDF) */
+    .forest td.c-plot { padding-left: 0; padding-right: 0; background-image: repeating-linear-gradient(to bottom, rgba(91,63,156,.5) 0 3px, transparent 3px 6px); background-repeat: no-repeat; background-size: 2px 100%; background-position: 56.6% center; }
+    .forest .c-val { text-align: right; width: 17%; white-space: nowrap; font-weight: 700; }
+    .frow.overall th, .frow.overall td { background-color: var(--rowfill); font-weight: 700; }
+    .fgroup .glabel { cursor: pointer; user-select: none; font-weight: 700; color: var(--navy); background: var(--mist); }
+    .glabel .chev { display: inline-grid; place-items: center; width: 18px; height: 18px; margin-right: 7px; border-radius: 50%; background: var(--navy); color: #fff; font-size: .72rem; line-height: 1; transition: transform 200ms ease; }
+    .fgroup[aria-expanded="true"] .chev { transform: rotate(90deg); }
+    .glabel:focus-visible { outline: 3px solid var(--navy); outline-offset: -3px; }
+    .fgroup:hover .glabel { background: #e7eef4; }
+    .frow.child .c-sub { padding-left: clamp(22px,2.6vw,38px); font-weight: 600; }
+    .frow.child:nth-child(even) td, .frow.child:nth-child(even) th { background-color: var(--mist); }
+    .frow.child.rowin { animation: rowIn 300ms ease both; }
+    .frow.child.rowout { animation: rowOut 150ms ease both; }
+
+    .track { position: relative; height: clamp(13px,1.7vw,17px); background-image: linear-gradient(90deg, #e7ecf2 1px, transparent 1px); background-size: 20% 100%; }
+    .whisker { position: absolute; top: 50%; transform: translateY(-50%); height: 2px; background: #2c2c2c; }
+    .whisker::before, .whisker::after { content: ""; position: absolute; top: -3px; height: 8px; width: 2px; background: #2c2c2c; }
+    .whisker::before { left: 0; }
+    .whisker::after { right: 0; }
+    .dot { position: absolute; top: 50%; transform: translate(-50%, -50%); border-radius: 50%; background: var(--plot); box-shadow: 0 0 0 1px rgba(255,255,255,.7); }
+    .faxis td, .faxis th { border-bottom: 0; padding-top: 2px; }
+    .axis { position: relative; height: 16px; }
+    .axis span { position: absolute; top: 0; transform: translateX(-50%); font-size: clamp(.66rem,1vw,.78rem); font-weight: 700; color: var(--navy); }
+    .axis-label { margin: 2px 0 0; text-align: center; font-size: clamp(.72rem,1.1vw,.86rem); font-weight: 700; color: var(--navy); }
+    .fnotes { margin: clamp(3px,0.7vw,6px) 0 0; text-align: left; font-size: clamp(.66rem,1vw,.78rem); color: var(--muted); line-height: 1.3; }
+
+    #viewer .vfoot { flex: 0 0 auto; display: flex; justify-content: flex-start; padding: 6px clamp(14px,2.5vw,28px) 10px; }
+    .back-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 38px; padding: 7px 15px; border: 2px solid var(--teal); border-radius: 10px; background: #fff; color: var(--teal); font: inherit; font-size: .9rem; font-weight: 700; cursor: pointer; transition: background 160ms ease; }
+    .back-btn:hover { background: var(--pale); }
+    .back-btn:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    @keyframes revealUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes viewerIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    @keyframes rowIn { from { opacity: 0; transform: translateY(-7px); } to { opacity: 1; transform: none; } }
+    @keyframes rowOut { from { opacity: 1; } to { opacity: 0; } }
+    @keyframes celebrate { 0% { transform: scale(1); } 45% { transform: scale(1.04) translateY(-5px); } 100% { transform: scale(1); } }
+    @keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-9px); } 40% { transform: translateX(8px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(3px); } }
+
+    /* ===== Continue nudge — eased-in end-of-content reminder (house behaviour) ===== */
+    .slide.nudge-shown { padding-bottom: 80px; }
+    .nudge { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 40; display: none; align-items: center; gap: 10px; max-width: calc(100% - 28px); padding: 9px 17px; border-radius: 999px; background: rgba(34,47,85,0.94); color: #fff; font-size: 15px; font-weight: 600; line-height: 1.25; box-shadow: 0 8px 22px rgba(16,26,38,0.30); }
+    .nudge.is-on { display: inline-flex; animation: nudgeIn .5s ease both; }
+    .nudge b { font-weight: 700; }
+    .nudge__chev { flex: 0 0 auto; display: inline-grid; place-items: center; }
+    .nudge__chev svg { width: 20px; height: 20px; transition: transform .3s ease; }
+    .nudge.is-on .nudge__chev { animation: nudgeBob 1.6s ease-in-out .6s infinite; }
+    .nudge__m { display: none; }
+    body.is-fullscreen .nudge { bottom: auto; top: 60px; }
+    body.is-fullscreen .nudge__d { display: none; }
+    body.is-fullscreen .nudge__m { display: inline; }
+    body.is-fullscreen .nudge__chev svg { transform: rotate(180deg); }
+    body.is-fullscreen .nudge.is-on .nudge__chev { animation: nudgeBobUp 1.6s ease-in-out .6s infinite; }
+    @keyframes nudgeIn { from { opacity: 0; transform: translateX(-50%) translateY(12px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+    @keyframes nudgeBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(3px); } }
+    @keyframes nudgeBobUp { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+
+    /* ===== §4.2 Mobile/Visme launch card + return-to-course (single-screen variant) ===== */
+    .mlaunch { display: none; }
+    .returnbar { display: none; }
+    body.is-embedded-mobile .slide { display: none !important; }
+    body.is-embedded-mobile { display: block; }
+    body.is-embedded-mobile .mlaunch { display: flex; position: fixed; inset: 0; z-index: 50; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 42px; padding: 90px 70px; background: linear-gradient(135deg,#0098be 0%, #007a98 55%, #222f55 100%); color: #fff; }
+    .mlaunch__badge { font-size: 30px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; opacity: .9; }
+    .mlaunch__title { margin: 0; font-size: 52px; font-weight: 700; line-height: 1.08; }
+    .mlaunch__title em { font-style: italic; }
+    .mlaunch__lead { margin: 0; max-width: 1040px; font-size: 36px; font-weight: 500; line-height: 1.4; opacity: .96; }
+    .mlaunch__btn { display: inline-flex; align-items: center; gap: 26px; margin-top: 6px; padding: 44px 88px; border-radius: 999px; background: #fff; color: #007a98; font: inherit; font-weight: 700; font-size: 46px; text-decoration: none; box-shadow: 0 18px 54px rgba(16,26,38,.38); }
+    .mlaunch__btn svg { width: 54px; height: 54px; }
+    .mlaunch__note { margin: 0; max-width: 1040px; font-size: 27px; line-height: 1.4; opacity: .85; }
+    body.is-fullscreen .returnbar { display: inline-flex; align-items: center; justify-content: center; gap: 9px; position: fixed; top: 10px; left: 10px; z-index: 60; box-sizing: border-box; width: auto; height: 44px; padding: 0 18px 0 13px; border-radius: 999px; background: rgba(34,47,85,.92); color: #fff; text-decoration: none; box-shadow: 0 6px 16px rgba(16,26,38,.26); font: inherit; }
+    body.is-fullscreen .returnbar__ic { flex: 0 0 auto; width: 22px; height: 22px; display: grid; place-items: center; }
+    body.is-fullscreen .returnbar__ic svg { width: 22px; height: 22px; }
+    body.is-fullscreen .returnbar__lab { font: inherit; font-weight: 700; font-size: 15px; white-space: nowrap; }
+    body.is-fullscreen .returnbar:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
+    body.is-fullscreen { padding-top: 56px; }
+
+    @media (max-width: 760px) {
+      html, body { height: auto; }
+      body { overflow: auto; }
+      .slide { height: auto; }
+      .nudge { font-size: 13px; left: 12px; right: 12px; transform: none; max-width: none; justify-content: center; }
+      .nudge.is-on { animation: none; }
+      .slide.nudge-shown { padding-bottom: 0; }
+      .answers.cols-4, .answers.cols-3 { grid-template-columns: minmax(0,1fr); }
+      .answer { min-height: 78px; }
+      #viewer .vbody { overflow: auto; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+    @media print {
+      /* force background colours/gradients to render in the PDF (dots, whiskers, row fills, mean line) */
+      *, *::before, *::after { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      html, body, .slide { height: auto !important; overflow: visible !important; }
+      .caption, #mcq1, #mcq2, .forest-controls, #viewer .vfoot, .nudge, .returnbar, .mlaunch { display: none !important; }
+      #viewer { display: flex !important; }
+      #viewer .vbody { display: block !important; overflow: visible !important; justify-content: flex-start !important; padding-top: 6px; }
+      .frow.child[hidden] { display: table-row !important; }
+      .fround { box-shadow: 0 0 0 1px #cdd5e0; }
+      .track { background-image: none; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="slide" id="slide" aria-label="Efficacy outcomes in Asian patients knowledge check">
+    <div class="caption"><h1>Efficacy outcomes</h1><p class="sub" id="subtitle">ORR, DOR and PFS in Asian patients</p></div>
+
+    <div class="flow">
+      <!-- MCQ 1 -->
+      <section class="step active" id="mcq1">
+        <div class="stage">
+          <div class="question-band"><div class="question"><span class="question-icon" aria-hidden="true">?</span><p><span class="lead">Consider:</span> Compared with the overall population of the VISION study, what effect did line of treatment and <em>MET</em>ex14 skipping detection methods have on ORR, DOR, PFS and OS in Asian patients?</p></div></div>
+          <div class="answers cols-4" role="group" aria-label="Answer options">
+            <button class="answer" type="button" data-correct="false"><span class="atext">Outcomes were consistent across <em>MET</em>ex14 skipping detection methods but <span class="hl">NOT</span> lines of treatment</span></button>
+            <button class="answer" type="button" data-correct="false"><span class="atext">Outcomes were consistent across lines of treatment but <span class="hl">NOT</span> <em>MET</em>ex14 skipping detection methods</span></button>
+            <button class="answer" type="button" data-correct="false"><span class="atext">Outcomes were <span class="hl">NOT</span> consistent across lines of treatment and <em>MET</em>ex14 skipping detection methods</span></button>
+            <button class="answer" type="button" data-correct="true"><span class="atext">Outcomes were consistent across <em>MET</em>ex14 skipping detection methods and lines of treatment</span></button>
+          </div>
+          <div class="reveal" aria-live="polite" aria-atomic="true">
+            <p class="result-line"></p>
+            <div class="answer-final"><span class="atext">Outcomes were consistent across <em>MET</em>ex14 skipping detection methods and lines of treatment</span></div>
+            <p class="closing">Outcomes in Asian patients with <em>MET</em>ex14 skipping NSCLC were consistent with the overall population of the VISION study, with clinically meaningful efficacy observed across treatment lines and <em>MET</em>ex14 skipping detection methods.</p>
+            <div class="nav-row"><button class="nav-btn" type="button" id="to-mcq2">Next question <span aria-hidden="true">&rarr;</span></button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MCQ 2 -->
+      <section class="step" id="mcq2">
+        <div class="stage">
+          <div class="question-band"><div class="question"><span class="question-icon" aria-hidden="true">?</span><p><span class="lead">Consider:</span> Did patient baseline characteristics impact ORR in Asian patients with <em>MET</em>ex14 skipping NSCLC?</p></div></div>
+          <div class="answers cols-3" role="group" aria-label="Answer options">
+            <button class="answer" type="button" data-correct="false"><span class="atext"><span class="hl">Yes</span> &ndash; for most characteristics</span></button>
+            <button class="answer" type="button" data-correct="false"><span class="atext"><span class="hl">Yes</span> &ndash; but only for two characteristics</span></button>
+            <button class="answer" type="button" data-correct="true"><span class="atext"><span class="hl">No</span> &ndash; ORR was consistent across all patient baseline characteristics</span></button>
+          </div>
+          <div class="reveal" aria-live="polite" aria-atomic="true">
+            <p class="result-line"></p>
+            <div class="answer-final"><span class="atext"><span class="hl">No</span> &ndash; ORR was consistent across all patient baseline characteristics</span></div>
+            <p class="closing">Consistent efficacy was observed irrespective of baseline characteristics shown below including in patients aged &#8805;75 years and those with brain metastases at baseline.</p>
+            <div class="nav-row"><button class="nav-btn" type="button" id="to-forest"><span class="plus" aria-hidden="true">+</span>Click here to view forest plot</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Forest viewer -->
+      <section class="step" id="viewer" aria-label="ORR by IRC forest plot">
+        <div class="vhead"><h2>ORR by IRC in Asian patients with <em>MET</em>ex14 skipping</h2></div>
+        <div class="vbody">
+          <div class="forest-scope">
+            <div class="forest-controls"><button class="expand-all" type="button" id="print-table">Print full table (PDF)</button></div>
+            <div class="fround">
+            <table class="forest">
+              <thead>
+                <tr><th class="c-sub">Subgroup</th><th class="c-n">n</th><th class="c-plot" colspan="2">ORR, % (95% CI)</th></tr>
+              </thead>
+              <tbody>
+                <tr class="frow overall"><th class="c-sub">Overall</th><td class="c-n">106</td><td class="c-plot"><div class="track"><span class="whisker" style="left:46.6%;width:19.6%"></span><span class="dot" style="left:56.6%;width:16px;height:16px"></span></div></td><td class="c-val">56.6 (46.6, 66.2)</td></tr>
+
+                <tr class="fgroup" aria-expanded="false"><th class="c-sub glabel" role="button" tabindex="0" data-group="sex" aria-controls="sex1 sex2"><span class="chev" aria-hidden="true">&rsaquo;</span>Sex</th><td class="c-n"></td><td class="c-plot"></td><td class="c-val"></td></tr>
+                <tr class="frow child" id="sex1" data-parent="sex" hidden><th class="c-sub">Male</th><td class="c-n">64</td><td class="c-plot"><div class="track"><span class="whisker" style="left:40.2%;width:25.5%"></span><span class="dot" style="left:53.1%;width:14px;height:14px"></span></div></td><td class="c-val">53.1 (40.2, 65.7)</td></tr>
+                <tr class="frow child" id="sex2" data-parent="sex" hidden><th class="c-sub">Female</th><td class="c-n">42</td><td class="c-plot"><div class="track"><span class="whisker" style="left:45.6%;width:30.8%"></span><span class="dot" style="left:61.9%;width:13px;height:13px"></span></div></td><td class="c-val">61.9 (45.6, 76.4)</td></tr>
+
+                <tr class="fgroup" aria-expanded="false"><th class="c-sub glabel" role="button" tabindex="0" data-group="age" aria-controls="age1 age2"><span class="chev" aria-hidden="true">&rsaquo;</span>Age</th><td class="c-n"></td><td class="c-plot"></td><td class="c-val"></td></tr>
+                <tr class="frow child" id="age1" data-parent="age" hidden><th class="c-sub">&lt;75 years</th><td class="c-n">70</td><td class="c-plot"><div class="track"><span class="whisker" style="left:41.9%;width:24.4%"></span><span class="dot" style="left:54.3%;width:15px;height:15px"></span></div></td><td class="c-val">54.3 (41.9, 66.3)</td></tr>
+                <tr class="frow child" id="age2" data-parent="age" hidden><th class="c-sub">&#8805;75 years</th><td class="c-n">36</td><td class="c-plot"><div class="track"><span class="whisker" style="left:43.5%;width:33.4%"></span><span class="dot" style="left:61.1%;width:12px;height:12px"></span></div></td><td class="c-val">61.1 (43.5, 76.9)</td></tr>
+
+                <tr class="fgroup" aria-expanded="false"><th class="c-sub glabel" role="button" tabindex="0" data-group="smk" aria-controls="smk1 smk2"><span class="chev" aria-hidden="true">&rsaquo;</span>Smoking history*</th><td class="c-n"></td><td class="c-plot"></td><td class="c-val"></td></tr>
+                <tr class="frow child" id="smk1" data-parent="smk" hidden><th class="c-sub">Yes</th><td class="c-n">46</td><td class="c-plot"><div class="track"><span class="whisker" style="left:39.0%;width:30.1%"></span><span class="dot" style="left:54.3%;width:13px;height:13px"></span></div></td><td class="c-val">54.3 (39.0, 69.1)</td></tr>
+                <tr class="frow child" id="smk2" data-parent="smk" hidden><th class="c-sub">No</th><td class="c-n">58</td><td class="c-plot"><div class="track"><span class="whisker" style="left:46.6%;width:26.4%"></span><span class="dot" style="left:60.3%;width:14px;height:14px"></span></div></td><td class="c-val">60.3 (46.6, 73.0)</td></tr>
+
+                <tr class="fgroup" aria-expanded="false"><th class="c-sub glabel" role="button" tabindex="0" data-group="hist" aria-controls="hist1 hist2 hist3"><span class="chev" aria-hidden="true">&rsaquo;</span>Histology</th><td class="c-n"></td><td class="c-plot"></td><td class="c-val"></td></tr>
+                <tr class="frow child" id="hist1" data-parent="hist" hidden><th class="c-sub">Adenocarcinoma</th><td class="c-n">84</td><td class="c-plot"><div class="track"><span class="whisker" style="left:48.3%;width:21.8%"></span><span class="dot" style="left:59.5%;width:15px;height:15px"></span></div></td><td class="c-val">59.5 (48.3, 70.1)</td></tr>
+                <tr class="frow child" id="hist2" data-parent="hist" hidden><th class="c-sub">Squamous</th><td class="c-n">7</td><td class="c-plot"><div class="track"><span class="whisker" style="left:18.4%;width:71.7%"></span><span class="dot" style="left:57.1%;width:9px;height:9px"></span></div></td><td class="c-val">57.1 (18.4, 90.1)</td></tr>
+                <tr class="frow child" id="hist3" data-parent="hist" hidden><th class="c-sub">Others</th><td class="c-n">15</td><td class="c-plot"><div class="track"><span class="whisker" style="left:16.3%;width:51.4%"></span><span class="dot" style="left:40.0%;width:11px;height:11px"></span></div></td><td class="c-val">40.0 (16.3, 67.7)</td></tr>
+
+                <tr class="fgroup" aria-expanded="false"><th class="c-sub glabel" role="button" tabindex="0" data-group="ecog" aria-controls="ecog1 ecog2"><span class="chev" aria-hidden="true">&rsaquo;</span>ECOG PS</th><td class="c-n"></td><td class="c-plot"></td><td class="c-val"></td></tr>
+                <tr class="frow child" id="ecog1" data-parent="ecog" hidden><th class="c-sub">0</th><td class="c-n">28</td><td class="c-plot"><div class="track"><span class="whisker" style="left:33.9%;width:38.6%"></span><span class="dot" style="left:53.6%;width:12px;height:12px"></span></div></td><td class="c-val">53.6 (33.9, 72.5)</td></tr>
+                <tr class="frow child" id="ecog2" data-parent="ecog" hidden><th class="c-sub">1</th><td class="c-n">78</td><td class="c-plot"><div class="track"><span class="whisker" style="left:46.0%;width:22.8%"></span><span class="dot" style="left:57.7%;width:15px;height:15px"></span></div></td><td class="c-val">57.7 (46.0, 68.8)</td></tr>
+
+                <tr class="fgroup" aria-expanded="false"><th class="c-sub glabel" role="button" tabindex="0" data-group="bm" aria-controls="bm1 bm2"><span class="chev" aria-hidden="true">&rsaquo;</span>Brain metastases at baseline&dagger;</th><td class="c-n"></td><td class="c-plot"></td><td class="c-val"></td></tr>
+                <tr class="frow child" id="bm1" data-parent="bm" hidden><th class="c-sub">Present</th><td class="c-n">18</td><td class="c-plot"><div class="track"><span class="whisker" style="left:41.0%;width:45.7%"></span><span class="dot" style="left:66.7%;width:11px;height:11px"></span></div></td><td class="c-val">66.7 (41.0, 86.7)</td></tr>
+                <tr class="frow child" id="bm2" data-parent="bm" hidden><th class="c-sub">Absent</th><td class="c-n">88</td><td class="c-plot"><div class="track"><span class="whisker" style="left:43.6%;width:21.6%"></span><span class="dot" style="left:54.5%;width:15px;height:15px"></span></div></td><td class="c-val">54.5 (43.6, 65.2)</td></tr>
+
+                <tr class="fgroup" aria-expanded="false"><th class="c-sub glabel" role="button" tabindex="0" data-group="line" aria-controls="line1 line2"><span class="chev" aria-hidden="true">&rsaquo;</span>Line of therapy</th><td class="c-n"></td><td class="c-plot"></td><td class="c-val"></td></tr>
+                <tr class="frow child" id="line1" data-parent="line" hidden><th class="c-sub">1L</th><td class="c-n">50</td><td class="c-plot"><div class="track"><span class="whisker" style="left:49.2%;width:27.9%"></span><span class="dot" style="left:64.0%;width:13px;height:13px"></span></div></td><td class="c-val">64.0 (49.2, 77.1)</td></tr>
+                <tr class="frow child" id="line2" data-parent="line" hidden><th class="c-sub">2L+</th><td class="c-n">56</td><td class="c-plot"><div class="track"><span class="whisker" style="left:36.3%;width:27.4%"></span><span class="dot" style="left:50.0%;width:14px;height:14px"></span></div></td><td class="c-val">50.0 (36.3, 63.7)</td></tr>
+
+                <tr class="faxis"><th class="c-sub"></th><td class="c-n"></td><td class="c-plot"><div class="axis"><span style="left:0%">0</span><span style="left:20%">20</span><span style="left:40%">40</span><span style="left:60%">60</span><span style="left:80%">80</span><span style="left:100%">100</span></div></td><td class="c-val"></td></tr>
+              </tbody>
+            </table>
+            </div>
+            <p class="axis-label">ORR, % (95% CI)</p>
+            <p class="fnotes">*Smoking history was missing in two patients. &dagger;Identified at baseline (by investigator or independent review committee).</p>
+          </div>
+        </div>
+        <div class="vfoot"><button class="back-btn" type="button" id="forest-back">&larr; Back to question</button></div>
+      </section>
+    </div>
+  </main>
+
+  <!-- §4.2 return-to-course (shown only in the opened full-screen view) -->
+  <a class="returnbar" id="returnBar" href="#" aria-label="Return to the course">
+    <span class="returnbar__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 5 4 10 9 15"/><path d="M4 10 H15 a5 5 0 0 1 5 5 V19"/></svg></span>
+    <span class="returnbar__lab">Return to course</span>
+  </a>
+
+  <!-- §4.2 embedded-mobile launch card (shown only when iframed on a phone) -->
+  <div class="mlaunch" role="group" aria-label="Open the activity full screen">
+    <span class="mlaunch__badge">Touch Oncology &middot; CPD activity</span>
+    <h1 class="mlaunch__title">Efficacy outcomes in Asian patients</h1>
+    <p class="mlaunch__lead">This knowledge check is best viewed full screen on your phone. Tap below to open it.</p>
+    <a class="mlaunch__btn" id="mlaunchBtn" href="#" target="_blank" rel="noopener">Open the activity <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><polyline points="13 6 19 12 13 18"/></svg></a>
+    <p class="mlaunch__note">On a computer, the activity appears here directly.</p>
+  </div>
+
+  <!-- continue nudge — eases in once the forest plot has been fully explored -->
+  <div class="nudge" id="nudge" role="status" aria-live="polite">
+    <span class="nudge__chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+    <span class="nudge__d">All done &mdash; use the <b>&#9664;&nbsp;&#9654;</b> arrows at the bottom of the screen to continue when you&rsquo;re ready.</span>
+    <span class="nudge__m">Finished &mdash; tap <b>Return to course</b> to carry on.</span>
+  </div>
+
+  <script>
+    (function () {
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const steps = { mcq1: document.getElementById('mcq1'), mcq2: document.getElementById('mcq2'), viewer: document.getElementById('viewer') };
+      const subtitle = document.getElementById('subtitle');
+      function showStep(id) {
+        Object.values(steps).forEach(s => s.classList.remove('active'));
+        steps[id].classList.add('active');
+      }
+
+      function wireMcq(section) {
+        const stage = section.querySelector('.stage');
+        const answers = Array.from(section.querySelectorAll('.answer'));
+        const resultLine = section.querySelector('.result-line');
+        let done = false;
+        function reveal(correct) {
+          stage.classList.add('answered');
+          resultLine.textContent = correct ? 'Correct' : 'Not quite — here is the correct answer.';
+          resultLine.className = 'result-line ' + (correct ? 'is-correct' : 'is-incorrect');
+        }
+        answers.forEach(a => {
+          const act = () => {
+            if (done) return; done = true;
+            const correct = a.dataset.correct === 'true';
+            answers.forEach(x => { x.disabled = true; x.setAttribute('aria-disabled', 'true'); });
+            a.classList.add(correct ? 'is-correct' : 'is-incorrect');
+            window.setTimeout(() => reveal(correct), reduceMotion ? 0 : (correct ? 620 : 1080));
+          };
+          a.addEventListener('click', act);
+          a.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); act(); } });
+        });
+      }
+      wireMcq(steps.mcq1);
+      wireMcq(steps.mcq2);
+
+      document.getElementById('to-mcq2').addEventListener('click', () => {
+        subtitle.textContent = 'ORR in Asian patients by subgroups of interest';
+        showStep('mcq2');
+      });
+      document.getElementById('to-forest').addEventListener('click', () => showStep('viewer'));
+      document.getElementById('forest-back').addEventListener('click', () => { showStep('mcq2'); });
+
+      /* Forest group expand / collapse (with roll-out) */
+      function setGroup(row, open, animate) {
+        row.setAttribute('aria-expanded', String(open));
+        const label = row.querySelector('.glabel');
+        (label.getAttribute('aria-controls') || '').split(' ').forEach((id, k) => {
+          const c = document.getElementById(id);
+          if (!c) return;
+          c.classList.remove('rowin', 'rowout');
+          if (open) {
+            c.hidden = false;
+            if (animate && !reduceMotion) { c.style.animationDelay = (k * 60) + 'ms'; void c.offsetWidth; c.classList.add('rowin'); }
+          } else if (!animate || reduceMotion) {
+            c.hidden = true;
+          } else {
+            c.style.animationDelay = '0ms'; void c.offsetWidth; c.classList.add('rowout');
+            const done = () => { c.hidden = true; c.classList.remove('rowout'); };
+            c.addEventListener('animationend', done, { once: true });
+            window.setTimeout(() => { if (!c.hidden) done(); }, 300);
+          }
+        });
+      }
+      const slide = document.getElementById('slide');
+      const nudge = document.getElementById('nudge');
+      const fgroups = Array.from(document.querySelectorAll('.fgroup'));
+      const groupCount = fgroups.length;
+      const exploredGroups = new Set();
+      document.querySelectorAll('.glabel').forEach(label => {
+        function toggle() {
+          const row = label.closest('.fgroup');
+          const open = row.getAttribute('aria-expanded') !== 'true';
+          if (open) {
+            fgroups.forEach(g => { if (g !== row && g.getAttribute('aria-expanded') === 'true') setGroup(g, false, false); });
+            exploredGroups.add(label.getAttribute('data-group'));
+            if (exploredGroups.size >= groupCount) {
+              slide.classList.add('nudge-shown');
+              if (nudge) nudge.classList.add('is-on');
+            }
+          }
+          setGroup(row, open, true);
+        }
+        label.addEventListener('click', toggle);
+        label.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
+      });
+      const printBtn = document.getElementById('print-table');
+      if (printBtn) printBtn.addEventListener('click', () => window.print());
+
+      document.addEventListener('keydown', e => { if (e.key === 'Escape' && steps.viewer.classList.contains('active')) showStep('mcq2'); });
+    }());
+  </script>
+
+  <script>
+    /* §4.2 — mobile/Visme: launch card + return-to-course (single-screen variant) */
+    (function () {
+      "use strict";
+      var fullscreen = /[?&]fullscreen=1/.test(location.search);
+      var inIframe = true; try { inIframe = (window.self !== window.top); } catch (e) { inIframe = true; }
+      var isMobile = /Android|iPhone|iPad|iPod|Mobile|Silk/i.test(navigator.userAgent);
+      var btn = document.getElementById('mlaunchBtn');
+      var base = location.href.split('#')[0].split('?')[0];
+      var courseUrl = ''; try { courseUrl = document.referrer || ''; } catch (e) { courseUrl = ''; }
+      var target = base + '?fullscreen=1' + (courseUrl ? '&return=' + encodeURIComponent(courseUrl) : '');
+      if (btn) {
+        btn.href = target;
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          var w = null;
+          try { w = window.open(target, '_blank'); } catch (err) { w = null; }
+          if (!w) { try { window.top.location.href = target; } catch (err2) { window.location.href = target; } }
+        });
+      }
+      var rb = document.getElementById('returnBar');
+      var returnUrl = (function () { try { return new URLSearchParams(location.search).get('return'); } catch (e) { return null; } })();
+      if (rb) {
+        if (returnUrl) { rb.href = returnUrl; }
+        rb.addEventListener('click', function (e) {
+          e.preventDefault();
+          try { if (window.opener && !window.opener.closed) { window.close(); return; } } catch (err) {}
+          if (window.history.length > 1) { window.history.back(); return; }
+          if (returnUrl) { window.location.href = returnUrl; }
+        });
+      }
+      if (isMobile) { document.body.classList.add('is-mobile'); }
+      if (inIframe && isMobile && !fullscreen) { document.body.classList.add('is-embedded-mobile'); }
+      if (fullscreen) { document.body.classList.add('is-fullscreen'); }
+    }());
+  </script>
+</body>
+</html>
