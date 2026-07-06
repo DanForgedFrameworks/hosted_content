@@ -211,8 +211,8 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 @keyframes prep{ 0%,100%{ transform:scale(.6); opacity:.4; } 50%{ transform:scale(1); opacity:1; } }
 
 /* ===== Continue nudge — eased-in end-of-content reminder (fires once all 7 explored) ===== */
-.frame.nudge-shown{ padding-bottom:80px; }
-.nudge{ position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:38; display:none; align-items:center; gap:10px; max-width:calc(100% - 28px); padding:9px 17px; border-radius:999px; background:rgba(34,47,85,.94); color:#fff; font-size:15px; font-weight:600; line-height:1.25; box-shadow:0 8px 22px rgba(16,26,38,.30); }
+.frame.nudge-shown{ padding-bottom:0; } /* nudge is a fixed overlay — must NOT steal box height (was 80px, which squished the cards inside the locked 1370xN box) */
+.nudge{ position:fixed; left:50%; bottom:74px; transform:translateX(-50%); z-index:38; display:none; align-items:center; gap:10px; max-width:calc(100% - 28px); padding:9px 17px; border-radius:999px; background:rgba(34,47,85,.94); color:#fff; font-size:15px; font-weight:600; line-height:1.25; box-shadow:0 8px 22px rgba(16,26,38,.30); }
 .nudge.is-on{ display:inline-flex; animation:nudgeIn .5s ease both; }
 .nudge b{ font-weight:700; }
 .nudge__chev{ flex:0 0 auto; display:inline-grid; place-items:center; }
@@ -260,7 +260,7 @@ body.is-fullscreen{ padding-top:56px; }
   .cards{ grid-template-columns:1fr 1fr; }
   .forest{ font-size:.8rem; }
   .frame.nudge-shown{ padding-bottom:0; }
-  .nudge{ font-size:13px; left:12px; right:12px; transform:none; max-width:none; justify-content:center; }
+  .nudge{ font-size:13px; left:12px; right:12px; bottom:14px; transform:none; max-width:none; justify-content:center; }
   .nudge.is-on{ animation:none; }
 }
 @media (prefers-reduced-motion:reduce){
@@ -504,7 +504,7 @@ body.is-fullscreen{ padding-top:56px; }
     const axt=document.createElement('div'); axt.className='forest__axtitle'; axt.textContent='ORR, % (95% CI)'; mid.appendChild(axt);
 
     const vals=document.createElement('div'); vals.className='forest__vals';
-    rows.forEach(r=>{ const v=document.createElement('div'); v.className='fval'+(r.isOverall?' is-overall':''); v.innerHTML='<b>'+fmt(r.orr)+'</b> ('+fmt(r.lo)+', '+fmt(r.hi)+')'; vals.appendChild(v); });
+    rows.forEach(r=>{ const v=document.createElement('div'); v.className='fval'+(r.isOverall?' is-overall':''); v.innerHTML='<b>'+fmt(r.orr)+'</b>&nbsp;('+fmt(r.lo)+', '+fmt(r.hi)+')'; vals.appendChild(v); });
 
     wrap.appendChild(labels); wrap.appendChild(mid); wrap.appendChild(vals);
     return wrap;
