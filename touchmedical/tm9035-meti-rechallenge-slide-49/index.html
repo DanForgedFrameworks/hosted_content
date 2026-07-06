@@ -82,6 +82,7 @@
     .stat__val.na { color: var(--faint); font-size: clamp(1.2rem,2.2vw,1.7rem); }
     .stat__sub { font-size: clamp(.74rem,1.1vw,.9rem); font-weight: 600; color: var(--muted); line-height: 1.2; }
     .stat__sub .iqr { white-space: nowrap; }
+    .stat__unit { font-size: clamp(.85rem,1.4vw,1.05rem); font-weight: 700; color: var(--navy); }
     .resp-cohort { text-align: center; margin: -4px 0 0; font-size: clamp(.78rem,1.15vw,.94rem); font-weight: 700; color: var(--muted); }
 
     .tepo-note { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 12px; align-items: start; padding: clamp(11px,1.6vw,16px) clamp(13px,1.8vw,20px); border-radius: 14px; background: var(--good-pale); border: 2px solid var(--good); }
@@ -254,9 +255,9 @@
           <div class="resp-wrap">
             <p class="resp-cohort">Best response with subsequent <em>MET</em> inhibitor &mdash; patients with <em>MET</em>i rechallenge (n=65)</p>
             <div class="stat-grid">
-              <div class="stat"><span class="stat__lab">Partial response</span><span class="stat__val">6</span><span class="stat__sub">9.2% of patients</span></div>
-              <div class="stat"><span class="stat__lab">Stable disease</span><span class="stat__val">15</span><span class="stat__sub">23.1% of patients</span></div>
-              <div class="stat"><span class="stat__lab">Longest PFS</span><span class="stat__val">5.0</span><span class="stat__sub">months <span class="iqr">(median&nbsp;[IQR]&nbsp;2.0&ndash;7.0)</span></span></div>
+              <div class="stat"><span class="stat__lab">Partial response</span><span class="stat__val">6 <span class="stat__unit">patients</span></span><span class="stat__sub">9.2% of patients</span></div>
+              <div class="stat"><span class="stat__lab">Stable disease</span><span class="stat__val">15 <span class="stat__unit">patients</span></span><span class="stat__sub">23.1% of patients</span></div>
+              <div class="stat"><span class="stat__lab">Longest PFS</span><span class="stat__val">5.0 <span class="stat__unit">months</span></span><span class="stat__sub"><span class="iqr">(median&nbsp;[IQR]&nbsp;2.0&ndash;7.0)</span></span></div>
               <div class="stat"><span class="stat__lab">Longest DOR</span><span class="stat__val na">n/a</span><span class="stat__sub">months</span></div>
             </div>
             <div class="tepo-note" id="tepoNote">
