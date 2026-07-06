@@ -49,28 +49,20 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 /* ---------- body shell ---------- */
 .body{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; padding:clamp(8px,1.5vh,16px) clamp(14px,2.6vw,34px) clamp(6px,1.2vh,12px); gap:clamp(7px,1.2vh,12px); }
 
-/* shared cohort legend */
-.legend{ flex:0 0 auto; display:flex; justify-content:center; gap:clamp(14px,2.4vw,28px); }
-.legend__item{ display:inline-flex; align-items:center; gap:7px; font-size:clamp(.74rem,1.3vw,.9rem); font-weight:600; color:var(--navy); }
-.legend__sw{ width:14px; height:14px; border-radius:4px; flex:0 0 auto; }
-
 /* ---------- median region (hero horseshoes <-> compact strip) ---------- */
 .median{ display:flex; flex-direction:column; justify-content:center; min-height:0; }
 [data-stage="hero"] .median{ flex:1 1 auto; }
 [data-stage="compact"] .median{ flex:0 0 auto; }
 
 .median__hero,.median__strip{ overflow:hidden; transition:max-height .5s cubic-bezier(.4,0,.2,1), opacity .4s ease; }
-.median__hero{ display:flex; justify-content:center; align-items:center; gap:clamp(30px,6.5vw,96px); max-height:470px; opacity:1; }
+.median__hero{ display:flex; justify-content:center; align-items:center; gap:clamp(30px,6.5vw,96px); max-height:470px; opacity:1; overflow:visible; }
 .median__strip{ max-height:0; opacity:0; }
-[data-stage="compact"] .median__hero{ max-height:0; opacity:0; }
+[data-stage="compact"] .median__hero{ max-height:0; opacity:0; overflow:hidden; }
 [data-stage="compact"] .median__strip{ max-height:200px; opacity:1; }
 
 /* horseshoe gauge */
 .hs{ display:flex; flex-direction:column; align-items:center; gap:clamp(1px,0.5vh,4px); outline:none; cursor:default; min-height:0; max-height:100%; }
-.hs__ring{ position:relative; flex:0 0 auto; width:clamp(128px,20vh,190px); aspect-ratio:1; transition:transform .2s ease; }
-/* observed-range endpoints at the open ends (tips) of the horseshoe */
-.hs__min,.hs__max{ position:absolute; top:92%; transform:translate(-50%,-50%); font-size:clamp(.62rem,1.05vw,.76rem); font-weight:700; color:var(--muted); font-variant-numeric:tabular-nums; white-space:nowrap; pointer-events:none; }
-.hs__min{ left:14%; } .hs__max{ left:86%; }
+.hs__ring{ position:relative; flex:0 0 auto; width:clamp(96px,16vh,162px); aspect-ratio:1; transition:transform .2s ease; }
 .hs:hover .hs__ring,.hs:focus-visible .hs__ring{ transform:translateY(-3px); }
 .hs:focus-visible .hs__ring{ filter:drop-shadow(0 0 0 3px var(--navy)); }
 .hs__ring svg{ width:100%; height:100%; display:block; overflow:visible; }
@@ -78,9 +70,13 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 .hs__big{ font-size:clamp(1.95rem,5.2vh,3rem); font-weight:700; color:var(--navy); line-height:1; font-variant-numeric:tabular-nums; }
 .hs__unit{ font-size:clamp(.7rem,1.3vw,.82rem); font-weight:600; color:var(--muted); margin-top:1px; }
 .hs__sub{ font-size:.64rem; font-weight:700; color:var(--faint); text-transform:uppercase; letter-spacing:.09em; margin-top:2px; }
-.hs__lab{ display:flex; align-items:center; gap:7px; font-size:clamp(.84rem,1.5vw,1rem); font-weight:700; color:var(--navy); margin-top:2px; }
-.hs__sw{ width:13px; height:13px; border-radius:4px; }
+.hs__lab{ display:flex; align-items:center; justify-content:center; gap:7px; font-size:clamp(.84rem,1.5vw,1rem); font-weight:700; color:var(--navy); margin:0 0 clamp(3px,0.8vh,7px); text-align:center; }
+.hs__sw{ width:13px; height:13px; border-radius:4px; flex:0 0 auto; }
 .hs__range{ font-size:clamp(.7rem,1.25vw,.8rem); font-weight:600; color:var(--muted); font-variant-numeric:tabular-nums; }
+/* interval caption sits BELOW the ring in normal flow (never clipped by the ring's overflow) */
+.hs__ci{ margin-top:clamp(2px,0.7vh,6px); font-size:clamp(.64rem,1.12vw,.8rem); font-weight:600; color:var(--muted); font-variant-numeric:tabular-nums; white-space:nowrap; text-align:center; line-height:1.15; }
+.hs__ci b{ color:var(--navy); font-weight:700; }
+.hs__ci .hs__ci-un{ color:var(--faint); font-weight:600; }
 
 /* compact range strip */
 .median__strip{ flex-direction:column; padding-bottom:clamp(8px,1.3vh,15px); }
@@ -230,6 +226,15 @@ body.is-fullscreen .returnbar__lab{ font:inherit; font-weight:700; font-size:15p
 body.is-fullscreen .returnbar:focus-visible{ outline:3px solid var(--teal); outline-offset:3px; }
 body.is-fullscreen{ padding-top:56px; }
 
+/* ---------- short viewport (owner ~150% zoom → ~1263x560): compact the gauge column + card fronts so the CI caption never overlaps the cards ---------- */
+@media (max-height:600px) and (min-width:761px){
+  .hs__ring{ width:clamp(78px,13vh,118px); }
+  .hs__lab{ font-size:clamp(.74rem,1.25vw,.9rem); margin-bottom:clamp(2px,0.5vh,5px); }
+  .hs__ci{ font-size:clamp(.58rem,.98vw,.72rem); margin-top:clamp(1px,0.4vh,4px); }
+  .qcard__iconlg{ width:clamp(30px,4vh,44px); height:clamp(30px,4vh,44px); }
+  .qcard__front{ padding:clamp(8px,1.5vh,16px) clamp(14px,1.6vw,22px); gap:clamp(5px,1.1vh,10px); }
+}
+
 /* ---------- phone view (<760px): drop fixed-height, allow scroll ---------- */
 @media (max-width:760px){
   html,body{ height:auto; }
@@ -264,16 +269,11 @@ body.is-fullscreen{ padding-top:56px; }
 
   <div class="body" id="body" data-stage="hero">
 
-    <div class="legend" aria-hidden="true">
-      <span class="legend__item"><span class="legend__sw" style="background:var(--c2)"></span>Treatment-na&iuml;ve</span>
-      <span class="legend__item"><span class="legend__sw" style="background:var(--c1)"></span>Previously treated</span>
-    </div>
-
-    <!-- median region: hero horseshoes <-> compact strip -->
+    <!-- median region: hero horseshoes <-> compact strip · cohort labels now sit above each gauge -->
     <section class="median" aria-label="Median duration of treatment">
       <div class="median__hero" id="medianHero"></div>
       <div class="median__strip" id="medianStrip" aria-hidden="true">
-        <p class="median__stripcap">Median duration of treatment &middot; marker = median, bar spans the observed range (months)</p>
+        <p class="median__stripcap">Median duration of treatment &middot; marker = median, bar spans the 95% CI (months)</p>
         <div id="medianRows"></div>
       </div>
     </section>
@@ -363,6 +363,10 @@ body.is-fullscreen{ padding-top:56px; }
     { key:'naive', lab:'Treatment-naïve',     med:8.1, min:0.03, max:71.52, c:'var(--c2)' },
     { key:'prev',  lab:'Previously treated',  med:7.0, min:0.03, max:83.12, c:'var(--c1)' }
   ];
+  // Label for the two extreme values on each gauge. NOTE: slide 34's verbatim source calls
+  // 0.03–83.12 the observed RANGE (min–max); shown here as "95% CI" per owner/SME instruction
+  // (2026-07-06). To revert, set to 'Range' AND change the strip caption "95% CI" back to "range".
+  const CI_LABEL = '95% CI';
 
   const PILL = '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="17" y="13" width="14" height="27" rx="3.5"/><path d="M17 21h14"/><path d="M19 8h10v5H19z"/><path d="M24 27v7M20.5 30.5h7"/></svg>';
   const CAL  = '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="12" width="32" height="28" rx="3"/><path d="M8 20h32M18 8v8M30 8v8"/><path d="M15 29l4 4 9-9"/></svg>';
@@ -392,9 +396,10 @@ body.is-fullscreen{ padding-top:56px; }
     const mk=ptAt(fMed);
     const el=document.createElement('div');
     el.className='hs'; el.tabIndex=0; el.setAttribute('role','img');
-    el.setAttribute('aria-label', m.lab+': median duration of treatment '+med1+' months; observed range '+min2+' to '+max2+' months');
+    el.setAttribute('aria-label', m.lab+': median duration of treatment '+med1+' months; '+CI_LABEL+' '+min2+' to '+max2+' months');
     el.dataset.med=med1; el.dataset.min=min2; el.dataset.max=max2; el.dataset.lab=m.lab;
     el.innerHTML =
+      '<div class="hs__lab"><span class="hs__sw" style="background:'+m.c+'"></span>'+esc(m.lab)+'</div>'+
       '<div class="hs__ring">'+
         '<svg viewBox="0 0 100 100">'+
           '<g transform="rotate(135 50 50)">'+
@@ -405,9 +410,8 @@ body.is-fullscreen{ padding-top:56px; }
           '<circle cx="'+mk[0].toFixed(2)+'" cy="'+mk[1].toFixed(2)+'" r="5.4" fill="#fff" stroke="var(--navy)" stroke-width="3.1"/>'+
         '</svg>'+
         '<div class="hs__center"><div class="hs__big">'+med1+'</div><div class="hs__unit">months</div><div class="hs__sub">median</div></div>'+
-        '<div class="hs__min" aria-hidden="true">'+min2+'</div>'+
-        '<div class="hs__max" aria-hidden="true">'+max2+'</div>'+
-      '</div>';
+      '</div>'+
+      '<div class="hs__ci"><b>'+CI_LABEL+'</b> '+min2+'&ndash;'+max2+' <span class="hs__ci-un">months</span></div>';
     heroEl.appendChild(el);
   });
 
@@ -420,7 +424,7 @@ body.is-fullscreen{ padding-top:56px; }
     row.className='mrow';
     row.innerHTML =
       '<div class="mrow__lab">'+esc(m.lab)+'<b>median '+med1+' months</b></div>'+
-      '<div class="mrow__axis" role="img" aria-label="'+esc(m.lab)+': median '+med1+' months; range '+min2+' to '+max2+' months">'+
+      '<div class="mrow__axis" role="img" aria-label="'+esc(m.lab)+': median '+med1+' months; '+CI_LABEL+' '+min2+' to '+max2+' months">'+
         '<span class="mrow__line"></span>'+
         '<span class="mrow__fill" style="left:'+pMin.toFixed(2)+'%;width:'+(pMax-pMin).toFixed(2)+'%;background:'+m.c+';opacity:.34"></span>'+
         '<span class="mrow__end" style="left:'+pMin.toFixed(2)+'%"></span>'+
@@ -521,7 +525,7 @@ body.is-fullscreen{ padding-top:56px; }
     el.addEventListener('mouseleave',leave); el.addEventListener('blur',leave);
   }
   document.querySelectorAll('.hs').forEach(el=>{
-    wire(el,'<strong>'+esc(el.dataset.med)+' months</strong> median<span class="callout__lab">'+esc(el.dataset.lab)+' &middot; range '+esc(el.dataset.min)+'&ndash;'+esc(el.dataset.max)+'</span>');
+    wire(el,'<strong>'+esc(el.dataset.med)+' months</strong> median<span class="callout__lab">'+esc(el.dataset.lab)+' &middot; '+CI_LABEL+' '+esc(el.dataset.min)+'&ndash;'+esc(el.dataset.max)+'</span>');
   });
   document.querySelectorAll('.arow__track[data-n]').forEach(el=>{
     el.tabIndex=0;
