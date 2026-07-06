@@ -9,242 +9,115 @@
 @font-face { font-family:"Poppins"; src:url("assets/poppins-400.ttf") format("truetype"); font-weight:400; font-style:normal; font-display:swap; }
 @font-face { font-family:"Poppins"; src:url("assets/poppins-600.ttf") format("truetype"); font-weight:600; font-style:normal; font-display:swap; }
 @font-face { font-family:"Poppins"; src:url("assets/poppins-700.ttf") format("truetype"); font-weight:700; font-style:normal; font-display:swap; }
-</style>
-<style>
 /* ============================================================
-   TOUCH MEDICAL — REFERENCES / RESOURCE HUB
-   Self-contained folder-nav portal (search + modal + D22 launch
-   interstitial). No external dependencies (safe for Visme embed).
-
-   >>> BRAND SWAP HAPPENS HERE <<<
+   TOUCH MEDICAL — REFERENCES HUB (grouped ⇄ numbered)
+   Self-contained. Fits the fixed 1370×700 Visme box, no scroll.
+   Brand swap = the CSS variables below.
    ============================================================ */
 :root{
-  --tm-accent:        #0098be;   /* Touch Medical brand blue */
-  --tm-accent-strong: #007a98;
-  --tm-on-accent:     #ffffff;
-  --tm-accent2:       #3a4a86;   /* secondary (navy) for the 2nd category */
-
-  --tm-ink:    #222f55;          /* Touch Medical navy */
-  --tm-muted:  #56608a;
-  --tm-faint:  #8a91b0;
-  --tm-line:   #e3e8ee;
-  --tm-panel:  #ffffff;
-  --tm-tint:   #f4f7f9;
-  --tm-bg:     #f7f9fb;
-  --tm-backdrop: rgba(16,26,38,.55);
-
-  --tm-font: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --tm-radius:   16px;
-  --tm-radius-sm: 10px;
+  --tm-accent:#0098be; --tm-accent-strong:#007a98; --tm-on-accent:#ffffff;
+  --tm-accent2:#3a4a86; --tm-accent3:#1f7a6b;
+  --tm-ink:#222f55; --tm-muted:#56608a; --tm-faint:#8a91b0;
+  --tm-line:#e3e8ee; --tm-panel:#ffffff; --tm-tint:#f4f7f9; --tm-bg:#f7f9fb;
+  --tm-backdrop:rgba(16,26,38,.55);
+  --tm-font:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --tm-radius:16px; --tm-radius-sm:10px;
 }
-
 *{ box-sizing:border-box; }
 html,body{ margin:0; padding:0; height:100%; }
 body{
-  font-family:var(--tm-font);
-  color:var(--tm-ink);
-  background:var(--tm-bg);
+  font-family:var(--tm-font); color:var(--tm-ink); background:var(--tm-bg);
   overflow:hidden;                 /* fixed-frame embed: no scroll on desktop */
-  -webkit-font-smoothing:antialiased;
-  text-rendering:optimizeLegibility;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
 }
-
-/* Height-first frame: chrome stays fixed, the card area absorbs leftover height */
+/* Height-first frame */
 #tmh-root{
-  height:100%; max-width:1180px; margin:0 auto;
-  padding:18px clamp(14px,3vw,30px) 14px;
+  height:100%; max-width:1220px; margin:0 auto;
+  padding:16px clamp(14px,3vw,30px) 14px;
   display:flex; flex-direction:column; overflow:hidden;
 }
 .frame__chrome{ flex:0 0 auto; }
-.frame__body{
-  flex:1 1 auto; min-height:0; overflow:hidden;
-  display:flex; align-items:center; justify-content:center;
-}
-.frame__body .tmh-grid{ width:100%; }
+.frame__body{ flex:1 1 auto; min-height:0; overflow:hidden; display:flex; align-items:flex-start; justify-content:center; }
+.frame__body .tmh-scroll{ width:100%; }
 
-/* ---------- header ---------- */
-.tmh-head{ text-align:center; margin-bottom:12px; }
-.tmh-eyebrow{
-  font-size:10.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
-  color:var(--tm-accent); margin:0 0 3px;
+/* ---------- header + toggle ---------- */
+.tmh-head{ display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:10px; flex-wrap:wrap; }
+.tmh-titles{ min-width:0; }
+.tmh-eyebrow{ font-size:10.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--tm-accent); margin:0 0 2px; }
+.tmh-title{ font-size:clamp(20px,2.6vw,25px); font-weight:700; margin:0; color:var(--tm-ink); }
+.tmh-toggle{ display:inline-flex; background:var(--tm-panel); border:1px solid var(--tm-line); border-radius:999px; padding:3px; box-shadow:0 1px 2px rgba(16,26,38,.05); }
+.tmh-toggle button{
+  font-family:var(--tm-font); font-size:12.5px; font-weight:600; color:var(--tm-muted);
+  background:transparent; border:0; border-radius:999px; padding:7px 15px; cursor:pointer;
+  display:inline-flex; align-items:center; gap:6px; transition:background .15s ease,color .15s ease;
 }
-.tmh-title{ font-size:clamp(20px,3vw,26px); font-weight:700; margin:0; color:var(--tm-ink); }
-.tmh-sub{ font-size:13px; color:var(--tm-muted); margin:4px 0 0; }
+.tmh-toggle button svg{ width:14px; height:14px; }
+.tmh-toggle button[aria-pressed="true"]{ background:var(--tm-accent); color:var(--tm-on-accent); }
 
-/* ---------- search ---------- */
-.tmh-search{
-  position:relative; max-width:640px; margin:0 auto 12px;
-}
-.tmh-search svg{
-  position:absolute; left:16px; top:50%; transform:translateY(-50%);
-  width:18px; height:18px; color:var(--tm-faint); pointer-events:none;
-}
+/* ---------- search + breadcrumb row ---------- */
+.tmh-row{ display:flex; align-items:center; gap:12px; margin-bottom:12px; flex-wrap:wrap; }
+.tmh-search{ position:relative; flex:1 1 320px; max-width:520px; }
+.tmh-search svg{ position:absolute; left:14px; top:50%; transform:translateY(-50%); width:17px; height:17px; color:var(--tm-faint); pointer-events:none; }
 .tmh-search input{
-  width:100%; font-family:var(--tm-font); font-size:15px; color:var(--tm-ink);
-  padding:10px 16px 10px 44px;
-  border:1px solid var(--tm-line); border-radius:999px; background:var(--tm-panel);
-  box-shadow:0 1px 2px rgba(16,26,38,.05);
-  transition:border-color .15s ease, box-shadow .15s ease;
+  width:100%; font-family:var(--tm-font); font-size:14px; color:var(--tm-ink);
+  padding:9px 14px 9px 40px; border:1px solid var(--tm-line); border-radius:999px; background:var(--tm-panel);
+  box-shadow:0 1px 2px rgba(16,26,38,.05); transition:border-color .15s ease, box-shadow .15s ease;
 }
-.tmh-search input:focus{
-  outline:none; border-color:var(--tm-accent);
-  box-shadow:0 0 0 3px color-mix(in srgb,var(--tm-accent) 18%, transparent);
-}
-
-/* ---------- breadcrumbs ---------- */
-.tmh-crumbs{
-  display:flex; gap:10px; align-items:center; flex-wrap:wrap;
-  max-width:1180px; margin:0 auto 12px; font-weight:600;
-}
-.tmh-crumb{
-  cursor:pointer; padding:8px 15px; font-size:13px; color:var(--tm-ink);
-  background:var(--tm-panel); border:1px solid var(--tm-line); border-radius:999px;
-  box-shadow:0 1px 2px rgba(16,26,38,.05);
-  transition:background .15s ease, border-color .15s ease, color .15s ease;
-}
-.tmh-crumb:hover, .tmh-crumb:focus-visible{
-  background:var(--tm-tint); border-color:var(--tm-accent); color:var(--tm-accent); outline:none;
-}
+.tmh-search input:focus{ outline:none; border-color:var(--tm-accent); box-shadow:0 0 0 3px color-mix(in srgb,var(--tm-accent) 18%, transparent); }
+.tmh-crumbs{ display:flex; align-items:center; gap:8px; font-weight:600; }
+.tmh-crumb{ cursor:pointer; padding:7px 13px; font-size:12.5px; color:var(--tm-ink); background:var(--tm-panel); border:1px solid var(--tm-line); border-radius:999px; transition:background .15s ease,border-color .15s ease,color .15s ease; }
+.tmh-crumb:hover,.tmh-crumb:focus-visible{ background:var(--tm-tint); border-color:var(--tm-accent); color:var(--tm-accent); outline:none; }
 .tmh-crumb--static{ cursor:default; background:var(--tm-tint); color:var(--tm-muted); }
-.tmh-sep{ color:var(--tm-faint); font-size:15px; }
+.tmh-sep{ color:var(--tm-faint); font-size:14px; }
 
-/* ---------- grid + cards ---------- */
-.tmh-grid{
-  display:flex; flex-wrap:wrap; justify-content:center; align-items:stretch;
-  gap:20px; max-width:1180px; margin:0 auto;
+/* ---------- category folder cards ---------- */
+.tmh-cats{ display:flex; flex-wrap:wrap; gap:18px; justify-content:center; width:100%; }
+.tmh-cat{
+  position:relative; cursor:pointer; flex:0 1 320px; min-width:0;
+  background:var(--tm-panel); border:1px solid var(--tm-line); border-top:5px solid var(--theme,var(--tm-accent));
+  border-radius:var(--tm-radius); padding:18px 18px 16px; display:flex; flex-direction:column; gap:9px;
+  box-shadow:0 1px 3px rgba(16,26,38,.06); transition:transform .15s ease, box-shadow .15s ease;
 }
-.tmh-card{
-  position:relative; cursor:pointer;
-  flex:0 1 320px;
-  background:var(--tm-panel);
-  border:1px solid var(--tm-line);
-  border-top:5px solid var(--theme,var(--tm-accent));
-  border-radius:var(--tm-radius);
-  padding:14px 16px;
-  display:flex; flex-direction:column; gap:7px;
-  box-shadow:0 1px 3px rgba(16,26,38,.06);
-  transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
-}
-.tmh-card:hover, .tmh-card:focus-visible{
-  transform:translateY(-4px);
-  box-shadow:0 12px 26px rgba(16,26,38,.14);
-  outline:none;
-}
-.tmh-icon{
-  width:42px; height:42px; border-radius:11px;
-  display:inline-flex; align-items:center; justify-content:center;
-  background:color-mix(in srgb,var(--theme,var(--tm-accent)) 12%, white);
-  color:var(--theme,var(--tm-accent));
-}
-.tmh-icon svg{ width:22px; height:22px; }
-.tmh-card__title{
-  font-size:14.5px; font-weight:600; line-height:1.35; margin:0; color:var(--tm-ink);
-  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
-}
-.tmh-card__meta{ font-size:12.5px; color:var(--tm-muted); margin-top:auto; }
-.tmh-card__cue{ margin-top:4px; font-size:12.5px; font-weight:600; color:var(--theme,var(--tm-accent)); }
-.tmh-tag{
-  align-self:flex-start;
-  font-size:11px; font-weight:700; letter-spacing:.02em;
-  color:var(--theme,var(--tm-accent));
-  background:color-mix(in srgb,var(--theme,var(--tm-accent)) 12%, white);
-  border-radius:999px; padding:4px 11px;
-}
-.tmh-tag--count{ margin-top:auto; }
+.tmh-cat:hover,.tmh-cat:focus-visible{ transform:translateY(-4px); box-shadow:0 12px 26px rgba(16,26,38,.14); outline:none; }
+.tmh-cat__icon{ width:44px; height:44px; border-radius:12px; display:inline-flex; align-items:center; justify-content:center; background:color-mix(in srgb,var(--theme,var(--tm-accent)) 12%, white); color:var(--theme,var(--tm-accent)); }
+.tmh-cat__icon svg{ width:23px; height:23px; }
+.tmh-cat__title{ font-size:15px; font-weight:600; line-height:1.3; margin:0; color:var(--tm-ink); }
+.tmh-cat__meta{ margin-top:auto; display:flex; align-items:center; gap:8px; }
+.tmh-cat__count{ font-size:11px; font-weight:700; color:var(--theme,var(--tm-accent)); background:color-mix(in srgb,var(--theme,var(--tm-accent)) 12%, white); border-radius:999px; padding:4px 11px; }
+.tmh-cat__range{ font-size:11.5px; color:var(--tm-faint); }
 
-/* folder hover tooltip */
-.tmh-tooltip{
-  position:absolute; left:50%; top:calc(100% + 10px); transform:translateX(-50%) translateY(-6px);
-  width:min(320px,86vw);
-  background:var(--tm-ink); color:#fff;
-  border-radius:12px; padding:14px 16px;
-  box-shadow:0 16px 36px rgba(16,26,38,.32);
-  opacity:0; visibility:hidden; pointer-events:none;
-  transition:opacity .16s ease, transform .16s ease;
-  z-index:5;
+/* ---------- reference items (grouped list + numbered list + search) ---------- */
+.tmh-reflist{ column-gap:26px; }
+.tmh-reflist.cols-3{ column-count:3; }
+.tmh-reflist.cols-2{ column-count:2; }
+.tmh-reflist.cols-1{ column-count:1; }
+.tmh-ref{
+  break-inside:avoid; width:100%; text-align:left; cursor:pointer;
+  display:flex; gap:9px; align-items:flex-start; margin:0 0 5px;
+  background:transparent; border:0; border-radius:9px; padding:6px 8px;
+  font-family:var(--tm-font); color:var(--tm-ink);
+  transition:background .12s ease;
 }
-.tmh-card:hover .tmh-tooltip, .tmh-card:focus-within .tmh-tooltip{
-  opacity:1; visibility:visible; transform:translateX(-50%) translateY(0);
-}
-.tmh-tooltip__h{ font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#aeb9e0; margin:0 0 8px; }
-.tmh-tooltip ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:7px; }
-.tmh-tooltip li{ font-size:12px; line-height:1.35; color:#e6eaf5; }
-.tmh-tooltip li strong{ color:#fff; }
+.tmh-ref:hover,.tmh-ref:focus-visible{ background:var(--tm-tint); outline:none; }
+.tmh-ref:focus-visible{ box-shadow:0 0 0 2px var(--tm-accent); }
+.tmh-ref__n{ flex:0 0 auto; min-width:22px; height:22px; padding:0 5px; border-radius:6px; background:color-mix(in srgb,var(--theme,var(--tm-accent)) 13%, white); color:var(--theme,var(--tm-accent)); font-size:11.5px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; }
+.tmh-ref__body{ flex:1 1 auto; min-width:0; }
+.tmh-ref__cite{ display:block; font-size:12.5px; line-height:1.4; color:var(--tm-ink); }
+.tmh-ref__foot{ display:flex; align-items:center; gap:7px; margin-top:3px; }
+.tmh-ref__type{ font-size:10px; font-weight:700; letter-spacing:.02em; text-transform:uppercase; color:var(--tm-muted); }
+.tmh-ref__open{ font-size:10.5px; font-weight:600; color:var(--tm-accent); display:inline-flex; align-items:center; gap:3px; }
+.tmh-empty{ text-align:center; color:var(--tm-muted); padding:34px 10px; font-size:14px; width:100%; }
 
-.tmh-empty{ grid-column:1/-1; text-align:center; color:var(--tm-muted); padding:40px 10px; font-size:14px; }
-
-/* ---------- modal ---------- */
-.tmh-modal{
-  position:fixed; inset:0; z-index:2147483600;
-  display:none; align-items:center; justify-content:center;
-  padding:clamp(12px,4vw,40px);
-  background:var(--tm-backdrop);
-  -webkit-backdrop-filter:blur(2px); backdrop-filter:blur(2px);
-  overflow:auto;
-}
-.tmh-modal.is-open{ display:flex; }
-.tmh-modal__panel{
-  position:relative; width:min(620px,100%); margin:auto;
-  background:var(--tm-panel); border-radius:var(--tm-radius);
-  box-shadow:0 24px 60px rgba(16,26,38,.34);
-  padding:26px 26px 24px; animation:tmh-rise .2s ease both;
-}
-@keyframes tmh-rise{ from{ opacity:0; transform:translateY(10px) scale(.99);} to{opacity:1;transform:none;} }
-.tmh-modal__close{
-  position:absolute; top:16px; right:16px;
-  width:34px; height:34px; border:1px solid var(--tm-line); background:#fff;
-  border-radius:9px; cursor:pointer; color:var(--tm-muted); font-size:18px; line-height:1;
-  display:inline-flex; align-items:center; justify-content:center;
-  transition:background .15s ease, color .15s ease, border-color .15s ease;
-}
-.tmh-modal__close:hover, .tmh-modal__close:focus-visible{ background:var(--tm-tint); color:var(--tm-ink); border-color:var(--tm-faint); outline:none; }
-.tmh-modal__title{ font-size:18px; font-weight:700; line-height:1.4; margin:10px 48px 6px 0; color:var(--tm-ink); }
-.tmh-modal__cite{ font-size:13.5px; line-height:1.6; color:var(--tm-muted); margin:12px 0 0; }
-
-.tmh-urls{ margin-top:18px; display:flex; flex-direction:column; gap:12px; }
-.tmh-url{
-  border:1px solid var(--tm-line); border-radius:12px; padding:14px 15px; background:var(--tm-tint);
-  display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between;
-}
-.tmh-url__info{ display:flex; flex-direction:column; gap:3px; min-width:0; flex:1 1 220px; }
-.tmh-url__label{ font-size:12px; font-weight:600; color:var(--tm-ink); }
-.tmh-url__val{ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:11.5px; color:var(--tm-muted); word-break:break-all; }
-.tmh-url__actions{ display:flex; gap:8px; flex-wrap:wrap; }
-
-.tmh-btn{
-  min-height:42px; padding:9px 16px;
-  border:2px solid var(--tm-accent); border-radius:10px;
-  background:var(--tm-accent); color:var(--tm-on-accent);
-  font-family:var(--tm-font); font-weight:600; font-size:13px; cursor:pointer;
-  display:inline-flex; align-items:center; gap:7px;
-  transition:filter .15s ease, background .15s ease, color .15s ease;
-}
-.tmh-btn svg{ width:15px; height:15px; }
-.tmh-btn.secondary{ background:var(--tm-panel); color:var(--tm-accent); }
-.tmh-btn:disabled{ background:#c3c8d2; border-color:#c3c8d2; color:#fff; cursor:not-allowed; }
-.tmh-btn:hover:not(:disabled){ filter:brightness(.96); }
-
-/* ---------- D22 launch interstitial ---------- */
-.tmh-inter{
-  position:fixed; inset:0; z-index:2147483601;
-  display:none; align-items:center; justify-content:center;
-  padding:clamp(12px,4vw,40px); background:rgba(16,26,38,.68);
-}
+/* ---------- launch interstitial (D16/D22) ---------- */
+.tmh-inter{ position:fixed; inset:0; z-index:2147483601; display:none; align-items:center; justify-content:center; padding:clamp(12px,4vw,40px); background:rgba(16,26,38,.68); }
 .tmh-inter.is-open{ display:flex; }
-.tmh-inter__panel{
-  width:min(460px,100%); max-height:calc(100% - 24px); overflow:auto;
-  background:var(--tm-panel); border-radius:var(--tm-radius);
-  box-shadow:0 24px 60px rgba(16,26,38,.4); padding:22px; animation:tmh-rise .2s ease both;
-}
+.tmh-inter__panel{ width:min(460px,100%); max-height:calc(100% - 24px); overflow:auto; background:var(--tm-panel); border-radius:var(--tm-radius); box-shadow:0 24px 60px rgba(16,26,38,.4); padding:22px; animation:tmh-rise .2s ease both; }
+@keyframes tmh-rise{ from{opacity:0; transform:translateY(10px) scale(.99);} to{opacity:1; transform:none;} }
 .tmh-inter__title{ font-size:16px; font-weight:700; margin:0 0 8px; color:var(--tm-ink); }
 .tmh-inter__p{ font-size:13px; line-height:1.5; color:var(--tm-muted); margin:0 0 10px; }
 .tmh-inter__p strong{ color:var(--tm-ink); font-weight:600; }
 .tmh-inter__domain{ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12px; color:var(--tm-ink); margin:0 0 8px; overflow-wrap:anywhere; }
-.tmh-inter__url{
-  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:11.5px; line-height:1.45;
-  color:var(--tm-muted); background:var(--tm-tint); border:1px solid var(--tm-line);
-  border-radius:8px; padding:9px 11px; word-break:break-all;
-}
+.tmh-inter__url{ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:11.5px; line-height:1.45; color:var(--tm-muted); background:var(--tm-tint); border:1px solid var(--tm-line); border-radius:8px; padding:9px 11px; word-break:break-all; }
 .tmh-inter__status{ margin-top:12px; display:flex; align-items:center; gap:9px; min-height:22px; font-size:12px; font-style:italic; color:var(--tm-muted); }
 .tmh-prep{ display:inline-flex; gap:5px; }
 .tmh-prep i{ width:8px; height:8px; border-radius:50%; background:var(--tm-accent); display:inline-block; animation:tmh-prep-pulse 1s infinite ease-in-out; }
@@ -252,6 +125,10 @@ body{
 .tmh-prep i:nth-child(3){ animation-delay:.3s; }
 @keyframes tmh-prep-pulse{ 0%,100%{ transform:scale(.6); opacity:.4; } 50%{ transform:scale(1); opacity:1; } }
 .tmh-inter__actions{ display:flex; flex-wrap:wrap; gap:9px; margin-top:16px; }
+.tmh-btn{ min-height:44px; padding:10px 18px; border:2px solid var(--tm-accent); border-radius:10px; background:var(--tm-accent); color:var(--tm-on-accent); font-family:var(--tm-font); font-weight:600; font-size:13px; cursor:pointer; }
+.tmh-btn.secondary{ background:var(--tm-panel); color:var(--tm-accent); }
+.tmh-btn:disabled{ background:#c3c8d2; border-color:#c3c8d2; color:#fff; cursor:not-allowed; }
+.tmh-btn:hover:not(:disabled){ filter:brightness(.96); }
 
 /* ---------- phone: drop the fixed-frame rule, allow scrolling ---------- */
 @media (max-width:760px){
@@ -259,20 +136,14 @@ body{
   body{ overflow:auto; }
   #tmh-root{ height:auto; overflow:visible; padding-bottom:30px; }
   .frame__body{ display:block; overflow:visible; }
-}
-
-/* ---------- mobile ---------- */
-@media (max-width:540px){
-  .tmh-card{ flex-basis:100%; }
-  .tmh-modal__panel{ padding:22px 18px 20px; }
-  .tmh-url{ flex-direction:column; align-items:stretch; }
-  .tmh-url__actions .tmh-btn{ flex:1 1 auto; justify-content:center; }
+  .tmh-reflist.cols-3,.tmh-reflist.cols-2{ column-count:1; }
+  .tmh-cat{ flex-basis:100%; }
 }
 
 /* ---------- reduced motion ---------- */
 @media (prefers-reduced-motion:reduce){
-  .tmh-card, .tmh-crumb, .tmh-btn, .tmh-tooltip{ transition:none; }
-  .tmh-modal__panel, .tmh-inter__panel{ animation:none; }
+  .tmh-cat,.tmh-crumb,.tmh-btn,.tmh-ref,.tmh-toggle button{ transition:none; }
+  .tmh-inter__panel{ animation:none; }
   .tmh-prep i{ animation:none; }
 }
 </style>
@@ -281,34 +152,32 @@ body{
 
 <div id="tmh-root">
   <div class="frame__chrome">
-    <header class="tmh-head">
-      <p class="tmh-eyebrow">Evidence &amp; sources</p>
-      <h1 class="tmh-title">References</h1>
-      <p class="tmh-sub">Browse or search the evidence cited in this module, then open any source.</p>
-    </header>
-    <div class="tmh-search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
-      <input type="text" id="tmhSearch" placeholder="Search by author, title, journal or keyword…" aria-label="Search references">
+    <div class="tmh-head">
+      <div class="tmh-titles">
+        <p class="tmh-eyebrow">Evidence &amp; sources</p>
+        <h1 class="tmh-title">References</h1>
+      </div>
+      <div class="tmh-toggle" role="group" aria-label="View mode">
+        <button id="tmhTabGrouped" type="button" aria-pressed="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>Grouped</button>
+        <button id="tmhTabNumbered" type="button" aria-pressed="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>Numbered</button>
+      </div>
     </div>
-    <nav class="tmh-crumbs" id="tmhCrumbs" aria-label="Breadcrumb"></nav>
+    <div class="tmh-row">
+      <div class="tmh-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+        <input type="text" id="tmhSearch" placeholder="Search author, journal, drug or keyword…" aria-label="Search references">
+      </div>
+      <nav class="tmh-crumbs" id="tmhCrumbs" aria-label="Breadcrumb"></nav>
+    </div>
   </div>
   <div class="frame__body">
-    <div class="tmh-grid" id="tmhGrid"></div>
+    <div class="tmh-scroll" id="tmhBody"></div>
   </div>
 </div>
 
-<!-- RESOURCE DETAIL MODAL -->
-<div class="tmh-modal" id="tmhModal" role="dialog" aria-modal="true" aria-labelledby="tmhModalTitle" hidden>
-  <div class="tmh-modal__panel" role="document">
-    <button class="tmh-modal__close" id="tmhModalClose" type="button" aria-label="Close">&times;</button>
-    <span class="tmh-tag" id="tmhModalType"></span>
-    <h2 class="tmh-modal__title" id="tmhModalTitle"></h2>
-    <p class="tmh-modal__cite" id="tmhModalCite"></p>
-    <div class="tmh-urls" id="tmhModalUrls"></div>
-  </div>
-</div>
-
-<!-- D22 EXTERNAL-LINK LAUNCH INTERSTITIAL -->
+<!-- D16/D22 launch interstitial -->
 <div class="tmh-inter" id="tmhInter" role="dialog" aria-modal="true" aria-labelledby="tmhInterTitle" aria-describedby="tmhInterReason" hidden>
   <div class="tmh-inter__panel" role="document">
     <h2 class="tmh-inter__title" id="tmhInterTitle">You are leaving this activity</h2>
@@ -328,76 +197,32 @@ body{
 
 <script>
 /* ============================================================
-   CONTENT — edit here only.
-   Each reference: { cat, type, code, title, cite, url, search }
+   CONTENT — the 18-item global reference list. Edit here only.
+   Numbers 1–18 are fixed (master order); categories regroup them.
    ============================================================ */
-const CAT_A = "MET biology & the METex14 driver";
-const CAT_B = "Tepotinib & the VISION study";
+const CAT1 = "MET biology & the METex14 driver";
+const CAT2 = "Approvals, guidelines & pivotal VISION";
+const CAT3 = "VISION ≥3-year posters";
 
 const REFERENCES = [
-  // ---- Category A: MET biology & the METex14 driver ----
-  { cat:CAT_A, type:"Journal article", code:"Reungwetwattana 2017",
-    title:"The race to target MET exon 14 skipping alterations in NSCLC",
-    cite:"Reungwetwattana T, Liang Y, Zhu V, Ou SI. The race to target MET exon 14 skipping alterations in non-small cell lung cancer: the why, the how, the who, the unknown, and the inevitable. Lung Cancer. 2017;103:27–37.",
-    url:"https://doi.org/10.1016/j.lungcan.2016.11.011",
-    search:"reungwetwattana ou met exon 14 skipping nsclc review lung cancer 2017 targeted" },
-  { cat:CAT_A, type:"Journal article", code:"Frampton 2015",
-    title:"Activation of MET via diverse exon 14 splicing alterations confers sensitivity to MET inhibitors",
-    cite:"Frampton GM, Ali SM, Rosenzweig M, Chmielecki J, Lu X, Bauer TM, et al. Activation of MET via diverse exon 14 splicing alterations occurs in multiple tumor types and confers clinical sensitivity to MET inhibitors. Cancer Discov. 2015;5(8):850–859.",
-    url:"https://doi.org/10.1158/2159-8290.CD-15-0285",
-    search:"frampton foundation medicine met exon 14 splicing alterations tumor types met inhibitors cancer discovery 2015" },
-  { cat:CAT_A, type:"Journal article", code:"Paik 2015",
-    title:"Response to MET inhibitors in lung adenocarcinomas harbouring MET exon 14 skipping mutations",
-    cite:"Paik PK, Drilon A, Fan PD, Yu H, Rekhtman N, Ginsberg MS, et al. Response to MET inhibitors in patients with stage IV lung adenocarcinomas harboring MET mutations causing exon 14 skipping. Cancer Discov. 2015;5(8):842–849.",
-    url:"https://doi.org/10.1158/2159-8290.CD-14-1467",
-    search:"paik drilon met inhibitors stage iv lung adenocarcinoma exon 14 skipping cancer discovery 2015" },
-  { cat:CAT_A, type:"Journal article", code:"Rosell 2016",
-    title:"Large-scale screening for somatic mutations in lung cancer",
-    cite:"Rosell R, Karachaliou N. Large-scale screening for somatic mutations in lung cancer. Lancet. 2016;387(10026):1354–1356.",
-    url:"https://doi.org/10.1016/S0140-6736(15)01125-3",
-    search:"rosell karachaliou large-scale screening somatic mutations lung cancer lancet 2016 comment" },
-  { cat:CAT_A, type:"Journal article", code:"Salgia 2020",
-    title:"The promise of selective MET inhibitors in NSCLC with MET exon 14 skipping",
-    cite:"Salgia R, Sattler M, Scheele J, Stroh C, Felip E. The promise of selective MET inhibitors in non-small cell lung cancer with MET exon 14 skipping. Cancer Treat Rev. 2020;87:102022.",
-    url:"https://doi.org/10.1016/j.ctrv.2020.102022",
-    search:"salgia sattler selective met inhibitors nsclc exon 14 skipping cancer treatment reviews 2020" },
-  { cat:CAT_A, type:"Review", code:"Lee 2025",
-    title:"Evolving roles of MET as a therapeutic target in NSCLC and beyond",
-    cite:"Lee JB, Shim JS, Cho BC. Evolving roles of MET as a therapeutic target in NSCLC and beyond. Nat Rev Clin Oncol. 2025;22(9):640–666.",
-    url:"https://doi.org/10.1038/s41571-025-01051-9",
-    search:"lee shim cho evolving roles met therapeutic target nsclc nature reviews clinical oncology 2025 review" },
-
-  // ---- Category B: Tepotinib & the VISION study ----
-  { cat:CAT_B, type:"Journal article", code:"Mazieres 2023",
-    title:"Tepotinib in METex14 skipping NSCLC: long-term follow-up of the VISION phase 2 trial",
-    cite:"Mazieres J, Paik PK, Garassino MC, Le X, Sakai H, Veillon R, et al. Tepotinib treatment in patients with MET exon 14-skipping non-small cell lung cancer: long-term follow-up of the VISION phase 2 nonrandomized clinical trial. JAMA Oncol. 2023;9(9):1260–1266.",
-    url:"https://doi.org/10.1001/jamaoncol.2023.1962",
-    search:"mazieres tepotinib metex14 skipping nsclc vision phase 2 long-term follow-up jama oncology 2023" },
-  { cat:CAT_B, type:"Conference abstract (ELCC 2025)", code:"Mazieres 2025 · 81P",
-    title:"Tepotinib in METex14 skipping NSCLC from VISION: ≥3-year follow-up outcomes (81P)",
-    cite:"Mazieres J, et al. 81P. Tepotinib in patients with MET exon 14 (METex14) skipping NSCLC from the VISION study: ≥3-year follow-up outcomes. J Thorac Oncol. 2025;20(3, Suppl 1):S59–S60.",
-    url:"https://doi.org/10.1016/S1556-0864(25)00276-X",
-    search:"mazieres 81P tepotinib metex14 vision 3-year follow-up elcc 2025 journal thoracic oncology abstract" },
-  { cat:CAT_B, type:"Conference abstract (WCLC 2025)", code:"Felip 2025 · P3.12.40",
-    title:"Safety and patient-reported outcomes with tepotinib in METex14 skipping NSCLC: ≥3-year follow-up of VISION (P3.12.40)",
-    cite:"Felip E, et al. P3.12.40. Safety and patient-reported outcomes with tepotinib in patients with METex14 skipping NSCLC: ≥3-years follow-up of VISION. J Thorac Oncol. 2025;20(10, Suppl 1):S483–S484.",
-    url:"https://doi.org/10.1016/j.jtho.2025.09.902",
-    search:"felip P3.12.40 safety patient-reported outcomes tepotinib metex14 vision wclc 2025 abstract" },
-  { cat:CAT_B, type:"Conference abstract (ESMO 2025)", code:"Griesinger 2025 · 1996P",
-    title:"Long-term outcomes with tepotinib for clinically relevant subgroups in VISION: ≥3-year follow-up (1996P)",
-    cite:"Griesinger F, et al. 1996P. Long-term outcomes with tepotinib for clinically relevant subgroups of patients with MET exon 14 (METex14) skipping NSCLC in the VISION study: a ≥3-year follow-up. Ann Oncol. 2025;36(Suppl):S1061–S1062.",
-    url:"https://doi.org/10.1016/j.annonc.2025.08.2620",
-    search:"griesinger 1996P tepotinib clinically relevant subgroups metex14 vision esmo 2025 annals oncology abstract" },
-  { cat:CAT_B, type:"Conference abstract (ESMO 2025)", code:"Viteri 2025 · 1995P",
-    title:"Treatment sequencing of tepotinib in METex14 skipping NSCLC: ≥3-year follow-up of VISION (1995P)",
-    cite:"Viteri S, et al. 1995P. Treatment sequencing of tepotinib in patients with MET exon 14 (METex14) skipping NSCLC: outcomes from ≥3 years' follow-up of the VISION study. Ann Oncol. 2025;36(Suppl):S1060–S1061.",
-    url:"https://doi.org/10.1016/j.annonc.2025.08.2619",
-    search:"viteri 1995P treatment sequencing tepotinib metex14 vision esmo 2025 annals oncology abstract" },
-  { cat:CAT_B, type:"Conference abstract (ESMO 2025)", code:"Yang 2025 · 992P",
-    title:"Long-term outcomes in Asian patients with METex14 skipping NSCLC on tepotinib in VISION: ≥3-year follow-up (992P)",
-    cite:"Yang J, Morise M, Ahn MJ, Kato T, Zhao J, Chen YM, et al. 992P. Long-term outcomes in Asian patients with MET exon 14 skipping NSCLC receiving tepotinib in the VISION study: ≥3-year follow-up data. Ann Oncol. 2025;36(Suppl):S2062–S2063.",
-    url:"https://doi.org/10.1016/j.annonc.2025.10.703",
-    search:"yang 992P asian patients metex14 tepotinib vision esmo 2025 annals oncology abstract long-term" }
+  { n:1,  cat:CAT1, type:"Journal article", cite:"Russo A, et al. J Thorac Oncol. 2026; e-pub ahead of print.", url:"https://doi.org/10.1016/j.jtho.2026.103695" },
+  { n:2,  cat:CAT1, type:"Journal article", cite:"Drilon A, et al. J Thorac Oncol. 2017;12(1):15–26.", url:"https://doi.org/10.1016/j.jtho.2016.10.014" },
+  { n:3,  cat:CAT1, type:"Journal article", cite:"Awad MM, et al. J Clin Oncol. 2016;34(7):721–730.", url:"https://doi.org/10.1200/JCO.2015.63.4600" },
+  { n:4,  cat:CAT1, type:"Journal article", cite:"Remon J, et al. J Thorac Oncol. 2023;18(4):419–435.", url:"https://doi.org/10.1016/j.jtho.2022.10.015" },
+  { n:5,  cat:CAT1, type:"Journal article", cite:"Tong JH, et al. Clin Cancer Res. 2016;22(12):3048–3056.", url:"https://doi.org/10.1158/1078-0432.CCR-15-2061" },
+  { n:6,  cat:CAT2, type:"Prescribing information", cite:"US FDA. TEPMETKO (tepotinib) Prescribing Information. 2024.", avail:"emdserono.com/…/tepmetko-pi.pdf", accessed:"June 2026", url:"https://www.emdserono.com/us-en/pi/tepmetko-pi.pdf" },
+  { n:7,  cat:CAT2, type:"News release", cite:"TEPMETKO (tepotinib) Approved in Japan for Advanced NSCLC with METex14 Skipping Alterations.", avail:"merckgroup.com/…/tepotinib-25-03-2020.html", accessed:"June 2026", url:"https://www.merckgroup.com/en/news/tepotinib-25-03-2020.html" },
+  { n:8,  cat:CAT2, type:"SmPC", cite:"European Medicines Agency. TEPMETKO (tepotinib) Summary of Product Characteristics. 2026.", avail:"ema.europa.eu/…/tepmetko-epar-product-information_en.pdf", accessed:"June 2026", url:"https://www.ema.europa.eu/en/documents/product-information/tepmetko-epar-product-information_en.pdf" },
+  { n:9,  cat:CAT2, type:"Prescribing information", cite:"US FDA. Tabrecta (capmatinib) Prescribing Information. 2024.", avail:"novartis.com/…/tabrecta.pdf", accessed:"June 2026", url:"https://www.novartis.com/us-en/sites/novartis_us/files/tabrecta.pdf" },
+  { n:10, cat:CAT2, type:"SmPC", cite:"European Medicines Agency. Tabrecta (capmatinib) Summary of Product Characteristics. 2025.", avail:"ema.europa.eu/…/tabrecta-epar-product-information_en.pdf", accessed:"June 2026", url:"https://www.ema.europa.eu/en/documents/product-information/tabrecta-epar-product-information_en.pdf" },
+  { n:11, cat:CAT2, type:"Journal article", cite:"Hendriks LE, et al. Ann Oncol. 2023;34(4):339–357.", url:"https://doi.org/10.1016/j.annonc.2022.12.009" },
+  { n:12, cat:CAT2, type:"Clinical guideline", cite:"ESMO Oncogene-Addicted Metastatic Non-Small-Cell Lung Cancer Living Guideline, v1.3 – February 2026.", avail:"esmo.org/guidelines/living-guidelines/…", accessed:"June 2026", url:"https://www.esmo.org/guidelines/living-guidelines/esmo-living-guideline-oncogene-addicted-metastatic-non-small-cell-lung-cancer/management-of-advanced-and-metastatic-disease/ret-fusion-ntrk-her2-activating-mutations-her2-overexpression-met-ex14-skipping-mutation-c-met-or-kras-g12c-mutation/ret-ntrk-her2-exon-20-egfr-ex20ins" },
+  { n:13, cat:CAT2, type:"Journal article", cite:"Mazieres J, et al. JAMA Oncol. 2023;9(9):1260–1266.", url:"https://doi.org/10.1001/jamaoncol.2023.1962" },
+  { n:14, cat:CAT3, type:"Conference abstract", cite:"Mazieres J, et al. 81P. J Thorac Oncol. 2025;20(3, Suppl 1):S59–S60.", url:"https://doi.org/10.1016/S1556-0864(25)00276-X" },
+  { n:15, cat:CAT3, type:"Conference abstract", cite:"Felip E, et al. P3.12.40. J Thorac Oncol. 2025;20(10, Suppl 1):S483–S484.", url:"https://doi.org/10.1016/j.jtho.2025.09.902" },
+  { n:16, cat:CAT3, type:"Conference abstract", cite:"Griesinger F, et al. 1996P. Ann Oncol. 2025;36(Suppl):S1061–S1062.", url:"https://doi.org/10.1016/j.annonc.2025.08.2620" },
+  { n:17, cat:CAT3, type:"Conference abstract", cite:"Viteri S, et al. 1995P. Ann Oncol. 2025;36(Suppl):S1060–S1061.", url:"https://doi.org/10.1016/j.annonc.2025.08.2619" },
+  { n:18, cat:CAT3, type:"Conference abstract", cite:"Yang J, et al. 992P. Ann Oncol. 2025;36(Suppl):S2121–S2122.", url:"https://doi.org/10.1016/j.annonc.2025.10.703" }
 ];
 
 /* ============================================================
@@ -405,228 +230,142 @@ const REFERENCES = [
    ============================================================ */
 (function(){
   "use strict";
-  const grid    = document.getElementById('tmhGrid');
-  const crumbs  = document.getElementById('tmhCrumbs');
-  const search  = document.getElementById('tmhSearch');
-  const modal   = document.getElementById('tmhModal');
-  const inter   = document.getElementById('tmhInter');
+  const body   = document.getElementById('tmhBody');
+  const crumbs = document.getElementById('tmhCrumbs');
+  const search = document.getElementById('tmhSearch');
+  const inter  = document.getElementById('tmhInter');
+  const tabGrouped  = document.getElementById('tmhTabGrouped');
+  const tabNumbered = document.getElementById('tmhTabNumbered');
 
-  const THEME   = { [CAT_A]:'var(--tm-accent)', [CAT_B]:'var(--tm-accent2)' };
-  const FICON   = { [CAT_A]:'biology', [CAT_B]:'trial' };
-
-  const ICONS = {
-    biology:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.31"/><path d="M14 9.3V2"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/><path d="M5.5 16h13"/></svg>',
-    trial:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>',
-    article:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>',
-    abstract:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></svg>',
-    launch:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>'
+  const CATS = [CAT1, CAT2, CAT3];
+  const THEME = { [CAT1]:'var(--tm-accent)', [CAT2]:'var(--tm-accent2)', [CAT3]:'var(--tm-accent3)' };
+  const ICON = {
+    [CAT1]:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.31"/><path d="M14 9.3V2"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/><path d="M5.5 16h13"/></svg>',
+    [CAT2]:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>',
+    [CAT3]:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></svg>'
   };
-  function refIcon(r){ return /abstract/i.test(r.type) ? ICONS.abstract : ICONS.article; }
+  const OPEN_ICON = '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>';
 
   function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
-  const CATS = [];
-  REFERENCES.forEach(r => { if(!CATS.includes(r.cat)) CATS.push(r.cat); });
-
-  let inCategory = null;   // null = home; else the category name
+  let viewMode = 'grouped';   // 'grouped' | 'numbered'
+  let inCat = null;
 
   /* ---------- clipboard ---------- */
-  function fallbackCopy(t){
-    const ta=document.createElement('textarea'); ta.value=t; ta.setAttribute('readonly','');
-    ta.style.position='fixed'; ta.style.left='-9999px';
-    document.body.appendChild(ta); ta.select();
-    let ok=false; try{ ok=document.execCommand('copy'); }catch(e){ ok=false; }
-    document.body.removeChild(ta); return ok;
-  }
-  function copyText(t){
-    if(navigator.clipboard && navigator.clipboard.writeText){
-      return navigator.clipboard.writeText(t).then(()=>true).catch(()=>fallbackCopy(t));
-    }
-    return Promise.resolve(fallbackCopy(t));
-  }
+  function fallbackCopy(t){ const ta=document.createElement('textarea'); ta.value=t; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select(); let ok=false; try{ ok=document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); return ok; }
+  function copyText(t){ if(navigator.clipboard && navigator.clipboard.writeText){ return navigator.clipboard.writeText(t).then(()=>true).catch(()=>fallbackCopy(t)); } return Promise.resolve(fallbackCopy(t)); }
 
-  /* italicise the gene symbol MET for display only (data stays plain so search still works); run on esc()'d text */
-  function italMET(s){ return String(s).replace(/\bMET\b/g,'<em>MET</em>').replace(/\bMET(?=ex14)/g,'<em>MET</em>'); }
-
-  /* ---------- render ---------- */
-  function render(){
-    crumbs.innerHTML=''; grid.innerHTML='';
-    // breadcrumbs
-    const home=document.createElement('button');
-    home.type='button'; home.className='tmh-crumb'; home.textContent='All references';
-    home.onclick=()=>{ inCategory=null; render(); };
-    crumbs.appendChild(home);
-    if(inCategory){
-      const sep=document.createElement('span'); sep.className='tmh-sep'; sep.textContent='›'; crumbs.appendChild(sep);
-      const c=document.createElement('span'); c.className='tmh-crumb tmh-crumb--static'; c.innerHTML=italMET(esc(inCategory)); crumbs.appendChild(c);
-    }
-    if(!inCategory){
-      CATS.forEach(cat => grid.appendChild(folderCard(cat)));
-    } else {
-      REFERENCES.filter(r=>r.cat===inCategory).forEach(r => grid.appendChild(refCard(r)));
-    }
+  /* ---------- render helpers ---------- */
+  function refHTML(r){
+    return '<button class="tmh-ref" type="button" style="--theme:'+THEME[r.cat]+'" data-url="'+esc(r.url)+'" data-cite="'+esc(r.cite)+'" data-accessed="'+esc(r.accessed||'')+'">'+
+      '<span class="tmh-ref__n">'+r.n+'</span>'+
+      '<span class="tmh-ref__body">'+
+        '<span class="tmh-ref__cite">'+esc(r.cite)+'</span>'+
+        '<span class="tmh-ref__foot"><span class="tmh-ref__type">'+esc(r.type)+'</span>'+
+        '<span class="tmh-ref__open">Open source '+OPEN_ICON+'</span></span>'+
+      '</span></button>';
+  }
+  function listHTML(refs, cols){
+    if(!refs.length) return '<div class="tmh-empty">No matching references found.</div>';
+    return '<div class="tmh-reflist cols-'+cols+'">'+refs.map(refHTML).join('')+'</div>';
+  }
+  function catCardHTML(cat){
+    const refs = REFERENCES.filter(r=>r.cat===cat);
+    const first=refs[0].n, last=refs[refs.length-1].n;
+    return '<div class="tmh-cat" tabindex="0" role="button" data-cat="'+esc(cat)+'" style="--theme:'+THEME[cat]+'">'+
+      '<div class="tmh-cat__icon">'+ICON[cat]+'</div>'+
+      '<h2 class="tmh-cat__title">'+esc(cat)+'</h2>'+
+      '<div class="tmh-cat__meta"><span class="tmh-cat__count">'+refs.length+' reference'+(refs.length>1?'s':'')+'</span>'+
+      '<span class="tmh-cat__range">Refs '+first+'–'+last+'</span></div></div>';
   }
 
-  function folderCard(cat){
-    const items=REFERENCES.filter(r=>r.cat===cat);
-    const card=document.createElement('div');
-    card.className='tmh-card'; card.tabIndex=0; card.setAttribute('role','button');
-    card.style.setProperty('--theme', THEME[cat]||'var(--tm-accent)');
-    const go=()=>{ inCategory=cat; render(); };
-    card.onclick=go;
-    card.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } };
-    card.innerHTML =
-      '<div class="tmh-icon">'+(ICONS[FICON[cat]]||ICONS.article)+'</div>'+
-      '<h3 class="tmh-card__title">'+italMET(esc(cat))+'</h3>'+
-      '<span class="tmh-tag tmh-tag--count">'+items.length+' reference'+(items.length>1?'s':'')+'</span>'+
-      '<span class="tmh-card__cue">View references &rarr;</span>';
-    return card;
-  }
-
-  function refCard(r){
-    const card=document.createElement('div');
-    card.className='tmh-card'; card.tabIndex=0; card.setAttribute('role','button');
-    card.style.setProperty('--theme', THEME[r.cat]||'var(--tm-accent)');
-    const go=()=>openModal(r);
-    card.onclick=go;
-    card.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } };
-    card.innerHTML =
-      '<div class="tmh-icon">'+refIcon(r)+'</div>'+
-      '<span class="tmh-tag">'+esc(r.type)+'</span>'+
-      '<h3 class="tmh-card__title">'+italMET(esc(r.title))+'</h3>'+
-      '<div class="tmh-card__meta">'+esc(r.code)+'</div>';
-    return card;
-  }
-
-  /* ---------- search ---------- */
-  search.addEventListener('input', e=>{
-    const term=e.target.value.toLowerCase().trim();
-    if(term===''){ render(); return; }
+  function renderCrumbs(){
     crumbs.innerHTML='';
-    const home=document.createElement('button');
-    home.type='button'; home.className='tmh-crumb'; home.textContent='All references';
-    home.onclick=()=>{ search.value=''; inCategory=null; render(); };
+    if(viewMode==='numbered') return;              // numbered view: no breadcrumb
+    const home=document.createElement('button'); home.type='button'; home.className='tmh-crumb'; home.textContent='All references';
+    home.onclick=()=>{ inCat=null; search.value=''; render(); };
     crumbs.appendChild(home);
-    const sep=document.createElement('span'); sep.className='tmh-sep'; sep.textContent='›'; crumbs.appendChild(sep);
-    const s=document.createElement('span'); s.className='tmh-crumb tmh-crumb--static'; s.textContent='Search: "'+e.target.value+'"'; crumbs.appendChild(s);
-    grid.innerHTML='';
-    const hits=REFERENCES.filter(r =>
-      r.title.toLowerCase().includes(term) ||
-      r.code.toLowerCase().includes(term) ||
-      r.cite.toLowerCase().includes(term) ||
-      r.cat.toLowerCase().includes(term) ||
-      (r.search||'').toLowerCase().includes(term)
-    );
-    if(!hits.length){ grid.innerHTML='<div class="tmh-empty">No matching references found.</div>'; return; }
-    hits.forEach(r => grid.appendChild(refCard(r)));
+    if(inCat){ const s=document.createElement('span'); s.className='tmh-sep'; s.textContent='›'; crumbs.appendChild(s);
+      const c=document.createElement('span'); c.className='tmh-crumb tmh-crumb--static'; c.textContent=inCat; crumbs.appendChild(c); }
+  }
+
+  function render(){
+    renderCrumbs();
+    const term = search.value.toLowerCase().trim();
+    if(term){
+      const hits = REFERENCES.filter(r => (r.cite+' '+r.cat+' '+r.type+' '+r.url).toLowerCase().includes(term));
+      body.innerHTML = listHTML(hits, 3);
+      return;
+    }
+    if(viewMode==='numbered'){
+      body.innerHTML = listHTML(REFERENCES, 3);
+      return;
+    }
+    // grouped
+    if(!inCat){
+      body.innerHTML = '<div class="tmh-cats">'+CATS.map(catCardHTML).join('')+'</div>';
+    } else {
+      body.innerHTML = listHTML(REFERENCES.filter(r=>r.cat===inCat), 2);
+    }
+  }
+
+  /* ---------- interactions ---------- */
+  body.addEventListener('click', e=>{
+    const cat = e.target.closest('.tmh-cat');
+    if(cat){ inCat = cat.getAttribute('data-cat'); render(); return; }
+    const ref = e.target.closest('.tmh-ref');
+    if(ref){ openInter(ref.getAttribute('data-url'), ref.getAttribute('data-cite'), ref.getAttribute('data-accessed'), ref); }
   });
+  body.addEventListener('keydown', e=>{
+    const cat = e.target.closest('.tmh-cat');
+    if(cat && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); inCat=cat.getAttribute('data-cat'); render(); }
+  });
+  search.addEventListener('input', render);
 
-  /* ---------- modal ---------- */
-  let modalTrigger=null;
-  function openModal(r){
-    modalTrigger=document.activeElement;
-    document.getElementById('tmhModalType').textContent=r.type;
-    document.getElementById('tmhModalType').style.setProperty('--theme', THEME[r.cat]||'var(--tm-accent)');
-    document.getElementById('tmhModalTitle').innerHTML=italMET(esc(r.title));
-    document.getElementById('tmhModalCite').innerHTML=italMET(esc(r.cite));
-    const wrap=document.getElementById('tmhModalUrls');
-    wrap.innerHTML='';
-    const row=document.createElement('div'); row.className='tmh-url';
-    row.innerHTML =
-      '<div class="tmh-url__info"><span class="tmh-url__label">View on publisher (DOI)</span>'+
-      '<span class="tmh-url__val">'+esc(r.url)+'</span></div>';
-    const actions=document.createElement('div'); actions.className='tmh-url__actions';
-    const launch=document.createElement('button'); launch.type='button'; launch.className='tmh-btn';
-    launch.innerHTML=ICONS.launch+'Open source';
-    launch.addEventListener('click', ()=>openInter(r.url, r.code, launch));
-    const copy=document.createElement('button'); copy.type='button'; copy.className='tmh-btn secondary'; copy.textContent='Copy link';
-    copy.addEventListener('click', ()=>{ copyText(r.url).then(()=>{ const o=copy.textContent; copy.textContent='Copied!'; setTimeout(()=>copy.textContent=o,1600); }); });
-    actions.appendChild(launch); actions.appendChild(copy);
-    row.appendChild(actions); wrap.appendChild(row);
-    modal.hidden=false; modal.classList.add('is-open');
-    document.getElementById('tmhModalClose').focus();
+  function setView(mode){
+    viewMode = mode; inCat = null; search.value='';
+    tabGrouped.setAttribute('aria-pressed', mode==='grouped');
+    tabNumbered.setAttribute('aria-pressed', mode==='numbered');
+    render();
   }
-  function closeModal(){
-    if(inter.classList.contains('is-open')) closeInter();
-    modal.classList.remove('is-open'); modal.hidden=true;
-    if(modalTrigger && modalTrigger.focus){ try{ modalTrigger.focus(); }catch(e){} }
-  }
-  document.getElementById('tmhModalClose').addEventListener('click', closeModal);
-  modal.addEventListener('click', e=>{ if(e.target===modal) closeModal(); });
+  tabGrouped.addEventListener('click', ()=>setView('grouped'));
+  tabNumbered.addEventListener('click', ()=>setView('numbered'));
 
-  /* ---------- D22 launch interstitial ---------- */
-  const iDest=document.getElementById('tmhInterDest');
-  const iOrg=document.getElementById('tmhInterOrg');
-  const iDomain=document.getElementById('tmhInterDomain');
-  const iUrl=document.getElementById('tmhInterUrl');
-  const iReason=document.getElementById('tmhInterReason');
-  const iStatus=document.getElementById('tmhInterStatus');
-  const iDots=inter.querySelector('.tmh-prep');
-  const iOpen=document.getElementById('tmhInterOpen');
-  const iCopy=document.getElementById('tmhInterCopy');
-  const iStay=document.getElementById('tmhInterStay');
-  const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* ---------- D16/D22 interstitial ---------- */
+  const iDest=document.getElementById('tmhInterDest'), iOrg=document.getElementById('tmhInterOrg'),
+        iDomain=document.getElementById('tmhInterDomain'), iUrl=document.getElementById('tmhInterUrl'),
+        iReason=document.getElementById('tmhInterReason'), iStatus=document.getElementById('tmhInterStatus'),
+        iDots=inter.querySelector('.tmh-prep'), iOpen=document.getElementById('tmhInterOpen'),
+        iCopy=document.getElementById('tmhInterCopy'), iStay=document.getElementById('tmhInterStay');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let pendingURL=null, interTrigger=null, launchTimer=null;
 
   function orgFromHost(h){
-    const map={ 'doi.org':'Publisher (resolved via doi.org)' };
-    return map[h]||h;
+    const map={ 'doi.org':'Publisher (resolved via doi.org)','www.novartis.com':'Novartis','www.emdserono.com':'EMD Serono',
+      'www.ema.europa.eu':'European Medicines Agency','www.esmo.org':'European Society for Medical Oncology','www.merckgroup.com':'Merck KGaA' };
+    return map[h] || h;
   }
-  function openInter(url, label, trigger){
+  function openInter(url, cite, accessed, trigger){
     pendingURL=url; interTrigger=trigger;
     let host=url; try{ host=new URL(url).hostname; }catch(e){}
-    iDest.textContent=label;
-    iOrg.textContent=orgFromHost(host);
-    iDomain.textContent=host;
-    iUrl.textContent=url;
+    iDest.textContent = cite + (accessed ? '  ·  Accessed ' + accessed : '');
+    iOrg.textContent=orgFromHost(host); iDomain.textContent=host; iUrl.textContent=url;
     iReason.textContent='This link opens an external source in a new tab.';
-    if(iDots) iDots.style.display='';
-    iStatus.textContent='Preparing the link…';
-    iOpen.disabled=true;
-    inter.hidden=false; inter.classList.add('is-open');
-    iStay.focus();
+    if(iDots) iDots.style.display=''; iStatus.textContent='Preparing the link…'; iOpen.disabled=true;
+    inter.hidden=false; inter.classList.add('is-open'); iStay.focus();
     if(launchTimer) clearTimeout(launchTimer);
-    launchTimer=setTimeout(()=>{
-      if(iDots) iDots.style.display='none';
-      iStatus.textContent='Ready to open.';
-      iOpen.disabled=false; iOpen.focus();
-    }, reduceMotion?250:1300);
+    launchTimer=setTimeout(()=>{ if(iDots) iDots.style.display='none'; iStatus.textContent='Ready to open.'; iOpen.disabled=false; iOpen.focus(); }, reduceMotion?250:1300);
   }
-  function closeInter(){
-    if(launchTimer) clearTimeout(launchTimer);
-    inter.classList.remove('is-open'); inter.hidden=true;
-    if(interTrigger && interTrigger.focus){ try{ interTrigger.focus(); }catch(e){} }
-  }
-  iOpen.addEventListener('click', ()=>{
-    if(!pendingURL) return;
-    window.open(pendingURL, '_blank', 'noopener,noreferrer');
-    iStatus.textContent='Link opened in a new tab. Nothing opened? Copy the link and open it manually.';
-  });
-  iCopy.addEventListener('click', ()=>{
-    if(!pendingURL) return;
-    copyText(pendingURL).then(()=>{ iStatus.textContent='Link copied. Paste it into a fresh browser tab.'; });
-  });
+  function closeInter(){ if(launchTimer) clearTimeout(launchTimer); inter.classList.remove('is-open'); inter.hidden=true; if(interTrigger && interTrigger.focus){ try{ interTrigger.focus(); }catch(e){} } }
+  iOpen.addEventListener('click', ()=>{ if(!pendingURL) return; window.open(pendingURL,'_blank','noopener,noreferrer'); iStatus.textContent='Link opened in a new tab. Nothing opened? Copy the link and open it manually.'; });
+  iCopy.addEventListener('click', ()=>{ if(!pendingURL) return; copyText(pendingURL).then(()=>{ iStatus.textContent='Link copied. Paste it into a fresh browser tab.'; }); });
   iStay.addEventListener('click', closeInter);
   inter.addEventListener('click', e=>{ if(e.target===inter) closeInter(); });
 
-  /* ---------- keyboard ---------- */
-  function trap(e, container){
-    const f=container.querySelectorAll('a[href],button:not([disabled])');
-    if(!f.length) return;
-    const first=f[0], last=f[f.length-1];
-    if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
-    else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
-  }
+  function trap(e, c){ const f=c.querySelectorAll('a[href],button:not([disabled])'); if(!f.length) return; const first=f[0], last=f[f.length-1]; if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); } else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); } }
   document.addEventListener('keydown', e=>{
-    if(inter.classList.contains('is-open')){
-      if(e.key==='Escape'){ e.preventDefault(); closeInter(); return; }
-      if(e.key==='Tab'){ trap(e, inter); }
-      return;
-    }
-    if(modal.classList.contains('is-open')){
-      if(e.key==='Escape'){ e.preventDefault(); closeModal(); return; }
-      if(e.key==='Tab'){ trap(e, modal); }
-    }
+    if(inter.classList.contains('is-open')){ if(e.key==='Escape'){ e.preventDefault(); closeInter(); } else if(e.key==='Tab'){ trap(e, inter); } return; }
+    if(e.key==='Escape' && inCat){ inCat=null; render(); }
   }, true);
 
   render();
