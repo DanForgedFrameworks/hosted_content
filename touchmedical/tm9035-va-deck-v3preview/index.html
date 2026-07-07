@@ -46,12 +46,14 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
 .tab:not(.is-active):hover{ background:#dfeaf7; }
 .tabs__panels{ position:relative; background:#f4f9fd; border:1.5px solid #bcd6ee; border-radius:0 0 16px 16px; padding:26px 32px; min-height:322px; display:flex; flex-direction:column; justify-content:center; }
 .tabpanel{ display:none; }
-.tabpanel.is-active{ display:block; width:100%; animation:tabFade .42s ease both; }
+.tabpanel.is-active{ display:block; width:100%; }
 .tabpanel__h{ font-size:26px; font-weight:700; color:var(--teal-strong); margin:0 0 14px; }
 .tabpanel__p{ font-size:24px; line-height:1.5; color:var(--navy); margin:0; }
 .tabpanel__p b{ color:var(--teal-strong); }
 @keyframes tabPulse{ 0%,100%{ transform:translateY(0); opacity:.7 } 50%{ transform:translateY(2px); opacity:1 } }
 @keyframes tabFade{ from{ opacity:0; transform:translateY(8px) } to{ opacity:1; transform:none } }
+.tabpanel.is-active .tabpanel__h{ animation:tabFade .44s cubic-bezier(.16,1,.3,1) both; }
+.tabpanel.is-active .tabpanel__p{ animation:tabFade .5s cubic-bezier(.16,1,.3,1) .12s both; }
 /* ================= S4 · LONG-TERM EFFICACY ================= */
 .s4::before{ content:""; position:absolute; inset:0; z-index:0; background:url("assets/s4.jpg") center/cover no-repeat; opacity:.10; }
 .s4 > *{ position:relative; z-index:1; }
@@ -107,8 +109,10 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
 .osub__lab{ width:32px; font-weight:700; font-size:15px; color:var(--teal-strong); }
 .osub__track{ flex:1 1 auto; height:12px; border-radius:6px; background:var(--mist); box-shadow:inset 0 0 0 1px var(--line); overflow:hidden; position:relative; }
 .osub__fill{ position:absolute; left:0; top:0; height:100%; border-radius:6px; background:var(--teal); transform-origin:left; }
-.osub__fill.l2{ background:var(--teal-strong); }
+.osub__fill.l2{ background:var(--navy); }
 .osub__val{ width:54px; text-align:right; font-weight:700; font-size:15px; color:var(--navy); }
+.orrsubs .osub:nth-child(1) .osub__lab, .orrsubs .osub:nth-child(1) .osub__val{ color:var(--teal-strong); }
+.orrsubs .osub:nth-child(2) .osub__lab, .orrsubs .osub:nth-child(2) .osub__val{ color:var(--navy); }
 .orr.is-split .orrsubs .osub__fill{ animation:fillGrow .68s cubic-bezier(.16,1,.3,1) both; }
 .orr.is-split .osub:nth-child(1) .osub__fill{ animation-delay:.06s; }
 .orr.is-split .osub:nth-child(2) .osub__fill{ animation-delay:.2s; }
@@ -145,13 +149,13 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
 /* S5 entrance: stat boxes appear one-by-one with a pause, then question/hint/takeaway */
 @keyframes statSlide{ from{ transform:translateY(20px); } to{ transform:none; } }
 /* ================= S6 · CONSISTENCY ACROSS SUBGROUPS ================= */
-.s6 .cs__body{ justify-content:center; gap:22px; }
-.sglist{ display:flex; flex-direction:column; gap:16px; }
+.s6 .cs__body{ justify-content:center; gap:34px; }
+.sglist{ display:flex; flex-direction:column; gap:22px; }
 .sgbullet{ display:flex; gap:16px; align-items:flex-start; font-size:22px; line-height:1.38; color:var(--navy); }
 .sgbullet .gene{ font-style:italic; }
 .sgbullet__ic{ flex:0 0 auto; width:40px; height:40px; border-radius:10px; background:var(--pale); display:grid; place-items:center; margin-top:2px; } .sgbullet__ic svg{ width:60%; height:60%; display:block; }
 .sgbullet .sup{ color:var(--teal); }
-.sgcards{ display:flex; flex-wrap:wrap; gap:16px; justify-content:center; }
+.sgcards{ display:flex; flex-wrap:wrap; gap:22px; justify-content:center; }
 .sgcard{ flex:0 1 46%; min-width:0; background:#eaf4fc; border:1.5px solid #bcd6ee; border-left:5px solid var(--teal); border-radius:16px; padding:15px 20px; box-shadow:0 4px 14px rgba(34,47,85,.05); }
 .sgcard__h{ display:flex; align-items:center; gap:10px; font-size:19px; font-weight:700; color:var(--navy); }
 .sgcard__ic{ flex:0 0 auto; width:26px; height:26px; } .sgcard__ic svg{ width:100%; height:100%; display:block; }
@@ -286,7 +290,7 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
 .sup:hover,.sup:focus-visible{ text-decoration:underline; outline:none; }
 
 /* acronym term (hover; only the first-appearance is interactive) */
-.ac{ text-decoration:underline dotted; text-decoration-color:var(--teal); text-underline-offset:3px; cursor:help; }
+.ac{ text-decoration:underline dotted; text-decoration-color:var(--teal); text-underline-offset:3px; cursor:pointer; }
 .ac--plain{ text-decoration:none; cursor:auto; }
 .ac .gene{ font-style:italic; }
 
@@ -342,8 +346,9 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
 /* ================= TABLE OF CONTENTS ================= */
 .toc__wrap{ flex:1 1 auto; display:flex; flex-direction:column; justify-content:center; padding:0 150px 50px; }
 .toc h2{ text-align:center; margin:0 0 26px; font-size:56px; font-weight:700; color:var(--navy); text-shadow:var(--title-shadow); }
-.toc__list{ display:flex; flex-direction:column; gap:14px; }
-.toc__item{ display:flex; align-items:center; gap:20px; width:100%; text-align:left; background:#eaf4fc; border:1.5px solid #bcd6ee; font:inherit; cursor:pointer; padding:12px 18px; border-radius:16px; transition:background .16s ease, transform .16s var(--ease), box-shadow .16s ease; }
+.toc__list{ display:flex; flex-direction:column; align-items:flex-start; gap:14px; }
+.toc__item{ display:flex; align-items:center; gap:20px; width:max-content; max-width:100%; text-align:left; background:#eaf4fc; border:1.5px solid #bcd6ee; font:inherit; cursor:pointer; padding:12px 18px; border-radius:16px; transition:background .16s ease, transform .16s var(--ease), box-shadow .16s ease; }
+.toc__item:nth-child(2){margin-left:48px}.toc__item:nth-child(3){margin-left:96px}.toc__item:nth-child(4){margin-left:144px}.toc__item:nth-child(5){margin-left:192px}.toc__item:nth-child(6){margin-left:240px}.toc__item:nth-child(7){margin-left:288px}.toc__item:nth-child(8){margin-left:336px}
 .toc.play .toc__item{ animation:fadeUp .7s cubic-bezier(.16,1,.3,1) both; }
 .toc.play .toc__item:nth-child(1){animation-delay:.1s}.toc.play .toc__item:nth-child(2){animation-delay:.22s}.toc.play .toc__item:nth-child(3){animation-delay:.34s}.toc.play .toc__item:nth-child(4){animation-delay:.46s}.toc.play .toc__item:nth-child(5){animation-delay:.58s}.toc.play .toc__item:nth-child(6){animation-delay:.7s}.toc.play .toc__item:nth-child(7){animation-delay:.82s}.toc.play .toc__item:nth-child(8){animation-delay:.94s}
 .toc__item:hover{ background:#dcecfb; border-color:var(--teal); transform:translateX(4px); box-shadow:0 6px 16px rgba(0,152,190,.14); }
@@ -514,6 +519,11 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
 .takeaway.is-open .takeaway__btn{ border-bottom-left-radius:0; border-bottom-right-radius:0; }
 .takeaway__rev{ display:none; margin:0 auto; max-width:820px; padding:18px 30px 14px; background:var(--teal); border-radius:0 0 14px 14px; color:#fff; font-size:22px; font-style:italic; line-height:1.35; } .takeaway__rev .gene{ font-style:italic; font-weight:700; }
 .takeaway.is-open .takeaway__rev{ display:block; animation:pop .32s var(--ease) both; }
+.cs__para{ display:block; margin-top:.5em; }
+.s5 .takeaway{ position:relative; }
+.s5 .takeaway.is-open .takeaway__btn{ border-radius:0 0 12px 12px; }
+.s5 .takeaway__rev{ border-radius:14px 14px 0 0; }
+.s5 .takeaway.is-open .takeaway__rev{ position:absolute; left:0; right:0; bottom:100%; margin:0 auto; width:min(760px,90%); box-shadow:0 -14px 30px rgba(34,47,85,.22); z-index:6; }
 
 /* S1 staged entrance */
 .cs.img-in .cs__media{ opacity:1; transform:translateX(300px) scale(1.14); }   /* image fades in, prominent */
@@ -587,7 +597,7 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
         </div>
         <div class="howto__row">
           <span class="howto__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#007a98" aria-hidden="true"><path fill="currentColor" d="m220.49 207.8l-12.69 12.69a12 12 0 0 1-17 0l-56.57-56.57L115 214.08l-.13.33a15.84 15.84 0 0 1-14.61 9.59h-.78a15.82 15.82 0 0 1-14.41-11L32.8 52.92A15.95 15.95 0 0 1 52.92 32.8L213 85.07a16 16 0 0 1 1.41 29.8l-.33.13l-50.16 19.27l56.57 56.56a12 12 0 0 1 0 16.97"/></svg></span>
-          <span class="howto__tx"><b>See definitions</b><span>Hover a <span class="ac" style="text-decoration-color:var(--teal)">dotted term</span> to see what an acronym means.</span></span>
+          <span class="howto__tx"><b>See definitions</b><span>Select a <span class="ac" style="text-decoration-color:var(--teal)">dotted term</span> to see what an acronym means.</span></span>
         </div>
         <div class="howto__row">
           <span class="howto__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#0098be" aria-hidden="true"><path fill="currentColor" d="M116 72v88a48.05 48.05 0 0 1-48 48a8 8 0 0 1 0-16a32 32 0 0 0 32-32v-8H40a16 16 0 0 1-16-16V72a16 16 0 0 1 16-16h60a16 16 0 0 1 16 16m100-16h-60a16 16 0 0 0-16 16v64a16 16 0 0 0 16 16h60v8a32 32 0 0 1-32 32a8 8 0 0 0 0 16a48.05 48.05 0 0 0 48-48V72a16 16 0 0 0-16-16"/></svg></span>
@@ -638,7 +648,7 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
           <p class="cs__copy"><span class="ac" data-gloss="METex14"><span class="gene">MET</span>ex14</span> skipping is a primary oncogenic driver associated with poor prognosis, but one that confers sensitivity to selective <span class="ac" data-gloss="MET"><span class="gene">MET</span></span> <span class="ac" data-gloss="TKI">TKIs</span>.<span class="sup" data-ref="r-35" tabindex="0" role="button" aria-label="References 2 to 4">2&ndash;4</span></p>
           <div class="stats">
             <div class="stat"><span class="stat__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#0098be" aria-hidden="true"><path fill="currentColor" d="M200 204.5V232a8 8 0 0 1-16 0v-27.5a63.67 63.67 0 0 0-35.38-57.25l-48.4-24.19A79.58 79.58 0 0 1 56 51.5V24a8 8 0 0 1 16 0v27.5a63.67 63.67 0 0 0 35.38 57.25l48.4 24.19A79.58 79.58 0 0 1 200 204.5M163.18 192H83.91a8 8 0 0 1-8-8.53a8.18 8.18 0 0 1 8.27-7.47h65.52a4 4 0 0 0 2.75-6.9a48.2 48.2 0 0 0-11-7.53L94.8 138.23a4 4 0 0 0-4.08.3A79.51 79.51 0 0 0 56 204.5v27.23a8.17 8.17 0 0 0 7.47 8.27a8 8 0 0 0 8.53-8v-16h92a4 4 0 0 0 4-4v-7.5a49 49 0 0 0-.9-9.32a4 4 0 0 0-3.92-3.18m28.29-176a8.17 8.17 0 0 0-7.47 8.27V40H92a4 4 0 0 0-4 4v7.5a49 49 0 0 0 .9 9.32A4 4 0 0 0 92.82 64h79a8.18 8.18 0 0 1 8.25 7.47a8 8 0 0 1-8 8.53H106.3a4 4 0 0 0-2.75 6.9a48.2 48.2 0 0 0 11 7.53l46.67 23.34a4 4 0 0 0 4.08-.3A79.51 79.51 0 0 0 200 51.5V24a8 8 0 0 0-8.53-8"/></svg></span><div class="stat__v">~35 %</div><div class="stat__l">of <span class="ac" data-gloss="NSCLC">NSCLC</span> cases carry actionable genomic alterations <span class="sup" data-ref="r-26" tabindex="0" role="button" aria-label="References 5 and 6">5,6</span></div></div>
-            <div class="stat"><span class="stat__ic" aria-hidden="true"><svg viewBox="0 0 24 24" style="color:#0098be" aria-hidden="true"><path fill="currentColor" d="M4 2h2v2c0 1.44.68 2.61 1.88 3.78c.86.83 2.01 1.63 3.21 2.42l-1.83 1.19C8.27 10.72 7.31 10 6.5 9.21C5.07 7.82 4 6.1 4 4zm14 0h2v2c0 2.1-1.07 3.82-2.5 5.21c-1.41 1.38-3.21 2.52-4.96 3.63c-1.75 1.12-3.45 2.21-4.66 3.38C6.68 17.39 6 18.56 6 20v2H4v-2c0-2.1 1.07-3.82 2.5-5.21c1.41-1.38 3.21-2.52 4.96-3.63c1.75-1.12 3.45-2.21 4.66-3.38C17.32 6.61 18 5.44 18 4zm-3.26 10.61c.99.67 1.95 1.39 2.76 2.18C18.93 16.18 20 17.9 20 20v2h-2v-2c0-1.44-.68-2.61-1.88-3.78c-.86-.83-2.01-1.63-3.21-2.42zM7 3h10v1l-.06.5H7.06L7 4zm.68 3h8.64c-.24.34-.52.69-.9 1.06l-.51.44H9.07l-.49-.44c-.38-.37-.66-.72-.9-1.06m1.41 10.5h5.84l.49.44c.38.37.66.72.9 1.06H7.68c.24-.34.52-.69.9-1.06zm-2.03 3h9.88l.06.5v1H7v-1z"/></svg></span><div class="stat__v">~2&ndash;4 %</div><div class="stat__l">of patients have <span class="ac" data-gloss="METex14"><span class="gene">MET</span>ex14</span> skipping <span class="sup" data-ref="r-13" tabindex="0" role="button" aria-label="References 1 to 3">1&ndash;3</span></div></div>
+            <div class="stat"><span class="stat__ic" aria-hidden="true"><svg viewBox="0 0 24 24" style="color:#0098be" aria-hidden="true"><path fill="currentColor" d="M4 2h2v2c0 1.44.68 2.61 1.88 3.78c.86.83 2.01 1.63 3.21 2.42l-1.83 1.19C8.27 10.72 7.31 10 6.5 9.21C5.07 7.82 4 6.1 4 4zm14 0h2v2c0 2.1-1.07 3.82-2.5 5.21c-1.41 1.38-3.21 2.52-4.96 3.63c-1.75 1.12-3.45 2.21-4.66 3.38C6.68 17.39 6 18.56 6 20v2H4v-2c0-2.1 1.07-3.82 2.5-5.21c1.41-1.38 3.21-2.52 4.96-3.63c1.75-1.12 3.45-2.21 4.66-3.38C17.32 6.61 18 5.44 18 4zm-3.26 10.61c.99.67 1.95 1.39 2.76 2.18C18.93 16.18 20 17.9 20 20v2h-2v-2c0-1.44-.68-2.61-1.88-3.78c-.86-.83-2.01-1.63-3.21-2.42zM7 3h10v1l-.06.5H7.06L7 4zm.68 3h8.64c-.24.34-.52.69-.9 1.06l-.51.44H9.07l-.49-.44c-.38-.37-.66-.72-.9-1.06m1.41 10.5h5.84l.49.44c.38.37.66.72.9 1.06H7.68c.24-.34.52-.69.9-1.06zm-2.03 3h9.88l.06.5v1H7v-1z"/></svg></span><div class="stat__v">~2&ndash;4 %</div><div class="stat__l">of patients have <span class="ac" data-gloss="METex14"><span class="gene">MET</span>ex14</span> skipping <span class="sup" data-ref="r-13" tabindex="0" role="button" aria-label="References 1, 3 and 5">1,3,5</span></div></div>
           </div>
           <div class="amber" id="s1amber">
             <button class="amber__btn" type="button" aria-expanded="false"><span class="amber__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#7a5a12" aria-hidden="true"><path fill="currentColor" d="M176 232a8 8 0 0 1-8 8H88a8 8 0 0 1 0-16h80a8 8 0 0 1 8 8m40-128a87.55 87.55 0 0 1-33.64 69.21A16.24 16.24 0 0 0 176 186v6a16 16 0 0 1-16 16H96a16 16 0 0 1-16-16v-6a16 16 0 0 0-6.23-12.66A87.59 87.59 0 0 1 40 104.49C39.74 56.83 78.26 17.14 125.88 16A88 88 0 0 1 216 104m-32.11-9.34a57.6 57.6 0 0 0-46.56-46.55a8 8 0 0 0-2.66 15.78c16.57 2.79 30.63 16.85 33.44 33.45A8 8 0 0 0 176 104a9 9 0 0 0 1.35-.11a8 8 0 0 0 6.54-9.23"/></svg></span><span class="amber__lab">What is <span class="gene">MET</span>ex14 skipping?</span></button>
@@ -719,7 +729,7 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
                 <button class="reveal-btn" id="s4orrReveal" type="button">Reveal the response rate <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><polyline points="13 6 19 12 13 18"/></svg></button>
               </div>
               <button class="ring" id="s4ring" type="button" aria-label="Overall response rate 51.8 percent, 95% CI 46.1 to 57.4"><span class="ring__hole"><span><span class="ring__val" id="s4ringVal">51.8 %</span><span class="ring__ci">95% CI 46.1, 57.4</span></span></span></button>
-              <p class="orr__cap">Around <b>half of patients</b> achieved an objective response, sustained with long-term follow-up.</p><div class="orr__split"><button class="split" id="s4orrsplit" type="button" aria-pressed="false"><span class="dot" style="background:var(--teal)"></span><span class="dot" style="background:var(--teal-strong)"></span> Split by line of therapy</button><div class="orrsubs"><div class="osub"><span class="osub__lab">1L</span><span class="osub__track"><span class="osub__fill" style="width:57.9%"></span></span><span class="osub__val">57.9 %</span></div><div class="osub"><span class="osub__lab">2L+</span><span class="osub__track"><span class="osub__fill l2" style="width:45.0%"></span></span><span class="osub__val">45.0 %</span></div></div></div>
+              <p class="orr__cap">Around <b>half of patients</b> achieved an objective response, sustained with long-term follow-up.</p><div class="orr__split"><button class="split" id="s4orrsplit" type="button" aria-pressed="false"><span class="dot" style="background:var(--teal)"></span><span class="dot" style="background:var(--navy)"></span> Split by line of therapy</button><div class="orrsubs"><div class="osub"><span class="osub__lab">1L</span><span class="osub__track"><span class="osub__fill" style="width:57.9%"></span></span><span class="osub__val">57.9 %</span></div><div class="osub"><span class="osub__lab">2L+</span><span class="osub__track"><span class="osub__fill l2" style="width:45.0%"></span></span><span class="osub__val">45.0 %</span></div></div></div>
             </div>
           </section>
           <section class="panel" aria-label="Time-to-event outcomes">
@@ -742,7 +752,7 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
       <header class="hd"><h1 class="hd__title">Long-term safety</h1><div class="hd__rule" aria-hidden="true"><i></i><b></b><i></i></div></header>
       <div class="cs cs--right">
         <div class="cs__body">
-          <p class="cs__copy">The safety profile of tepotinib remained manageable in patients with <span class="ac" data-gloss="METex14"><span class="gene">MET</span>ex14</span> skipping <span class="ac" data-gloss="NSCLC">NSCLC</span> after &ge;3 years of follow-up.<span class="sup" data-ref="r5-1" tabindex="0" role="button" aria-label="Reference 1">1</span> Most events were handled with dose modifications and/or interruptions rather than discontinuation.</p>
+          <p class="cs__copy">The safety profile of tepotinib remained manageable in patients with <span class="ac" data-gloss="METex14"><span class="gene">MET</span>ex14</span> skipping <span class="ac" data-gloss="NSCLC">NSCLC</span> after &ge;3 years of follow-up.<span class="sup" data-ref="r5-1" tabindex="0" role="button" aria-label="Reference 1">1</span><span class="cs__para">Most events were handled with dose modifications and/or interruptions rather than discontinuation.</span></p>
           <div class="stats">
             <div class="stat"><span class="stat__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#0098be" aria-hidden="true"><path fill="currentColor" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m37.66 117.66l-32 32a8 8 0 0 1-11.32 0l-32-32a8 8 0 0 1 11.32-11.32L120 148.69V88a8 8 0 0 1 16 0v60.69l18.34-18.35a8 8 0 0 1 11.32 11.32"/></svg></span><div class="stat__v">33.2 %</div><div class="stat__l"><span class="ac" data-gloss="TRAE">TRAE</span> &rarr; dose reduction</div></div>
             <div class="stat"><span class="stat__ic" aria-hidden="true"><svg viewBox="0 0 256 256" style="color:#0098be" aria-hidden="true"><path fill="currentColor" d="M128 24a104 104 0 1 0 104 104A104.13 104.13 0 0 0 128 24m-16 136a8 8 0 0 1-16 0V96a8 8 0 0 1 16 0Zm48 0a8 8 0 0 1-16 0V96a8 8 0 0 1 16 0Z"/></svg></span><div class="stat__v">43.8 %</div><div class="stat__l"><span class="ac" data-gloss="TRAE">TRAE</span> &rarr; interruption</div></div>
@@ -932,7 +942,7 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
     'r-1':'1. Drilon A, et al. <em>J Thorac Oncol.</em> 2017;12(1):15&ndash;26.',
     'r-35':'2. Awad MM, et al. <em>J Clin Oncol.</em> 2016;34(7):721&ndash;730.<br>3. Remon J, et al. <em>J Thorac Oncol.</em> 2023;18(4):419&ndash;435.<br>4. Tong JH, et al. <em>Clin Cancer Res.</em> 2016;22(12):3048&ndash;3056.',
     'r-26':'5. Russo A, et al. <em>J Thorac Oncol.</em> 2026 (e-pub ahead of print). doi:10.1016/j.jtho.2026.103695.<br>6. Aggarwal C, et al. <em>JCO Precis Oncol.</em> 2023;e2300191. doi:10.1200/PO.23.00191.',
-    'r-13':'1. Drilon A, et al. <em>J Thorac Oncol.</em> 2017;12(1):15&ndash;26.<br>2. Awad MM, et al. <em>J Clin Oncol.</em> 2016;34(7):721&ndash;730.<br>3. Remon J, et al. <em>J Thorac Oncol.</em> 2023;18(4):419&ndash;435.',
+    'r-13':'1. Drilon A, et al. <em>J Thorac Oncol.</em> 2017;12(1):15&ndash;26.<br>3. Remon J, et al. <em>J Thorac Oncol.</em> 2023;18(4):419&ndash;435.<br>5. Russo A, et al. <em>J Thorac Oncol.</em> 2026 (e-pub ahead of print). doi:10.1016/j.jtho.2026.103695.',
     'r2-15':'1. US FDA. TEPMETKO (tepotinib) prescribing information. 2024.<br>2. Merck. TEPMETKO (tepotinib) approved in Japan for advanced NSCLC with METex14 skipping. 2020.<br>3. EMA. TEPMETKO (tepotinib) SmPC. 2026.<br>4. US FDA. Tabrecta (capmatinib) prescribing information. 2024.<br>5. EMA. Tabrecta (capmatinib) SmPC. 2025.',
     'r2-67':'6. Hendriks LE, et al. <em>Ann Oncol.</em> 2023;34(4):339&ndash;357.<br>7. ESMO oncogene-addicted metastatic NSCLC living guideline, v1.3, 2026.',
     'r2-13':'1. US FDA. TEPMETKO (tepotinib) prescribing information. 2024.<br>2. Merck. TEPMETKO (tepotinib) approved in Japan for advanced NSCLC with METex14 skipping. 2020.<br>3. EMA. TEPMETKO (tepotinib) SmPC. 2026.',
@@ -971,6 +981,7 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
 
   /* ---------- navigation ---------- */
   var cur=0, lastBeforeToc=null, entryTimers=[];
+  window.__swStep=1; window.__swTotal=4;
   var prev=document.getElementById('prev'), next=document.getElementById('next'),
       pill=document.getElementById('pill'), back=document.getElementById('back'),
       progress=document.getElementById('progress'), live=document.getElementById('live');
@@ -978,6 +989,7 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
   var dots=Array.prototype.slice.call(progress.children);
   function clearTimers(){ entryTimers.forEach(clearTimeout); entryTimers=[]; }
   function revealNav(){ deck.classList.add('nav-ready'); }
+  window.__syncSummaryNav=function(step,total){ window.__swStep=step; window.__swTotal=total; if(scenes[cur] && scenes[cur].dataset.scene==='s7'){ next.disabled=(step<total); } };
 
   function playScene(el){
     deck.classList.remove('nav-ready'); clearTimers(); hideTips();
@@ -1004,7 +1016,7 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
     dots.forEach(function(x,i){ x.classList.toggle('on',i===n); });
     cur=n;
     var name=scenes[n].dataset.scene;
-    prev.disabled=(n===0); next.disabled=(n===scenes.length-1);
+    prev.disabled=(n===0); next.disabled=(n===scenes.length-1) || (name==='s7' && (window.__swStep|0) < (window.__swTotal||4));
     pill.hidden=(CONTENT.indexOf(name)<0);                 // Contents pill only on content scenes
     { var _hp=document.getElementById('howtoPill'); if(_hp) _hp.hidden=(CONTENT.indexOf(name)<0); }
     back.hidden=!(name==='toc' && lastBeforeToc!=null);
@@ -1051,7 +1063,7 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
     var Sv=function(v){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+v+'</svg>'; };
     var WSTEPS=[
       {ic:Sv('<polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/>'), t:'Move between screens', d:'Use the <b>&#9664; &#9654;</b> arrows on screen, or your keyboard arrows, to move through the activity.'},
-      {ic:Sv('<path d="M3 3l7 18 2-8 8-2z"/>'), t:'See definitions', d:'Hover a <b>dotted term</b> to see what an acronym means.'},
+      {ic:Sv('<path d="M3 3l7 18 2-8 8-2z"/>'), t:'See definitions', d:'Select a <b>dotted term</b> to see what an acronym means.'},
       {ic:Sv('<rect x="6" y="7" width="5" height="7" rx="1"/><rect x="13" y="7" width="5" height="7" rx="1"/>'), t:'Open references', d:'Select a <b>superscript number</b> for its citation; select away to close.'},
       {ic:Sv('<path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12c1 1 1 2 1 3h6c0-1 0-2 1-3a7 7 0 0 0-4-12z"/>'), t:'Reveal explainers', d:'Select the <b>lightbulb</b> or amber prompts for a quick &ldquo;what is&hellip;&rdquo; explainer.'},
       {ic:Sv('<rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/>'), t:'Get the takeaway', d:'Select the <b>+</b> to reveal the key message for a scene.'},
@@ -1078,7 +1090,7 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
     var _t=e.target;
     if(_t&&(_t.tagName==='INPUT'||_t.tagName==='TEXTAREA'||_t.tagName==='SELECT'||_t.isContentEditable)) return;
     if(_t&&_t.closest&&_t.closest('[role=radio],.sw-xmodal.is-open,.launch.is-open,.wt.is-open')) return;
-    if(e.key==='ArrowRight'||e.key==='PageDown'){ e.preventDefault(); show(cur+1); }
+    if(e.key==='ArrowRight'||e.key==='PageDown'){ e.preventDefault(); if(!next.disabled) show(cur+1); }
     else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); show(cur-1); }
     else if(e.key==='Home'){ e.preventDefault(); show(0); } else if(e.key==='End'){ e.preventDefault(); show(scenes.length-1); }
   });
@@ -1273,6 +1285,7 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
   var backBtn=$('swBack'), nextBtn=$('swNext'), exportBtn=$('swExport'), midLabel=$('swMid');
   function swShow(n,dir){
     current=n;
+    if(window.__syncSummaryNav) window.__syncSummaryNav(n,TOTAL);
     steps.forEach(function(s){ var on=(+s.dataset.step===n); s.classList.toggle('is-on',on); s.hidden=!on; s.classList.remove('anim-r','anim-l'); });
     railSteps.forEach(function(r){ var rs=+r.dataset.rs; r.classList.toggle('is-active',rs===n); r.classList.toggle('is-done',rs<n); });
     midLabel.textContent='Step '+n+' of '+TOTAL;
