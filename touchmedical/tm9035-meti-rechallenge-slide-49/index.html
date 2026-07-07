@@ -80,9 +80,9 @@
     .stat__lab { font-size: clamp(.78rem,1.2vw,.96rem); font-weight: 700; color: var(--teal-strong); line-height: 1.2; }
     .stat__val { font-size: clamp(1.5rem,3vw,2.3rem); font-weight: 700; color: var(--navy); line-height: 1; font-variant-numeric: tabular-nums; }
     .stat__val.na { color: var(--faint); font-size: clamp(1.2rem,2.2vw,1.7rem); }
+    .stat__unit { font-size: clamp(.85rem,1.4vw,1.05rem); font-weight: 700; color: var(--navy); }
     .stat__sub { font-size: clamp(.74rem,1.1vw,.9rem); font-weight: 600; color: var(--muted); line-height: 1.2; }
     .stat__sub .iqr { white-space: nowrap; }
-    .stat__unit { font-size: clamp(.85rem,1.4vw,1.05rem); font-weight: 700; color: var(--navy); }
     .resp-cohort { text-align: center; margin: -4px 0 0; font-size: clamp(.78rem,1.15vw,.94rem); font-weight: 700; color: var(--muted); }
 
     .tepo-note { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 12px; align-items: start; padding: clamp(11px,1.6vw,16px) clamp(13px,1.8vw,20px); border-radius: 14px; background: var(--good-pale); border: 2px solid var(--good); }
@@ -90,8 +90,24 @@
     .tepo-note__body { font-size: clamp(.82rem,1.25vw,1rem); line-height: 1.4; color: var(--navy); font-weight: 500; }
     .tepo-note__body b { font-weight: 700; }
     .tepo-note__body .ast { display: block; margin-top: 5px; font-size: .86em; color: var(--muted); font-weight: 600; }
-    .tepo-note.flash { animation: noteFlash 1.4s ease both; }
+    .tepo-note.flash, .tepo-note[data-enter].flash { animation: noteFlash 1.4s ease both; }
     @keyframes noteFlash { 0%,100% { box-shadow: 0 0 0 0 rgba(31,157,107,0); } 30% { box-shadow: 0 0 0 6px rgba(31,157,107,.28); } }
+
+    /* ===== Staged entrance (§5B): transform-only, opacity:1 at rest (§6); reduced-motion = no motion ===== */
+    @media (prefers-reduced-motion: no-preference) {
+      @keyframes riseIn { from { transform: translateY(10px); } to { transform: translateY(0); } }
+      @keyframes popIn  { from { transform: scale(.965); }      to { transform: scale(1); } }
+      .legend__item, .stat[data-enter], .tepo-note[data-enter] { animation: riseIn .44s cubic-bezier(.34,1.4,.5,1) backwards; }
+      .legend__item:nth-child(1){ animation-delay:.03s } .legend__item:nth-child(2){ animation-delay:.09s }
+      .legend__item:nth-child(3){ animation-delay:.15s } .legend__item:nth-child(4){ animation-delay:.21s }
+      .legend__item:nth-child(5){ animation-delay:.27s } .legend__item:nth-child(6){ animation-delay:.33s }
+      .legend__item:nth-child(7){ animation-delay:.39s } .legend__item:nth-child(8){ animation-delay:.45s }
+      .legend__item:nth-child(9){ animation-delay:.51s }
+      .donut-stack { animation: popIn .5s cubic-bezier(.34,1.4,.5,1) backwards; }
+      .stat[data-enter]:nth-child(1){ animation-delay:.05s } .stat[data-enter]:nth-child(2){ animation-delay:.12s }
+      .stat[data-enter]:nth-child(3){ animation-delay:.19s } .stat[data-enter]:nth-child(4){ animation-delay:.26s }
+      .tepo-note[data-enter]{ animation-delay:.32s }
+    }
 
     /* ===== Footer (progress + source) ===== */
     .xfoot { flex: 0 0 auto; max-width: 1180px; width: 100%; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 9px 2px 12px; }
@@ -179,6 +195,14 @@
     body.is-fullscreen .returnbar:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
     body.is-fullscreen { padding-top: 56px; }
 
+    /* Short-height squeeze (owner's ~150% local zoom ≈ 1263x560) — top-anchor Tab 2 so the
+       stat cards stay fully visible and only the note tail clips; real embed (620–864) is untouched. §11 */
+    @media (max-height: 600px) {
+      .resp-wrap { justify-content: flex-start; gap: clamp(6px,1vw,12px); }
+      .stat { padding: clamp(8px,1.2vw,14px) 12px; }
+      .tepo-note { padding: clamp(8px,1.2vw,13px) clamp(12px,1.6vw,18px); }
+    }
+
     @media (max-width: 760px) {
       html, body { height: auto; }
       body { overflow: auto; }
@@ -215,37 +239,38 @@
         <div class="xpanel active" role="tabpanel" id="panel-0" aria-labelledby="tab-0" tabindex="0">
           <div class="donut-grid">
             <div class="donut-stack">
-              <svg viewBox="0 0 42 42" role="img" aria-label="Donut chart of subsequent MET inhibitors received (n=62 patients with a named agent)">
+              <svg viewBox="0 0 42 42" role="img" aria-label="Donut chart of subsequent MET inhibitors received (n=63 patients with a named agent)">
                 <circle r="15.915" cx="21" cy="21" fill="none" stroke="var(--mist)" stroke-width="6"></circle>
-                <!-- segments: dasharray = pct (of 62) , 100-pct ; dashoffset = -cumulative -->
-                <circle class="donut__seg" data-k="crizotinib" r="15.915" cx="21" cy="21" fill="none" stroke="#222f55" stroke-width="6" stroke-dasharray="33.87 66.13" stroke-dashoffset="0" tabindex="0" role="button" aria-label="Crizotinib: 21 of 62 (33.9%)"></circle>
-                <circle class="donut__seg" data-k="capmatinib" r="15.915" cx="21" cy="21" fill="none" stroke="#34518a" stroke-width="6" stroke-dasharray="33.87 66.13" stroke-dashoffset="-33.87" tabindex="0" role="button" aria-label="Capmatinib: 21 of 62 (33.9%)"></circle>
-                <circle class="donut__seg donut__seg--tepo" data-k="tepotinib" r="15.915" cx="21" cy="21" fill="none" stroke="#0098be" stroke-width="7" stroke-dasharray="11.29 88.71" stroke-dashoffset="-67.74" tabindex="0" role="button" aria-label="Tepotinib: 7 of 62 (11.3%)"></circle>
-                <circle class="donut__seg" data-k="amivantamab" r="15.915" cx="21" cy="21" fill="none" stroke="#2f7fa6" stroke-width="6" stroke-dasharray="6.45 93.55" stroke-dashoffset="-79.03" tabindex="0" role="button" aria-label="Amivantamab: 4 of 62 (6.5%)"></circle>
-                <circle class="donut__seg" data-k="cabozantinib" r="15.915" cx="21" cy="21" fill="none" stroke="#4f9fc4" stroke-width="6" stroke-dasharray="4.84 95.16" stroke-dashoffset="-85.48" tabindex="0" role="button" aria-label="Cabozantinib: 3 of 62 (4.8%)"></circle>
-                <circle class="donut__seg" data-k="savolitinib" r="15.915" cx="21" cy="21" fill="none" stroke="#74b4d3" stroke-width="6" stroke-dasharray="3.23 96.77" stroke-dashoffset="-90.32" tabindex="0" role="button" aria-label="Savolitinib: 2 of 62 (3.2%)"></circle>
-                <circle class="donut__seg" data-k="sym015" r="15.915" cx="21" cy="21" fill="none" stroke="#93c7df" stroke-width="6" stroke-dasharray="3.23 96.77" stroke-dashoffset="-93.55" tabindex="0" role="button" aria-label="Sym015: 2 of 62 (3.2%)"></circle>
-                <circle class="donut__seg" data-k="elzovantinib" r="15.915" cx="21" cy="21" fill="none" stroke="#b4d8e8" stroke-width="6" stroke-dasharray="1.61 98.39" stroke-dashoffset="-96.78" tabindex="0" role="button" aria-label="Elzovantinib: 1 of 62 (1.6%)"></circle>
-                <circle class="donut__seg" data-k="telisotuzumab" r="15.915" cx="21" cy="21" fill="none" stroke="#d3e9f2" stroke-width="6" stroke-dasharray="1.61 98.39" stroke-dashoffset="-98.39" tabindex="0" role="button" aria-label="Telisotuzumab vedotin: 1 of 62 (1.6%)"></circle>
+                <!-- segments: dasharray = pct (of 63) , 100-pct ; dashoffset = -cumulative -->
+                <circle class="donut__seg" data-k="crizotinib" r="15.915" cx="21" cy="21" fill="none" stroke="#222f55" stroke-width="6" stroke-dasharray="33.33 66.67" stroke-dashoffset="0" tabindex="0" role="button" aria-label="Crizotinib: 21 of 63 (33.3%)"></circle>
+                <circle class="donut__seg" data-k="capmatinib" r="15.915" cx="21" cy="21" fill="none" stroke="#34518a" stroke-width="6" stroke-dasharray="33.33 66.67" stroke-dashoffset="-33.33" tabindex="0" role="button" aria-label="Capmatinib: 21 of 63 (33.3%)"></circle>
+                <circle class="donut__seg donut__seg--tepo" data-k="tepotinib" r="15.915" cx="21" cy="21" fill="none" stroke="#0098be" stroke-width="7" stroke-dasharray="11.11 88.89" stroke-dashoffset="-66.67" tabindex="0" role="button" aria-label="Tepotinib: 7 of 63 (11.1%)"></circle>
+                <circle class="donut__seg" data-k="amivantamab" r="15.915" cx="21" cy="21" fill="none" stroke="#2f7fa6" stroke-width="6" stroke-dasharray="6.35 93.65" stroke-dashoffset="-77.78" tabindex="0" role="button" aria-label="Amivantamab: 4 of 63 (6.3%)"></circle>
+                <circle class="donut__seg" data-k="cabozantinib" r="15.915" cx="21" cy="21" fill="none" stroke="#4f9fc4" stroke-width="6" stroke-dasharray="4.76 95.24" stroke-dashoffset="-84.13" tabindex="0" role="button" aria-label="Cabozantinib: 3 of 63 (4.8%)"></circle>
+                <circle class="donut__seg" data-k="savolitinib" r="15.915" cx="21" cy="21" fill="none" stroke="#74b4d3" stroke-width="6" stroke-dasharray="4.76 95.24" stroke-dashoffset="-88.89" tabindex="0" role="button" aria-label="Savolitinib: 3 of 63 (4.8%)"></circle>
+                <circle class="donut__seg" data-k="sym015" r="15.915" cx="21" cy="21" fill="none" stroke="#93c7df" stroke-width="6" stroke-dasharray="3.17 96.83" stroke-dashoffset="-93.65" tabindex="0" role="button" aria-label="Sym015: 2 of 63 (3.2%)"></circle>
+                <circle class="donut__seg" data-k="elzovantinib" r="15.915" cx="21" cy="21" fill="none" stroke="#b4d8e8" stroke-width="6" stroke-dasharray="1.59 98.41" stroke-dashoffset="-96.83" tabindex="0" role="button" aria-label="Elzovantinib: 1 of 63 (1.6%)"></circle>
+                <circle class="donut__seg" data-k="telisotuzumab" r="15.915" cx="21" cy="21" fill="none" stroke="#d3e9f2" stroke-width="6" stroke-dasharray="1.59 98.41" stroke-dashoffset="-98.41" tabindex="0" role="button" aria-label="Telisotuzumab vedotin: 1 of 63 (1.6%)"></circle>
               </svg>
               <div class="donut__center" id="donutCenter" aria-hidden="true">
-                <div class="donut__big" id="donutBig">62</div>
+                <div class="donut__big" id="donutBig">63</div>
                 <div class="donut__sub" id="donutSub">patients received<br>subsequent <em>MET</em>i</div>
                 <div class="donut__lab" id="donutLab"></div>
               </div>
             </div>
 
             <div class="legend" id="legend" role="list" aria-label="Subsequent MET inhibitors by patient number">
-              <button class="legend__item" role="listitem" data-k="crizotinib"><span class="legend__sw" style="background:#222f55"></span><span class="legend__name">Crizotinib</span><span class="legend__n">21 <span class="pct">(33.9%)</span></span></button>
-              <button class="legend__item" role="listitem" data-k="capmatinib"><span class="legend__sw" style="background:#34518a"></span><span class="legend__name">Capmatinib</span><span class="legend__n">21 <span class="pct">(33.9%)</span></span></button>
-              <button class="legend__item is-focus" role="listitem" data-k="tepotinib"><span class="legend__sw" style="background:#0098be"></span><span class="legend__name">Tepotinib</span><span class="legend__n">7 <span class="pct">(11.3%)</span></span></button>
-              <button class="legend__item" role="listitem" data-k="amivantamab"><span class="legend__sw" style="background:#2f7fa6"></span><span class="legend__name">Amivantamab</span><span class="legend__n">4 <span class="pct">(6.5%)</span></span></button>
+              <button class="legend__item" role="listitem" data-k="crizotinib"><span class="legend__sw" style="background:#222f55"></span><span class="legend__name">Crizotinib</span><span class="legend__n">21 <span class="pct">(33.3%)</span></span></button>
+              <button class="legend__item" role="listitem" data-k="capmatinib"><span class="legend__sw" style="background:#34518a"></span><span class="legend__name">Capmatinib</span><span class="legend__n">21 <span class="pct">(33.3%)</span></span></button>
+              <button class="legend__item is-focus" role="listitem" data-k="tepotinib"><span class="legend__sw" style="background:#0098be"></span><span class="legend__name">Tepotinib</span><span class="legend__n">7 <span class="pct">(11.1%)</span></span></button>
+              <button class="legend__item" role="listitem" data-k="amivantamab"><span class="legend__sw" style="background:#2f7fa6"></span><span class="legend__name">Amivantamab</span><span class="legend__n">4 <span class="pct">(6.3%)</span></span></button>
               <button class="legend__item" role="listitem" data-k="cabozantinib"><span class="legend__sw" style="background:#4f9fc4"></span><span class="legend__name">Cabozantinib</span><span class="legend__n">3 <span class="pct">(4.8%)</span></span></button>
-              <button class="legend__item" role="listitem" data-k="savolitinib"><span class="legend__sw" style="background:#74b4d3"></span><span class="legend__name">Savolitinib</span><span class="legend__n">2 <span class="pct">(3.2%)</span></span></button>
+              <button class="legend__item" role="listitem" data-k="savolitinib"><span class="legend__sw" style="background:#74b4d3"></span><span class="legend__name">Savolitinib</span><span class="legend__n">3 <span class="pct">(4.8%)</span></span></button>
               <button class="legend__item" role="listitem" data-k="sym015"><span class="legend__sw" style="background:#93c7df"></span><span class="legend__name">Sym015</span><span class="legend__n">2 <span class="pct">(3.2%)</span></span></button>
               <button class="legend__item" role="listitem" data-k="elzovantinib"><span class="legend__sw" style="background:#b4d8e8"></span><span class="legend__name">Elzovantinib</span><span class="legend__n">1 <span class="pct">(1.6%)</span></span></button>
               <button class="legend__item" role="listitem" data-k="telisotuzumab"><span class="legend__sw" style="background:#d3e9f2"></span><span class="legend__name">Telisotuzumab vedotin</span><span class="legend__n">1 <span class="pct">(1.6%)</span></span></button>
               <p class="donut-foot" id="donutFoot">Tepotinib was the subsequent agent in 7 patients &mdash; <button class="tepo-link" type="button" id="toTepo">see best response&nbsp;&rsaquo;</button></p>
+              <p class="donut-foot donut-foot--na">Data for two patients who received subsequent <em>MET</em> inhibitors was not available.</p>
             </div>
           </div>
         </div>
@@ -255,12 +280,12 @@
           <div class="resp-wrap">
             <p class="resp-cohort">Best response with subsequent <em>MET</em> inhibitor &mdash; patients with <em>MET</em>i rechallenge (n=65)</p>
             <div class="stat-grid">
-              <div class="stat"><span class="stat__lab">Partial response</span><span class="stat__val">6 <span class="stat__unit">patients</span></span><span class="stat__sub">9.2% of patients</span></div>
-              <div class="stat"><span class="stat__lab">Stable disease</span><span class="stat__val">15 <span class="stat__unit">patients</span></span><span class="stat__sub">23.1% of patients</span></div>
-              <div class="stat"><span class="stat__lab">Longest PFS</span><span class="stat__val">5.0 <span class="stat__unit">months</span></span><span class="stat__sub"><span class="iqr">(median&nbsp;[IQR]&nbsp;2.0&ndash;7.0)</span></span></div>
-              <div class="stat"><span class="stat__lab">Longest DOR</span><span class="stat__val na">n/a</span><span class="stat__sub">months</span></div>
+              <div class="stat" data-enter><span class="stat__lab">Partial response</span><span class="stat__val">6 <span class="stat__unit">patients</span></span><span class="stat__sub">9.2% of patients</span></div>
+              <div class="stat" data-enter><span class="stat__lab">Stable disease</span><span class="stat__val">15 <span class="stat__unit">patients</span></span><span class="stat__sub">23.1% of patients</span></div>
+              <div class="stat" data-enter><span class="stat__lab">Longest PFS</span><span class="stat__val">5.0 <span class="stat__unit">months</span></span><span class="stat__sub"><span class="iqr">(median&nbsp;[IQR]&nbsp;2.0&ndash;7.0)</span></span></div>
+              <div class="stat" data-enter><span class="stat__lab">Longest DOR</span><span class="stat__val na">n/a</span><span class="stat__sub">months</span></div>
             </div>
-            <div class="tepo-note" id="tepoNote">
+            <div class="tepo-note" id="tepoNote" data-enter>
               <span class="tepo-note__ic" aria-hidden="true">i</span>
               <p class="tepo-note__body">Among the <b>seven patients</b> who received subsequent <b>tepotinib</b>, best response was a partial response in one patient and stable disease in two patients; the longest duration of response (median) was <b>4.0 months (3.0&ndash;5.0)</b> and the longest progression-free survival (median) was <b>6.5 months (5.5&ndash;10.0)</b>.<span class="ast">*Assessed by investigator; mDOR and mPFS were based on descriptive analyses.</span></p>
             </div>
@@ -353,6 +378,10 @@
           if (nudge) nudge.classList.add('is-on');
         }
       }
+      function playEntrance(i) {
+        var els = panels[i].querySelectorAll('.legend__item, .donut-stack, [data-enter]');
+        Array.prototype.forEach.call(els, function (el) { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = ''; });
+      }
       function selectTab(i, focusPanel) {
         tabs.forEach(function (t, k) {
           var on = k === i;
@@ -360,6 +389,7 @@
           t.tabIndex = on ? 0 : -1;
         });
         panels.forEach(function (p, k) { p.classList.toggle('active', k === i); p.setAttribute('aria-hidden', String(k !== i)); });
+        playEntrance(i);
         markSeen(i);
         if (focusPanel) panels[i].focus();
       }
@@ -382,23 +412,23 @@
       var sub = document.getElementById('donutSub');
       var lab = document.getElementById('donutLab');
       var DATA = {
-        crizotinib:   { name: 'Crizotinib',            n: 21, pct: '33.9%' },
-        capmatinib:   { name: 'Capmatinib',            n: 21, pct: '33.9%' },
-        tepotinib:    { name: 'Tepotinib',             n: 7,  pct: '11.3%' },
-        amivantamab:  { name: 'Amivantamab',           n: 4,  pct: '6.5%' },
+        crizotinib:   { name: 'Crizotinib',            n: 21, pct: '33.3%' },
+        capmatinib:   { name: 'Capmatinib',            n: 21, pct: '33.3%' },
+        tepotinib:    { name: 'Tepotinib',             n: 7,  pct: '11.1%' },
+        amivantamab:  { name: 'Amivantamab',           n: 4,  pct: '6.3%' },
         cabozantinib: { name: 'Cabozantinib',          n: 3,  pct: '4.8%' },
-        savolitinib:  { name: 'Savolitinib',           n: 2,  pct: '3.2%' },
+        savolitinib:  { name: 'Savolitinib',           n: 3,  pct: '4.8%' },
         sym015:       { name: 'Sym015',                n: 2,  pct: '3.2%' },
         elzovantinib: { name: 'Elzovantinib',          n: 1,  pct: '1.6%' },
         telisotuzumab:{ name: 'Telisotuzumab vedotin', n: 1,  pct: '1.6%' }
       };
-      var DEFAULT_BIG = '62';
+      var DEFAULT_BIG = '63';
       var DEFAULT_SUB = 'patients received<br>subsequent <em>MET</em>i';
       function focusKey(k) {
         var d = DATA[k]; if (!d) return;
         big.textContent = d.n;
         sub.innerHTML = (d.n === 1 ? 'patient received' : 'patients received') + '<br>' + d.name;
-        lab.innerHTML = d.pct + ' of 62';
+        lab.innerHTML = d.pct + ' of 63';
         segs.forEach(function (s) { s.classList.toggle('is-active', s.getAttribute('data-k') === k); });
         items.forEach(function (it) { it.classList.toggle('is-active', it.getAttribute('data-k') === k); });
       }
