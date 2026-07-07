@@ -80,6 +80,12 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 .panel__lead{ margin:0; font-size:clamp(.86rem,1.5vw,1rem); font-weight:600; color:var(--navy); line-height:1.45; }
 .panel__lead b{ color:var(--teal-strong); }
 .panel__note{ margin:0; font-size:clamp(.76rem,1.3vw,.86rem); color:var(--muted); line-height:1.45; }
+/* pick-a-lens prompt (shown until the learner selects a lens) */
+.lensprompt{ flex:1 1 auto; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:11px; text-align:center; color:var(--muted); padding:18px; animation:fadeIn .4s ease both; }
+.lensprompt[hidden]{ display:none; }
+@keyframes arrowBob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-8px); } }
+.lensprompt svg{ width:30px; height:30px; color:var(--teal); animation:arrowBob 1.15s ease-in-out 3.3s 4 both; }
+.lensprompt p{ margin:0; font-size:clamp(.86rem,1.5vw,1rem); font-weight:600; max-width:28ch; line-height:1.45; }
 
 /* Lens 1 — subgroup consistency chips (centred 3-column grid) */
 .chips{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px 10px; width:100%; max-width:600px; margin:0 auto; }
@@ -137,11 +143,60 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 @keyframes fadeUp{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
 @keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
 @keyframes rise{ from{ opacity:0; transform:translateY(10px) scale(.99);} to{ opacity:1; transform:none; } }
+/* ===== reveal vocabulary ===== */
+@keyframes fillGrow{ 0%{ transform:scaleX(0); } 72%{ transform:scaleX(1.05); } 100%{ transform:scaleX(1); } }
+@keyframes pop{ 0%{ opacity:0; transform:scale(.6); } 60%{ opacity:1; transform:scale(1.08); } 100%{ opacity:1; transform:scale(1); } }
+@keyframes popScale{ 0%{ transform:scale(.6); } 60%{ transform:scale(1.08); } 100%{ transform:scale(1); } }
+@keyframes slideUp{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:none; } }
+@keyframes slideInR{ from{ opacity:0; transform:translateX(20px); } to{ opacity:1; transform:none; } }
 
-.hd{ animation:fadeUp .5s ease both; }
-.navprompt{ animation:fadeUp .5s ease .06s both; }
-.sg__media{ animation:fadeUp .5s ease .14s both; }
-.lens{ animation:fadeUp .5s ease .22s both; }
+/* ORR 51.8% overlay — hidden until the FIRST lens is picked (any) */
+.orrbox{ opacity:0; }
+.slide.orr-on .orrbox{ opacity:1; animation:popScale .6s cubic-bezier(.16,1,.3,1) both; }
+
+/* Lens 1 (Subgroups): consist box (tick pops) -> note -> the six chips in order */
+#p0.is-active .consist{ animation:slideUp .5s cubic-bezier(.16,1,.3,1) .04s both; }
+#p0.is-active .consist svg{ animation:pop .55s cubic-bezier(.16,1,.3,1) .3s both; }
+#p0.is-active .panel__note{ animation:slideUp .5s cubic-bezier(.16,1,.3,1) .2s both; }
+#p0.is-active .chip{ animation:pop .5s cubic-bezier(.16,1,.3,1) both; }
+#p0.is-active .chip:nth-child(1){ animation-delay:.42s; }
+#p0.is-active .chip:nth-child(2){ animation-delay:.55s; }
+#p0.is-active .chip:nth-child(3){ animation-delay:.68s; }
+#p0.is-active .chip:nth-child(4){ animation-delay:.81s; }
+#p0.is-active .chip:nth-child(5){ animation-delay:.94s; }
+#p0.is-active .chip:nth-child(6){ animation-delay:1.07s; }
+
+/* Lens 2 (Line of therapy): rows slide up + bars grow with the fillGrow bounce (widths baked) */
+.lot__fill{ transform-origin:left; }
+#p1.is-active .panel__lead{ animation:slideUp .5s cubic-bezier(.16,1,.3,1) .04s both; }
+#p1.is-active .lot__row{ animation:slideUp .45s cubic-bezier(.16,1,.3,1) both; }
+#p1.is-active .lot__row:nth-child(2){ animation-delay:.12s; }
+#p1.is-active .lot__row:nth-child(3){ animation-delay:.28s; }
+#p1.is-active .lot__row:nth-child(4){ animation-delay:.44s; }
+#p1.is-active .lot__row:nth-child(2) .lot__fill{ animation:fillGrow .7s cubic-bezier(.16,1,.3,1) .2s both; }
+#p1.is-active .lot__row:nth-child(3) .lot__fill{ animation:fillGrow .7s cubic-bezier(.16,1,.3,1) .36s both; }
+#p1.is-active .lot__row:nth-child(4) .lot__fill{ animation:fillGrow .7s cubic-bezier(.16,1,.3,1) .52s both; }
+#p1.is-active .lot__ref,#p1.is-active .lot__reflab,#p1.is-active .lot__axis{ animation:fadeIn .5s ease .62s both; }
+
+/* Lens 3 (Asian): 56.6% first -> accented stat panels slide in -> note last */
+#p2.is-active .asian__big{ animation:pop .6s cubic-bezier(.16,1,.3,1) .05s both; }
+#p2.is-active .asian__stat{ animation:slideInR .55s cubic-bezier(.16,1,.3,1) both; }
+#p2.is-active .asian__stat:nth-child(1){ animation-delay:.42s; }
+#p2.is-active .asian__stat:nth-child(2){ animation-delay:.6s; }
+#p2.is-active .panel__note{ animation:slideUp .5s cubic-bezier(.16,1,.3,1) .82s both; }
+
+/* ===== scene intro — matches the v3 deck: image fades in prominent -> white title ON the image (bottom-left)
+       -> title fades out as the image glides left to its column -> heading/lens/caption ease in.
+       Pure-CSS (no JS timers) so a backgrounded embed can't strand it mid-intro; reduced-motion snaps to rest. ===== */
+@keyframes heroMedia{ 0%{ opacity:0; transform:translateX(31%) scale(1.12);} 25%{ opacity:1;} 76%{ opacity:1; transform:translateX(31%) scale(1.12);} 100%{ opacity:1; transform:none;} }
+@keyframes heroTitle{ 0%,40%{ opacity:0;} 56%,76%{ opacity:1;} 92%,100%{ opacity:0;} }
+.sg__media{ animation:heroMedia 3.2s cubic-bezier(.16,1,.3,1) both; }
+.sg__hero{ position:absolute; inset:0; z-index:5; display:flex; align-items:flex-end; padding:clamp(18px,2.8vw,38px); background:linear-gradient(180deg,rgba(20,30,48,0) 44%,rgba(20,30,48,.76)); opacity:0; pointer-events:none; animation:heroTitle 3.2s ease both; }
+.sg__hero b{ font-size:clamp(1.55rem,3.3vw,2.7rem); font-weight:700; color:#fff; line-height:1.08; text-shadow:0 3px 16px rgba(0,0,0,.42); }
+.hd{ animation:fadeIn .6s ease 2.5s both; }
+.navprompt{ animation:fadeIn .55s ease 2.55s both; }
+.lens{ animation:fadeIn .55s ease 2.62s both; }
+.sg__media figcaption{ animation:fadeIn .55s ease 3.1s both; }
 
 /* ===== Continue nudge ===== */
 .slide.nudge-shown{ padding-bottom:72px; }
@@ -225,11 +280,12 @@ body.is-fullscreen{ padding-top:56px; }
       <!-- diverse cohort image + overall ORR callout -->
       <figure class="sg__media">
         <img src="assets/s6.jpg" alt="A grid of portraits of diverse adults across ages, ethnicities and sexes — consistent outcomes across subgroups." />
+        <div class="sg__hero" aria-hidden="true"><b>Consistency across subgroups</b></div>
         <div class="sg__center">
           <div class="orrbox">
             <div class="orrbox__lab">Overall response rate</div>
-            <div class="orrbox__val">51.8%</div>
-            <div class="orrbox__ci">95% CI 46.1&ndash;57.4</div>
+            <div class="orrbox__val">51.8 %</div>
+            <div class="orrbox__ci">95% CI 46.1, 57.4</div>
           </div>
         </div>
         <figcaption>Efficacy held across a broad, diverse patient population.</figcaption>
@@ -238,19 +294,24 @@ body.is-fullscreen{ padding-top:56px; }
       <!-- lens switcher -->
       <section class="lens" aria-label="Consistency lenses">
         <div class="seg" role="tablist" aria-label="Choose a lens">
-          <button class="seg__btn" id="tab0" role="tab" aria-selected="true" aria-controls="p0" tabindex="0" type="button">Subgroups</button>
+          <button class="seg__btn" id="tab0" role="tab" aria-selected="false" aria-controls="p0" tabindex="0" type="button">Subgroups</button>
           <button class="seg__btn" id="tab1" role="tab" aria-selected="false" aria-controls="p1" tabindex="-1" type="button">Line of therapy</button>
           <button class="seg__btn" id="tab2" role="tab" aria-selected="false" aria-controls="p2" tabindex="-1" type="button">Asian patients</button>
         </div>
 
         <div class="card">
+          <!-- pick-a-lens prompt (hidden once a lens is chosen) -->
+          <div class="lensprompt" id="lensPrompt">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><polyline points="6 11 12 5 18 11"/></svg>
+            <p>Select a lens above to explore how consistent the response was.</p>
+          </div>
           <!-- Lens 1 -->
-          <div class="panel panel--center is-active" id="p0" role="tabpanel" aria-labelledby="tab0" tabindex="0">
+          <div class="panel panel--center" id="p0" role="tabpanel" aria-labelledby="tab0" tabindex="0" hidden>
             <div class="consist">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
               ORR was consistent across every subgroup assessed
             </div>
-            <p class="panel__note">Overall ORR 51.8% (95% CI 46.1&ndash;57.4) held irrespective of the clinical subgroups below.</p>
+            <p class="panel__note">Overall ORR 51.8 % (95% CI 46.1, 57.4) held irrespective of the clinical subgroups below.</p>
             <div class="chips">
               <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Sex</span>
               <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Age</span>
@@ -267,18 +328,18 @@ body.is-fullscreen{ padding-top:56px; }
             <div class="lot">
               <span class="lot__ref" aria-hidden="true"></span>
               <div class="lot__row">
-                <div class="lot__top"><span class="lot__name">1L <span>first-line tepotinib</span></span><span class="lot__val">57.9%</span></div>
+                <div class="lot__top"><span class="lot__name">1L <span>first-line tepotinib</span></span><span class="lot__val">57.9 %</span></div>
                 <div class="lot__track"><span class="lot__fill" style="width:57.9%;background:var(--c2)"></span></div>
               </div>
               <div class="lot__row">
-                <div class="lot__top"><span class="lot__name">2L+ <span>second-line or later</span></span><span class="lot__val">45.0%</span></div>
+                <div class="lot__top"><span class="lot__name">2L+ <span>second-line or later</span></span><span class="lot__val">45.0 %</span></div>
                 <div class="lot__track"><span class="lot__fill" style="width:45.0%;background:var(--c3)"></span></div>
               </div>
               <div class="lot__row">
-                <div class="lot__top"><span class="lot__name">Before tepotinib <span>all lines</span></span><span class="lot__val">28.9%</span></div>
+                <div class="lot__top"><span class="lot__name">All treatment lines before tepotinib</span><span class="lot__val">28.9 %</span></div>
                 <div class="lot__track"><span class="lot__fill" style="width:28.9%;background:var(--c4)"></span></div>
               </div>
-              <div class="lot__axis"><span>0%</span><span class="lot__reflab">Overall 51.8%</span><span>100%</span></div>
+              <div class="lot__axis"><span>0%</span><span class="lot__reflab">Overall 51.8 %</span><span>100%</span></div>
             </div>
           </div>
 
@@ -287,11 +348,11 @@ body.is-fullscreen{ padding-top:56px; }
             <div class="asian">
               <div class="asian__big">
                 <div class="asian__lab">Asian patients &middot; n&nbsp;=&nbsp;106</div>
-                <div class="asian__val">56.6%</div>
-                <div class="asian__ci">ORR (95% CI 46.6&ndash;66.2)</div>
+                <div class="asian__val">56.6 %</div>
+                <div class="asian__ci">ORR (95% CI 46.6, 66.2)</div>
               </div>
               <div class="asian__side">
-                <div class="asian__stat"><b>64.0%</b><span>ORR in first-line (1L) Asian patients</span></div>
+                <div class="asian__stat"><b>64.0 %</b><span>ORR in first-line (1L) Asian patients</span></div>
                 <div class="asian__stat"><b>&#10003;</b><span>Robust, durable long-term efficacy and a manageable safety profile</span></div>
               </div>
             </div>
@@ -301,6 +362,7 @@ body.is-fullscreen{ padding-top:56px; }
       </section>
     </div>
   </div>
+
 
   <!-- sources: bottom inner-corner pill -->
   <button class="srcpill" id="srcPill" type="button" aria-haspopup="dialog">
@@ -360,13 +422,16 @@ body.is-fullscreen{ padding-top:56px; }
   var tabs=[$('tab0'),$('tab1'),$('tab2')];
   var panels=[$('p0'),$('p1'),$('p2')];
   var LABELS=['Subgroups','Line of therapy','Asian patients'];
-  var viewed=new Set([0]);
+  var viewed=new Set();
+  var lensPrompt=$('lensPrompt');
   var nudgeShown=false;
 
   function maybeNudge(){
     if(viewed.size>=3 && !nudgeShown){ nudgeShown=true; slide.classList.add('nudge-shown'); var nd=$('nudge'); if(nd) nd.classList.add('is-on'); }
   }
   function select(i, focus){
+    if(lensPrompt) lensPrompt.hidden=true;          // hide the pick-a-lens prompt
+    slide.classList.add('orr-on');                  // reveal the ORR 51.8% overlay on the FIRST lens picked (any)
     tabs.forEach(function(t,n){ var on=n===i; t.setAttribute('aria-selected', on?'true':'false'); t.tabIndex = on?0:-1; });
     panels.forEach(function(p,n){ var on=n===i; p.hidden=!on; p.classList.toggle('is-active', on); });
     viewed.add(i);
@@ -378,7 +443,8 @@ body.is-fullscreen{ padding-top:56px; }
   document.querySelector('.seg').addEventListener('keydown',function(e){
     var cur=tabs.findIndex(function(t){ return t.getAttribute('aria-selected')==='true'; });
     var to=null;
-    if(e.key==='ArrowRight'||e.key==='ArrowDown') to=(cur+1)%tabs.length;
+    if(cur<0){ if(['ArrowRight','ArrowLeft','ArrowDown','ArrowUp','Home','End'].indexOf(e.key)>=0) to=0; }
+    else if(e.key==='ArrowRight'||e.key==='ArrowDown') to=(cur+1)%tabs.length;
     else if(e.key==='ArrowLeft'||e.key==='ArrowUp') to=(cur-1+tabs.length)%tabs.length;
     else if(e.key==='Home') to=0; else if(e.key==='End') to=tabs.length-1;
     if(to!==null){ e.preventDefault(); select(to,true); }
