@@ -25,7 +25,7 @@
 }
 *{ box-sizing:border-box; }
 html,body{ margin:0; height:100%; }
-body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-font-smoothing:antialiased; overflow:hidden; }
+body{ background:transparent; font-family:var(--font); color:var(--navy); -webkit-font-smoothing:antialiased; overflow:hidden; }
 .gene{ font-style:italic; margin-right:-.04em; }   /* gene MET — closes italic->roman kerning gap */
 .amber__lab{ display:inline; }                      /* keep MET+ex14 in normal flow (not flex items) */
 .cs.cs--right{ grid-template-columns:1fr 820px; }   /* image on the right (S2) */
@@ -207,8 +207,8 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
 .track, .sub__track{ background-image:repeating-linear-gradient(90deg, transparent 0, transparent calc(33.333% - 1px), rgba(34,47,85,.14) calc(33.333% - 1px), rgba(34,47,85,.14) 33.333%); }
 .axis{ display:flex; justify-content:space-between; margin-top:8px; font-size:14px; font-weight:600; color:var(--faint); letter-spacing:.01em; }
 
-.stage{ position:fixed; inset:0; overflow:hidden; background:#0b1622; }
-.deck{ position:absolute; top:50%; left:50%; width:1920px; height:1080px; overflow:hidden; background:#fff; transform:translate(-50%,-50%) scale(1); transform-origin:center center; box-shadow:0 30px 80px rgba(0,0,0,.5); }
+.stage{ position:fixed; inset:0; overflow:hidden; background:transparent; }
+.deck{ position:absolute; top:50%; left:50%; width:1920px; height:1080px; overflow:hidden; background:#fff; transform:translate(-50%,-50%) scale(1); transform-origin:center center; }
 
 .scene{ position:absolute; inset:0; display:none; flex-direction:column; background:#fff; }
 .scene.is-on{ display:flex; }
