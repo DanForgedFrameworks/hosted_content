@@ -390,6 +390,7 @@
         });
         panels.forEach(function (p, k) { p.classList.toggle('active', k === i); p.setAttribute('aria-hidden', String(k !== i)); });
         playEntrance(i);
+        if (i === 0) playTab1Tally(); else if (i === 1) playTab2Tally();
         markSeen(i);
         if (focusPanel) panels[i].focus();
       }
@@ -426,6 +427,7 @@
       var DEFAULT_SUB = 'patients received<br>subsequent <em>MET</em>i';
       function focusKey(k) {
         var d = DATA[k]; if (!d) return;
+        if (t1on) finalTab1();
         big.textContent = d.n;
         sub.innerHTML = (d.n === 1 ? 'patient received' : 'patients received') + '<br>' + d.name;
         lab.innerHTML = d.pct + ' of 63';
@@ -448,6 +450,60 @@
       }
       segs.forEach(bindFocus);
       items.forEach(bindFocus);
+
+      /* ===== Count-up tally (owner-requested) — Tab 1: sequential per-inhibitor run-up (number + %),
+         the donut centre collating the running total, and the ring filling segment-by-segment; Tab 2:
+         the stat cards count up. §6-SAFE: FINAL figures are baked in the DOM; the tally only overwrites
+         them once it actually runs (zeroing INSIDE rAF so a dead/backgrounded clock never strands zeros),
+         snaps back to final on any hover / tab-change / tab-hide, and is skipped under reduced-motion —
+         so the correct figures always show whenever the animation can't play. ===== */
+      var reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var TALLY = ['crizotinib','capmatinib','tepotinib','amivantamab','cabozantinib','savolitinib','sym015','elzovantinib','telisotuzumab'];
+      var segByKey = {}, lnByKey = {}, FIN = {};
+      segs.forEach(function (s) { segByKey[s.getAttribute('data-k')] = s; });
+      items.forEach(function (it) { lnByKey[it.getAttribute('data-k')] = it.querySelector('.legend__n'); });
+      TALLY.forEach(function (k) { FIN[k] = { n: DATA[k].n, pct: parseFloat(DATA[k].pct), len: parseFloat(segByKey[k].getAttribute('stroke-dasharray')) }; });
+      function easeOutCubic(p) { return 1 - Math.pow(1 - p, 3); }
+      function paintSeg(k, f) { var L = FIN[k].len * f; segByKey[k].setAttribute('stroke-dasharray', L.toFixed(2) + ' ' + (100 - L).toFixed(2)); }
+      function paintLeg(k, nv, pv) { var b = lnByKey[k]; b.childNodes[0].nodeValue = Math.round(nv) + ' '; b.querySelector('.pct').textContent = '(' + pv.toFixed(1) + '%)'; }
+      var raf1 = null, t1on = false;
+      function cancelTab1() { if (raf1) { cancelAnimationFrame(raf1); raf1 = null; } t1on = false; }
+      function finalTab1() { cancelTab1(); TALLY.forEach(function (k) { paintSeg(k, 1); paintLeg(k, FIN[k].n, FIN[k].pct); }); if (!document.querySelector('.legend__item.is-active')) big.textContent = DEFAULT_BIG; }
+      function playTab1Tally() {
+        cancelTab1();
+        if (reduceMotion) { finalTab1(); return; }
+        var per = 340, step = 250, N = TALLY.length, total = step * (N - 1) + per, t0 = null;
+        t1on = true;
+        function frame(ts) {
+          if (!t1on) return;
+          if (t0 === null) t0 = ts;
+          var t = ts - t0, grand = 0;
+          for (var i = 0; i < N; i++) { var k = TALLY[i], e = easeOutCubic(Math.max(0, Math.min(1, (t - i * step) / per))); paintSeg(k, e); paintLeg(k, FIN[k].n * e, FIN[k].pct * e); grand += FIN[k].n * e; }
+          big.textContent = String(Math.round(grand));
+          if (t < total) { raf1 = requestAnimationFrame(frame); } else { finalTab1(); }
+        }
+        raf1 = requestAnimationFrame(function (ts) { for (var j = 0; j < TALLY.length; j++) { paintSeg(TALLY[j], 0); paintLeg(TALLY[j], 0, 0); } big.textContent = '0'; frame(ts); });
+      }
+      var STAT = Array.prototype.slice.call(document.querySelectorAll('#panel-1 .stat__val:not(.na)')).map(function (el) { var raw = el.childNodes[0].nodeValue.trim(); return { node: el.childNodes[0], val: parseFloat(raw), dec: (raw.split('.')[1] || '').length }; });
+      var raf2 = null, t2on = false;
+      function cancelTab2() { if (raf2) { cancelAnimationFrame(raf2); raf2 = null; } t2on = false; }
+      function finalTab2() { cancelTab2(); STAT.forEach(function (s) { s.node.nodeValue = s.val.toFixed(s.dec) + ' '; }); }
+      function playTab2Tally() {
+        cancelTab2();
+        if (reduceMotion) { finalTab2(); return; }
+        var per = 460, step = 120, N = STAT.length, total = step * (N - 1) + per, t0 = null;
+        t2on = true;
+        function frame(ts) {
+          if (!t2on) return;
+          if (t0 === null) t0 = ts;
+          var t = ts - t0;
+          STAT.forEach(function (s, i) { var e = easeOutCubic(Math.max(0, Math.min(1, (t - i * step) / per))); s.node.nodeValue = (s.val * e).toFixed(s.dec) + ' '; });
+          if (t < total) { raf2 = requestAnimationFrame(frame); } else { finalTab2(); }
+        }
+        raf2 = requestAnimationFrame(function (ts) { STAT.forEach(function (s) { s.node.nodeValue = (0).toFixed(s.dec) + ' '; }); frame(ts); });
+      }
+      window.__snapFinal = function () { finalTab1(); finalTab2(); };
+      document.addEventListener('visibilitychange', function () { if (document.hidden) { finalTab1(); finalTab2(); } });
 
       /* tepotinib slice / legend / link -> jump to Best response tab and flash the note */
       var tepoNote = document.getElementById('tepoNote');
@@ -504,6 +560,7 @@
       });
 
       markSeen(0);
+      playTab1Tally();
     }());
   </script>
 
