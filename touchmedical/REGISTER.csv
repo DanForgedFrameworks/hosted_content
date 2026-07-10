@@ -22,3 +22,4 @@ tm9035-va-summary,"Visual abstract - summary scene",,,unchanged,https://danforge
 vision-references,"Citation pill (D16/D22 interstitial + chip grid)",,,unchanged,https://danforgedframeworks.github.io/hosted_content/touchmedical/vision-references/
 vision-references-hub,"References hub (folder-nav + search)",,,unchanged,https://danforgedframeworks.github.io/hosted_content/touchmedical/vision-references-hub/
 tm9035-summary-and-reflection-slide-69-mobiletest,"Mobile/Visme pattern REFERENCE IMPL - do NOT delete (spec for MOBILE-VISME-HANDOVER)",69,,retain-legacy,https://danforgedframeworks.github.io/hosted_content/touchmedical/tm9035-summary-and-reflection-slide-69-mobiletest/
+tm9035-storage-probe,"TEMPORARY DIAGNOSTIC - cross-scene localStorage probe; DELETE once the benchmark split question is settled",,,temporary,https://danforgedframeworks.github.io/hosted_content/touchmedical/tm9035-storage-probe/
