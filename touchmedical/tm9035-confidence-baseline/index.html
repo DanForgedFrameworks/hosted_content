@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Your starting point — VISION (tepotinib, METex14 skipping NSCLC)</title>
+<style>
+/* ============================================================
+   TOUCH MEDICAL — TM9035 CONFIDENCE BASELINE (scene A)
+   The opening half of the split benchmark. Sits EARLY in the deck; its partner
+   `tm9035-benchmark-summary-and-reflection-scene-71` sits at the end and reads
+   what this writes.
+
+   Two steps, no scroll, no export:
+     1 Your starting point — confidence self-rating across the six topic areas
+     2 Thank you           — closing confirmation + what happens at the end
+
+   STORAGE (best-effort, never load-bearing). Writes
+   `tm9035:confidence:baseline:v1` = {v:1, source:'baseline-scene', ts, date, r:{0..5}}
+   to localStorage. Confirmed reachable inside the real Visme embed (probe, 2026-07-10:
+   opaque origin = no, storageAccess = granted, nonce survived writer -> reader).
+   Still fully guarded: Safari blocks third-party storage, and a sandbox without
+   allow-same-origin would throw SecurityError. If the write fails the learner sees
+   NO difference — the summary scene simply asks for a baseline itself.
+
+   COPY RULE: the thank-you page must never claim the rating was "saved", because on
+   a blocked browser that would be a lie. It promises only what is true either way:
+   you will rate these again at the end.
+
+   NO free-text capture. NO drag-and-drop (Visme scales a fixed ~1368px canvas).
+   Tap targets >= 44px. Self-contained; no external runtime dependencies.
+   Brand: Poppins (bundled), teal #0098be, navy #222f55.
+   ============================================================ */
+@font-face { font-family:"Poppins"; src:url("assets/poppins-400.ttf") format("truetype"); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-600.ttf") format("truetype"); font-weight:600; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-700.ttf") format("truetype"); font-weight:700; font-style:normal; font-display:swap; }
+
+:root{
+  --teal:#0098be; --teal-strong:#007a98;
+  --navy:#222f55; --on-accent:#ffffff;
+  --neutral:#c6d3e2;
+  --muted:#56608a; --faint:#8a91b0;
+  --pale:#d9eff8; --mist:#f4f7f9; --line:#e3e8ee;
+  --backdrop:rgba(16,26,38,.68);
+  --title-shadow-slim:0 1px 2px rgba(34,47,85,.16);
+  /* feedback/state — slide-69's contrast-tuned realisation (see notes.md) */
+  --good:#287d5c; --good-soft:#e3f3ec;
+  --amber:#9a6a16; --amber-soft:#fbf0db;
+  --flag:#b64457; --flag-soft:#fbe7ea;
+  --font:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{ box-sizing:border-box; }
+html,body{ height:100%; margin:0; }
+body{ overflow:hidden; background:#eef4f7; color:var(--navy); font-family:var(--font); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; display:flex; align-items:center; justify-content:center; }
+
+.frame{ position:relative; z-index:1; width:100%; height:100%; max-width:1370px; max-height:680px; display:flex; flex-direction:column; overflow:hidden; background:#fff; border-radius:16px; box-shadow:0 20px 52px rgba(16,26,38,.18); }
+
+/* banner — §0.9 white-band heading */
+.banner{ flex:0 0 auto; text-align:center; padding:clamp(9px,1.5vh,16px) 16px; background:#fff; box-shadow:0 4px 11px rgba(34,47,85,0.07); border-bottom:1px solid var(--line); border-radius:14px 14px 0 0; }
+.banner__title{ margin:0; font-size:clamp(30px,3.4vw,48px); font-weight:700; line-height:1.1; letter-spacing:-0.012em; color:var(--navy); text-shadow:var(--title-shadow-slim); }
+.banner__title em{ font-style:italic; }
+.banner__prompt{ margin:4px 0 0; font-size:clamp(.76rem,1.3vw,.9rem); font-weight:500; color:var(--muted); }
+
+/* step rail */
+.rail{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:clamp(6px,1.4vw,16px); padding:clamp(6px,1.2vh,12px) clamp(12px,3vw,28px) clamp(4px,.9vh,9px); }
+.rail__step{ display:inline-flex; align-items:center; gap:8px; font-size:clamp(.7rem,1.15vw,.82rem); font-weight:700; color:var(--faint); }
+.rail__num{ width:23px; height:23px; flex:0 0 auto; border-radius:50%; display:grid; place-items:center; background:#fff; border:2px solid var(--line); color:var(--faint); font-size:.78rem; font-weight:700; }
+.rail__step.is-active .rail__num{ background:var(--teal); border-color:var(--teal); color:#fff; }
+.rail__step.is-active{ color:var(--navy); }
+.rail__step.is-done .rail__num{ background:var(--teal-strong); border-color:var(--teal-strong); color:#fff; }
+.rail__step.is-done{ color:var(--muted); }
+.rail__line{ width:clamp(14px,3vw,40px); height:2px; background:var(--line); border-radius:2px; }
+.rail__step.is-done + .rail__line{ background:var(--teal-strong); }
+@media (max-width:880px){ .rail__lab{ display:none; } }
+
+/* body shell */
+.body{ flex:1 1 auto; min-height:0; position:relative; padding:clamp(5px,1vh,12px) clamp(16px,2.8vw,40px) clamp(7px,1.2vh,14px); }
+.step{ position:absolute; inset:0; padding:inherit; display:none; flex-direction:column; min-height:0; overflow:hidden; }
+.step.is-on{ display:flex; }
+.step.anim-right{ animation:stepInR .36s cubic-bezier(.4,0,.2,1); }
+.step.anim-left{ animation:stepInL .36s cubic-bezier(.4,0,.2,1); }
+@keyframes stepInR{ from{ transform:translateX(40px); } to{ transform:none; } }   /* §6: transform only, never opacity */
+@keyframes stepInL{ from{ transform:translateX(-40px); } to{ transform:none; } }  /* §6: transform only, never opacity */
+.step__lead{ flex:0 0 auto; margin:0 0 clamp(5px,1vh,11px); font-size:clamp(.78rem,1.35vw,.94rem); font-weight:600; color:var(--muted); line-height:1.35; text-align:center; }
+.step__lead b{ color:var(--navy); font-weight:700; }
+
+/* confidence map */
+.cmap{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; justify-content:center; gap:clamp(5px,.95vh,10px); }
+.crow{ display:grid; grid-template-columns:1fr auto; align-items:center; gap:clamp(10px,1.6vw,20px); padding:clamp(6px,1.05vh,12px) clamp(12px,1.6vw,18px); background:#fff; border:1.5px solid var(--line); border-radius:11px; transition:border-color .15s ease, box-shadow .15s ease; }
+.crow.is-set{ border-color:var(--teal); box-shadow:0 3px 12px rgba(34,47,85,.07); }
+.crow__lab{ font-size:clamp(.74rem,1.28vw,.9rem); font-weight:600; line-height:1.22; color:var(--navy); }
+.crow__lab em{ font-style:italic; }
+.crow__lab b{ color:var(--teal-strong); font-weight:700; margin-right:6px; }
+.chips{ display:inline-flex; gap:clamp(5px,.7vw,8px); flex:0 0 auto; }
+.chip{ border:1.5px solid var(--line); background:#fff; color:var(--muted); font:inherit; font-weight:700; font-size:clamp(.68rem,1.12vw,.78rem); padding:6px clamp(8px,1.1vw,14px); border-radius:999px; cursor:pointer; white-space:nowrap; transition:all .14s ease; }
+.chip:hover{ border-color:var(--teal); color:var(--navy); }
+.chip:focus-visible{ outline:3px solid var(--navy); outline-offset:2px; }
+.chip[aria-checked="true"][data-v="good"]{ background:var(--good-soft); border-color:var(--good); color:var(--good); }
+.chip[aria-checked="true"][data-v="amber"]{ background:var(--amber-soft); border-color:var(--amber); color:var(--amber); }
+.chip[aria-checked="true"][data-v="flag"]{ background:var(--flag-soft); border-color:var(--flag); color:var(--flag); }
+.progress{ flex:0 0 auto; text-align:center; margin:clamp(4px,.8vh,9px) 0 0; font-size:clamp(.7rem,1.15vw,.8rem); font-weight:700; color:var(--teal-strong); min-height:1.2em; font-variant-numeric:tabular-nums; }
+.progress.is-full{ color:var(--good); }
+
+/* step 2 — thank-you / closing panel */
+.done{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:clamp(7px,1.2vh,14px); text-align:center; }
+.done__tick{ flex:0 0 auto; width:clamp(48px,5.6vw,64px); height:clamp(48px,5.6vw,64px); border-radius:50%; background:var(--good-soft); border:3px solid var(--good); color:var(--good); display:grid; place-items:center; }
+.done__tick svg{ width:55%; height:55%; }
+.done__h{ margin:0; font-size:clamp(1.1rem,2.1vw,1.6rem); font-weight:700; color:var(--navy); line-height:1.2; }
+.done__p{ margin:0; max-width:64ch; font-size:clamp(.82rem,1.4vw,.98rem); font-weight:500; color:var(--muted); line-height:1.45; }
+.done__p b{ color:var(--navy); font-weight:700; }
+.done__grid{ display:flex; flex-wrap:wrap; justify-content:center; gap:6px; max-width:100%; }
+.tag{ display:inline-flex; align-items:center; gap:6px; font-size:clamp(.66rem,1.06vw,.76rem); font-weight:600; padding:5px 11px; border-radius:999px; border:1.5px solid var(--line); background:#fff; color:var(--muted); }
+.tag em{ font-style:italic; }
+.tag b{ font-weight:700; }
+.tag[data-v="good"]{ border-color:var(--good); color:var(--good); background:var(--good-soft); }
+.tag[data-v="amber"]{ border-color:var(--amber); color:var(--amber); background:var(--amber-soft); }
+.tag[data-v="flag"]{ border-color:var(--flag); color:var(--flag); background:var(--flag-soft); }
+.tag[data-v="none"]{ color:var(--faint); }
+.done__note{ margin:0; font-size:clamp(.67rem,1.06vw,.75rem); color:var(--faint); line-height:1.35; max-width:74ch; }
+
+/* footer controls */
+.controls{ flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:clamp(6px,1.1vh,12px) clamp(16px,3vw,30px); border-top:1px solid var(--line); }
+.btn{ display:inline-flex; align-items:center; gap:8px; min-height:44px; padding:9px clamp(14px,1.8vw,22px); border:2px solid var(--teal); border-radius:10px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:clamp(.8rem,1.3vw,.9rem); cursor:pointer; transition:filter .15s ease, opacity .15s ease; }
+.btn svg{ width:17px; height:17px; }
+.btn:hover:not(:disabled){ filter:brightness(.95); }
+.btn.secondary{ background:#fff; color:var(--teal); }
+.btn.secondary:hover:not(:disabled){ background:var(--mist); filter:none; }
+.btn:focus-visible,.chip:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+.controls__mid{ font-size:clamp(.72rem,1.2vw,.84rem); font-weight:700; color:var(--teal); white-space:nowrap; font-variant-numeric:tabular-nums; }
+
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+@media (max-width:760px){
+  html,body{ height:auto; }
+  body{ overflow:auto; display:block; }
+  .frame{ width:auto; height:auto; min-height:100%; max-height:none; margin:0; border-radius:0; }
+  .body{ position:static; }
+  .step{ position:static; overflow:visible; }
+  .rail__lab{ display:none; }
+  .crow{ grid-template-columns:1fr; gap:8px; }
+  .chips{ flex-wrap:wrap; }
+  .chip{ min-height:44px; display:inline-flex; align-items:center; }
+  body.is-fullscreen{ padding-top:56px; }
+  .nudge{ font-size:13px; left:12px; right:12px; transform:none; max-width:none; justify-content:center; }
+  .nudge.is-on{ animation:none; }
+  .frame.nudge-shown{ padding-bottom:0; }
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+}
+
+/* ===== Continue nudge — locked house copy ===== */
+.frame.nudge-shown{ padding-bottom:72px; }
+.nudge{ position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:40; display:none; align-items:center; gap:10px; max-width:calc(100% - 28px); padding:9px 17px; border-radius:999px; background:rgba(34,47,85,0.94); color:#fff; font-size:15px; font-weight:600; line-height:1.25; box-shadow:0 8px 22px rgba(16,26,38,0.30); }
+.nudge.is-on{ display:inline-flex; animation:nudgeIn .5s ease backwards; }
+.nudge b{ font-weight:700; }
+.nudge__chev{ flex:0 0 auto; display:inline-grid; place-items:center; }
+.nudge__chev svg{ width:20px; height:20px; transition:transform .3s ease; }
+.nudge.is-on .nudge__chev{ animation:nudgeBob 1.6s ease-in-out .6s infinite; }
+.nudge__m{ display:none; }
+body.is-fullscreen .nudge{ bottom:auto; top:60px; }
+body.is-fullscreen .nudge__d{ display:none; }
+body.is-fullscreen .nudge__m{ display:inline; }
+body.is-fullscreen .nudge__chev svg{ transform:rotate(180deg); }
+body.is-fullscreen .nudge.is-on .nudge__chev{ animation:nudgeBobUp 1.6s ease-in-out .6s infinite; }
+body.is-fullscreen.is-laststep .nudge__m{ display:none; }
+@keyframes nudgeIn{ from{ transform:translateX(-50%) translateY(12px); } to{ transform:translateX(-50%) translateY(0); } }  /* §6: transform only */
+@keyframes nudgeBob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(3px); } }
+@keyframes nudgeBobUp{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-3px); } }
+
+/* ===== MOBILE/VISME — embedded-mobile launch card (contract §4.2) ===== */
+.mlaunch{ display:none; }
+body.is-embedded-mobile .frame{ display:none !important; }
+body.is-embedded-mobile{ display:block; }
+body.is-embedded-mobile .mlaunch{
+  display:flex; position:fixed; inset:0; z-index:50;
+  flex-direction:column; align-items:center; justify-content:center; text-align:center;
+  gap:42px; padding:90px 70px;
+  background:linear-gradient(135deg,#0098be 0%, #007a98 55%, #222f55 100%); color:#fff;
+}
+.mlaunch__badge{ font-size:30px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; opacity:.9; }
+.mlaunch__title{ margin:0; font-size:64px; font-weight:700; line-height:1.08; }
+.mlaunch__lead{ margin:0; max-width:1040px; font-size:36px; font-weight:500; line-height:1.4; opacity:.96; }
+.mlaunch__btn{ display:inline-flex; align-items:center; gap:26px; margin-top:6px;
+  padding:48px 92px; border-radius:999px; background:#fff; color:#007a98;
+  font:inherit; font-weight:700; font-size:48px; text-decoration:none;
+  box-shadow:0 18px 54px rgba(16,26,38,.38); }
+.mlaunch__btn svg{ width:56px; height:56px; }
+.mlaunch__note{ margin:0; max-width:1040px; font-size:27px; line-height:1.4; opacity:.85; }
+
+/* MOBILE/VISME — Return-to-course control (full-screen view only) */
+.returnbar{ display:none; }
+body.is-fullscreen .returnbar{
+  display:inline-flex; align-items:center; justify-content:center; gap:0;
+  position:fixed; top:10px; left:10px; z-index:60; box-sizing:border-box;
+  width:44px; height:44px; padding:0; overflow:hidden;
+  border-radius:13px; background:rgba(34,47,85,.92); color:#fff;
+  text-decoration:none; box-shadow:0 6px 16px rgba(16,26,38,.26);
+  transition:width .28s cubic-bezier(.4,0,.2,1), padding .28s cubic-bezier(.4,0,.2,1), gap .28s ease, border-radius .28s ease;
+}
+body.is-fullscreen .returnbar__ic{ flex:0 0 auto; width:22px; height:22px; display:grid; place-items:center; }
+body.is-fullscreen .returnbar__ic svg{ width:22px; height:22px; }
+body.is-fullscreen .returnbar__lab{ font:inherit; font-weight:700; font-size:15px; white-space:nowrap; max-width:0; opacity:0; transition:max-width .28s ease, opacity .2s ease; }
+body.is-fullscreen .returnbar:focus-visible{ outline:3px solid var(--teal); outline-offset:3px; }
+body.is-fullscreen.is-laststep .returnbar{ width:auto; gap:9px; padding:0 18px 0 13px; border-radius:999px; }
+body.is-fullscreen.is-laststep .returnbar__lab{ max-width:220px; opacity:1; }
+
+.returnhint{ display:none; }
+body.is-fullscreen.is-laststep .returnhint{ display:block; flex:0 0 auto; margin:0; padding:10px clamp(16px,3vw,30px) 4px; font-size:13px; line-height:1.42; color:var(--muted); text-align:center; }
+body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-weight:700; }
+</style>
+</head>
+<body>
+
+<a class="returnbar" id="returnBar" href="#" aria-label="Return to the course">
+  <span class="returnbar__ic" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 5 4 10 9 15"/><path d="M4 10 H15 a5 5 0 0 1 5 5 V19"/></svg>
+  </span>
+  <span class="returnbar__lab">Return to course</span>
+</a>
+
+<div class="mlaunch" role="group" aria-label="Open the activity full screen">
+  <span class="mlaunch__badge">Touch Oncology &middot; CPD activity</span>
+  <h1 class="mlaunch__title">Your starting point</h1>
+  <p class="mlaunch__lead">This interactive activity is best viewed full screen on your phone. Tap below to open it.</p>
+  <a class="mlaunch__btn" id="mlaunchBtn" href="#" target="_blank" rel="noopener">
+    Open the activity
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><polyline points="13 6 19 12 13 18"/></svg>
+  </a>
+  <p class="mlaunch__note">On a computer, the activity appears here directly.</p>
+</div>
+
+<main class="frame" aria-label="Your starting point — confidence baseline">
+
+  <header class="banner">
+    <h1 class="banner__title">Your starting point</h1>
+    <p class="banner__prompt">Gauge where you stand before the module &mdash; you&rsquo;ll revisit this at the end.</p>
+  </header>
+
+  <nav class="rail" id="rail" aria-label="Activity steps">
+    <span class="rail__step is-active" data-rs="1"><span class="rail__num">1</span><span class="rail__lab">Where you start</span></span>
+    <span class="rail__line"></span>
+    <span class="rail__step" data-rs="2"><span class="rail__num">2</span><span class="rail__lab">Thank you</span></span>
+  </nav>
+
+  <div class="body">
+
+    <!-- STEP 1 — BASELINE RATING -->
+    <section class="step is-on" data-sid="rate" aria-label="Where you start">
+      <p class="step__lead">Across the six areas of this module, how confident do you feel <b>right now</b>? <b>There are no wrong answers</b> &mdash; this is simply your starting point.</p>
+      <div class="cmap" id="bmap"></div>
+      <p class="progress" id="progress" aria-live="polite">Rate all six areas to continue.</p>
+    </section>
+
+    <!-- STEP 2 — THANK YOU / CLOSING PANEL -->
+    <section class="step" data-sid="done" aria-label="Thank you" hidden>
+      <div class="done">
+        <span class="done__tick" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </span>
+        <h2 class="done__h">Thank you &mdash; that&rsquo;s your starting point.</h2>
+        <!-- Deliberately promises only what is true even when storage is blocked:
+             it never claims the rating was "saved". -->
+        <p class="done__p">At the <b>end of the module</b> you&rsquo;ll rate these same six areas again, and see how far you&rsquo;ve moved. Anything you flagged as a priority is worth watching for as you go.</p>
+        <div class="done__grid" id="doneGrid"></div>
+        <p class="done__note">Your ratings stay on your own device and are never sent anywhere. Nothing here is clinical guidance.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="controls">
+    <button class="btn secondary" id="backBtn" type="button" disabled style="visibility:hidden">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>Back
+    </button>
+    <span class="controls__mid" id="stepLabel" aria-hidden="true">Step 1 of 2</span>
+    <button class="btn" id="nextBtn" type="button">
+      Next<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+
+  <p class="returnhint">Once you&rsquo;ve set your starting point, you can return to the course using the <b>Return to course</b> button at the top.</p>
+
+  <p class="sr-only" id="live" aria-live="polite" aria-atomic="true"></p>
+</main>
+
+<div class="nudge" id="nudge" role="status" aria-live="polite">
+  <span class="nudge__chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+  <span class="nudge__d">All done &mdash; use the <b>&#9664;&nbsp;&#9654;</b> arrows at the bottom of the screen to continue when you&rsquo;re ready.</span>
+  <span class="nudge__m">Finished &mdash; tap <b>Return to course</b> to carry on.</span>
+</div>
+
+<!-- MOBILE/VISME: launch-card decision -->
+<script>
+(function(){
+  "use strict";
+  var fullscreen = /[?&]fullscreen=1/.test(location.search);
+  var inIframe = true; try { inIframe = (window.self !== window.top); } catch(e){ inIframe = true; }
+  var isMobile = /Android|iPhone|iPad|iPod|Mobile|Silk/i.test(navigator.userAgent);
+  var btn = document.getElementById('mlaunchBtn');
+  var base = location.href.split('#')[0].split('?')[0];
+  var courseUrl = ''; try { courseUrl = document.referrer || ''; } catch(e){ courseUrl = ''; }
+  var target = base + '?fullscreen=1' + (courseUrl ? '&return=' + encodeURIComponent(courseUrl) : '');
+  if(btn){
+    btn.href = target;
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      var w = null;
+      try { w = window.open(target, '_blank'); } catch(err){ w = null; }
+      if(!w){
+        try { window.top.location.href = target; }
+        catch(err2){ window.location.href = target; }
+      }
+    });
+  }
+  var rb = document.getElementById('returnBar');
+  var returnUrl = (function(){ try { return new URLSearchParams(location.search).get('return'); } catch(e){ return null; } })();
+  if(rb){
+    if(returnUrl){ rb.href = returnUrl; }
+    rb.addEventListener('click', function(e){
+      e.preventDefault();
+      try { if(window.opener && !window.opener.closed){ window.close(); return; } } catch(err){}
+      if(window.history.length > 1){ window.history.back(); return; }
+      if(returnUrl){ window.location.href = returnUrl; }
+    });
+  }
+  if(isMobile){ document.body.classList.add('is-mobile'); }
+  if(inIframe && isMobile && !fullscreen){ document.body.classList.add('is-embedded-mobile'); }
+  if(fullscreen){ document.body.classList.add('is-fullscreen'); }
+})();
+</script>
+
+<script>
+(function(){
+  "use strict";
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); }
+  function $(id){ return document.getElementById(id); }
+
+  /* ---------- content (verbatim — owner slides) ---------- */
+  // The same six Table-of-Contents content areas the summary scene rates, in the same
+  // order. The 7th TOC entry ("Summary") is omitted — rating it is circular.
+  // These MUST stay in lockstep with the summary scene, or the delta compares apples to pears.
+  var TOPICS = [
+    { html:'<em>MET</em>ex14 skipping NSCLC and tepotinib', plain:'METex14 skipping NSCLC and tepotinib' },
+    { html:'Efficacy of tepotinib in the VISION study', plain:'Efficacy of tepotinib in the VISION study' },
+    { html:'Safety of tepotinib in the VISION study', plain:'Safety of tepotinib in the VISION study' },
+    { html:'Tepotinib efficacy in clinically relevant subgroups of the VISION study', plain:'Tepotinib efficacy in clinically relevant subgroups of the VISION study' },
+    { html:'Efficacy of tepotinib across treatment lines in the VISION study', plain:'Efficacy of tepotinib across treatment lines in the VISION study' },
+    { html:'Outcomes in Asian patients in the VISION study', plain:'Outcomes in Asian patients in the VISION study' }
+  ];
+  var CHIPS = [
+    { v:'good',  label:'Confident' },
+    { v:'amber', label:'Worth a refresher' },
+    { v:'flag',  label:'Priority to revisit' }
+  ];
+  var CHIP_TEXT = { good:'Confident', amber:'Worth a refresher', flag:'Priority to revisit', none:'Not yet rated' };
+
+  var baseRatings = {};
+
+  /* ============================================================
+     STORAGE — best-effort, never load-bearing.
+     Probe (2026-07-10) confirmed localStorage IS reachable inside the real Visme
+     embed (opaque origin: no). It is still fully guarded: Safari blocks
+     third-party storage, and a future sandbox change could remove
+     allow-same-origin. A failed write must be invisible to the learner.
+     ============================================================ */
+  var BKEY = 'tm9035:confidence:baseline:v1';
+  function storageOK(){
+    try{ var k='tm9035:probe'; window.localStorage.setItem(k,'1'); window.localStorage.removeItem(k); return true; }
+    catch(e){ return false; }
+  }
+  var HAS_STORAGE = storageOK();
+
+  function dateStr(){ try{ return new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}); }catch(e){ return ''; } }
+  function writeBaseline(){
+    if(!HAS_STORAGE) return false;
+    try{
+      window.localStorage.setItem(BKEY, JSON.stringify({
+        v:1, source:'baseline-scene', ts:Date.now(), date:dateStr(), r:baseRatings
+      }));
+      return true;
+    }catch(e){ return false; }
+  }
+
+  /* ---------- confidence map ---------- */
+  (function(){
+    var host=$('bmap');
+    TOPICS.forEach(function(t,i){
+      var row=document.createElement('div');
+      row.className='crow'; row.dataset.row=i;
+      var chips=CHIPS.map(function(c){
+        return '<button class="chip" type="button" role="radio" aria-checked="false" data-v="'+c.v+'" data-row="'+i+'" aria-label="'+esc(t.plain)+': '+c.label+'">'+c.label+'</button>';
+      }).join('');
+      row.innerHTML='<span class="crow__lab"><b>'+(i+1)+'</b>'+t.html+'</span>'+
+        '<span class="chips" role="radiogroup" aria-label="Confidence for '+esc(t.plain)+'">'+chips+'</span>';
+      host.appendChild(row);
+    });
+    host.addEventListener('click',function(e){
+      var chip=e.target.closest('.chip'); if(!chip) return;
+      var row=+chip.dataset.row;
+      chip.parentNode.querySelectorAll('.chip').forEach(function(g){ g.setAttribute('aria-checked','false'); });
+      chip.setAttribute('aria-checked','true');
+      baseRatings[row]=chip.dataset.v;
+      chip.closest('.crow').classList.add('is-set');
+      writeBaseline();                       // guarded; a failure is silent by design
+      $('live').textContent=TOPICS[row].plain+': '+CHIP_TEXT[chip.dataset.v]+'.';
+      syncProgress();
+    });
+  })();
+
+  function rated(){ return Object.keys(baseRatings).length; }
+  function syncProgress(){
+    var n=rated(), el=$('progress');
+    el.classList.toggle('is-full', n===TOPICS.length);
+    el.textContent = n===TOPICS.length
+      ? 'All six rated — continue when you’re ready.'
+      : (n===0 ? 'Rate all six areas to continue.' : 'Rated '+n+' of '+TOPICS.length+'.');
+    // Next stays enabled throughout: a partial baseline is still a valid baseline,
+    // and the summary scene reports "no comparison yet" for any unrated area.
+  }
+
+  /* ---------- step 2: closing panel ---------- */
+  function buildDone(){
+    $('doneGrid').innerHTML = TOPICS.map(function(t,i){
+      var v=baseRatings[i]||'none';
+      return '<span class="tag" data-v="'+v+'"><b>'+(i+1)+'</b>&nbsp;'+t.html+' &middot; '+CHIP_TEXT[v]+'</span>';
+    }).join('');
+  }
+
+  /* ---------- nudge ---------- */
+  function fireNudge(on){
+    var frame=document.querySelector('.frame'), nudge=$('nudge');
+    if(frame) frame.classList.toggle('nudge-shown', on);
+    if(nudge) nudge.classList.toggle('is-on', on);
+  }
+
+  /* ---------- step navigation ---------- */
+  var ACTIVE=['rate','done'], TOTAL=ACTIVE.length, current=1;
+  var steps=Array.prototype.slice.call(document.querySelectorAll('.step'));
+  var railSteps=Array.prototype.slice.call(document.querySelectorAll('.rail__step'));
+  var backBtn=$('backBtn'), nextBtn=$('nextBtn'), stepLabel=$('stepLabel');
+
+  function show(n, dir){
+    current=n;
+    var sid=ACTIVE[n-1];
+    steps.forEach(function(s){ var on=(s.dataset.sid===sid); s.classList.toggle('is-on',on); s.hidden=!on; s.classList.remove('anim-right','anim-left'); });
+    railSteps.forEach(function(r){ var rs=+r.dataset.rs; r.classList.toggle('is-active',rs===n); r.classList.toggle('is-done',rs<n); });
+    stepLabel.textContent='Step '+n+' of '+TOTAL;
+    backBtn.disabled=(n===1);
+    backBtn.style.visibility=(n===1)?'hidden':'visible';
+    document.body.classList.toggle('is-laststep', n===TOTAL);
+    if(n===TOTAL){
+      nextBtn.style.display='none';
+      buildDone();
+      fireNudge(true);
+    }else{
+      nextBtn.style.display='';
+      fireNudge(false);
+    }
+    if(!reduceMotion && dir){
+      var active=document.querySelector('.step.is-on');
+      if(active){ void active.offsetWidth; active.classList.add(dir==='left'?'anim-left':'anim-right'); }
+    }
+    $('live').textContent='Step '+n+' of '+TOTAL+'.';
+  }
+  nextBtn.addEventListener('click',function(){ if(current<TOTAL) show(current+1,'right'); });
+  backBtn.addEventListener('click',function(){ if(current>1) show(current-1,'left'); });
+  railSteps.forEach(function(r){
+    r.style.cursor='pointer';
+    r.addEventListener('click',function(){ var rs=+r.dataset.rs; if(rs<current) show(rs,'left'); });
+  });
+
+  syncProgress();
+  stepLabel.textContent='Step 1 of '+TOTAL;
+})();
+</script>
+</body>
+</html>

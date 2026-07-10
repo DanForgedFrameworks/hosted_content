@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Benchmark summary &amp; reflection — VISION (tepotinib, METex14 skipping NSCLC)</title>
+<style>
+/* ============================================================
+   TOUCH MEDICAL — TM9035 SCENE 71 · BENCHMARK VARIANT
+   (fit-to-embed-box, 680 ceiling)
+   Summary & CPD reflection with a BEFORE/AFTER confidence delta.
+   Twin of tm9035-summary-and-reflection-scene-71; identical except for the
+   baseline rating, the delta, and the localStorage probe.
+
+   Six-step flow inside one box, no scroll:
+     1 Baseline         — confidence BEFORE the summary  (SKIPPED if a deck-wide
+                          baseline is already in localStorage)
+     2 Summary          — five VISION summary points (verbatim)
+     3 Where you stand  — confidence AFTER the summary
+     4 My commitments   — pick up to three practice commitments (tap-to-toggle)
+     5 What's in the way — pick ONE barrier (tap-to-select, single choice)
+     6 CPD record       — review + delta + in-frame export (sandbox-safe)
+
+   STORAGE (best-effort, never load-bearing). Inside Visme the embed may sit on an
+   OPAQUE ORIGIN, where any localStorage access throws SecurityError. Every read and
+   write is therefore wrapped in try/catch and the asset degrades silently:
+     - baseline found + valid -> use it, skip the baseline step, say where it came from
+     - storage throws / empty  -> ask for the baseline in-asset (always works)
+   The learner never sees an error and never meets a dead feature.
+
+   NO free-text capture (client steer 2026-07-10). NO drag-and-drop anywhere:
+   Visme scales a fixed ~1368px canvas, so drag mis-taps badly (contract §4.2).
+   Tap targets >= 44px. Export is IN-FRAME (contract §0.5). The DOWNLOADED HTML doc
+   (only) carries a printed blank lined "My reflection" box.
+   No content is ever gated behind animation (contract §6).
+   Self-contained. No external runtime dependencies.
+   Brand: Poppins (bundled), teal #0098be, navy #222f55.
+   ============================================================ */
+@font-face { font-family:"Poppins"; src:url("assets/poppins-400.ttf") format("truetype"); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-600.ttf") format("truetype"); font-weight:600; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-700.ttf") format("truetype"); font-weight:700; font-style:normal; font-display:swap; }
+
+:root{
+  /* canonical palette — contract §2 (re-derived from brand-tokens.css) */
+  --teal:#0098be; --teal-strong:#007a98;
+  --navy:#222f55; --on-accent:#ffffff;
+  --neutral:#c6d3e2;
+  --muted:#56608a; --faint:#8a91b0;
+  --pale:#d9eff8; --mist:#f4f7f9; --line:#e3e8ee;
+  --backdrop:rgba(16,26,38,.68);
+  --title-shadow-slim:0 1px 2px rgba(34,47,85,.16);
+  --c1:#222f55; --c2:#0098be; --c3:#4f9fc4; --c4:#86bdd8; --c5:#b9d8e8;
+  /* feedback/state — slide-69's contrast-tuned realisation, retained verbatim.
+     Used as TEXT on their -soft fill; the contract §0.1 extension values fail
+     WCAG 1.4.3 in that role. Divergence recorded in notes.md. */
+  --good:#287d5c; --good-soft:#e3f3ec;
+  --amber:#9a6a16; --amber-soft:#fbf0db;
+  --flag:#b64457; --flag-soft:#fbe7ea;
+  --font:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{ box-sizing:border-box; }
+html,body{ height:100%; margin:0; }
+body{ overflow:hidden; background:#eef4f7; color:var(--navy); font-family:var(--font); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; display:flex; align-items:center; justify-content:center; }
+
+/* ---------- frame: white card, capped at 680, centred ---------- */
+.frame{ position:relative; z-index:1; width:100%; height:100%; max-width:1370px; max-height:680px; display:flex; flex-direction:column; overflow:hidden; background:#fff; border-radius:16px; box-shadow:0 20px 52px rgba(16,26,38,.18); }
+
+/* banner (chrome) — §0.9 white-band heading */
+.banner{ flex:0 0 auto; text-align:center; padding:clamp(9px,1.5vh,16px) 16px; background:#fff; box-shadow:0 4px 11px rgba(34,47,85,0.07); border-bottom:1px solid var(--line); border-radius:14px 14px 0 0; }
+.banner__title{ margin:0; font-size:clamp(30px,3.4vw,48px); font-weight:700; line-height:1.1; letter-spacing:-0.012em; color:var(--navy); text-shadow:var(--title-shadow-slim); }
+.banner__title em{ font-style:italic; }
+.banner__prompt{ margin:4px 0 0; font-size:clamp(.76rem,1.3vw,.9rem); font-weight:500; color:var(--muted); }
+
+/* ---------- step rail (built by JS from ACTIVE steps) ---------- */
+.rail{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:clamp(4px,.9vw,12px); padding:clamp(6px,1.2vh,12px) clamp(10px,2.4vw,24px) clamp(4px,.9vh,9px); }
+.rail__step{ display:inline-flex; align-items:center; gap:7px; font-size:clamp(.66rem,1.05vw,.78rem); font-weight:700; color:var(--faint); }
+.rail__num{ width:23px; height:23px; flex:0 0 auto; border-radius:50%; display:grid; place-items:center; background:#fff; border:2px solid var(--line); color:var(--faint); font-size:.78rem; font-weight:700; }
+.rail__step.is-active .rail__num{ background:var(--teal); border-color:var(--teal); color:#fff; }
+.rail__step.is-active{ color:var(--navy); }
+.rail__step.is-done .rail__num{ background:var(--teal-strong); border-color:var(--teal-strong); color:#fff; }
+.rail__step.is-done{ color:var(--muted); }
+.rail__line{ width:clamp(8px,1.9vw,28px); height:2px; background:var(--line); border-radius:2px; }
+.rail__step.is-done + .rail__line{ background:var(--teal-strong); }
+@media (max-width:1180px){ .rail__lab{ display:none; } }
+
+/* ---------- body shell ---------- */
+.body{ flex:1 1 auto; min-height:0; position:relative; padding:clamp(5px,1vh,12px) clamp(16px,2.8vw,40px) clamp(7px,1.2vh,14px); }
+.step{ position:absolute; inset:0; padding:inherit; display:none; flex-direction:column; min-height:0; overflow:hidden; }
+.step.is-on{ display:flex; }
+.step.anim-right{ animation:stepInR .36s cubic-bezier(.4,0,.2,1); }
+.step.anim-left{ animation:stepInL .36s cubic-bezier(.4,0,.2,1); }
+@keyframes stepInR{ from{ transform:translateX(40px); } to{ transform:none; } }   /* §6: transform only, never opacity */
+@keyframes stepInL{ from{ transform:translateX(-40px); } to{ transform:none; } }  /* §6: transform only, never opacity */
+.step__lead{ flex:0 0 auto; margin:0 0 clamp(5px,1vh,11px); font-size:clamp(.78rem,1.35vw,.94rem); font-weight:600; color:var(--muted); line-height:1.35; text-align:center; }
+.step__lead b{ color:var(--navy); font-weight:700; }
+.congrats{ flex:0 0 auto; margin:0 0 clamp(5px,1vh,11px); padding:clamp(7px,1.3vh,13px) clamp(14px,2vw,24px); background:var(--good-soft); border:2px solid var(--good); border-radius:13px; color:var(--good); font-size:clamp(.82rem,1.4vw,1rem); font-weight:600; line-height:1.4; text-align:center; }
+.congrats b{ color:var(--good); font-weight:700; }
+/* end-of-module completion state — swapped in once the learner actually TAKES their
+   record (copy / download / email), not merely on arriving at the step. */
+.congrats.is-complete{ display:flex; align-items:center; justify-content:center; gap:clamp(9px,1.3vw,14px); text-align:left; border-width:3px; }
+.congrats__tick{ flex:0 0 auto; width:clamp(30px,3.2vw,38px); height:clamp(30px,3.2vw,38px); border-radius:50%; background:var(--good); color:#fff; display:grid; place-items:center; }
+.congrats__tick svg{ width:60%; height:60%; }
+.congrats__txt{ flex:0 1 auto; min-width:0; }
+
+/* ---------- summary cards ---------- */
+.sum{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; justify-content:center; gap:clamp(5px,1.1vh,11px); padding:2px 0; }
+.scard{ display:flex; align-items:center; gap:clamp(12px,1.8vw,20px); padding:clamp(5px,1.05vh,13px) clamp(14px,1.9vw,22px); background:#fff; border:2px solid var(--teal); border-radius:14px; box-shadow:0 5px 16px rgba(34,47,85,.07); opacity:0; transform:translateY(18px); }
+.scard.in{ opacity:1; transform:none; transition:opacity .55s cubic-bezier(.4,0,.2,1), transform .55s cubic-bezier(.4,0,.2,1); }
+.scard__no{ flex:0 0 auto; width:clamp(30px,3.4vw,40px); height:clamp(30px,3.4vw,40px); border-radius:50%; background:var(--teal); color:#fff; display:grid; place-items:center; font-size:clamp(.92rem,1.7vw,1.16rem); font-weight:700; }
+.scard__main{ flex:1 1 auto; min-width:0; }
+.scard__eyebrow{ display:block; font-size:clamp(.6rem,1.05vw,.7rem); font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--teal-strong); margin-bottom:2px; }
+.scard__text{ margin:0; font-size:clamp(.82rem,1.42vw,.98rem); font-weight:500; line-height:1.34; color:var(--navy); text-align:justify; text-justify:inter-word; }
+.scard__text em{ font-style:italic; }
+
+/* ---------- confidence map (used by BOTH the baseline and the after step) ---------- */
+.cmap{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; justify-content:center; gap:clamp(5px,.9vh,9px); }
+.crow{ display:grid; grid-template-columns:1fr auto; align-items:center; gap:clamp(10px,1.6vw,20px); padding:clamp(5px,.95vh,10px) clamp(12px,1.6vw,18px); background:#fff; border:1.5px solid var(--line); border-radius:11px; transition:border-color .15s ease, box-shadow .15s ease; }
+.crow.is-set{ border-color:var(--teal); box-shadow:0 3px 12px rgba(34,47,85,.07); }
+.crow__lab{ font-size:clamp(.73rem,1.26vw,.89rem); font-weight:600; line-height:1.22; color:var(--navy); }
+.crow__lab em{ font-style:italic; }
+.crow__lab b{ color:var(--teal-strong); font-weight:700; margin-right:6px; }
+.chips{ display:inline-flex; gap:clamp(5px,.7vw,8px); flex:0 0 auto; }
+.chip{ border:1.5px solid var(--line); background:#fff; color:var(--muted); font:inherit; font-weight:700; font-size:clamp(.68rem,1.12vw,.78rem); padding:6px clamp(8px,1.1vw,14px); border-radius:999px; cursor:pointer; white-space:nowrap; transition:all .14s ease; }
+.chip:hover{ border-color:var(--teal); color:var(--navy); }
+.chip:focus-visible{ outline:3px solid var(--navy); outline-offset:2px; }
+.chip[aria-checked="true"][data-v="good"]{ background:var(--good-soft); border-color:var(--good); color:var(--good); }
+.chip[aria-checked="true"][data-v="amber"]{ background:var(--amber-soft); border-color:var(--amber); color:var(--amber); }
+.chip[aria-checked="true"][data-v="flag"]{ background:var(--flag-soft); border-color:var(--flag); color:var(--flag); }
+
+/* ---------- commitments (tap-to-toggle, max 3; NO drag) ---------- */
+.mwrap{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; justify-content:center; gap:clamp(5px,.9vh,10px); }
+.mgrid{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(6px,1vh,10px) clamp(10px,1.4vw,18px); }
+.mcard{ display:flex; align-items:center; gap:clamp(9px,1.2vw,13px); min-height:52px; padding:clamp(7px,1.1vh,11px) clamp(11px,1.5vw,16px); background:#fff; border:1.5px solid var(--line); border-radius:12px; cursor:pointer; text-align:left; font:inherit; color:var(--navy); transition:border-color .14s ease, box-shadow .14s ease, background .14s ease, transform .12s ease; }
+.mcard:hover{ border-color:var(--teal); }
+.mcard:active{ transform:translateY(1px); }
+.mcard:focus-visible{ outline:3px solid var(--navy); outline-offset:2px; }
+.mcard__box{ flex:0 0 auto; width:22px; height:22px; border-radius:6px; border:2px solid var(--neutral); display:grid; place-items:center; background:#fff; transition:background .14s ease, border-color .14s ease; }
+.mcard__box svg{ width:14px; height:14px; opacity:0; color:#fff; transition:opacity .14s ease; }
+.mcard[aria-checked="true"]{ border-color:var(--teal); background:var(--pale); box-shadow:0 3px 12px rgba(34,47,85,.07); }
+.mcard[aria-checked="true"] .mcard__box{ background:var(--teal); border-color:var(--teal); }
+.mcard[aria-checked="true"] .mcard__box svg{ opacity:1; }
+/* §0.10: the card centres its text via flex — wrap ALL text in ONE span so an
+   inline <em>MET</em> can't splinter into its own flex column. */
+.mcard__t{ flex:1 1 auto; min-width:0; font-size:clamp(.71rem,1.19vw,.85rem); font-weight:600; line-height:1.3; }
+.mcard__t em{ font-style:italic; }
+.mcount{ flex:0 0 auto; text-align:center; font-size:clamp(.69rem,1.12vw,.79rem); font-weight:700; color:var(--teal-strong); min-height:1.2em; }
+.mcount.is-full{ color:var(--good); }
+.mcount.is-warn{ color:var(--amber); }
+
+/* ---------- barrier picker (single-select; NO drag) ---------- */
+.bwrap{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; justify-content:center; gap:clamp(7px,1.2vh,13px); }
+.bgrid{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(7px,1.1vh,12px) clamp(10px,1.4vw,18px); }
+.bcard{ display:flex; align-items:center; gap:clamp(10px,1.3vw,14px); min-height:56px; padding:clamp(8px,1.2vh,13px) clamp(12px,1.6vw,18px); background:#fff; border:1.5px solid var(--line); border-radius:12px; cursor:pointer; text-align:left; font:inherit; color:var(--navy); transition:border-color .14s ease, background .14s ease, box-shadow .14s ease, transform .12s ease; }
+.bcard:hover{ border-color:var(--teal); }
+.bcard:active{ transform:translateY(1px); }
+.bcard:focus-visible{ outline:3px solid var(--navy); outline-offset:2px; }
+.bcard__dot{ flex:0 0 auto; width:21px; height:21px; border-radius:50%; border:2px solid var(--neutral); display:grid; place-items:center; background:#fff; transition:border-color .14s ease; }
+.bcard__dot i{ display:block; width:10px; height:10px; border-radius:50%; background:transparent; transition:background .14s ease; }
+.bcard[aria-checked="true"]{ border-color:var(--teal); background:var(--pale); box-shadow:0 3px 12px rgba(34,47,85,.07); }
+.bcard[aria-checked="true"] .bcard__dot{ border-color:var(--teal); }
+.bcard[aria-checked="true"] .bcard__dot i{ background:var(--teal); }
+.bcard__t{ flex:1 1 auto; min-width:0; font-size:clamp(.72rem,1.2vw,.86rem); font-weight:600; line-height:1.3; }
+.bcard__t em{ font-style:italic; }
+.bcard__t b{ display:block; font-weight:700; color:var(--navy); }
+.bcard__t span{ display:block; font-weight:500; color:var(--muted); font-size:.92em; line-height:1.25; margin-top:1px; }
+
+/* ---------- CPD record ---------- */
+.cpd{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; gap:clamp(4px,.8vh,9px); }
+.cpd__scroll{ flex:1 1 auto; min-height:0; overflow:auto; border:1.5px solid var(--line); border-radius:12px; background:var(--mist); padding:clamp(9px,1.5vw,18px); }
+.cpd__sec + .cpd__sec{ margin-top:clamp(7px,1.3vh,14px); }
+.cpd__h{ margin:0 0 6px; font-size:clamp(.66rem,1.1vw,.74rem); font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--teal-strong); }
+.cpd__grid{ display:flex; flex-wrap:wrap; gap:6px; }
+.tag{ display:inline-flex; align-items:center; gap:6px; font-size:clamp(.67rem,1.08vw,.77rem); font-weight:600; padding:5px 11px; border-radius:999px; border:1.5px solid var(--line); background:#fff; color:var(--muted); }
+.tag em{ font-style:italic; }
+.tag b{ font-weight:700; }
+.tag[data-v="good"]{ border-color:var(--good); color:var(--good); background:var(--good-soft); }
+.tag[data-v="amber"]{ border-color:var(--amber); color:var(--amber); background:var(--amber-soft); }
+.tag[data-v="flag"]{ border-color:var(--flag); color:var(--flag); background:var(--flag-soft); }
+.tag[data-v="none"]{ color:var(--faint); }
+.klist{ margin:0; padding:0 0 0 18px; }
+.klist li{ font-size:clamp(.73rem,1.2vw,.85rem); font-weight:500; color:var(--navy); line-height:1.36; }
+.klist li + li{ margin-top:4px; }
+.klist li em{ font-style:italic; }
+.kbar{ margin:0; font-size:clamp(.73rem,1.2vw,.85rem); font-weight:500; color:var(--navy); line-height:1.36; }
+.kbar em{ font-style:italic; }
+.kbar b{ font-weight:700; }
+.knone{ margin:0; font-size:clamp(.73rem,1.2vw,.85rem); font-style:italic; color:var(--faint); }
+.cpd__note{ flex:0 0 auto; font-size:clamp(.67rem,1.06vw,.75rem); color:var(--faint); line-height:1.35; margin:0; }
+
+/* ---------- BENCHMARK: before/after delta ---------- */
+.dhead{ margin:0 0 7px; font-size:clamp(.72rem,1.18vw,.84rem); font-weight:600; color:var(--navy); }
+.dhead b{ font-weight:700; color:var(--good); }
+.drow{ display:grid; grid-template-columns:1fr auto; gap:clamp(8px,1.2vw,16px); align-items:center; padding:4px 0; border-bottom:1px dashed var(--line); }
+.drow:last-child{ border-bottom:0; }
+.drow__l{ font-size:clamp(.71rem,1.16vw,.82rem); font-weight:600; color:var(--navy); line-height:1.28; }
+.drow__l em{ font-style:italic; }
+.drow__l b{ color:var(--teal-strong); font-weight:700; margin-right:5px; }
+.drow__m{ font-size:clamp(.68rem,1.1vw,.78rem); font-weight:700; white-space:nowrap; font-variant-numeric:tabular-nums; }
+.drow__m[data-d="up"]{ color:var(--good); }
+.drow__m[data-d="same"]{ color:var(--muted); }
+.drow__m[data-d="down"]{ color:var(--amber); }
+.drow__m[data-d="none"]{ color:var(--faint); font-weight:600; font-style:italic; }
+/* baseline provenance + reset control */
+.srcnote{ flex:0 0 auto; display:flex; flex-wrap:wrap; align-items:center; gap:4px 10px; margin:0; font-size:clamp(.67rem,1.06vw,.75rem); color:var(--muted); line-height:1.35; }
+.resetbtn{ display:inline-flex; align-items:center; min-height:44px; padding:2px 0; font:inherit; font-size:inherit; font-weight:700; color:var(--teal-strong); background:none; border:0; cursor:pointer; text-decoration:underline; text-underline-offset:3px; }
+.resetbtn:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+.resetbtn.is-arm{ color:var(--flag); }
+
+/* ---------- footer controls (chrome) ---------- */
+.controls{ flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:clamp(6px,1.1vh,12px) clamp(16px,3vw,30px); border-top:1px solid var(--line); }
+.btn{ display:inline-flex; align-items:center; gap:8px; min-height:44px; padding:9px clamp(14px,1.8vw,22px); border:2px solid var(--teal); border-radius:10px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:clamp(.8rem,1.3vw,.9rem); cursor:pointer; transition:filter .15s ease, opacity .15s ease; }
+.btn svg{ width:17px; height:17px; }
+.btn:hover:not(:disabled){ filter:brightness(.95); }
+.btn.secondary{ background:#fff; color:var(--teal); }
+.btn.secondary:hover:not(:disabled){ background:var(--mist); filter:none; }
+.btn:disabled{ background:#fff; color:var(--faint); border-color:var(--line); cursor:not-allowed; }
+.btn:focus-visible,.chip:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+.controls__mid{ font-size:clamp(.72rem,1.2vw,.84rem); font-weight:700; color:var(--teal); white-space:nowrap; font-variant-numeric:tabular-nums; }
+
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+/* ---------- phone view (<760px): drop fixed-height, allow scroll ---------- */
+@media (max-width:760px){
+  html,body{ height:auto; }
+  body{ overflow:auto; display:block; }
+  .frame{ width:auto; height:auto; min-height:100%; max-height:none; margin:0; border-radius:0; }
+  .body{ position:static; }
+  .step{ position:static; overflow:visible; }
+  .rail__lab{ display:none; }
+  .crow{ grid-template-columns:1fr; gap:8px; }
+  .chips{ flex-wrap:wrap; }
+  .chip{ min-height:44px; display:inline-flex; align-items:center; }
+  .mgrid,.bgrid{ grid-template-columns:1fr; }
+  .drow{ grid-template-columns:1fr; gap:2px; }
+  .drow__m{ white-space:normal; }
+  body.is-fullscreen{ padding-top:56px; }
+  .nudge{ font-size:13px; left:12px; right:12px; transform:none; max-width:none; justify-content:center; }
+  .nudge.is-on{ animation:none; }
+  .frame.nudge-shown{ padding-bottom:0; }
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+  .scard{ opacity:1; transform:none; }
+}
+
+/* ---------- export modal (in-frame; sandbox-safe download + copy) ---------- */
+.xmodal{ position:fixed; inset:0; z-index:40; display:none; align-items:center; justify-content:center; padding:clamp(12px,4vw,40px); background:var(--backdrop); }
+.xmodal.is-open{ display:flex; }
+.xcard{ width:min(560px,100%); max-height:calc(100% - 24px); overflow:auto; background:#fff; border-radius:16px; box-shadow:0 24px 60px rgba(16,26,38,.4); padding:clamp(18px,3vw,26px); animation:rise .22s ease backwards; }  /* §6/§0.11: backwards, never `both` with opacity */
+.xcard__check{ width:38px; height:38px; border-radius:50%; background:var(--teal); color:#fff; display:grid; place-items:center; margin-bottom:12px; }
+.xcard__check svg{ width:20px; height:20px; }
+.xcard__eyebrow{ margin:0 0 4px; font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--teal-strong); }
+.xcard__title{ margin:0 0 8px; font-size:clamp(1.05rem,2vw,1.25rem); font-weight:700; color:var(--navy); }
+.xcard__body{ margin:0; font-size:.9rem; line-height:1.5; color:var(--muted); }
+.xcard__body strong{ color:var(--navy); font-weight:700; }
+.xcard__actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+.xcard__status{ margin:12px 0 0; min-height:20px; font-size:.82rem; font-weight:600; color:var(--teal-strong); }
+.xcard__status.warn{ color:var(--amber); }
+@keyframes rise{ from{ transform:translateY(10px) scale(.99); } to{ transform:none; } }  /* §6: transform only */
+
+/* ===== Continue nudge — eased-in end-of-content reminder (house behaviour) ===== */
+.frame.nudge-shown{ padding-bottom:72px; }
+.nudge{ position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:40; display:none; align-items:center; gap:10px; max-width:calc(100% - 28px); padding:9px 17px; border-radius:999px; background:rgba(34,47,85,0.94); color:#fff; font-size:15px; font-weight:600; line-height:1.25; box-shadow:0 8px 22px rgba(16,26,38,0.30); }
+.nudge.is-on{ display:inline-flex; animation:nudgeIn .5s ease backwards; }
+.nudge b{ font-weight:700; }
+.nudge__chev{ flex:0 0 auto; display:inline-grid; place-items:center; }
+.nudge__chev svg{ width:20px; height:20px; transition:transform .3s ease; }
+.nudge.is-on .nudge__chev{ animation:nudgeBob 1.6s ease-in-out .6s infinite; }
+.nudge__m{ display:none; }
+body.is-fullscreen .nudge{ bottom:auto; top:60px; }
+body.is-fullscreen .nudge__d{ display:none; }
+body.is-fullscreen .nudge__m{ display:inline; }
+body.is-fullscreen .nudge__chev svg{ transform:rotate(180deg); }
+body.is-fullscreen .nudge.is-on .nudge__chev{ animation:nudgeBobUp 1.6s ease-in-out .6s infinite; }
+body.is-fullscreen.is-laststep .nudge__m{ display:none; }
+@keyframes nudgeIn{ from{ transform:translateX(-50%) translateY(12px); } to{ transform:translateX(-50%) translateY(0); } }  /* §6: transform only */
+@keyframes nudgeBob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(3px); } }
+@keyframes nudgeBobUp{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-3px); } }
+
+/* ============================================================
+   MOBILE/VISME — embedded-mobile launch card (approved 2026-06-25)
+   ============================================================ */
+.mlaunch{ display:none; }
+body.is-embedded-mobile .frame{ display:none !important; }
+body.is-embedded-mobile{ display:block; }
+body.is-embedded-mobile .mlaunch{
+  display:flex; position:fixed; inset:0; z-index:50;
+  flex-direction:column; align-items:center; justify-content:center; text-align:center;
+  gap:42px; padding:90px 70px;
+  background:linear-gradient(135deg,#0098be 0%, #007a98 55%, #222f55 100%); color:#fff;
+}
+.mlaunch__badge{ font-size:30px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; opacity:.9; }
+.mlaunch__title{ margin:0; font-size:60px; font-weight:700; line-height:1.08; }
+.mlaunch__title em{ font-style:italic; }
+.mlaunch__lead{ margin:0; max-width:1040px; font-size:36px; font-weight:500; line-height:1.4; opacity:.96; }
+.mlaunch__btn{ display:inline-flex; align-items:center; gap:26px; margin-top:6px;
+  padding:48px 92px; border-radius:999px; background:#fff; color:#007a98;
+  font:inherit; font-weight:700; font-size:48px; text-decoration:none;
+  box-shadow:0 18px 54px rgba(16,26,38,.38); }
+.mlaunch__btn svg{ width:56px; height:56px; }
+.mlaunch__note{ margin:0; max-width:1040px; font-size:27px; line-height:1.4; opacity:.85; }
+
+/* MOBILE/VISME — "Return to course" control (full-screen view only) */
+.returnbar{ display:none; }
+body.is-fullscreen .returnbar{
+  display:inline-flex; align-items:center; justify-content:center; gap:0;
+  position:fixed; top:10px; left:10px; z-index:60; box-sizing:border-box;
+  width:44px; height:44px; padding:0; overflow:hidden;
+  border-radius:13px; background:rgba(34,47,85,.92); color:#fff;
+  text-decoration:none; box-shadow:0 6px 16px rgba(16,26,38,.26);
+  transition:width .28s cubic-bezier(.4,0,.2,1), padding .28s cubic-bezier(.4,0,.2,1), gap .28s ease, border-radius .28s ease;
+}
+body.is-fullscreen .returnbar__ic{ flex:0 0 auto; width:22px; height:22px; display:grid; place-items:center; }
+body.is-fullscreen .returnbar__ic svg{ width:22px; height:22px; }
+body.is-fullscreen .returnbar__lab{
+  font:inherit; font-weight:700; font-size:15px; white-space:nowrap;
+  max-width:0; opacity:0; transition:max-width .28s ease, opacity .2s ease;
+}
+body.is-fullscreen .returnbar:focus-visible{ outline:3px solid var(--teal); outline-offset:3px; }
+body.is-fullscreen.is-laststep .returnbar{ width:auto; gap:9px; padding:0 18px 0 13px; border-radius:999px; }
+body.is-fullscreen.is-laststep .returnbar__lab{ max-width:220px; opacity:1; }
+
+.returnhint{ display:none; }
+body.is-fullscreen.is-laststep .returnhint{
+  display:block; flex:0 0 auto; margin:0; padding:10px clamp(16px,3vw,30px) 4px;
+  font-size:13px; line-height:1.42; color:var(--muted); text-align:center;
+}
+body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-weight:700; }
+</style>
+</head>
+<body>
+
+<!-- MOBILE/VISME: return-to-course bar (shown only in the opened full-screen view) -->
+<a class="returnbar" id="returnBar" href="#" aria-label="Return to the course">
+  <span class="returnbar__ic" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 5 4 10 9 15"/><path d="M4 10 H15 a5 5 0 0 1 5 5 V19"/></svg>
+  </span>
+  <span class="returnbar__lab">Return to course</span>
+</a>
+
+<!-- MOBILE/VISME: embedded-mobile launch card -->
+<div class="mlaunch" role="group" aria-label="Open the activity full screen">
+  <span class="mlaunch__badge">Touch Oncology &middot; CPD activity</span>
+  <h1 class="mlaunch__title">Benchmark summary &amp; reflection</h1>
+  <p class="mlaunch__lead">This interactive activity is best viewed full screen on your phone. Tap below to open it.</p>
+  <a class="mlaunch__btn" id="mlaunchBtn" href="#" target="_blank" rel="noopener">
+    Open the activity
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><polyline points="13 6 19 12 13 18"/></svg>
+  </a>
+  <p class="mlaunch__note">On a computer, the activity appears here directly.</p>
+</div>
+
+<main class="frame" aria-label="Benchmark summary and reflection for the VISION study">
+
+  <header class="banner">
+    <h1 class="banner__title">Benchmark summary &amp; reflection</h1>
+    <p class="banner__prompt">Gauge where you start, review the summary, see how far you&rsquo;ve moved, then export a CPD record.</p>
+  </header>
+
+  <!-- step rail — built by JS from the ACTIVE step list -->
+  <nav class="rail" id="rail" aria-label="Activity steps"></nav>
+
+  <div class="body">
+
+    <!-- STEP — BASELINE (skipped when a deck-wide baseline is already stored) -->
+    <section class="step" data-sid="baseline" aria-label="Baseline" hidden>
+      <p class="step__lead"><b>Before</b> you review the summary, how confident do you feel across the six areas of this module? <b>There are no wrong answers</b> &mdash; this is your starting point.</p>
+      <div class="cmap" id="bmap"></div>
+    </section>
+
+    <!-- STEP — SUMMARY -->
+    <section class="step is-on" data-sid="summary" aria-label="Summary">
+      <p class="step__lead">After <b>&ge;3 years&rsquo; follow-up</b> in VISION, the headline findings were:</p>
+      <div class="sum" id="sum"></div>
+    </section>
+
+    <!-- STEP — CONFIDENCE MAP (the "after" rating) -->
+    <section class="step" data-sid="stand" aria-label="Where you stand" hidden>
+      <p class="step__lead">Now you&rsquo;ve reviewed the summary, how confident do you feel? <b>We&rsquo;ll compare this with your baseline</b> in your CPD record.</p>
+      <div class="cmap" id="cmap"></div>
+    </section>
+
+    <!-- STEP — COMMITMENTS (tap-to-toggle, max 3) -->
+    <section class="step" data-sid="commit" aria-label="My commitments" hidden>
+      <p class="step__lead">Which of these will you actually take back to your practice? <b>Choose up to three</b> &mdash; they become the action plan in your CPD record.</p>
+      <div class="mwrap">
+        <div class="mgrid" id="mgrid" role="group" aria-label="Commitments to practice — choose up to three"></div>
+        <p class="mcount" id="mcount" aria-live="polite">Choose up to three.</p>
+      </div>
+    </section>
+
+    <!-- STEP — BARRIER (single-select) -->
+    <section class="step" data-sid="barrier" aria-label="What is in the way" hidden>
+      <p class="step__lead">What&rsquo;s most likely to stop you acting on this? <b>Choose the one</b> that matters most &mdash; naming it is the first step to planning around it.</p>
+      <div class="bwrap">
+        <div class="bgrid" id="bgrid" role="radiogroup" aria-label="What is most likely to stop you acting on this"></div>
+      </div>
+    </section>
+
+    <!-- STEP — CPD RECORD -->
+    <section class="step" data-sid="record" aria-label="CPD record" hidden>
+      <p class="congrats" id="congrats"><b>Congratulations &mdash; you&rsquo;ve reached the end of this module.</b> We really hope you&rsquo;ve enjoyed it. This was your time to reflect &mdash; create your CPD record below to keep a note of it. You can also revisit the <b>references</b> page in the course whenever you need it.</p>
+      <p class="step__lead">Here is your record. <b>Create your CPD record</b> to download or copy it for your CPD log &mdash; or step back to refine anything.</p>
+      <div class="cpd">
+        <div class="cpd__scroll" id="cpdScroll" tabindex="0" aria-label="CPD record preview"></div>
+        <p class="srcnote" id="srcNote" hidden>
+          <span id="srcText"></span>
+          <button class="resetbtn" id="resetBase" type="button">Re-rate my baseline</button>
+        </p>
+        <p class="cpd__note">This is a personal reflective record, not clinical guidance. Figures relate to the 313 patients with <em>MET</em>ex14 skipping NSCLC in the Phase&nbsp;2 VISION trial.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- footer controls -->
+  <div class="controls">
+    <button class="btn secondary" id="backBtn" type="button" disabled style="visibility:hidden">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>Back
+    </button>
+    <span class="controls__mid" id="stepLabel" aria-hidden="true">Step 1 of 6</span>
+    <button class="btn" id="nextBtn" type="button">
+      Next<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+    <button class="btn" id="exportBtn" type="button" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><polyline points="8 11 12 15 16 11"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Create my CPD record
+    </button>
+  </div>
+
+  <!-- MOBILE/VISME: full-screen final-step return hint -->
+  <p class="returnhint">Once you have completed your reflection and saved your summary, you can return to the course using the <b>Return to course</b> button at the top.</p>
+
+  <p class="sr-only" id="live" aria-live="polite" aria-atomic="true"></p>
+</main>
+
+<!-- continue nudge -->
+<div class="nudge" id="nudge" role="status" aria-live="polite">
+  <span class="nudge__chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+  <span class="nudge__d">All done &mdash; use the <b>&#9664;&nbsp;&#9654;</b> arrows at the bottom of the screen to continue when you&rsquo;re ready.</span>
+  <span class="nudge__m">Finished &mdash; tap <b>Return to course</b> to carry on.</span>
+</div>
+
+<!-- in-frame export modal -->
+<div class="xmodal" id="exportModal" role="dialog" aria-modal="true" aria-labelledby="xTitle" hidden>
+  <div class="xcard" role="document">
+    <span class="xcard__check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+    <p class="xcard__eyebrow">CPD record</p>
+    <h2 class="xcard__title" id="xTitle">Your CPD record is ready</h2>
+    <p class="xcard__body"><strong>Copy to clipboard</strong> is the most reliable option &mdash; paste the full record straight into Word or your CPD system. <strong>Email to myself</strong> opens your mail app with the record written into the message body (it drafts the text; a mail draft can&rsquo;t carry a file attachment). <strong>Download</strong> saves it as a file to open and Save&nbsp;as&nbsp;PDF &mdash; that version includes <strong>blank lines to write your own reflection</strong> &mdash; but some embedded players block downloads.</p>
+    <div class="xcard__actions">
+      <button class="btn" id="cpBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Copy to clipboard
+      </button>
+      <a class="btn secondary" id="mailBtn" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Email to myself
+      </a>
+      <button class="btn secondary" id="dlBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><polyline points="8 11 12 15 16 11"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Download record
+      </button>
+      <button class="btn secondary" id="xClose" type="button">Close</button>
+    </div>
+    <p class="xcard__status" id="xStatus" aria-live="polite"></p>
+  </div>
+</div>
+
+<!-- MOBILE/VISME: decide whether to show the embedded-mobile launch card -->
+<script>
+(function(){
+  "use strict";
+  var fullscreen = /[?&]fullscreen=1/.test(location.search);
+  var inIframe = true; try { inIframe = (window.self !== window.top); } catch(e){ inIframe = true; }
+  var isMobile = /Android|iPhone|iPad|iPod|Mobile|Silk/i.test(navigator.userAgent);
+  var btn = document.getElementById('mlaunchBtn');
+  var base = location.href.split('#')[0].split('?')[0];
+  var courseUrl = ''; try { courseUrl = document.referrer || ''; } catch(e){ courseUrl = ''; }
+  var target = base + '?fullscreen=1' + (courseUrl ? '&return=' + encodeURIComponent(courseUrl) : '');
+  if(btn){
+    btn.href = target;
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      var w = null;
+      try { w = window.open(target, '_blank'); } catch(err){ w = null; }
+      if(!w){
+        try { window.top.location.href = target; }
+        catch(err2){ window.location.href = target; }
+      }
+    });
+  }
+
+  var rb = document.getElementById('returnBar');
+  var returnUrl = (function(){ try { return new URLSearchParams(location.search).get('return'); } catch(e){ return null; } })();
+  if(rb){
+    if(returnUrl){ rb.href = returnUrl; }
+    rb.addEventListener('click', function(e){
+      e.preventDefault();
+      try { if(window.opener && !window.opener.closed){ window.close(); return; } } catch(err){}
+      if(window.history.length > 1){ window.history.back(); return; }
+      if(returnUrl){ window.location.href = returnUrl; }
+    });
+  }
+
+  if(isMobile){ document.body.classList.add('is-mobile'); }
+  if(inIframe && isMobile && !fullscreen){ document.body.classList.add('is-embedded-mobile'); }
+  if(fullscreen){ document.body.classList.add('is-fullscreen'); }
+})();
+</script>
+
+<script>
+(function(){
+  "use strict";
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); }
+  function $(id){ return document.getElementById(id); }
+
+  /* ---------- content (verbatim — owner slides) ---------- */
+  var SUMMARY = [
+    { eyebrow:'Efficacy', html:'Tepotinib continued to demonstrate robust and durable efficacy in treatment-na&iuml;ve and previously treated patients with <em>MET</em>ex14 skipping NSCLC enrolled in VISION.' },
+    { eyebrow:'Safety &amp; HRQoL', html:'Tepotinib continued to demonstrate a manageable safety profile and stable HRQoL PRO scores.' },
+    { eyebrow:'Subgroups', html:'Efficacy outcomes were consistent irrespective of T+/L+ status, age, smoking history, or the presence of brain metastases at baseline.' },
+    { eyebrow:'Treatment lines', html:'Efficacy outcomes with tepotinib across treatment lines were consistent with previous reports, particularly in the 1L setting.' },
+    { eyebrow:'Asian patients', html:'In Asian patients, tepotinib demonstrated robust and durable long-term efficacy, particularly as a first-line treatment, consistent with outcomes in the overall population.' }
+  ];
+
+  var TOPICS = [
+    { html:'<em>MET</em>ex14 skipping NSCLC and tepotinib', plain:'METex14 skipping NSCLC and tepotinib' },
+    { html:'Efficacy of tepotinib in the VISION study', plain:'Efficacy of tepotinib in the VISION study' },
+    { html:'Safety of tepotinib in the VISION study', plain:'Safety of tepotinib in the VISION study' },
+    { html:'Tepotinib efficacy in clinically relevant subgroups of the VISION study', plain:'Tepotinib efficacy in clinically relevant subgroups of the VISION study' },
+    { html:'Efficacy of tepotinib across treatment lines in the VISION study', plain:'Efficacy of tepotinib across treatment lines in the VISION study' },
+    { html:'Outcomes in Asian patients in the VISION study', plain:'Outcomes in Asian patients in the VISION study' }
+  ];
+
+  // PROPOSED CONTENT — owner/SME approval required before deploy (see notes.md).
+  // Paraphrased from the five verbatim summary points + the six topic areas.
+  // CPD/process intentions only — no efficacy, safety or comparative clinical claim.
+  var COMMITMENTS = [
+    { html:'Review how testing for <em>MET</em>ex14 skipping is requested and reported in my service.', plain:'Review how testing for METex14 skipping is requested and reported in my service.' },
+    { html:'Revisit the VISION long-term follow-up data before my next relevant MDT discussion.',       plain:'Revisit the VISION long-term follow-up data before my next relevant MDT discussion.' },
+    { html:'Talk with colleagues about how we set patient expectations over the course of treatment.',   plain:'Talk with colleagues about how we set patient expectations over the course of treatment.' },
+    { html:'Check how we monitor and manage adverse events in patients receiving a <em>MET</em> TKI.',   plain:'Check how we monitor and manage adverse events in patients receiving a MET TKI.' },
+    { html:'Look at how patient-reported outcomes and quality of life are captured in my practice.',     plain:'Look at how patient-reported outcomes and quality of life are captured in my practice.' },
+    { html:'Review how treatment line shapes our decision-making in <em>MET</em>ex14 skipping NSCLC.',   plain:'Review how treatment line shapes our decision-making in METex14 skipping NSCLC.' },
+    { html:'Share the VISION subgroup findings with my team.',                                           plain:'Share the VISION subgroup findings with my team.' },
+    { html:'Book time to revisit whichever area I flagged as a priority above.',                         plain:'Book time to revisit whichever area I flagged as a priority above.' }
+  ];
+
+  // PROPOSED CONTENT — owner/SME approval required before deploy (see notes.md).
+  var BARRIERS = [
+    { t:'Time',              d:'I don&rsquo;t have protected time to act on this.',                        plain:'Time — I don’t have protected time to act on this.' },
+    { t:'Access to testing', d:'<em>MET</em>ex14 skipping testing isn&rsquo;t readily available to me.',   plain:'Access to testing — METex14 skipping testing isn’t readily available to me.' },
+    { t:'Local pathways',    d:'Our protocols or guidelines would need to change first.',                  plain:'Local pathways — our protocols or guidelines would need to change first.' },
+    { t:'Team buy-in',       d:'I&rsquo;d need colleagues or the MDT on board.',                           plain:'Team buy-in — I’d need colleagues or the MDT on board.' },
+    { t:'Confidence',        d:'I&rsquo;d want to know more before changing anything.',                    plain:'Confidence — I’d want to know more before changing anything.' },
+    { t:'Nothing significant', d:'I can act on this straight away.',                                       plain:'Nothing significant — I can act on this straight away.' }
+  ];
+
+  var CHIPS = [
+    { v:'good',  label:'Confident' },
+    { v:'amber', label:'Worth a refresher' },
+    { v:'flag',  label:'Priority to revisit' }
+  ];
+  var CHIP_TEXT = { good:'Confident', amber:'Worth a refresher', flag:'Priority to revisit', none:'Not yet rated' };
+  var RANK = { flag:1, amber:2, good:3 };
+
+  var MAX_PICKS = 3;
+  var ratings     = {};   // AFTER  — topicIndex -> 'good'|'amber'|'flag'
+  var baseRatings = {};   // BEFORE — topicIndex -> 'good'|'amber'|'flag'
+  var picks   = [];
+  var barrier = null;
+
+  /* ============================================================
+     STORAGE — best-effort, never load-bearing.
+     Inside Visme the iframe may have an OPAQUE ORIGIN: touching
+     localStorage then throws SecurityError. Every access is guarded and
+     the asset falls back to asking for the baseline in-asset.
+     ============================================================ */
+  var BKEY = 'tm9035:confidence:baseline:v1';
+  var PKEY = 'tm9035:confidence:post:v1';
+
+  function storageOK(){
+    try{
+      var k='tm9035:probe';
+      window.localStorage.setItem(k,'1');
+      window.localStorage.removeItem(k);
+      return true;
+    }catch(e){ return false; }   // opaque origin, disabled storage, private mode quota
+  }
+  var HAS_STORAGE = storageOK();
+
+  // Accepts a baseline written by THIS asset (source:'self') or by the separate
+  // `tm9035-confidence-baseline` scene (source:'baseline-scene') — anything that is
+  // not 'self' is treated as "recorded earlier in this module".
+  function readBaseline(){
+    if(!HAS_STORAGE) return null;
+    try{
+      var raw = window.localStorage.getItem(BKEY);
+      if(!raw) return null;
+      var o = JSON.parse(raw);
+      if(!o || o.v !== 1 || !o.r || typeof o.r !== 'object') return null;
+      var out = {}, any = false;
+      for(var i=0;i<TOPICS.length;i++){
+        var v = o.r[i];
+        if(v==='good' || v==='amber' || v==='flag'){ out[i]=v; any=true; }
+      }
+      return any ? {
+        r:out,
+        source:(o.source==='self' ? 'self' : 'earlier'),
+        date:(typeof o.date==='string' && o.date ? o.date : null)   // may be absent on older records
+      } : null;
+    }catch(e){ return null; }
+  }
+  function writeBaseline(){
+    if(!HAS_STORAGE) return;
+    try{ window.localStorage.setItem(BKEY, JSON.stringify({ v:1, source:'self', ts:Date.now(), date:dateStr(), r:baseRatings })); }catch(e){}
+  }
+  function writePost(){
+    if(!HAS_STORAGE) return;
+    try{ window.localStorage.setItem(PKEY, JSON.stringify({ v:1, r:ratings, source:'self' })); }catch(e){}
+  }
+  function clearBaseline(){
+    if(!HAS_STORAGE) return;
+    try{ window.localStorage.removeItem(BKEY); }catch(e){}
+  }
+
+  var stored = readBaseline();
+  var baselineFromStore = !!stored;
+  var baselineSource = stored ? stored.source : 'self';
+  var baselineDate   = stored ? stored.date : null;
+  // copy IN PLACE — mountMap's delegated handler captures baseRatings by reference
+  if(stored){ Object.keys(stored.r).forEach(function(k){ baseRatings[k]=stored.r[k]; }); }
+
+  /* ---------- summary cards ---------- */
+  (function(){
+    var host=$('sum');
+    SUMMARY.forEach(function(s,i){
+      var el=document.createElement('div');
+      el.className='scard';
+      el.innerHTML='<span class="scard__no">'+(i+1)+'</span>'+
+        '<div class="scard__main"><span class="scard__eyebrow">'+s.eyebrow+'</span>'+
+        '<p class="scard__text">'+s.html+'</p></div>';
+      host.appendChild(el);
+    });
+  })();
+  var summaryAnimated=false;
+  function animateSummary(){
+    var cards=document.querySelectorAll('#sum .scard');
+    if(summaryAnimated){ cards.forEach(function(c){ c.classList.add('in'); }); return; }
+    summaryAnimated=true;
+    cards.forEach(function(c){ c.classList.remove('in'); });
+    void $('sum').offsetWidth;
+    cards.forEach(function(c,i){
+      if(reduceMotion){ c.classList.add('in'); return; }
+      setTimeout(function(){ c.classList.add('in'); }, 175*i);
+    });
+  }
+
+  /* ---------- confidence map builder (shared by baseline + after) ---------- */
+  function mountMap(hostId, store, ariaPrefix, onSet){
+    var host=$(hostId);
+    host.innerHTML='';
+    // the click handler is DELEGATED on the host, so bind it once — a re-mount
+    // (the baseline reset) must not stack a second listener on the same element.
+    var firstMount = !host.dataset.bound;
+    TOPICS.forEach(function(t,i){
+      var row=document.createElement('div');
+      row.className='crow'; row.dataset.row=i;
+      var cur=store[i];
+      var chips=CHIPS.map(function(c){
+        var on = (cur===c.v);
+        return '<button class="chip" type="button" role="radio" aria-checked="'+(on?'true':'false')+'" data-v="'+c.v+'" data-row="'+i+'" aria-label="'+esc(ariaPrefix)+' '+esc(t.plain)+': '+c.label+'">'+c.label+'</button>';
+      }).join('');
+      row.innerHTML='<span class="crow__lab"><b>'+(i+1)+'</b>'+t.html+'</span>'+
+        '<span class="chips" role="radiogroup" aria-label="'+esc(ariaPrefix)+' confidence for '+esc(t.plain)+'">'+chips+'</span>';
+      if(cur) row.classList.add('is-set');
+      host.appendChild(row);
+    });
+    if(!firstMount) return;
+    host.dataset.bound='1';
+    // `store` is captured by reference — callers must CLEAR it in place, never
+    // reassign it, or this handler keeps writing into the old object.
+    host.addEventListener('click',function(e){
+      var chip=e.target.closest('.chip'); if(!chip) return;
+      var row=+chip.dataset.row;
+      chip.parentNode.querySelectorAll('.chip').forEach(function(g){ g.setAttribute('aria-checked','false'); });
+      chip.setAttribute('aria-checked','true');
+      store[row]=chip.dataset.v;
+      chip.closest('.crow').classList.add('is-set');
+      $('live').textContent=TOPICS[row].plain+': '+CHIP_TEXT[chip.dataset.v]+'.';
+      if(onSet) onSet();
+    });
+  }
+  mountMap('bmap', baseRatings, 'Baseline', function(){ baselineSource='self'; writeBaseline(); });
+  mountMap('cmap', ratings,     'Current',  writePost);
+
+  /* ---------- commitments ---------- */
+  function syncCount(msg){
+    var el=$('mcount');
+    el.classList.remove('is-full','is-warn');
+    if(msg){ el.textContent=msg; el.classList.add('is-warn'); return; }
+    if(!picks.length){ el.textContent='Choose up to three.'; return; }
+    el.textContent='Chosen: '+picks.length+' of '+MAX_PICKS+'.';
+    if(picks.length===MAX_PICKS) el.classList.add('is-full');
+  }
+  (function(){
+    var host=$('mgrid');
+    COMMITMENTS.forEach(function(c,i){
+      var b=document.createElement('button');
+      b.type='button'; b.className='mcard';
+      b.setAttribute('role','checkbox'); b.setAttribute('aria-checked','false');
+      b.setAttribute('aria-label', c.plain);
+      b.dataset.i=i;
+      // §0.10: ALL text in ONE span so <em>MET</em> can't splinter the flex row.
+      b.innerHTML='<span class="mcard__box" aria-hidden="true">'+
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'+
+        '</span><span class="mcard__t">'+c.html+'</span>';
+      host.appendChild(b);
+    });
+    host.addEventListener('click',function(e){
+      var card=e.target.closest('.mcard'); if(!card) return;
+      var i=+card.dataset.i, at=picks.indexOf(i);
+      if(at>-1){
+        picks.splice(at,1);
+        card.setAttribute('aria-checked','false');
+        $('live').textContent='Removed: '+COMMITMENTS[i].plain;
+        syncCount();
+      }else{
+        if(picks.length>=MAX_PICKS){
+          syncCount('You can choose up to three — deselect one first.');
+          $('live').textContent='You can choose up to three commitments. Deselect one first.';
+          return;
+        }
+        picks.push(i);
+        card.setAttribute('aria-checked','true');
+        $('live').textContent='Chosen: '+COMMITMENTS[i].plain;
+        syncCount();
+      }
+    });
+    syncCount();
+  })();
+
+  /* ---------- barrier ---------- */
+  (function(){
+    var host=$('bgrid');
+    BARRIERS.forEach(function(b,i){
+      var el=document.createElement('button');
+      el.type='button'; el.className='bcard';
+      el.setAttribute('role','radio'); el.setAttribute('aria-checked','false');
+      el.setAttribute('aria-label', b.plain);
+      el.dataset.i=i;
+      el.innerHTML='<span class="bcard__dot" aria-hidden="true"><i></i></span>'+
+        '<span class="bcard__t"><b>'+b.t+'</b><span>'+b.d+'</span></span>';
+      host.appendChild(el);
+    });
+    host.addEventListener('click',function(e){
+      var card=e.target.closest('.bcard'); if(!card) return;
+      var i=+card.dataset.i;
+      barrier=i;
+      host.querySelectorAll('.bcard').forEach(function(c){ c.setAttribute('aria-checked','false'); });
+      card.setAttribute('aria-checked','true');
+      $('live').textContent='Barrier chosen: '+BARRIERS[i].plain;
+    });
+  })();
+
+  /* ---------- delta ---------- */
+  // dir: 'up' | 'same' | 'down' | 'none' (no baseline, or not yet rated)
+  function deltaFor(i){
+    var b=baseRatings[i], a=ratings[i];
+    if(!b || !a) return { dir:'none', before:b||'none', after:a||'none' };
+    var d=RANK[a]-RANK[b];
+    return { dir:(d>0?'up':(d<0?'down':'same')), before:b, after:a };
+  }
+  function deltaSummary(){
+    var up=0, rated=0;
+    TOPICS.forEach(function(t,i){ var d=deltaFor(i); if(d.dir!=='none'){ rated++; if(d.dir==='up') up++; } });
+    return { up:up, rated:rated };
+  }
+  function deltaMark(d){
+    if(d.dir==='none') return 'no comparison yet';
+    var arrow = d.dir==='up' ? '&uarr;' : (d.dir==='down' ? '&darr;' : '&rarr;');
+    return CHIP_TEXT[d.before]+' '+arrow+' '+CHIP_TEXT[d.after];
+  }
+  function deltaMarkPlain(d){
+    if(d.dir==='none') return 'no comparison yet';
+    var arrow = d.dir==='up' ? '↑' : (d.dir==='down' ? '↓' : '→');
+    return CHIP_TEXT[d.before]+' '+arrow+' '+CHIP_TEXT[d.after];
+  }
+  // Owner chose "never expire" for a stored baseline. The staleness mitigation is
+  // therefore VISIBILITY, not silent deletion: whenever the baseline came from storage
+  // we say WHEN it was recorded, so an inherited or months-old one is obvious rather
+  // than invisible. The two-tap "Re-rate my baseline" control is the escape.
+  function baselineNote(){
+    if(!baselineFromStore) return 'Baseline recorded at the start of this activity.';
+    var where = (baselineSource==='earlier')
+      ? 'Baseline taken from the rating you recorded earlier in this module'
+      : 'Baseline taken from the rating you recorded when you started this activity';
+    return where + (baselineDate ? ', on '+baselineDate+'.' : '.');
+  }
+
+  /* ---------- record assembly ---------- */
+  function dateStr(){
+    try{ return new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}); }
+    catch(e){ return ''; }
+  }
+  function fileDate(){ try{ var d=new Date(); function p(n){ return (n<10?'0':'')+n; } return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }catch(e){ return ''; } }
+  function orderedPicks(){ return picks.slice().sort(function(a,b){ return a-b; }); }
+
+  function buildPreview(){
+    var host=$('cpdScroll');
+    var tags=TOPICS.map(function(t,i){
+      var v=ratings[i]||'none';
+      return '<span class="tag" data-v="'+v+'"><b>'+(i+1)+'</b>&nbsp;'+t.html+' &middot; '+CHIP_TEXT[v]+'</span>';
+    }).join('');
+    var priorities=TOPICS.filter(function(t,i){ return ratings[i]==='flag'; });
+    var priLine = priorities.length
+      ? '<p class="cpd__note" style="margin-top:8px;color:var(--flag)"><strong>Flagged to revisit:</strong> '+priorities.map(function(t){ return t.html; }).join('; ')+'.</p>'
+      : '';
+    var ds=deltaSummary();
+    var dhead = ds.rated
+      ? '<p class="dhead"><b>'+ds.up+' of '+ds.rated+'</b> rated area'+(ds.rated===1?'':'s')+' moved up from your baseline.</p>'
+      : '<p class="dhead">Rate the six areas to see how far you&rsquo;ve moved.</p>';
+    var drows=TOPICS.map(function(t,i){
+      var d=deltaFor(i);
+      return '<div class="drow"><span class="drow__l"><b>'+(i+1)+'</b>&nbsp;'+t.html+'</span>'+
+             '<span class="drow__m" data-d="'+d.dir+'">'+deltaMark(d)+'</span></div>';
+    }).join('');
+    var op=orderedPicks();
+    var commits = op.length
+      ? '<ul class="klist">'+op.map(function(i){ return '<li>'+COMMITMENTS[i].html+'</li>'; }).join('')+'</ul>'
+      : '<p class="knone">(none chosen yet)</p>';
+    var bar = (barrier===null)
+      ? '<p class="knone">(none chosen yet)</p>'
+      : '<p class="kbar"><b>'+BARRIERS[barrier].t+'</b> &mdash; '+BARRIERS[barrier].d+'</p>';
+    host.innerHTML=
+      '<div class="cpd__sec"><h3 class="cpd__h">How my confidence moved</h3>'+dhead+drows+'</div>'+
+      '<div class="cpd__sec"><h3 class="cpd__h">Confidence now, across the six areas</h3>'+
+        '<div class="cpd__grid">'+tags+'</div>'+priLine+'</div>'+
+      '<div class="cpd__sec"><h3 class="cpd__h">My commitments to practice</h3>'+commits+'</div>'+
+      '<div class="cpd__sec"><h3 class="cpd__h">What&rsquo;s in the way</h3>'+bar+'</div>';
+
+    var note=$('srcNote');
+    if(note){ note.hidden=false; $('srcText').textContent=baselineNote(); }
+  }
+
+  // opts.detail — include the per-area delta lines AND the "confidence now" block.
+  // Those two are the only sheddable blocks. The delta HEADLINE, the commitments and
+  // the barrier are the learner's ACTION PLAN and outcome measure: never dropped.
+  // Shedding is always announced, never silent.
+  function buildRecordText(opts){
+    opts = opts || {};
+    var L=[], ds=deltaSummary();
+    L.push('CPD REFLECTION RECORD');
+    L.push('Tepotinib in METex14 skipping NSCLC — VISION study summary');
+    L.push('Date: '+dateStr());
+    L.push('');
+    L.push('HOW MY CONFIDENCE MOVED');
+    L.push(baselineNote());
+    if(ds.rated){ L.push(ds.up+' of '+ds.rated+' rated area'+(ds.rated===1?'':'s')+' moved up from baseline.'); }
+    if(opts.detail){
+      TOPICS.forEach(function(t,i){ L.push((i+1)+'. '+t.plain+' — '+deltaMarkPlain(deltaFor(i))); });
+      L.push('');
+      L.push('CONFIDENCE NOW, ACROSS THE SIX AREAS');
+      TOPICS.forEach(function(t,i){ L.push((i+1)+'. '+t.plain+' — '+CHIP_TEXT[ratings[i]||'none']); });
+    }
+    L.push('');
+    var pri=TOPICS.filter(function(t,i){ return ratings[i]==='flag'; }).map(function(t){ return t.plain; });
+    if(pri.length){ L.push('Flagged to revisit next: '+pri.join('; ')+'.'); L.push(''); }
+    L.push('MY COMMITMENTS TO PRACTICE');
+    var op=orderedPicks();
+    if(op.length){ op.forEach(function(i,n){ L.push((n+1)+'. '+COMMITMENTS[i].plain); }); }
+    else{ L.push('(none chosen)'); }
+    L.push(''); L.push('WHAT IS IN THE WAY');
+    L.push(barrier===null ? '(none chosen)' : BARRIERS[barrier].plain);
+    if(!opts.detail){
+      L.push('');
+      L.push('(This draft was shortened for email length limits: the per-area confidence lines are not included. Use “Copy to clipboard” in the activity for the complete record.)');
+    }
+    L.push('');
+    L.push('— This is a personal reflective CPD record, not clinical guidance. Figures relate to the 313 patients with METex14 skipping NSCLC in the Phase 2 VISION trial (Mazieres J, et al. JAMA Oncol. 2023;9(9):1260–6).');
+    return L.join('\n');
+  }
+  function buildPlainText(){ return buildRecordText({ detail:true }); }
+
+  // mailto: draft — the record goes in the BODY (a mail draft can't carry an attachment).
+  // Long mailto URLs are truncated by some clients (~2000 chars); if the full record won't
+  // fit we shed the per-area lines and KEEP the delta headline + action plan.
+  function buildMailto(){
+    var subj='CPD reflection record — VISION (tepotinib) — '+dateStr();
+    var mk=function(detail){ return 'mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildRecordText({detail:detail})); };
+    var url=mk(true);
+    if(url.length>1900) url=mk(false);
+    return url;
+  }
+
+  // The DOWNLOADED HTML doc is the only output carrying the blank lined
+  // "My reflection" box — deliberately absent from the clipboard text and mail draft.
+  function buildHtmlDoc(){
+    var ds=deltaSummary();
+    var drows=TOPICS.map(function(t,i){
+      var d=deltaFor(i);
+      return '<p class="row">'+(i+1)+'. '+t.html+' &mdash; <b>'+deltaMark(d)+'</b></p>';
+    }).join('');
+    var dlead = ds.rated
+      ? '<p class="row"><b>'+ds.up+' of '+ds.rated+'</b> rated area'+(ds.rated===1?'':'s')+' moved up from baseline.</p>'
+      : '';
+    var rows=TOPICS.map(function(t,i){ return '<p class="row">'+(i+1)+'. '+t.html+' &mdash; <b>'+CHIP_TEXT[ratings[i]||'none']+'</b></p>'; }).join('');
+    var pri=TOPICS.filter(function(t,i){ return ratings[i]==='flag'; });
+    var priBlock=pri.length ? '<p class="row" style="margin-top:6px"><b>Flagged to revisit next:</b> '+pri.map(function(t){ return t.html; }).join('; ')+'.</p>' : '';
+    var op=orderedPicks();
+    var commits = op.length
+      ? '<ol class="cl">'+op.map(function(i){ return '<li>'+COMMITMENTS[i].html+'</li>'; }).join('')+'</ol>'
+      : '<p class="row empty">(none chosen)</p>';
+    var bar = (barrier===null)
+      ? '<p class="row empty">(none chosen)</p>'
+      : '<p class="row"><b>'+BARRIERS[barrier].t+'</b> &mdash; '+BARRIERS[barrier].d+'</p>';
+    var lines=''; for(var n=0;n<8;n++){ lines+='<span></span>'; }
+    return '<!DOCTYPE html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'+
+      '<title>CPD reflection record — VISION (tepotinib)</title><style>'+
+      'body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#222f55;max-width:720px;margin:32px auto;padding:0 22px;line-height:1.5}'+
+      'h1{font-size:22px;margin:0 0 2px}.meta{color:#56608a;font-size:13px;margin:0 0 8px}'+
+      '.hint{color:#8a91b0;font-size:12px;margin:0 0 20px}'+
+      'h2{font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:#007a98;border-bottom:1px solid #e3e8ee;padding-bottom:4px;margin:22px 0 8px}'+
+      '.row{margin:0 0 4px;font-size:14px}.row.empty{font-style:italic;color:#8a91b0}'+
+      '.src{color:#8a91b0;font-size:12px;margin:0 0 8px}'+
+      '.cl{margin:0;padding-left:20px}.cl li{font-size:14px;margin:0 0 4px}'+
+      '.ln-lead{color:#8a91b0;font-size:12px;margin:0 0 12px}'+
+      '.lines{page-break-inside:avoid;break-inside:avoid}'+
+      '.lines span{display:block;height:28px;border-bottom:1px solid #cfd8e2}'+
+      '.foot{margin-top:24px;border-top:1px solid #e3e8ee;padding-top:8px;color:#8a91b0;font-size:11px}'+
+      '@media print{.hint{display:none}@page{margin:16mm}}'+
+      '</style></head><body>'+
+      '<h1>CPD reflection record</h1>'+
+      '<p class="meta">Tepotinib in <em>MET</em>ex14 skipping NSCLC &mdash; VISION study summary &middot; '+esc(dateStr())+'</p>'+
+      '<p class="hint">To save as a PDF: open your browser&rsquo;s Print (Ctrl/Cmd&nbsp;+&nbsp;P) and choose &ldquo;Save as PDF&rdquo;.</p>'+
+      '<h2>How my confidence moved</h2>'+
+      '<p class="src">'+esc(baselineNote())+'</p>'+dlead+drows+
+      '<h2>Confidence now, across the six areas</h2>'+rows+priBlock+
+      '<h2>My commitments to practice</h2>'+commits+
+      '<h2>What is in the way</h2>'+bar+
+      '<h2>My reflection</h2>'+
+      '<p class="ln-lead">Space to add your own reflection, in your own words.</p>'+
+      '<div class="lines">'+lines+'</div>'+
+      '<p class="foot">This is a personal reflective CPD record, not clinical guidance or an operational decision. '+
+      'Figures relate to the 313 patients with <em>MET</em>ex14 skipping NSCLC in the Phase&nbsp;2 VISION trial '+
+      '(Mazieres J, et al. JAMA Oncol. 2023;9(9):1260&ndash;6).</p>'+
+      '</body></html>';
+  }
+
+  /* ---------- export: download (best-effort) + copy (always works) ---------- */
+  function downloadRecord(){
+    var status=$('xStatus'); status.classList.remove('warn');
+    try{
+      var blob=new Blob([buildHtmlDoc()],{type:'text/html'});
+      var url=URL.createObjectURL(blob);
+      var a=document.createElement('a');
+      a.href=url; a.download='CPD-reflection-VISION-tepotinib-'+fileDate()+'.html';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+      status.textContent='Download started. If nothing downloaded, use Copy to clipboard instead.';
+      $('live').textContent='CPD record download started.';
+    }catch(e){
+      status.classList.add('warn');
+      status.textContent='Download was blocked here. Use Copy to clipboard instead.';
+    }
+  }
+  function copyRecord(){
+    var status=$('xStatus'); status.classList.remove('warn');
+    var text=buildPlainText();
+    function ok(){ status.textContent='Copied. Paste it into Word or your CPD system to save.'; $('live').textContent='CPD record copied to clipboard.'; }
+    function fallback(){
+      var ta=document.createElement('textarea'); ta.value=text; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.left='-9999px';
+      document.body.appendChild(ta); ta.select();
+      var done=false; try{ done=document.execCommand('copy'); }catch(e){}
+      document.body.removeChild(ta);
+      if(done){ ok(); } else { status.classList.add('warn'); status.textContent='Copy was blocked. Select the text in your record (behind this panel) and copy it manually.'; }
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(ok, fallback); }
+    else { fallback(); }
+  }
+
+  /* ---------- end-of-module completion panel ----------
+     Fires when the learner TAKES their record (copy / download / email), which is
+     the real completion moment — not merely arriving at the record step. */
+  var completed=false;
+  function markComplete(){
+    if(completed) return; completed=true;
+    var el=$('congrats'); if(!el) return;
+    var ds=deltaSummary();
+    var moved = ds.rated
+      ? 'Your record shows how your confidence moved across '+ds.rated+' rated area'+(ds.rated===1?'':'s')+' since your starting point. '
+      : '';
+    el.classList.add('is-complete');
+    el.innerHTML='<span class="congrats__tick" aria-hidden="true">'+
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>'+
+      '<span class="congrats__txt"><b>Thank you &mdash; you&rsquo;ve completed this module.</b> '+moved+
+      'Keep the record alongside your commitments, and revisit the areas you flagged. '+
+      'You can return to the <b>references</b> page in the course whenever you need it.</span>';
+    $('live').textContent='Module complete. Your CPD record is ready.';
+  }
+
+  /* ---------- completion nudge ---------- */
+  function fireNudge(on){
+    var frame=document.querySelector('.frame');
+    var nudge=$('nudge');
+    if(frame) frame.classList.toggle('nudge-shown', on);
+    if(nudge) nudge.classList.toggle('is-on', on);
+  }
+
+  /* ---------- export modal ---------- */
+  var exportModal=$('exportModal'); var xLastFocus=null;
+  function openExport(){
+    buildPreview();
+    xLastFocus=document.activeElement;
+    $('xStatus').textContent=''; $('xStatus').classList.remove('warn');
+    var mb=$('mailBtn'); if(mb) mb.href=buildMailto();
+    exportModal.hidden=false; exportModal.classList.add('is-open');
+    setTimeout(function(){ $('cpBtn').focus(); }, 30);
+  }
+  function closeExport(){ exportModal.classList.remove('is-open'); exportModal.hidden=true; if(xLastFocus&&xLastFocus.focus){ try{ xLastFocus.focus(); }catch(e){} } }
+  $('dlBtn').addEventListener('click',function(){ downloadRecord(); markComplete(); });
+  $('cpBtn').addEventListener('click',function(){ copyRecord(); markComplete(); });
+  $('mailBtn').addEventListener('click',function(){
+    var status=$('xStatus'); status.classList.remove('warn');
+    status.textContent='Opening your email app with the record drafted in the message body. Nothing happened? No mail app is set up here — use Copy to clipboard instead.';
+    $('live').textContent='Draft email opened with your CPD record.';
+    markComplete();
+  });
+  $('xClose').addEventListener('click',closeExport);
+  exportModal.addEventListener('click',function(e){ if(e.target===exportModal) closeExport(); });
+  document.addEventListener('keydown',function(e){
+    if(!exportModal.classList.contains('is-open')) return;
+    if(e.key==='Escape'){ e.preventDefault(); closeExport(); return; }
+    if(e.key==='Tab'){ var f=exportModal.querySelectorAll('button:not([disabled]), a[href]'); if(!f.length) return; var first=f[0],last=f[f.length-1]; if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); } else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); } }
+  });
+
+  /* ---------- step navigation (id-driven; baseline is added or skipped) ---------- */
+  var STEP_LABELS = {
+    baseline:'Baseline', summary:'Summary', stand:'Where you stand',
+    commit:'My commitments', barrier:'What&rsquo;s in the way', record:'CPD record'
+  };
+  var FULL = ['baseline','summary','stand','commit','barrier','record'];
+  var ACTIVE, TOTAL, current=1, railSteps=[];
+
+  var steps=Array.prototype.slice.call(document.querySelectorAll('.step'));
+  var backBtn=$('backBtn'), nextBtn=$('nextBtn'), exportBtn=$('exportBtn'), stepLabel=$('stepLabel');
+
+  function buildRail(){
+    var rail=$('rail'); var html='';
+    ACTIVE.forEach(function(sid,i){
+      if(i) html+='<span class="rail__line"></span>';
+      html+='<span class="rail__step" data-rs="'+(i+1)+'">'+
+        '<span class="rail__num">'+(i+1)+'</span><span class="rail__lab">'+STEP_LABELS[sid]+'</span></span>';
+    });
+    rail.innerHTML=html;
+    railSteps=Array.prototype.slice.call(rail.querySelectorAll('.rail__step'));
+    railSteps.forEach(function(r){
+      r.style.cursor='pointer';
+      r.addEventListener('click',function(){ var rs=+r.dataset.rs; if(rs<current) show(rs,'left'); });
+    });
+  }
+  function setActive(list){
+    ACTIVE=list; TOTAL=list.length;
+    buildRail();
+  }
+
+  function show(n, dir){
+    current=n;
+    var sid=ACTIVE[n-1];
+    steps.forEach(function(s){ var on=(s.dataset.sid===sid); s.classList.toggle('is-on',on); s.hidden=!on; s.classList.remove('anim-right','anim-left'); });
+    railSteps.forEach(function(r){
+      var rs=+r.dataset.rs;
+      r.classList.toggle('is-active',rs===n);
+      r.classList.toggle('is-done',rs<n);
+    });
+    stepLabel.textContent='Step '+n+' of '+TOTAL;
+    backBtn.disabled=(n===1);
+    backBtn.style.visibility=(n===1)?'hidden':'visible';
+    document.body.classList.toggle('is-laststep', n===TOTAL);
+    if(n===TOTAL){
+      nextBtn.style.display='none'; exportBtn.style.display='';
+      buildPreview();
+      fireNudge(true);
+    }else{
+      nextBtn.style.display=''; exportBtn.style.display='none';
+      fireNudge(false);
+    }
+    if(!reduceMotion && dir){
+      var active=document.querySelector('.step.is-on');
+      if(active){ void active.offsetWidth; active.classList.add(dir==='left'?'anim-left':'anim-right'); }
+    }
+    if(sid==='summary') animateSummary();
+    $('live').textContent='Step '+n+' of '+TOTAL+'.';
+  }
+  nextBtn.addEventListener('click',function(){ if(current<TOTAL) show(current+1,'right'); });
+  backBtn.addEventListener('click',function(){ if(current>1) show(current-1,'left'); });
+  exportBtn.addEventListener('click',openExport);
+
+  /* ---------- "Re-rate my baseline": two-tap, in-session (no reload, no confirm()) ----------
+     window.confirm() is swallowed by a sandboxed iframe without allow-modals, and a
+     reload can be blocked too — so the reset re-enters the baseline step in place. */
+  (function(){
+    var btn=$('resetBase'); if(!btn) return;
+    var armed=false, t=null;
+    function disarm(){ armed=false; btn.classList.remove('is-arm'); btn.textContent='Re-rate my baseline'; if(t){ clearTimeout(t); t=null; } }
+    btn.addEventListener('click',function(){
+      if(!armed){
+        armed=true; btn.classList.add('is-arm'); btn.textContent='Tap again to clear my baseline';
+        $('live').textContent='Tap again to clear your baseline and rate it afresh.';
+        t=setTimeout(disarm, 4500);
+        return;
+      }
+      disarm();
+      clearBaseline();
+      // clear IN PLACE (see mountMap) — reassigning would orphan the bound handler
+      Object.keys(baseRatings).forEach(function(k){ delete baseRatings[k]; });
+      baselineFromStore=false; baselineSource='self'; baselineDate=null;
+      mountMap('bmap', baseRatings, 'Baseline', function(){ baselineSource='self'; writeBaseline(); });
+      setActive(FULL);
+      show(1,'left');
+      $('live').textContent='Baseline cleared. Rate the six areas again to set a new starting point.';
+    });
+  })();
+
+  /* ---------- boot ---------- */
+  // A valid stored baseline (written by an earlier slide, or by this activity on a
+  // previous visit) removes the baseline step entirely. If storage throws or is
+  // empty we simply ask for it here — the learner sees no difference.
+  setActive(baselineFromStore ? FULL.slice(1) : FULL);
+  show(1, null);   // show() runs animateSummary() when the summary step is the one on screen
+})();
+</script>
+</body>
+</html>
