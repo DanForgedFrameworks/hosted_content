@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>References</title>
+<style>
+/* Bundled Poppins — self-contained, no external font CDN (embed-safe) */
+@font-face { font-family:"Poppins"; src:url("assets/poppins-400.ttf") format("truetype"); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-600.ttf") format("truetype"); font-weight:600; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-700.ttf") format("truetype"); font-weight:700; font-style:normal; font-display:swap; }
+/* ============================================================
+   TOUCH MEDICAL — REFERENCES HUB (grouped ⇄ numbered)
+   Self-contained. Fits the fixed 1370×700 Visme box, no scroll.
+   Brand swap = the CSS variables below.
+   ============================================================ */
+:root{
+  --tm-accent:#0098be; --tm-accent-strong:#007a98; --tm-on-accent:#ffffff;
+  --tm-accent2:#3a4a86; --tm-accent3:#1f7a6b;
+  --tm-ink:#222f55; --tm-muted:#56608a; --tm-faint:#8a91b0;
+  --tm-line:#e3e8ee; --tm-panel:#ffffff; --tm-tint:#f4f7f9; --tm-bg:#f7f9fb;
+  --tm-backdrop:rgba(16,26,38,.55);
+  --tm-font:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --tm-radius:16px; --tm-radius-sm:10px;
+}
+*{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; height:100%; }
+body{
+  font-family:var(--tm-font); color:var(--tm-ink); background:var(--tm-bg);
+  overflow:hidden;                 /* fixed-frame embed: no scroll on desktop */
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+/* Height-first frame */
+#tmh-root{
+  height:100%; max-width:1220px; margin:0 auto;
+  padding:16px clamp(14px,3vw,30px) 14px;
+  display:flex; flex-direction:column; overflow:hidden;
+}
+.frame__chrome{ flex:0 0 auto; }
+.frame__body{ flex:1 1 auto; min-height:0; overflow:hidden; display:flex; align-items:flex-start; justify-content:center; }
+.frame__body .tmh-scroll{ width:100%; }
+
+/* ---------- header + toggle ---------- */
+.tmh-head{ display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:10px; flex-wrap:wrap; }
+.tmh-titles{ min-width:0; }
+.tmh-eyebrow{ font-size:10.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--tm-accent); margin:0 0 2px; }
+.tmh-title{ font-size:clamp(20px,2.6vw,25px); font-weight:700; margin:0; color:var(--tm-ink); }
+.tmh-toggle{ display:inline-flex; background:var(--tm-panel); border:1px solid var(--tm-line); border-radius:999px; padding:3px; box-shadow:0 1px 2px rgba(16,26,38,.05); }
+.tmh-toggle button{
+  font-family:var(--tm-font); font-size:12.5px; font-weight:600; color:var(--tm-muted);
+  background:transparent; border:0; border-radius:999px; padding:7px 15px; cursor:pointer;
+  display:inline-flex; align-items:center; gap:6px; transition:background .15s ease,color .15s ease;
+}
+.tmh-toggle button svg{ width:14px; height:14px; }
+.tmh-toggle button[aria-pressed="true"]{ background:var(--tm-accent); color:var(--tm-on-accent); }
+
+/* ---------- search + breadcrumb row ---------- */
+.tmh-row{ display:flex; align-items:center; gap:12px; margin-bottom:12px; flex-wrap:wrap; }
+.tmh-search{ position:relative; flex:1 1 320px; max-width:520px; }
+.tmh-search svg{ position:absolute; left:14px; top:50%; transform:translateY(-50%); width:17px; height:17px; color:var(--tm-faint); pointer-events:none; }
+.tmh-search input{
+  width:100%; font-family:var(--tm-font); font-size:14px; color:var(--tm-ink);
+  padding:9px 14px 9px 40px; border:1px solid var(--tm-line); border-radius:999px; background:var(--tm-panel);
+  box-shadow:0 1px 2px rgba(16,26,38,.05); transition:border-color .15s ease, box-shadow .15s ease;
+}
+.tmh-search input:focus{ outline:none; border-color:var(--tm-accent); box-shadow:0 0 0 3px color-mix(in srgb,var(--tm-accent) 18%, transparent); }
+.tmh-crumbs{ display:flex; align-items:center; gap:8px; font-weight:600; }
+.tmh-crumb{ cursor:pointer; padding:7px 13px; font-size:12.5px; color:var(--tm-ink); background:var(--tm-panel); border:1px solid var(--tm-line); border-radius:999px; transition:background .15s ease,border-color .15s ease,color .15s ease; }
+.tmh-crumb:hover,.tmh-crumb:focus-visible{ background:var(--tm-tint); border-color:var(--tm-accent); color:var(--tm-accent); outline:none; }
+.tmh-crumb--static{ cursor:default; background:var(--tm-tint); color:var(--tm-muted); }
+.tmh-sep{ color:var(--tm-faint); font-size:14px; }
+
+/* ---------- category folder cards ---------- */
+.tmh-cats{ display:flex; flex-wrap:wrap; gap:18px; justify-content:center; width:100%; }
+.tmh-cat{
+  position:relative; cursor:pointer; flex:0 1 320px; min-width:0;
+  background:var(--tm-panel); border:1px solid var(--tm-line); border-top:5px solid var(--theme,var(--tm-accent));
+  border-radius:var(--tm-radius); padding:18px 18px 16px; display:flex; flex-direction:column; gap:9px;
+  box-shadow:0 1px 3px rgba(16,26,38,.06); transition:transform .15s ease, box-shadow .15s ease;
+}
+.tmh-cat:hover,.tmh-cat:focus-visible{ transform:translateY(-4px); box-shadow:0 12px 26px rgba(16,26,38,.14); outline:none; }
+.tmh-cat__icon{ width:44px; height:44px; border-radius:12px; display:inline-flex; align-items:center; justify-content:center; background:color-mix(in srgb,var(--theme,var(--tm-accent)) 12%, white); color:var(--theme,var(--tm-accent)); }
+.tmh-cat__icon svg{ width:23px; height:23px; }
+.tmh-cat__title{ font-size:15px; font-weight:600; line-height:1.3; margin:0; color:var(--tm-ink); }
+.tmh-cat__meta{ margin-top:auto; display:flex; align-items:center; gap:8px; }
+.tmh-cat__count{ font-size:11px; font-weight:700; color:var(--theme,var(--tm-accent)); background:color-mix(in srgb,var(--theme,var(--tm-accent)) 12%, white); border-radius:999px; padding:4px 11px; }
+.tmh-cat__range{ font-size:11.5px; color:var(--tm-faint); }
+
+/* ---------- reference items (grouped list + numbered list + search) ---------- */
+.tmh-reflist{ column-gap:26px; }
+.tmh-reflist.cols-3{ column-count:3; }
+.tmh-reflist.cols-2{ column-count:2; }
+.tmh-reflist.cols-1{ column-count:1; }
+.tmh-ref{
+  break-inside:avoid; width:100%; text-align:left; cursor:pointer;
+  display:flex; gap:9px; align-items:flex-start; margin:0 0 5px;
+  background:transparent; border:0; border-radius:9px; padding:6px 8px;
+  font-family:var(--tm-font); color:var(--tm-ink);
+  transition:background .12s ease;
+}
+.tmh-ref:hover,.tmh-ref:focus-visible{ background:var(--tm-tint); outline:none; }
+.tmh-ref:focus-visible{ box-shadow:0 0 0 2px var(--tm-accent); }
+.tmh-ref__n{ flex:0 0 auto; min-width:22px; height:22px; padding:0 5px; border-radius:6px; background:color-mix(in srgb,var(--theme,var(--tm-accent)) 13%, white); color:var(--theme,var(--tm-accent)); font-size:11.5px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; }
+.tmh-ref__body{ flex:1 1 auto; min-width:0; }
+.tmh-ref__cite{ display:block; font-size:12.5px; line-height:1.4; color:var(--tm-ink); }
+.tmh-ref__foot{ display:flex; align-items:center; gap:7px; margin-top:3px; }
+.tmh-ref__type{ font-size:10px; font-weight:700; letter-spacing:.02em; text-transform:uppercase; color:var(--tm-muted); }
+.tmh-ref__open{ font-size:10.5px; font-weight:600; color:var(--tm-accent); display:inline-flex; align-items:center; gap:3px; }
+.tmh-empty{ text-align:center; color:var(--tm-muted); padding:34px 10px; font-size:14px; width:100%; }
+
+/* ---------- launch interstitial (D16/D22) ---------- */
+.tmh-inter{ position:fixed; inset:0; z-index:2147483601; display:none; align-items:center; justify-content:center; padding:clamp(12px,4vw,40px); background:rgba(16,26,38,.68); }
+.tmh-inter.is-open{ display:flex; }
+.tmh-inter__panel{ width:min(460px,100%); max-height:calc(100% - 24px); overflow:auto; background:var(--tm-panel); border-radius:var(--tm-radius); box-shadow:0 24px 60px rgba(16,26,38,.4); padding:22px; animation:tmh-rise .2s ease both; }
+@keyframes tmh-rise{ from{opacity:0; transform:translateY(10px) scale(.99);} to{opacity:1; transform:none;} }
+.tmh-inter__title{ font-size:16px; font-weight:700; margin:0 0 8px; color:var(--tm-ink); }
+.tmh-inter__p{ font-size:13px; line-height:1.5; color:var(--tm-muted); margin:0 0 10px; }
+.tmh-inter__p strong{ color:var(--tm-ink); font-weight:600; }
+.tmh-inter__domain{ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12px; color:var(--tm-ink); margin:0 0 8px; overflow-wrap:anywhere; }
+.tmh-inter__url{ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:11.5px; line-height:1.45; color:var(--tm-muted); background:var(--tm-tint); border:1px solid var(--tm-line); border-radius:8px; padding:9px 11px; word-break:break-all; }
+.tmh-inter__status{ margin-top:12px; display:flex; align-items:center; gap:9px; min-height:22px; font-size:12px; font-style:italic; color:var(--tm-muted); }
+.tmh-prep{ display:inline-flex; gap:5px; }
+.tmh-prep i{ width:8px; height:8px; border-radius:50%; background:var(--tm-accent); display:inline-block; animation:tmh-prep-pulse 1s infinite ease-in-out; }
+.tmh-prep i:nth-child(2){ animation-delay:.15s; }
+.tmh-prep i:nth-child(3){ animation-delay:.3s; }
+@keyframes tmh-prep-pulse{ 0%,100%{ transform:scale(.6); opacity:.4; } 50%{ transform:scale(1); opacity:1; } }
+.tmh-inter__actions{ display:flex; flex-wrap:wrap; gap:9px; margin-top:16px; }
+.tmh-btn{ min-height:44px; padding:10px 18px; border:2px solid var(--tm-accent); border-radius:10px; background:var(--tm-accent); color:var(--tm-on-accent); font-family:var(--tm-font); font-weight:600; font-size:13px; cursor:pointer; }
+.tmh-btn.secondary{ background:var(--tm-panel); color:var(--tm-accent); }
+.tmh-btn:disabled{ background:#c3c8d2; border-color:#c3c8d2; color:#fff; cursor:not-allowed; }
+.tmh-btn:hover:not(:disabled){ filter:brightness(.96); }
+
+/* ---------- phone: drop the fixed-frame rule, allow scrolling ---------- */
+@media (max-width:760px){
+  html,body{ height:auto; }
+  body{ overflow:auto; }
+  #tmh-root{ height:auto; overflow:visible; padding-bottom:30px; }
+  .frame__body{ display:block; overflow:visible; }
+  .tmh-reflist.cols-3,.tmh-reflist.cols-2{ column-count:1; }
+  .tmh-cat{ flex-basis:100%; }
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion:reduce){
+  .tmh-cat,.tmh-crumb,.tmh-btn,.tmh-ref,.tmh-toggle button{ transition:none; }
+  .tmh-inter__panel{ animation:none; }
+  .tmh-prep i{ animation:none; }
+}
+</style>
+</head>
+<body>
+
+<div id="tmh-root">
+  <div class="frame__chrome">
+    <div class="tmh-head">
+      <div class="tmh-titles">
+        <p class="tmh-eyebrow">Evidence &amp; sources</p>
+        <h1 class="tmh-title">References</h1>
+      </div>
+      <div class="tmh-toggle" role="group" aria-label="View mode">
+        <button id="tmhTabGrouped" type="button" aria-pressed="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>Grouped</button>
+        <button id="tmhTabNumbered" type="button" aria-pressed="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>Numbered</button>
+      </div>
+    </div>
+    <div class="tmh-row">
+      <div class="tmh-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+        <input type="text" id="tmhSearch" placeholder="Search author, journal, drug or keyword…" aria-label="Search references">
+      </div>
+      <nav class="tmh-crumbs" id="tmhCrumbs" aria-label="Breadcrumb"></nav>
+    </div>
+  </div>
+  <div class="frame__body">
+    <div class="tmh-scroll" id="tmhBody"></div>
+  </div>
+</div>
+
+<!-- D16/D22 launch interstitial -->
+<div class="tmh-inter" id="tmhInter" role="dialog" aria-modal="true" aria-labelledby="tmhInterTitle" aria-describedby="tmhInterReason" hidden>
+  <div class="tmh-inter__panel" role="document">
+    <h2 class="tmh-inter__title" id="tmhInterTitle">You are leaving this activity</h2>
+    <p class="tmh-inter__p" id="tmhInterReason"></p>
+    <p class="tmh-inter__p"><strong>Source:</strong> <span id="tmhInterDest"></span><br><strong>Publisher:</strong> <span id="tmhInterOrg"></span></p>
+    <p class="tmh-inter__domain" id="tmhInterDomain"></p>
+    <p class="tmh-inter__p">The source opens in a new tab. Check the address is expected before continuing.</p>
+    <div class="tmh-inter__url" id="tmhInterUrl"></div>
+    <div class="tmh-inter__status" aria-live="polite"><span class="tmh-prep" aria-hidden="true"><i></i><i></i><i></i></span><span id="tmhInterStatus">Preparing the link&hellip;</span></div>
+    <div class="tmh-inter__actions">
+      <button class="tmh-btn" id="tmhInterOpen" type="button" disabled>Open source</button>
+      <button class="tmh-btn secondary" id="tmhInterCopy" type="button">Copy link</button>
+      <button class="tmh-btn secondary" id="tmhInterStay" type="button">Stay here</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   CONTENT — the 19-item ABSTRACT reference list. Edit here only.
+   Numbers 1–19 are fixed (master order); categories regroup them.
+   ============================================================ */
+const CAT1 = "MET biology & the METex14 driver";
+const CAT2 = "Approvals, guidelines & pivotal VISION";
+const CAT3 = "VISION ≥3-year posters";
+
+const REFERENCES = [
+  { n:1,  cat:CAT1, type:"Journal article", cite:"Drilon A, et al. J Thorac Oncol. 2017;12(1):15–26.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2016.10.014" },
+  { n:2,  cat:CAT1, type:"Journal article", cite:"Awad MM, et al. J Clin Oncol. 2016;34(7):721–730.", journal:"J Clin Oncol.", url:"https://doi.org/10.1200/JCO.2015.63.4600" },
+  { n:3,  cat:CAT1, type:"Journal article", cite:"Remon J, et al. J Thorac Oncol. 2023;18(4):419–435.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2022.10.015" },
+  { n:4,  cat:CAT1, type:"Journal article", cite:"Tong JH, et al. Clin Cancer Res. 2016;22(12):3048–3056.", journal:"Clin Cancer Res.", url:"https://doi.org/10.1158/1078-0432.CCR-15-2061" },
+  { n:5,  cat:CAT1, type:"Journal article", cite:"Russo A, et al. J Thorac Oncol. 2026; e-pub ahead of print.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2026.103695" },
+  { n:6,  cat:CAT1, type:"Journal article", cite:"Aggarwal C, et al. JCO Precis Oncol. 2023;7:e2300191.", journal:"JCO Precis Oncol.", url:"https://doi.org/10.1200/PO.23.00191" },
+  { n:7,  cat:CAT2, type:"Prescribing information", cite:"US FDA. TEPMETKO (tepotinib) Prescribing Information. 2024.", avail:"emdserono.com/…/tepmetko-pi.pdf", accessed:"June 2026", url:"https://www.emdserono.com/us-en/pi/tepmetko-pi.pdf" },
+  { n:8,  cat:CAT2, type:"News release", cite:"TEPMETKO (tepotinib) Approved in Japan for Advanced NSCLC with METex14 Skipping Alterations.", avail:"merckgroup.com/…/tepotinib-25-03-2020.html", accessed:"June 2026", url:"https://www.merckgroup.com/en/news/tepotinib-25-03-2020.html" },
+  { n:9,  cat:CAT2, type:"SmPC", cite:"European Medicines Agency. TEPMETKO (tepotinib) Summary of Product Characteristics. 2026.", avail:"ema.europa.eu/…/tepmetko-epar-product-information_en.pdf", accessed:"June 2026", url:"https://www.ema.europa.eu/en/documents/product-information/tepmetko-epar-product-information_en.pdf" },
+  { n:10, cat:CAT2, type:"Prescribing information", cite:"US FDA. Tabrecta (capmatinib) Prescribing Information. 2024.", avail:"novartis.com/…/tabrecta.pdf", accessed:"June 2026", url:"https://www.novartis.com/us-en/sites/novartis_us/files/tabrecta.pdf" },
+  { n:11, cat:CAT2, type:"SmPC", cite:"European Medicines Agency. Tabrecta (capmatinib) Summary of Product Characteristics. 2025.", avail:"ema.europa.eu/…/tabrecta-epar-product-information_en.pdf", accessed:"June 2026", url:"https://www.ema.europa.eu/en/documents/product-information/tabrecta-epar-product-information_en.pdf" },
+  { n:12, cat:CAT2, type:"Journal article", cite:"Hendriks LE, et al. Ann Oncol. 2023;34(4):339–357.", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2022.12.009" },
+  { n:13, cat:CAT2, type:"Clinical guideline", cite:"ESMO Oncogene-Addicted Metastatic Non-Small-Cell Lung Cancer Living Guideline, v1.3 – February 2026.", avail:"esmo.org/guidelines/living-guidelines/…", accessed:"June 2026", url:"https://www.esmo.org/guidelines/living-guidelines/esmo-living-guideline-oncogene-addicted-metastatic-non-small-cell-lung-cancer/management-of-advanced-and-metastatic-disease/ret-fusion-ntrk-her2-activating-mutations-her2-overexpression-met-ex14-skipping-mutation-c-met-or-kras-g12c-mutation/ret-ntrk-her2-exon-20-egfr-ex20ins" },
+  { n:14, cat:CAT2, type:"Journal article", cite:"Mazieres J, et al. JAMA Oncol. 2023;9(9):1260–1266.", journal:"JAMA Oncol.", url:"https://doi.org/10.1001/jamaoncol.2023.1962" },
+  { n:15, cat:CAT3, type:"Conference abstract", cite:"Mazieres J, et al. 81P. J Thorac Oncol. 2025;20(3, Suppl 1):S59–S60.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/S1556-0864(25)00276-X" },
+  { n:16, cat:CAT3, type:"Conference abstract", cite:"Felip E, et al. P3.12.40. J Thorac Oncol. 2025;20(10, Suppl 1):S483–S484.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2025.09.902" },
+  { n:17, cat:CAT3, type:"Conference abstract", cite:"Griesinger F, et al. 1996P. Ann Oncol. 2025;36(Suppl):S1061–S1062.", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2025.08.2620" },
+  { n:18, cat:CAT3, type:"Conference abstract", cite:"Viteri S, et al. 1995P. Ann Oncol. 2025;36(Suppl):S1060–S1061.", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2025.08.2619" },
+  { n:19, cat:CAT3, type:"Conference abstract", cite:"Yang J, et al. 992P. Ann Oncol. 2025;36(Suppl):S2121–S2122.", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2025.10.703" }
+];
+
+/* ============================================================
+   ENGINE — no edits needed below.
+   ============================================================ */
+(function(){
+  "use strict";
+  const body   = document.getElementById('tmhBody');
+  const crumbs = document.getElementById('tmhCrumbs');
+  const search = document.getElementById('tmhSearch');
+  const inter  = document.getElementById('tmhInter');
+  const tabGrouped  = document.getElementById('tmhTabGrouped');
+  const tabNumbered = document.getElementById('tmhTabNumbered');
+
+  const CATS = [CAT1, CAT2, CAT3];
+  const THEME = { [CAT1]:'var(--tm-accent)', [CAT2]:'var(--tm-accent2)', [CAT3]:'var(--tm-accent3)' };
+  const ICON = {
+    [CAT1]:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.31"/><path d="M14 9.3V2"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/><path d="M5.5 16h13"/></svg>',
+    [CAT2]:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>',
+    [CAT3]:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></svg>'
+  };
+  const OPEN_ICON = '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>';
+
+  function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  // Italicise the journal token inside the (already-escaped) citation, per house style.
+  function citeHTML(r){ let s=esc(r.cite); if(r.journal){ const j=esc(r.journal); s=s.replace(j,'<em>'+j+'</em>'); } return s; }
+
+  let viewMode = 'grouped';   // 'grouped' | 'numbered'
+  let inCat = null;
+
+  /* ---------- clipboard ---------- */
+  function fallbackCopy(t){ const ta=document.createElement('textarea'); ta.value=t; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select(); let ok=false; try{ ok=document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); return ok; }
+  function copyText(t){ if(navigator.clipboard && navigator.clipboard.writeText){ return navigator.clipboard.writeText(t).then(()=>true).catch(()=>fallbackCopy(t)); } return Promise.resolve(fallbackCopy(t)); }
+
+  /* ---------- render helpers ---------- */
+  function refHTML(r){
+    return '<button class="tmh-ref" type="button" style="--theme:'+THEME[r.cat]+'" data-url="'+esc(r.url)+'" data-cite="'+esc(r.cite)+'" data-accessed="'+esc(r.accessed||'')+'">'+
+      '<span class="tmh-ref__n">'+r.n+'</span>'+
+      '<span class="tmh-ref__body">'+
+        '<span class="tmh-ref__cite">'+citeHTML(r)+'</span>'+
+        '<span class="tmh-ref__foot"><span class="tmh-ref__type">'+esc(r.type)+'</span>'+
+        '<span class="tmh-ref__open">Open source '+OPEN_ICON+'</span></span>'+
+      '</span></button>';
+  }
+  function listHTML(refs, cols){
+    if(!refs.length) return '<div class="tmh-empty">No matching references found.</div>';
+    return '<div class="tmh-reflist cols-'+cols+'">'+refs.map(refHTML).join('')+'</div>';
+  }
+  function catCardHTML(cat){
+    const refs = REFERENCES.filter(r=>r.cat===cat);
+    const first=refs[0].n, last=refs[refs.length-1].n;
+    return '<div class="tmh-cat" tabindex="0" role="button" data-cat="'+esc(cat)+'" style="--theme:'+THEME[cat]+'">'+
+      '<div class="tmh-cat__icon">'+ICON[cat]+'</div>'+
+      '<h2 class="tmh-cat__title">'+esc(cat)+'</h2>'+
+      '<div class="tmh-cat__meta"><span class="tmh-cat__count">'+refs.length+' reference'+(refs.length>1?'s':'')+'</span>'+
+      '<span class="tmh-cat__range">Refs '+first+'–'+last+'</span></div></div>';
+  }
+
+  function renderCrumbs(){
+    crumbs.innerHTML='';
+    if(viewMode==='numbered') return;              // numbered view: no breadcrumb
+    const home=document.createElement('button'); home.type='button'; home.className='tmh-crumb'; home.textContent='All references';
+    home.onclick=()=>{ inCat=null; search.value=''; render(); };
+    crumbs.appendChild(home);
+    if(inCat){ const s=document.createElement('span'); s.className='tmh-sep'; s.textContent='›'; crumbs.appendChild(s);
+      const c=document.createElement('span'); c.className='tmh-crumb tmh-crumb--static'; c.textContent=inCat; crumbs.appendChild(c); }
+  }
+
+  function render(){
+    renderCrumbs();
+    const term = search.value.toLowerCase().trim();
+    if(term){
+      const hits = REFERENCES.filter(r => (r.cite+' '+r.cat+' '+r.type+' '+r.url).toLowerCase().includes(term));
+      body.innerHTML = listHTML(hits, 3);
+      return;
+    }
+    if(viewMode==='numbered'){
+      body.innerHTML = listHTML(REFERENCES, 3);
+      return;
+    }
+    // grouped
+    if(!inCat){
+      body.innerHTML = '<div class="tmh-cats">'+CATS.map(catCardHTML).join('')+'</div>';
+    } else {
+      body.innerHTML = listHTML(REFERENCES.filter(r=>r.cat===inCat), 2);
+    }
+  }
+
+  /* ---------- interactions ---------- */
+  body.addEventListener('click', e=>{
+    const cat = e.target.closest('.tmh-cat');
+    if(cat){ inCat = cat.getAttribute('data-cat'); render(); return; }
+    const ref = e.target.closest('.tmh-ref');
+    if(ref){ openInter(ref.getAttribute('data-url'), ref.getAttribute('data-cite'), ref.getAttribute('data-accessed'), ref); }
+  });
+  body.addEventListener('keydown', e=>{
+    const cat = e.target.closest('.tmh-cat');
+    if(cat && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); inCat=cat.getAttribute('data-cat'); render(); }
+  });
+  search.addEventListener('input', render);
+
+  function setView(mode){
+    viewMode = mode; inCat = null; search.value='';
+    tabGrouped.setAttribute('aria-pressed', mode==='grouped');
+    tabNumbered.setAttribute('aria-pressed', mode==='numbered');
+    render();
+  }
+  tabGrouped.addEventListener('click', ()=>setView('grouped'));
+  tabNumbered.addEventListener('click', ()=>setView('numbered'));
+
+  /* ---------- D16/D22 interstitial ---------- */
+  const iDest=document.getElementById('tmhInterDest'), iOrg=document.getElementById('tmhInterOrg'),
+        iDomain=document.getElementById('tmhInterDomain'), iUrl=document.getElementById('tmhInterUrl'),
+        iReason=document.getElementById('tmhInterReason'), iStatus=document.getElementById('tmhInterStatus'),
+        iDots=inter.querySelector('.tmh-prep'), iOpen=document.getElementById('tmhInterOpen'),
+        iCopy=document.getElementById('tmhInterCopy'), iStay=document.getElementById('tmhInterStay');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let pendingURL=null, interTrigger=null, launchTimer=null;
+
+  function orgFromHost(h){
+    const map={ 'doi.org':'Publisher (resolved via doi.org)','www.novartis.com':'Novartis','www.emdserono.com':'EMD Serono',
+      'www.ema.europa.eu':'European Medicines Agency','www.esmo.org':'European Society for Medical Oncology','www.merckgroup.com':'Merck KGaA' };
+    return map[h] || h;
+  }
+  function openInter(url, cite, accessed, trigger){
+    pendingURL=url; interTrigger=trigger;
+    let host=url; try{ host=new URL(url).hostname; }catch(e){}
+    iDest.textContent = cite + (accessed ? '  ·  Accessed ' + accessed : '');
+    iOrg.textContent=orgFromHost(host); iDomain.textContent=host; iUrl.textContent=url;
+    iReason.textContent='This link opens an external source in a new tab.';
+    if(iDots) iDots.style.display=''; iStatus.textContent='Preparing the link…'; iOpen.disabled=true;
+    inter.hidden=false; inter.classList.add('is-open'); iStay.focus();
+    if(launchTimer) clearTimeout(launchTimer);
+    launchTimer=setTimeout(()=>{ if(iDots) iDots.style.display='none'; iStatus.textContent='Ready to open.'; iOpen.disabled=false; iOpen.focus(); }, reduceMotion?250:1300);
+  }
+  function closeInter(){ if(launchTimer) clearTimeout(launchTimer); inter.classList.remove('is-open'); inter.hidden=true; if(interTrigger && interTrigger.focus){ try{ interTrigger.focus(); }catch(e){} } }
+  iOpen.addEventListener('click', ()=>{ if(!pendingURL) return; window.open(pendingURL,'_blank','noopener,noreferrer'); iStatus.textContent='Link opened in a new tab. Nothing opened? Copy the link and open it manually.'; });
+  iCopy.addEventListener('click', ()=>{ if(!pendingURL) return; copyText(pendingURL).then(()=>{ iStatus.textContent='Link copied. Paste it into a fresh browser tab.'; }); });
+  iStay.addEventListener('click', closeInter);
+  inter.addEventListener('click', e=>{ if(e.target===inter) closeInter(); });
+
+  function trap(e, c){ const f=c.querySelectorAll('a[href],button:not([disabled])'); if(!f.length) return; const first=f[0], last=f[f.length-1]; if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); } else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); } }
+  document.addEventListener('keydown', e=>{
+    if(inter.classList.contains('is-open')){ if(e.key==='Escape'){ e.preventDefault(); closeInter(); } else if(e.key==='Tab'){ trap(e, inter); } return; }
+    if(e.key==='Escape' && inCat){ inCat=null; render(); }
+  }, true);
+
+  render();
+})();
+</script>
+</body>
+</html>
