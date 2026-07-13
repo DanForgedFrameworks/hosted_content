@@ -197,32 +197,32 @@ body{
 
 <script>
 /* ============================================================
-   CONTENT — the 18-item global reference list. Edit here only.
+   CONTENT — the 18-item full scene deck reference list (deck numbering). Edit here only.
    Numbers 1–18 are fixed (master order); categories regroup them.
    ============================================================ */
 const CAT1 = "MET biology & the METex14 driver";
-const CAT2 = "Approvals, guidelines & pivotal VISION";
+const CAT2 = "Approvals & pivotal VISION";
 const CAT3 = "VISION ≥3-year posters";
 
 const REFERENCES = [
-  { n:1,  cat:CAT1, type:"Journal article", cite:"Russo A, et al. J Thorac Oncol. 2026; e-pub ahead of print.", url:"https://doi.org/10.1016/j.jtho.2026.103695" },
-  { n:2,  cat:CAT1, type:"Journal article", cite:"Drilon A, et al. J Thorac Oncol. 2017;12(1):15–26.", url:"https://doi.org/10.1016/j.jtho.2016.10.014" },
-  { n:3,  cat:CAT1, type:"Journal article", cite:"Awad MM, et al. J Clin Oncol. 2016;34(7):721–730.", url:"https://doi.org/10.1200/JCO.2015.63.4600" },
-  { n:4,  cat:CAT1, type:"Journal article", cite:"Remon J, et al. J Thorac Oncol. 2023;18(4):419–435.", url:"https://doi.org/10.1016/j.jtho.2022.10.015" },
-  { n:5,  cat:CAT1, type:"Journal article", cite:"Tong JH, et al. Clin Cancer Res. 2016;22(12):3048–3056.", url:"https://doi.org/10.1158/1078-0432.CCR-15-2061" },
-  { n:6,  cat:CAT2, type:"Prescribing information", cite:"US FDA. TEPMETKO (tepotinib) Prescribing Information. 2024.", avail:"emdserono.com/…/tepmetko-pi.pdf", accessed:"June 2026", url:"https://www.emdserono.com/us-en/pi/tepmetko-pi.pdf" },
-  { n:7,  cat:CAT2, type:"News release", cite:"TEPMETKO (tepotinib) Approved in Japan for Advanced NSCLC with METex14 Skipping Alterations.", avail:"merckgroup.com/…/tepotinib-25-03-2020.html", accessed:"June 2026", url:"https://www.merckgroup.com/en/news/tepotinib-25-03-2020.html" },
-  { n:8,  cat:CAT2, type:"SmPC", cite:"European Medicines Agency. TEPMETKO (tepotinib) Summary of Product Characteristics. 2026.", avail:"ema.europa.eu/…/tepmetko-epar-product-information_en.pdf", accessed:"June 2026", url:"https://www.ema.europa.eu/en/documents/product-information/tepmetko-epar-product-information_en.pdf" },
-  { n:9,  cat:CAT2, type:"Prescribing information", cite:"US FDA. Tabrecta (capmatinib) Prescribing Information. 2024.", avail:"novartis.com/…/tabrecta.pdf", accessed:"June 2026", url:"https://www.novartis.com/us-en/sites/novartis_us/files/tabrecta.pdf" },
-  { n:10, cat:CAT2, type:"SmPC", cite:"European Medicines Agency. Tabrecta (capmatinib) Summary of Product Characteristics. 2025.", avail:"ema.europa.eu/…/tabrecta-epar-product-information_en.pdf", accessed:"June 2026", url:"https://www.ema.europa.eu/en/documents/product-information/tabrecta-epar-product-information_en.pdf" },
-  { n:11, cat:CAT2, type:"Journal article", cite:"Hendriks LE, et al. Ann Oncol. 2023;34(4):339–357.", url:"https://doi.org/10.1016/j.annonc.2022.12.009" },
-  { n:12, cat:CAT2, type:"Clinical guideline", cite:"ESMO Oncogene-Addicted Metastatic Non-Small-Cell Lung Cancer Living Guideline, v1.3 – February 2026.", avail:"esmo.org/guidelines/living-guidelines/…", accessed:"June 2026", url:"https://www.esmo.org/guidelines/living-guidelines/esmo-living-guideline-oncogene-addicted-metastatic-non-small-cell-lung-cancer/management-of-advanced-and-metastatic-disease/ret-fusion-ntrk-her2-activating-mutations-her2-overexpression-met-ex14-skipping-mutation-c-met-or-kras-g12c-mutation/ret-ntrk-her2-exon-20-egfr-ex20ins" },
-  { n:13, cat:CAT2, type:"Journal article", cite:"Mazieres J, et al. JAMA Oncol. 2023;9(9):1260–1266.", url:"https://doi.org/10.1001/jamaoncol.2023.1962" },
-  { n:14, cat:CAT3, type:"Conference abstract", cite:"Mazieres J, et al. 81P. J Thorac Oncol. 2025;20(3, Suppl 1):S59–S60.", url:"https://doi.org/10.1016/S1556-0864(25)00276-X" },
-  { n:15, cat:CAT3, type:"Conference abstract", cite:"Felip E, et al. P3.12.40. J Thorac Oncol. 2025;20(10, Suppl 1):S483–S484.", url:"https://doi.org/10.1016/j.jtho.2025.09.902" },
-  { n:16, cat:CAT3, type:"Conference abstract", cite:"Griesinger F, et al. 1996P. Ann Oncol. 2025;36(Suppl):S1061–S1062.", url:"https://doi.org/10.1016/j.annonc.2025.08.2620" },
-  { n:17, cat:CAT3, type:"Conference abstract", cite:"Viteri S, et al. 1995P. Ann Oncol. 2025;36(Suppl):S1060–S1061.", url:"https://doi.org/10.1016/j.annonc.2025.08.2619" },
-  { n:18, cat:CAT3, type:"Conference abstract", cite:"Yang J, et al. 992P. Ann Oncol. 2025;36(Suppl):S2121–S2122.", url:"https://doi.org/10.1016/j.annonc.2025.10.703" }
+  { n:1,  cat:CAT1, type:"Journal article", cite:"Russo A, et al. J Thorac Oncol. 2026; e-pub ahead of print.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2026.103695" },
+  { n:2,  cat:CAT1, type:"Journal article", cite:"Paik PK, Drilon A, Fan PD, Yu H, Rekhtman N, Ginsberg MS, et al. Response to MET inhibitors in patients with stage IV lung adenocarcinomas harboring MET mutations causing exon 14 skipping. Cancer Discov. 2015;5(8):842–9.", journal:"Cancer Discov.", url:"https://doi.org/10.1158/2159-8290.CD-14-1467" },
+  { n:3,  cat:CAT1, type:"Journal article", cite:"Reungwetwattana T, Liang Y, Zhu V, Ou SI. The race to target MET exon 14 skipping alterations in non-small cell lung cancer: The Why, the How, the Who, the Unknown, and the Inevitable. Lung Cancer. 2017;103:27–37.", journal:"Lung Cancer", url:"https://doi.org/10.1016/j.lungcan.2016.11.011" },
+  { n:4,  cat:CAT1, type:"Journal article", cite:"Rosell R, Karachaliou N. Large-scale screening for somatic mutations in lung cancer. Lancet. 2016;387(10026):1354–6.", journal:"Lancet", url:"https://doi.org/10.1016/S0140-6736(15)01125-3" },
+  { n:5,  cat:CAT1, type:"Journal article", cite:"Salgia R, Sattler M, Scheele J, Stroh C, Felip E. The promise of selective MET inhibitors in non-small cell lung cancer with MET exon 14 skipping. Cancer Treat Rev. 2020;87:102022.", journal:"Cancer Treat Rev.", url:"https://doi.org/10.1016/j.ctrv.2020.102022" },
+  { n:6,  cat:CAT1, type:"Journal article", cite:"Drilon A, et al. J Thorac Oncol. 2017;12(1):15–26.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2016.10.014" },
+  { n:7,  cat:CAT1, type:"Journal article", cite:"Awad MM, et al. J Clin Oncol. 2016;34(7):721–730.", journal:"J Clin Oncol.", url:"https://doi.org/10.1200/JCO.2015.63.4600" },
+  { n:8,  cat:CAT1, type:"Journal article", cite:"Remon J, et al. J Thorac Oncol. 2023;18(4):419–435.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2022.10.015" },
+  { n:9,  cat:CAT1, type:"Journal article", cite:"Tong JH, et al. Clin Cancer Res. 2016;22(12):3048–3056.", journal:"Clin Cancer Res.", url:"https://doi.org/10.1158/1078-0432.CCR-15-2061" },
+  { n:10, cat:CAT2, type:"Prescribing information", cite:"US FDA. TEPMETKO (tepotinib) Prescribing Information. 2024.", avail:"emdserono.com", accessed:"June 2026", url:"https://www.emdserono.com/us-en/pi/tepmetko-pi.pdf" },
+  { n:11, cat:CAT2, type:"News release", cite:"TEPMETKO (tepotinib) Approved in Japan for Advanced NSCLC with METex14 Skipping Alterations. 2020.", avail:"merckgroup.com", accessed:"June 2026", url:"https://www.merckgroup.com/en/news/tepotinib-25-03-2020.html" },
+  { n:12, cat:CAT2, type:"SmPC", cite:"European Medicines Agency. TEPMETKO (tepotinib) Summary of Product Characteristics. 2026.", avail:"ema.europa.eu", accessed:"June 2026", url:"https://www.ema.europa.eu/en/documents/product-information/tepmetko-epar-product-information_en.pdf" },
+  { n:13, cat:CAT2, type:"Journal article", cite:"Mazieres J, et al. JAMA Oncol. 2023;9(9):1260–1266.", journal:"JAMA Oncol.", url:"https://doi.org/10.1001/jamaoncol.2023.1962" },
+  { n:14, cat:CAT3, type:"Conference abstract", cite:"Mazieres J, Veillon R, Cortot AB, Ferrara R, Felip E, Garassino MC, Le X, et al. Tepotinib in patients with METex14 skipping NSCLC from the VISION study: ≥3-year follow-up outcomes. J Thorac Oncol. 2025;20(3 Suppl 1):S59–S60. (81P)", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/S1556-0864(25)00276-X" },
+  { n:15, cat:CAT3, type:"Conference abstract", cite:"Felip E, Ferrara R, Veillon R, Le X, Smit EF, Mazieres J, et al. Safety and Patient-Reported Outcomes With Tepotinib in Patients With METex14 Skipping NSCLC: ≥3-Years Follow-Up of VISION. J Thorac Oncol. 2025;20(10 Suppl 1):S483–S484. (P3.12.40)", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2025.09.902" },
+  { n:16, cat:CAT3, type:"Conference abstract", cite:"Griesinger F, et al. Long-term outcomes with tepotinib for clinically relevant subgroups of patients with METex14 skipping NSCLC in the VISION study: A ≥3-year follow-up. Ann Oncol. 2025;36:S1061–S1062. (1996P)", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2025.08.2620" },
+  { n:17, cat:CAT3, type:"Conference abstract", cite:"Viteri S, et al. Treatment sequencing of tepotinib in patients with METex14 skipping NSCLC: Outcomes from ≥3 years follow-up of the VISION study. Ann Oncol. 2025;36:S1060–S1061. (1995P)", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2025.08.2619" },
+  { n:18, cat:CAT3, type:"Conference abstract", cite:"Yang JC-H, et al. Long-term outcomes in Asian patients with MET exon 14 skipping NSCLC receiving tepotinib in the VISION study: ≥3-year follow-up data. Ann Oncol. 2025;36:S2121–S2122. (992P)", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2025.10.703" }
 ];
 
 /* ============================================================
@@ -247,6 +247,8 @@ const REFERENCES = [
   const OPEN_ICON = '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>';
 
   function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  // Italicise the journal token inside the (already-escaped) citation, per house style.
+  function citeHTML(r){ let s=esc(r.cite); if(r.journal){ const j=esc(r.journal); s=s.replace(j,'<em>'+j+'</em>'); } return s; }
 
   let viewMode = 'grouped';   // 'grouped' | 'numbered'
   let inCat = null;
@@ -260,7 +262,7 @@ const REFERENCES = [
     return '<button class="tmh-ref" type="button" style="--theme:'+THEME[r.cat]+'" data-url="'+esc(r.url)+'" data-cite="'+esc(r.cite)+'" data-accessed="'+esc(r.accessed||'')+'">'+
       '<span class="tmh-ref__n">'+r.n+'</span>'+
       '<span class="tmh-ref__body">'+
-        '<span class="tmh-ref__cite">'+esc(r.cite)+'</span>'+
+        '<span class="tmh-ref__cite">'+citeHTML(r)+'</span>'+
         '<span class="tmh-ref__foot"><span class="tmh-ref__type">'+esc(r.type)+'</span>'+
         '<span class="tmh-ref__open">Open source '+OPEN_ICON+'</span></span>'+
       '</span></button>';
