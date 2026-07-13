@@ -50,12 +50,12 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 
 .card{ position:relative; border:0; background:transparent; padding:0; font:inherit; color:inherit; cursor:pointer; perspective:1300px; min-height:0; }
 .card:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; border-radius:18px; }
-.card__inner{ position:relative; display:grid; width:100%; height:100%; transition:transform .55s cubic-bezier(.4,0,.2,1); transform-style:preserve-3d; }
+.card__inner{ position:relative; display:grid; width:100%; height:100%; transition:transform .55s cubic-bezier(.4,0,.2,1); transform-style:preserve-3d; will-change:transform; }
 .card[aria-expanded="true"] .card__inner{ transform:rotateY(180deg); }
 .card__face{ grid-area:1 / 1; -webkit-backface-visibility:hidden; backface-visibility:hidden; display:flex; flex-direction:column; border:2px solid var(--line); border-radius:16px; background:#fff; overflow:hidden; transition:border-color .16s ease, box-shadow .16s ease; }
 
 /* front */
-.card__front{ padding:clamp(8px,1.2vh,13px) clamp(10px,1.1vw,15px); }
+.card__front{ padding:clamp(8px,1.2vh,13px) clamp(10px,1.1vw,15px); transform:rotateY(0deg); }
 .card:hover .card__front{ border-color:var(--teal); box-shadow:0 9px 18px rgba(34,47,85,.10); }
 .card__head{ flex:0 0 auto; display:flex; align-items:center; gap:9px; margin-bottom:clamp(6px,1.1vh,10px); }
 .card__icon{ flex:0 0 auto; width:clamp(28px,2.9vw,37px); height:clamp(28px,2.9vw,37px); color:var(--teal); }
@@ -185,7 +185,7 @@ body.is-fullscreen{ padding-top:56px; }
   <div class="grid" id="grid"></div>
 
   <div class="navprompt">
-    <p class="navprompt__box"><span class="navprompt__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>Select a card for the quick split, then <b>flip it</b> for the full figures. Footnotes sit on smoking history. (n&nbsp;=&nbsp;106)</p>
+    <p class="navprompt__box"><span class="navprompt__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>Select a card for the quick split, then <b>flip it</b> for the full figures. Footnotes sit on smoking history. (n=106)</p>
   </div>
 
   <p class="sr-only" id="live" aria-live="polite" aria-atomic="true"></p>
@@ -244,7 +244,7 @@ body.is-fullscreen{ padding-top:56px; }
       levels:[{lab:'0', n:28, pct:'26.4', c:TEAL},{lab:'1', n:78, pct:'73.6', c:NAVY}] },
     { id:'age', name:'Age', icon:ICON.age, type:'gauge',
       stat:{ median:'70.5', min:52, max:89, unit:'years' } },
-    { id:'brain', name:'Presence of baseline brain metastases', icon:ICON.brain, type:'split',
+    { id:'brain', name:'Brain metastases at baseline', icon:ICON.brain, type:'split',
       levels:[{lab:'Yes', n:18, pct:'17.0', c:TEAL},{lab:'No', n:88, pct:'83.0', c:NAVY}] },
     { id:'smoking', name:'Smoking history', icon:ICON.smoking, type:'single', fn:['*','†'],
       single:{ n:43, pct:'43.4', lab:'History of smoking', desc:'with a history of smoking' } },
@@ -296,12 +296,12 @@ body.is-fullscreen{ padding-top:56px; }
   /* ---------- back detail ---------- */
   function backDetail(c){
     if(c.type==='split' || c.type==='split3' || c.type==='dual'){
-      const rows=c.levels.map(l=>'<div class="detail__row"><span class="sw" style="background:'+l.c+'"></span><span class="lab">'+esc(l.lab)+'</span> <span class="fig">'+l.n+' ('+l.pct+'%)</span></div>').join('');
+      const rows=c.levels.map(l=>'<div class="detail__row"><span class="sw" style="background:'+l.c+'"></span><span class="lab">'+esc(l.lab)+'</span> <span class="fig">'+l.n+' ('+l.pct+' %)</span></div>').join('');
       return '<div class="detail">'+rows+(c.note?'<div class="detail__note">'+esc(c.note)+'</div>':'')+'</div>';
     }
     if(c.type==='single'){
       const s=c.single;
-      return '<div class="detail"><div class="detail__row"><span class="fig">'+s.n+' ('+s.pct+'%)</span></div>'+
+      return '<div class="detail"><div class="detail__row"><span class="fig">'+s.n+' ('+s.pct+' %)</span></div>'+
         '<div class="detail__row"><span class="lab">'+esc(s.desc)+fnMark(c.fn[0])+fnMark(c.fn[1])+'</span></div></div>';
     }
     const st=c.stat;

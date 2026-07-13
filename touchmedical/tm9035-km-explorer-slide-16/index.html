@@ -283,10 +283,9 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 .dtable tbody th{ text-align:left; font-weight:700; color:var(--navy); background:#fff; }
 .dtable th.col-naive{ color:var(--pink); }
 .dtable th.col-treated{ color:var(--green); }
-.dtable tbody td:first-of-type{ font-weight:400; }
-.dtable tbody td:first-of-type span{ font-weight:400; } /* range (95% CI) stays regular weight so all three ranges match; only the median value is bold */
+.dtable tbody td:first-of-type{ font-weight:600; }
 .dtable .rowlabel{ text-align:left; font-weight:600; color:var(--muted); }
-.dtable__n{ display:block; font-size:.72rem; font-weight:400; color:var(--muted); }
+.dtable__n{ display:block; font-size:.72rem; font-weight:600; color:var(--muted); }
 
 .modal__foot{ margin-top:14px; }
 .modal__note{ font-size:.74rem; color:var(--faint); line-height:1.5; margin:0 0 12px; }
@@ -534,9 +533,9 @@ body.is-fullscreen{ padding-top:56px; }
       <thead>
         <tr>
           <th scope="col">Parameter</th>
-          <th scope="col">Overall<span class="dtable__n">N = 313</span></th>
-          <th scope="col" class="col-naive">Treatment-na&iuml;ve<span class="dtable__n">n = 164</span></th>
-          <th scope="col" class="col-treated">Previously treated<span class="dtable__n">n = 149</span></th>
+          <th scope="col">Overall<span class="dtable__n">N=313</span></th>
+          <th scope="col" class="col-naive">Treatment-na&iuml;ve<span class="dtable__n">n=164</span></th>
+          <th scope="col" class="col-treated">Previously treated<span class="dtable__n">n=149</span></th>
         </tr>
       </thead>
       <tbody id="dtableBody"></tbody>
@@ -584,21 +583,21 @@ body.is-fullscreen{ padding-top:56px; }
   const METRICS = [
     { id:'os', abbr:'OS', full:'Overall survival', img:'assets/km-os.jpg',
       alt:'Kaplan–Meier overall survival curves for treatment-naïve and previously treated patients; median crossing markers are highlighted on the 0.5 line.',
-      overall:{m:'19.7', ci:'16.2–22.3', ev:'234 (74.8)'},
-      naive:{m:'21.1', ci:'14.2–24.5', ev:'119 (72.6)'},
-      treated:{m:'19.3', ci:'15.6–21.0', ev:'115 (77.2)'},
+      overall:{m:'19.7', ci:'16.2, 22.3', ev:'234 (74.8)'},
+      naive:{m:'21.1', ci:'14.2, 24.5', ev:'119 (72.6)'},
+      treated:{m:'19.3', ci:'15.6, 21.0', ev:'115 (77.2)'},
       hot:{ naive:{x:34.6,y:44.9}, treated:{x:31.5,y:44.2} } },
     { id:'dor', abbr:'DOR', full:'Duration of response', img:'assets/km-dor.jpg',
       alt:'Kaplan–Meier duration-of-response curves for treatment-naïve and previously treated responders; median crossing markers are highlighted on the 0.5 line.',
-      overall:{m:'18.0', ci:'12.6–31.8', ev:'77 (47.5)'},
-      naive:{m:'31.7', ci:'13.8–46.4', ev:'40 (42.1)'},
-      treated:{m:'12.6', ci:'9.5–18.5', ev:'37 (55.2)'},
+      overall:{m:'18.0', ci:'12.6, 31.8', ev:'77 (47.5)'},
+      naive:{m:'31.7', ci:'13.8, 46.4', ev:'40 (42.1)'},
+      treated:{m:'12.6', ci:'9.5, 18.5', ev:'37 (55.2)'},
       hot:{ naive:{x:48.3,y:45.8}, treated:{x:28.5,y:45.8} } },
     { id:'pfs', abbr:'PFS', full:'Progression-free survival', img:'assets/km-pfs.jpg',
       alt:'Kaplan–Meier progression-free survival curves for treatment-naïve and previously treated patients; median crossing markers are highlighted on the 0.5 line.',
-      overall:{m:'11.2', ci:'9.5–13.8', ev:'172 (55.0)'},
-      naive:{m:'12.6', ci:'9.7–17.7', ev:'88 (53.7)'},
-      treated:{m:'11.0', ci:'8.2–13.7', ev:'84 (56.4)'},
+      overall:{m:'11.2', ci:'9.5, 13.8', ev:'172 (55.0)'},
+      naive:{m:'12.6', ci:'9.7, 17.7', ev:'88 (53.7)'},
+      treated:{m:'11.0', ci:'8.2, 13.7', ev:'84 (56.4)'},
       hot:{ naive:{x:26.5,y:44.1}, treated:{x:24.5,y:44.4} } }
   ];
 

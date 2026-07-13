@@ -241,6 +241,23 @@ body.is-fullscreen{ padding-top:56px; }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
 }
+/* ---------- entrance: bounce-in graphics when a panel becomes active ---------- */
+.panel.is-live .split{ animation:tm12wipe .6s cubic-bezier(.22,1,.36,1) both; }
+.panel.is-live .bar__fill{ transform-origin:left center; animation:tm12grow .58s cubic-bezier(.34,1.45,.5,1) both; }
+.panel.is-live .bar:nth-child(2) .bar__fill{ animation-delay:.08s; }
+.panel.is-live .bar:nth-child(3) .bar__fill{ animation-delay:.16s; }
+.panel.is-live .donut-stack svg{ transform-origin:50% 50%; animation:tm12pop .58s cubic-bezier(.34,1.56,.5,1) both; }
+.panel.is-live .gauge svg{ transform-origin:50% 100%; animation:tm12pop .58s cubic-bezier(.34,1.56,.5,1) both; }
+.panel.is-live .legend__item{ animation:tm12rise .46s ease both; }
+.panel.is-live .legend__item:nth-child(1){ animation-delay:.14s; }
+.panel.is-live .legend__item:nth-child(2){ animation-delay:.21s; }
+.panel.is-live .legend__item:nth-child(3){ animation-delay:.28s; }
+.panel.is-live .legend__item:nth-child(4){ animation-delay:.35s; }
+.panel.is-live .legend__item:nth-child(5){ animation-delay:.42s; }
+@keyframes tm12grow{ from{ transform:scaleX(0); } to{ transform:scaleX(1); } }
+@keyframes tm12wipe{ from{ clip-path:inset(0 100% 0 0); } to{ clip-path:inset(0 0 0 0); } }
+@keyframes tm12pop{ from{ transform:scale(.55); opacity:0; } to{ transform:scale(1); opacity:1; } }
+@keyframes tm12rise{ from{ opacity:0; transform:translateY(9px); } to{ opacity:1; transform:none; } }
 </style>
 </head>
 <body>
@@ -390,7 +407,7 @@ body.is-fullscreen{ padding-top:56px; }
     if(c.type==='split'){
       const segs=c.items.map((it,i)=>
         '<button class="split__seg" type="button" style="flex:'+it.pct+' 1 0;background:'+SEG[i]+'" '+dataAttrs(it)+' '+ariaFig(it)+'>'+
-        '<span class="split__pct">'+it.pct+'%</span><span class="split__lab">'+esc(it.label)+'</span></button>'
+        '<span class="split__pct">'+it.pct+' %</span><span class="split__lab">'+esc(it.label)+'</span></button>'
       ).join('');
       return '<div class="panel__visual"><div class="split">'+segs+'</div></div>';
     }
@@ -398,7 +415,7 @@ body.is-fullscreen{ padding-top:56px; }
       const rows=c.items.map((it,i)=>{
         const w=Math.min(100,parseFloat(it.pct)), zero=parseFloat(it.pct)===0;
         return '<div class="bar'+(zero?' is-zero':'')+'" role="button" tabindex="0" '+dataAttrs(it)+' '+ariaFig(it)+'>'+
-          '<div class="bar__top"><span class="bar__label">'+esc(it.label)+'</span><span class="bar__val">'+it.pct+'%</span></div>'+
+          '<div class="bar__top"><span class="bar__label">'+esc(it.label)+'</span><span class="bar__val">'+it.pct+' %</span></div>'+
           '<div class="bar__track"><span class="bar__fill" style="width:'+w.toFixed(1)+'%;background:'+SEG[Math.min(i,4)]+'"></span></div>'+
         '</div>';
       }).join('');
@@ -432,7 +449,7 @@ body.is-fullscreen{ padding-top:56px; }
       const idx=c.items.indexOf(it);
       return '<button class="legend__item" type="button" '+dataAttrs(it)+' '+ariaFig(it)+'>'+
         '<span class="legend__sw" style="background:'+SEG[Math.min(idx,4)]+'"></span>'+
-        '<span class="legend__txt">'+esc(it.label)+'</span><span class="legend__pct">'+it.pct+'%</span></button>';
+        '<span class="legend__txt">'+esc(it.label)+'</span><span class="legend__pct">'+it.pct+' %</span></button>';
     }).join('');
     // wrap a long centre label onto two lines (e.g. "Line of treatment")
     const _lab=String(c.label); const _w=_lab.split(' '); let labSVG;
@@ -490,10 +507,32 @@ body.is-fullscreen{ padding-top:56px; }
   const visited=new Set();
   let index=0, citeShownOnce=false;
 
+  /* ---------- entrance: count-up numbers + bounce-in graphics (embed-safe) ---------- */
+  document.querySelectorAll('.split__pct,.bar__val,.legend__pct,.dc__big').forEach(el=>{ el.dataset.final=el.textContent; });
+  document.querySelectorAll('.gauge__big').forEach(el=>{ el.dataset.final=(el.childNodes[0]?el.childNodes[0].nodeValue:el.textContent); });
+  let countRAF=null;
+  function eachNum(scope,fn){ scope.querySelectorAll('.split__pct,.bar__val,.legend__pct,.dc__big').forEach(el=>fn(el,false)); scope.querySelectorAll('.gauge__big').forEach(el=>fn(el,true)); }
+  function setNum(el,g,str){ if(g){ if(el.childNodes[0]) el.childNodes[0].nodeValue=str; } else el.textContent=str; }
+  function snapCounts(panel){ if(countRAF){ cancelAnimationFrame(countRAF); countRAF=null; } eachNum(panel,(el,g)=>setNum(el,g,el.dataset.final||el.textContent)); }
+  function playCounts(panel,dur){
+    if(reduceMotion){ eachNum(panel,(el,g)=>setNum(el,g,el.dataset.final||'')); return; }
+    const list=[]; eachNum(panel,(el,g)=>{ const f=el.dataset.final||''; list.push({el:el,g:g,f:f,m:f.match(/^(\s*)([\d.]+)(.*)$/)}); });
+    let t0=null;
+    function tick(now){
+      if(t0===null) t0=now;
+      const p=Math.min(1,(now-t0)/dur), e=1-Math.pow(1-p,3);
+      list.forEach(o=>{ if(o.m){ const end=parseFloat(o.m[2]), dec=(o.m[2].split('.')[1]||'').length; setNum(o.el,o.g,o.m[1]+(end*e).toFixed(dec)+o.m[3]); } });
+      if(p<1){ countRAF=requestAnimationFrame(tick); } else { list.forEach(o=>setNum(o.el,o.g,o.f)); countRAF=null; }
+    }
+    countRAF=requestAnimationFrame(tick);
+  }
+  function playPanel(){ const a=panels[index]; panels.forEach(p=>{ if(p!==a){ p.classList.remove('is-live'); snapCounts(p); } }); a.classList.remove('is-live'); void a.offsetWidth; requestAnimationFrame(function(){ a.classList.add('is-live'); playCounts(a,820); }); }
+  document.addEventListener('visibilitychange',function(){ if(document.hidden) snapCounts(panels[index]); });
+
   /* ---------- hover/focus callout (anchored under the data point) ---------- */
   const callout=document.getElementById('callout');
   function showCallout(el,d){
-    callout.innerHTML='<strong>'+esc(d.n)+' of '+N+'</strong> ('+esc(d.pct)+'%)<span class="callout__lab">'+esc(d.label)+'</span>';
+    callout.innerHTML='<strong>'+esc(d.n)+' of '+N+'</strong> ('+esc(d.pct)+' %)<span class="callout__lab">'+esc(d.label)+'</span>';
     callout.style.left='0px'; callout.style.top='0px'; callout.classList.remove('is-above');
     const r=el.getBoundingClientRect(), cw=callout.offsetWidth, ch=callout.offsetHeight;
     let top=r.bottom+11;
@@ -532,6 +571,7 @@ body.is-fullscreen{ padding-top:56px; }
     prev.disabled = index===0; next.disabled = index===CHARS.length-1;
     if(focusTab) tabs[index].focus();
     markVisited(index);
+    playPanel();
   }
   function markVisited(i){
     if(!visited.has(i)){

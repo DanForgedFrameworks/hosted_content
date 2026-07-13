@@ -54,6 +54,7 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 .fnote__btn:focus-visible{ outline:2px solid var(--navy); outline-offset:2px; border-radius:3px; }
 .fnote__pop{ position:absolute; left:0; bottom:calc(100% + 7px); width:max-content; max-width:min(280px,68vw); padding:9px 12px; border:2px solid var(--teal); border-radius:10px; background:#fff; box-shadow:0 12px 26px rgba(34,47,85,.22); color:#151515; font-size:clamp(.72rem,1.05vw,.84rem); font-weight:400; line-height:1.4; text-align:left; white-space:normal; opacity:0; visibility:hidden; transform:translateY(-4px); transition:opacity .15s ease, visibility .15s ease, transform .15s ease; z-index:9; }
 .fnote:hover .fnote__pop,.fnote:focus-within .fnote__pop,.fnote.open .fnote__pop{ opacity:1; visibility:visible; transform:translateY(0); }
+[data-view="hub"] .fnote--down .fnote__pop{ top:calc(100% + 7px); bottom:auto; transform:translateY(4px); }
 
 /* ---------- stage shell ---------- */
 .stage{ flex:1 1 auto; min-height:0; position:relative; }
@@ -285,7 +286,7 @@ body.is-fullscreen{ padding-top:56px; }
     <section class="view is-active" id="view-hub" aria-label="Subgroup hub">
       <div class="hero">
         <div class="hero__stat">
-          <span class="hero__big">51.8%</span>
+          <span class="hero__big">51.8 %</span>
           <span class="hero__cap">Overall ORR (95% CI 46.1, 57.4) &middot; N=313</span>
         </div>
         <p class="hero__msg">ORR was consistent across all patient subgroups assessed by sex, age, smoking history, histology, ECOG&nbsp;PS, brain metastases at baseline and line of therapy.</p>
@@ -418,10 +419,10 @@ body.is-fullscreen{ padding-top:56px; }
     { id:'histology', name:'Histology', icon:ICON.histology, foot:{mk:'†', txt:'33 patients had histology other than squamous and adenocarcinoma.'}, levels:[
       {lab:'Adenocarcinoma', short:'A', n:252, orr:54.0, lo:47.6, hi:60.2},
       {lab:'Squamous', short:'S', n:28, orr:35.7, lo:18.6, hi:55.9} ] },
-    { id:'ecog', name:'ECOG PS', icon:ICON.ecog, foot:{mk:'‡', txt:'One patient had ECOG PS 2.'}, levels:[
+    { id:'ecog', name:'ECOG PS', icon:ICON.ecog, foot:{mk:'‡', txt:'One patient had ECOG PS 2.', down:true}, levels:[
       {lab:'0', short:'0', n:81, orr:59.3, lo:47.8, hi:70.1},
       {lab:'1', short:'1', n:231, orr:49.4, lo:42.7, hi:56.0} ] },
-    { id:'brain', name:'Brain metastases at baseline', icon:ICON.brain, foot:{mk:'§', txt:'Identified at baseline (investigator or independent review).'}, levels:[
+    { id:'brain', name:'Brain metastases at baseline', icon:ICON.brain, foot:{mk:'§', txt:'Identified at baseline (investigator or independent review).', down:true}, levels:[
       {lab:'Yes', short:'Y', n:57, orr:56.1, lo:42.4, hi:69.3},
       {lab:'No', short:'N', n:256, orr:50.8, lo:44.5, hi:57.1} ] },
     { id:'line', name:'Line of therapy', icon:ICON.line, note:'2L is a subset of 2L+ (second line or later); the two rows are not mutually exclusive.', levels:[
@@ -436,7 +437,7 @@ body.is-fullscreen{ padding-top:56px; }
     if(!s||!s.foot) return '';
     const mk=esc(s.foot.mk), txt=esc(s.foot.txt);
     // span (not <button>) so it stays valid when nested inside the hub card <button>
-    return '<span class="fnote">'+
+    return '<span class="fnote'+(s.foot.down?' fnote--down':'')+'">'+
       '<span class="fnote__btn" role="button" tabindex="0" aria-expanded="false" aria-label="Footnote: '+txt+'">'+mk+'</span>'+
       '<span class="fnote__pop" role="note">'+txt+'</span>'+
     '</span>';

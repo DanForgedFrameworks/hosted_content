@@ -254,6 +254,11 @@ body.is-fullscreen{ padding-top:56px; }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
 }
+/* ---------- entrance: gauges draw on + marker bounce ---------- */
+.hs.is-live .hs__val{ animation:hs24draw .9s cubic-bezier(.25,.9,.3,1) both; }
+@keyframes hs24draw{ from{ stroke-dashoffset:var(--len); } to{ stroke-dashoffset:0; } }
+.hs.is-live .hs__mk{ transform-box:fill-box; transform-origin:center; animation:hs24pop .55s cubic-bezier(.34,1.7,.5,1) .58s both; }
+@keyframes hs24pop{ 0%{ transform:scale(0); } 100%{ transform:scale(1); } }
 </style>
 </head>
 <body>
@@ -377,7 +382,7 @@ body.is-fullscreen{ padding-top:56px; }
     { q:'How many patients were still receiving treatment at data cut-off?', metric:'Still receiving treatment at data cut-off', icon:PILL,
       rows:[ {lab:'Treatment-naïve', n:12, c:'var(--c2)'}, {lab:'Previously treated', n:6, c:'var(--c1)'} ] },
     { q:'How many patients had a treatment duration of ≥12 months?', metric:'Treatment duration ≥12 months', icon:CAL,
-      rows:[ {lab:'Treatment-naïve', n:58, c:'var(--c2)'}, {lab:'Previously treated', n:58, c:'var(--c1)'} ] },
+      rows:[ {lab:'Treatment-naïve', n:58, c:'var(--c2)'}, {lab:'Previously treated', n:41, c:'var(--c1)'} ] },
     { q:'How many patients had a treatment duration of ≥60 months?', metric:'Treatment duration ≥60 months', icon:CLOCK,
       rows:[ {lab:'Treatment-naïve', n:1, c:'var(--c2)'}, {lab:'Previously treated', n:3, c:'var(--c1)'} ] }
   ];
@@ -405,15 +410,36 @@ body.is-fullscreen{ padding-top:56px; }
           '<g transform="rotate(135 50 50)">'+
             '<circle cx="50" cy="50" r="'+R+'" fill="none" stroke="var(--line)" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+ARC.toFixed(2)+' '+C.toFixed(2)+'"/>'+
             '<circle cx="50" cy="50" r="'+R+'" fill="none" stroke="'+m.c+'" stroke-opacity="0.30" stroke-width="9" stroke-linecap="butt" stroke-dasharray="'+lenMax+' '+C.toFixed(2)+'"/>'+
-            '<circle cx="50" cy="50" r="'+R+'" fill="none" stroke="'+m.c+'" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+lenMed+' '+C.toFixed(2)+'"/>'+
+            '<circle class="hs__val" style="--len:'+lenMed+'" cx="50" cy="50" r="'+R+'" fill="none" stroke="'+m.c+'" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+lenMed+' '+C.toFixed(2)+'"/>'+
           '</g>'+
-          '<circle cx="'+mk[0].toFixed(2)+'" cy="'+mk[1].toFixed(2)+'" r="5.4" fill="#fff" stroke="var(--navy)" stroke-width="3.1"/>'+
+          '<circle class="hs__mk" cx="'+mk[0].toFixed(2)+'" cy="'+mk[1].toFixed(2)+'" r="5.4" fill="#fff" stroke="var(--navy)" stroke-width="3.1"/>'+
         '</svg>'+
         '<div class="hs__center"><div class="hs__big">'+med1+'</div><div class="hs__unit">months</div><div class="hs__sub">median</div></div>'+
       '</div>'+
-      '<div class="hs__ci"><b>'+CI_LABEL+'</b> '+min2+'&ndash;'+max2+' <span class="hs__ci-un">months</span></div>';
+      '<div class="hs__ci"><b>'+CI_LABEL+'</b> '+min2+', '+max2+' <span class="hs__ci-un">months</span></div>';
     heroEl.appendChild(el);
   });
+
+  /* ---------- entrance: draw-on gauges + count-up medians (embed-safe, rAF-gated) ---------- */
+  (function(){
+    var gauges=[].slice.call(document.querySelectorAll('.hs'));
+    var bigs=[].slice.call(document.querySelectorAll('.hs__big'));
+    bigs.forEach(function(b){ b.dataset.final=b.textContent; });
+    if(reduceMotion) return;
+    document.addEventListener('visibilitychange',function(){ if(document.hidden) bigs.forEach(function(b){ b.textContent=b.dataset.final; }); });
+    requestAnimationFrame(function(){
+      gauges.forEach(function(g){ g.classList.add('is-live'); });
+      var items=bigs.map(function(b){ return { el:b, end:parseFloat(b.dataset.final), dec:(String(b.dataset.final).split('.')[1]||'').length }; });
+      var t0=null, dur=900;
+      function tick(now){
+        if(t0===null) t0=now;
+        var p=Math.min(1,(now-t0)/dur), e=1-Math.pow(1-p,3);
+        items.forEach(function(o){ o.el.textContent=(o.end*e).toFixed(o.dec); });
+        if(p<1) requestAnimationFrame(tick); else bigs.forEach(function(b){ b.textContent=b.dataset.final; });
+      }
+      requestAnimationFrame(tick);
+    });
+  })();
 
   /* ---------- compact range strip ---------- */
   const medianRows = document.getElementById('medianRows');
@@ -525,7 +551,7 @@ body.is-fullscreen{ padding-top:56px; }
     el.addEventListener('mouseleave',leave); el.addEventListener('blur',leave);
   }
   document.querySelectorAll('.hs').forEach(el=>{
-    wire(el,'<strong>'+esc(el.dataset.med)+' months</strong> median<span class="callout__lab">'+esc(el.dataset.lab)+' &middot; '+CI_LABEL+' '+esc(el.dataset.min)+'&ndash;'+esc(el.dataset.max)+'</span>');
+    wire(el,'<strong>'+esc(el.dataset.med)+' months</strong> median<span class="callout__lab">'+esc(el.dataset.lab)+' &middot; '+CI_LABEL+' '+esc(el.dataset.min)+', '+esc(el.dataset.max)+'</span>');
   });
   document.querySelectorAll('.arow__track[data-n]').forEach(el=>{
     el.tabIndex=0;
