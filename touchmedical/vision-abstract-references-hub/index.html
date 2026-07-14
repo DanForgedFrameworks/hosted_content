@@ -37,7 +37,7 @@ body{
   display:flex; flex-direction:column; overflow:hidden;
 }
 .frame__chrome{ flex:0 0 auto; }
-.frame__body{ flex:1 1 auto; min-height:0; overflow:hidden; display:flex; align-items:flex-start; justify-content:center; }
+.frame__body{ flex:1 1 auto; min-height:0; overflow-y:auto; overflow-x:hidden; display:flex; align-items:flex-start; justify-content:center; scrollbar-width:thin; padding-bottom:4px; }
 .frame__body .tmh-scroll{ width:100%; }
 
 /* ---------- header + toggle ---------- */
@@ -69,6 +69,11 @@ body{
 .tmh-crumb:hover,.tmh-crumb:focus-visible{ background:var(--tm-tint); border-color:var(--tm-accent); color:var(--tm-accent); outline:none; }
 .tmh-crumb--static{ cursor:default; background:var(--tm-tint); color:var(--tm-muted); }
 .tmh-sep{ color:var(--tm-faint); font-size:14px; }
+.tmh-print{ margin-left:auto; display:inline-flex; align-items:center; gap:7px; font-family:var(--tm-font); font-size:12.5px; font-weight:600; color:var(--tm-accent); background:var(--tm-panel); border:1px solid var(--tm-line); border-radius:999px; padding:8px 15px; cursor:pointer; box-shadow:0 1px 2px rgba(16,26,38,.05); transition:background .15s ease, border-color .15s ease, color .15s ease; white-space:nowrap; }
+.tmh-print:hover, .tmh-print:focus-visible{ background:var(--tm-tint); border-color:var(--tm-accent); outline:none; }
+.tmh-print svg{ width:15px; height:15px; }
+.tmh-toast{ position:fixed; left:50%; bottom:22px; transform:translateX(-50%) translateY(10px); z-index:2147483602; background:var(--tm-ink); color:#fff; padding:10px 17px; border-radius:999px; font-size:13px; font-weight:600; box-shadow:0 8px 22px rgba(16,26,38,.32); opacity:0; visibility:hidden; transition:opacity .2s ease, transform .2s ease, visibility .2s ease; max-width:calc(100vw - 32px); text-align:center; }
+.tmh-toast.is-on{ opacity:1; visibility:visible; transform:translateX(-50%) translateY(0); }
 
 /* ---------- category folder cards ---------- */
 .tmh-cats{ display:flex; flex-wrap:wrap; gap:18px; justify-content:center; width:100%; }
@@ -170,6 +175,7 @@ body{
         <input type="text" id="tmhSearch" placeholder="Search author, journal, drug or keyword…" aria-label="Search references">
       </div>
       <nav class="tmh-crumbs" id="tmhCrumbs" aria-label="Breadcrumb"></nav>
+      <button class="tmh-print" id="tmhPrint" type="button" title="Print the reference list or save it as a PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Print / Save PDF</button>
     </div>
   </div>
   <div class="frame__body">
@@ -325,6 +331,27 @@ const REFERENCES = [
   });
   search.addEventListener('input', render);
 
+  /* ---------- print / export references (sandbox-safe: new-tab print, clipboard fallback) ---------- */
+  let toastTimer=null;
+  function toast(msg){ const t=document.getElementById('tmhToast'); if(!t) return; t.textContent=msg; t.classList.add('is-on'); if(toastTimer) clearTimeout(toastTimer); toastTimer=setTimeout(function(){ t.classList.remove('is-on'); }, 3400); }
+  function copyAllRefs(){ const text=REFERENCES.map(function(r){ return r.n+'. '+r.cite; }).join('\n'); copyText(text).then(function(){ toast('References copied to your clipboard.'); }); }
+  function printRefs(){
+    const rows=REFERENCES.map(function(r){ return '<li><span class="rn">'+r.n+'.</span><span class="rc">'+citeHTML(r)+'</span></li>'; }).join('');
+    const html='<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>VISION TM9035 &mdash; References</title><style>'
+      +'body{font-family:Georgia,"Times New Roman",serif;color:#111;max-width:760px;margin:26px auto;padding:0 22px;line-height:1.5;}'
+      +'h1{font-size:19px;color:#222f55;border-bottom:2px solid #0098be;padding-bottom:6px;}'
+      +'ol{list-style:none;padding:0;margin:14px 0;}li{display:flex;gap:9px;margin:0 0 7px;font-size:12.5px;break-inside:avoid;}'
+      +'.rn{font-weight:700;min-width:26px;text-align:right;color:#222f55;}em{font-style:italic;}'
+      +'@media print{body{margin:0;}}'
+      +'</style></head><body><h1>References &mdash; VISION (TM9035)</h1><ol>'+rows+'</ol>'
+      +'<scr'+'ipt>window.onload=function(){setTimeout(function(){try{window.print();}catch(e){}},300);};</scr'+'ipt>'
+      +'</body></html>';
+    let w=null; try{ w=window.open('','_blank'); }catch(e){ w=null; }
+    if(w && w.document){ try{ w.document.open(); w.document.write(html); w.document.close(); }catch(e){ copyAllRefs(); } }
+    else { copyAllRefs(); }
+  }
+  const _printBtn=document.getElementById('tmhPrint'); if(_printBtn) _printBtn.addEventListener('click', printRefs);
+
   function setView(mode){
     viewMode = mode; inCat = null; search.value='';
     tabGrouped.setAttribute('aria-pressed', mode==='grouped');
@@ -374,5 +401,6 @@ const REFERENCES = [
   render();
 })();
 </script>
+<div class="tmh-toast" id="tmhToast" role="status" aria-live="polite"></div>
 </body>
 </html>
