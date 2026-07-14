@@ -336,13 +336,13 @@ const REFERENCES = [
   function copyAllRefs(){ const text=REFERENCES.map(function(r){ return r.n+'. '+r.cite; }).join('\n'); copyText(text).then(function(){ toast('References copied to your clipboard.'); }); }
   function printRefs(){
     const rows=REFERENCES.map(function(r){ return '<li><span class="rn">'+r.n+'.</span><span class="rc">'+citeHTML(r)+'</span></li>'; }).join('');
-    const html='<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>VISION TM9035 &mdash; References</title><style>'
+    const html='<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>References &ndash; Detailed</title><style>'
       +'body{font-family:Georgia,"Times New Roman",serif;color:#111;max-width:760px;margin:26px auto;padding:0 22px;line-height:1.5;}'
       +'h1{font-size:19px;color:#222f55;border-bottom:2px solid #0098be;padding-bottom:6px;}'
       +'ol{list-style:none;padding:0;margin:14px 0;}li{display:flex;gap:9px;margin:0 0 7px;font-size:12.5px;break-inside:avoid;}'
       +'.rn{font-weight:700;min-width:26px;text-align:right;color:#222f55;}em{font-style:italic;}'
       +'@media print{body{margin:0;}}'
-      +'</style></head><body><h1>References &mdash; VISION (TM9035)</h1><ol>'+rows+'</ol>'
+      +'</style></head><body><h1>References &ndash; Detailed</h1><ol>'+rows+'</ol>'
       +'<scr'+'ipt>window.onload=function(){setTimeout(function(){try{window.print();}catch(e){}},300);};</scr'+'ipt>'
       +'</body></html>';
     let w=null; try{ w=window.open('','_blank'); }catch(e){ w=null; }
