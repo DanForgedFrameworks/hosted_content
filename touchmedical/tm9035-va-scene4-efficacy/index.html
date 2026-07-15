@@ -100,7 +100,7 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 .reveal-btn:active{ transform:scale(.97); }
 .reveal-btn:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
 .reveal-btn svg{ width:18px; height:18px; }
-.split{ display:inline-flex; align-items:center; gap:8px; padding:7px 13px; border-radius:999px; border:2px solid var(--teal); background:#fff; color:var(--teal-strong); font:inherit; font-weight:700; font-size:.76rem; cursor:pointer; transition:background .15s ease, color .15s ease, transform .14s ease; }
+.split{ display:inline-flex; align-items:center; gap:8px; padding:7px 14px; border-radius:999px; border:2px solid var(--teal); background:#fff; color:var(--teal-strong); font:inherit; font-weight:700; font-size:.82rem; cursor:pointer; transition:background .15s ease, color .15s ease, transform .14s ease; }
 .split[disabled]{ opacity:.45; cursor:not-allowed; border-color:var(--line); color:var(--faint); }
 .split:not([disabled]):hover{ background:var(--pale); }
 .split:not([disabled]):active{ transform:scale(.96); }
@@ -203,10 +203,12 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 @keyframes fadeUp{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
 @keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
 
-.hd{ animation:fadeUp .5s ease both; }
-.navprompt{ animation:fadeUp .5s ease .06s both; }
-.eff__cols .panel:nth-child(1){ animation:fadeUp .5s ease .14s both; }
-.eff__cols .panel:nth-child(2){ animation:fadeUp .5s ease .22s both; }
+/* opacity-only entrance (no transform) — avoids sub-pixel text blur on the
+   composited layer during load, which reads as haze on Visme's scaled canvas */
+.hd{ animation:fadeIn .5s ease both; }
+.navprompt{ animation:fadeIn .5s ease .06s both; }
+.eff__cols .panel:nth-child(1){ animation:fadeIn .5s ease .14s both; }
+.eff__cols .panel:nth-child(2){ animation:fadeIn .5s ease .22s both; }
 
 /* ===== Continue nudge ===== */
 .slide.nudge-shown{ padding-bottom:64px; }
@@ -440,7 +442,8 @@ body.is-fullscreen{ padding-top:56px; }
         <button class="src-item__view" type="button" data-url="https://doi.org/10.1016/S1556-0864(25)00276-X" data-ref="Mazieres J, et al. J Thorac Oncol. 2025;20(3 Suppl 1):S59–S60 (81P)">View source <span aria-hidden="true">&#8599;</span></button>
       </li>
       <li class="src-item">
-        <span class="src-item__ref">Viteri S, et al. <em>Ann Oncol.</em> 2025;36(Suppl):S1060&ndash;S1061.</span>
+        <span class="src-item__ref">Viteri S, et al. <em>Ann Oncol.</em> 2025;36(Suppl):S1060&ndash;S1061 (1995P).</span><br>
+        <button class="src-item__view" type="button" data-url="https://doi.org/10.1016/j.annonc.2025.08.2619" data-ref="Viteri S, et al. Treatment sequencing of tepotinib in patients with METex14 skipping NSCLC: outcomes from ≥3 years follow-up of the VISION study. Ann Oncol. 2025;36(Suppl):S1060–S1061 (1995P)">View source <span aria-hidden="true">&#8599;</span></button>
       </li>
     </ol>
     <button class="src-close" id="srcClose" type="button">Close</button>
