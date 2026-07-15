@@ -73,10 +73,6 @@
     #viewer .vhead h2 { margin: 0; color: var(--teal); font-size: clamp(1rem,1.7vw,1.3rem); font-weight: 700; }
     #viewer .vbody { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: safe center; padding: clamp(4px,1vw,10px) clamp(14px,2.5vw,28px) 0; }
     .forest-scope { width: min(100%, 1240px); margin: 0 auto; }
-    .forest-controls { display: flex; justify-content: flex-end; margin: 0 0 6px; }
-    .expand-all { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; border: 2px solid var(--teal); border-radius: 999px; background: #fff; color: var(--teal); font: inherit; font-size: clamp(.74rem,1.05vw,.86rem); font-weight: 700; cursor: pointer; transition: background 160ms ease; }
-    .expand-all:hover { background: var(--pale); }
-    .expand-all:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
     .fround { border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px var(--line); }
     .forest { width: 100%; border-collapse: collapse; font-size: clamp(.72rem,1.12vw,.9rem); }
     .forest th, .forest td { padding: clamp(1px,0.35vw,3px) 8px; border-bottom: 1px solid var(--line); vertical-align: middle; line-height: 1.12; }
@@ -174,18 +170,6 @@
       #viewer .vbody { overflow: auto; }
     }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
-    @media print {
-      /* force background colours/gradients to render in the PDF (dots, whiskers, row fills, mean line) */
-      *, *::before, *::after { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-      html, body, .slide { height: auto !important; overflow: visible !important; }
-      .caption, #mcq1, #mcq2, .forest-controls, #viewer .vfoot, .nudge, .returnbar, .mlaunch { display: none !important; }
-      #viewer { display: flex !important; }
-      #viewer .vbody { display: block !important; overflow: visible !important; justify-content: flex-start !important; padding-top: 6px; }
-      .frow.child[hidden] { display: table-row !important; }
-      .fround { box-shadow: 0 0 0 1px #cdd5e0; }
-      .track { background-image: none; }
-      *, *::before, *::after { animation: none !important; transition: none !important; }
-    }
   </style>
 </head>
 <body>
@@ -235,7 +219,6 @@
         <div class="vhead"><h2>ORR by IRC in Asian patients with <em>MET</em>ex14 skipping</h2></div>
         <div class="vbody">
           <div class="forest-scope">
-            <div class="forest-controls"><button class="expand-all" type="button" id="print-table">Print full table (PDF)</button></div>
             <div class="fround">
             <table class="forest">
               <thead>
@@ -393,9 +376,6 @@
         label.addEventListener('click', toggle);
         label.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
       });
-      const printBtn = document.getElementById('print-table');
-      if (printBtn) printBtn.addEventListener('click', () => window.print());
-
       document.addEventListener('keydown', e => { if (e.key === 'Escape' && steps.viewer.classList.contains('active')) showStep('mcq2'); });
     }());
   </script>
