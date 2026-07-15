@@ -261,7 +261,7 @@ body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-wei
         <h2 class="done__h">Thank you &mdash; that&rsquo;s your starting point.</h2>
         <!-- Deliberately promises only what is true even when storage is blocked:
              it never claims the rating was "saved". -->
-        <p class="done__p">At the <b>end of the module</b> you&rsquo;ll rate these same six areas again, and see how far you&rsquo;ve moved. Anything you flagged as a priority is worth watching for as you go.</p>
+        <p class="done__p">At the <b>end of the module</b> you&rsquo;ll rate these same six areas again, and see how far you&rsquo;ve moved. Anything you marked as new to you is worth watching for as you go.</p>
         <div class="done__grid" id="doneGrid"></div>
         <p class="done__note">Your ratings stay on your own device and are never sent anywhere. Nothing here is clinical guidance.</p>
       </div>
@@ -351,10 +351,10 @@ body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-wei
   ];
   var CHIPS = [
     { v:'good',  label:'Confident' },
-    { v:'amber', label:'Worth a refresher' },
-    { v:'flag',  label:'Priority to revisit' }
+    { v:'amber', label:'Aware, want to know more' },
+    { v:'flag',  label:'New to me' }
   ];
-  var CHIP_TEXT = { good:'Confident', amber:'Worth a refresher', flag:'Priority to revisit', none:'Not yet rated' };
+  var CHIP_TEXT = { good:'Confident', amber:'Aware, want to know more', flag:'New to me', none:'Not yet rated' };
 
   var baseRatings = {};
 
