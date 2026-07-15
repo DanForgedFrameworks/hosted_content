@@ -136,6 +136,9 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 .srclist li{ position:relative; padding-left:20px; font-size:clamp(.8rem,1.4vw,.9rem); color:var(--navy); line-height:1.5; }
 .srclist li::before{ content:""; position:absolute; left:5px; top:9px; width:6px; height:6px; border-radius:50%; background:var(--teal); }
 .srclist em{ font-style:italic; }
+.srclist a.srclink{ display:inline-flex; align-items:center; gap:4px; margin-left:4px; color:var(--teal-strong); font-weight:700; text-decoration:underline; text-underline-offset:2px; white-space:nowrap; }
+.srclist a.srclink:hover{ color:var(--teal); }
+.srclist a.srclink:focus-visible{ outline:3px solid var(--navy); outline-offset:2px; border-radius:4px; }
 .srcmodal__note{ margin:14px 0 0; font-size:.74rem; color:var(--faint); line-height:1.45; }
 
 .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
@@ -384,7 +387,7 @@ body.is-fullscreen{ padding-top:56px; }
     </div>
     <ul class="srclist">
       <li>Griesinger F, et al. <em>Ann Oncol.</em> 2025;36(Suppl):S1061&ndash;S1062.</li>
-      <li>Viteri S, et al. <em>Ann Oncol.</em> 2025;36(Suppl):S1060&ndash;S1061.</li>
+      <li>Viteri S, et al. <em>Ann Oncol.</em> 2025;36(Suppl):S1060&ndash;S1061 (1995P). <a class="srclink" href="https://doi.org/10.1016/j.annonc.2025.08.2619" target="_blank" rel="noopener noreferrer">View source <span aria-hidden="true">&#8599;</span></a></li>
       <li>Yang J, et al. <em>Ann Oncol.</em> 2025;36(Suppl):S2121&ndash;S2122.</li>
     </ul>
     <p class="srcmodal__note">VISION study, &ge;3-year follow-up. Subgroup, line-of-therapy and Asian-population analyses.</p>
