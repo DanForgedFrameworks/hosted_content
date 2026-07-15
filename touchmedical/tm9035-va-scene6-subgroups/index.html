@@ -136,9 +136,30 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 .srclist li{ position:relative; padding-left:20px; font-size:clamp(.8rem,1.4vw,.9rem); color:var(--navy); line-height:1.5; }
 .srclist li::before{ content:""; position:absolute; left:5px; top:9px; width:6px; height:6px; border-radius:50%; background:var(--teal); }
 .srclist em{ font-style:italic; }
-.srclist a.srclink{ display:inline-flex; align-items:center; gap:4px; margin-left:4px; color:var(--teal-strong); font-weight:700; text-decoration:underline; text-underline-offset:2px; white-space:nowrap; }
-.srclist a.srclink:hover{ color:var(--teal); }
-.srclist a.srclink:focus-visible{ outline:3px solid var(--navy); outline-offset:2px; border-radius:4px; }
+.srclist .src-view{ display:inline-flex; align-items:center; gap:6px; margin-top:6px; min-height:38px; padding:7px 14px; border:2px solid var(--teal); border-radius:9px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.8rem; cursor:pointer; }
+.srclist .src-view:hover{ filter:brightness(.96); }
+.srclist .src-view:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+
+/* ---------- D16 external-link interstitial (Touch Medical skin) — matches Scene 4 ---------- */
+.inter{ position:fixed; inset:0; z-index:65; display:none; align-items:center; justify-content:center; padding:clamp(12px,4vw,40px); background:var(--backdrop); }
+.inter.is-open{ display:flex; }
+.inter__panel{ width:min(460px,100%); max-height:calc(100% - 24px); overflow:auto; background:#fff; border-radius:var(--radius); box-shadow:0 24px 60px rgba(16,26,38,.4); padding:22px; animation:rise .2s ease both; }
+.inter__title{ font-size:1.05rem; font-weight:700; margin:0 0 8px; color:var(--navy); }
+.inter__p{ font-size:.82rem; line-height:1.5; color:var(--muted); margin:0 0 10px; }
+.inter__p strong{ color:var(--navy); font-weight:600; }
+.inter__p em{ font-style:italic; }
+.inter__url{ font-family:var(--font); font-size:.72rem; line-height:1.45; color:var(--muted); background:var(--mist); border:1px solid var(--line); border-radius:8px; padding:9px 11px; word-break:break-all; }
+.inter__status{ margin-top:12px; display:flex; align-items:center; gap:9px; min-height:22px; font-size:.76rem; font-style:italic; color:var(--muted); }
+.prep{ display:inline-flex; gap:5px; }
+.prep i{ width:8px; height:8px; border-radius:50%; background:var(--teal); display:inline-block; animation:prep 1s infinite ease-in-out; }
+.prep i:nth-child(2){ animation-delay:.15s; }
+.prep i:nth-child(3){ animation-delay:.3s; }
+.inter__actions{ display:flex; flex-wrap:wrap; gap:9px; margin-top:16px; }
+.inter__btn{ min-height:44px; padding:10px 18px; border:2px solid var(--teal); border-radius:10px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.82rem; cursor:pointer; }
+.inter__btn.secondary{ background:#fff; color:var(--teal); }
+.inter__btn:disabled{ background:#c3c8d2; border-color:#c3c8d2; color:#fff; cursor:not-allowed; }
+.inter__btn:hover:not(:disabled){ filter:brightness(.96); }
+@keyframes prep{ 0%,100%{ transform:scale(.6); opacity:.4; } 50%{ transform:scale(1); opacity:1; } }
 .srcmodal__note{ margin:14px 0 0; font-size:.74rem; color:var(--faint); line-height:1.45; }
 
 .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
@@ -387,10 +408,28 @@ body.is-fullscreen{ padding-top:56px; }
     </div>
     <ul class="srclist">
       <li>Griesinger F, et al. <em>Ann Oncol.</em> 2025;36(Suppl):S1061&ndash;S1062.</li>
-      <li>Viteri S, et al. <em>Ann Oncol.</em> 2025;36(Suppl):S1060&ndash;S1061 (1995P). <a class="srclink" href="https://doi.org/10.1016/j.annonc.2025.08.2619" target="_blank" rel="noopener noreferrer">View source <span aria-hidden="true">&#8599;</span></a></li>
+      <li>Viteri S, et al. <em>Ann Oncol.</em> 2025;36(Suppl):S1060&ndash;S1061 (1995P).<br>
+        <button class="src-view" type="button" data-url="https://doi.org/10.1016/j.annonc.2025.08.2619" data-ref="Viteri S, et al. Treatment sequencing of tepotinib in patients with METex14 skipping NSCLC: outcomes from ≥3 years follow-up of the VISION study. Ann Oncol. 2025;36(Suppl):S1060–S1061 (1995P)">View source <span aria-hidden="true">&#8599;</span></button></li>
       <li>Yang J, et al. <em>Ann Oncol.</em> 2025;36(Suppl):S2121&ndash;S2122.</li>
     </ul>
     <p class="srcmodal__note">VISION study, &ge;3-year follow-up. Subgroup, line-of-therapy and Asian-population analyses.</p>
+  </div>
+</div>
+
+<!-- D16 external-link interstitial -->
+<div class="inter" id="inter" role="dialog" aria-modal="true" aria-labelledby="interTitle" aria-describedby="interReason" hidden>
+  <div class="inter__panel" role="document">
+    <h2 class="inter__title" id="interTitle">You are leaving this activity</h2>
+    <p class="inter__p" id="interReason">This link opens an external source in a new tab.</p>
+    <p class="inter__p"><strong>Source:</strong> <span id="interDest"></span><br><strong>Organisation:</strong> <span id="interOrg"></span></p>
+    <p class="inter__p">The source opens in a new tab. Check the address is expected before continuing.</p>
+    <div class="inter__url" id="interUrl"></div>
+    <div class="inter__status" aria-live="polite"><span class="prep" aria-hidden="true"><i></i><i></i><i></i></span><span id="interStatus">Preparing the link&hellip;</span></div>
+    <div class="inter__actions">
+      <button class="inter__btn" id="interOpen" type="button" disabled>Open source</button>
+      <button class="inter__btn secondary" id="interCopy" type="button">Copy link</button>
+      <button class="inter__btn secondary" id="interStay" type="button">Stay here</button>
+    </div>
   </div>
 </div>
 
@@ -460,10 +499,45 @@ body.is-fullscreen{ padding-top:56px; }
   srcPill.addEventListener('click',openSrc);
   srcClose.addEventListener('click',closeSrc);
   srcModal.addEventListener('click',function(e){ if(e.target===srcModal) closeSrc(); });
+  /* ---- D16 external-link interstitial (source "View source" button -> DOI) ---- */
+  var inter=$('inter'), iDest=$('interDest'), iOrg=$('interOrg'), iUrl=$('interUrl'),
+      iStatus=$('interStatus'), iDots=inter.querySelector('.prep'),
+      iOpen=$('interOpen'), iCopy=$('interCopy'), iStay=$('interStay');
+  var pendingURL=null, interTrigger=null, launchTimer=null;
+  function orgFromHost(h){ return ({'doi.org':'Publisher (resolved via doi.org)'})[h]||h; }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); }
+  function italMET(s){ return String(s).replace(/\bMET\b/g,'<em>MET</em>').replace(/\bMET(?=ex14)/g,'<em>MET</em>'); }
+  function fmtRef(s){ return italMET(s).replace(/(J Thorac Oncol\.|Ann Oncol\.|JAMA Oncol\.)/g,'<em>$1</em>'); }
+  function openInter(url,ref,trigger){
+    pendingURL=url; interTrigger=trigger;
+    var host=url; try{ host=new URL(url).hostname; }catch(e){}
+    iDest.innerHTML=fmtRef(esc(ref)); iOrg.textContent=orgFromHost(host); iUrl.textContent=url;
+    if(iDots) iDots.style.display=''; iStatus.textContent='Preparing the link…'; iOpen.disabled=true;
+    inter.hidden=false; inter.classList.add('is-open'); iStay.focus();
+    if(launchTimer) clearTimeout(launchTimer);
+    launchTimer=setTimeout(function(){ if(iDots) iDots.style.display='none'; iStatus.textContent='Ready to open.'; iOpen.disabled=false; iOpen.focus(); }, reduceMotion?250:1300);
+  }
+  function closeInter(){ if(launchTimer) clearTimeout(launchTimer); inter.classList.remove('is-open'); inter.hidden=true; if(interTrigger&&interTrigger.focus){ try{ interTrigger.focus(); }catch(e){} } }
+  Array.prototype.forEach.call(srcModal.querySelectorAll('.src-view'),function(b){ b.addEventListener('click',function(){ openInter(b.dataset.url,b.dataset.ref,b); }); });
+  iOpen.addEventListener('click',function(){ if(!pendingURL) return; window.open(pendingURL,'_blank','noopener,noreferrer'); iStatus.textContent='Link opened in a new tab. Nothing opened? Copy the link and open it manually.'; });
+  iCopy.addEventListener('click',function(){ if(!pendingURL) return; var ta=document.createElement('textarea'); ta.value=pendingURL; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select(); var ok=false; try{ ok=document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); iStatus.textContent=ok?'Link copied. Paste it into a fresh browser tab.':'Copying is unavailable. Select and copy the visible URL manually.'; });
+  iStay.addEventListener('click',closeInter);
+  inter.addEventListener('click',function(e){ if(e.target===inter) closeInter(); });
+  function trap(container,e){
+    var f=container.querySelectorAll('button:not([disabled]),a[href],[tabindex]:not([tabindex="-1"])');
+    if(!f.length) return; var first=f[0], last=f[f.length-1];
+    if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); }
+  }
   document.addEventListener('keydown',function(e){
-    if(!srcModal.classList.contains('is-open')) return;
-    if(e.key==='Escape'){ e.preventDefault(); closeSrc(); return; }
-    if(e.key==='Tab'){ var f=srcModal.querySelectorAll('button:not([disabled]),a[href]'); if(!f.length) return; var first=f[0],last=f[f.length-1]; if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); } else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); } }
+    if(inter.classList.contains('is-open')){
+      if(e.key==='Escape'){ e.preventDefault(); closeInter(); return; }
+      if(e.key==='Tab'){ trap(inter,e); } return;
+    }
+    if(srcModal.classList.contains('is-open')){
+      if(e.key==='Escape'){ e.preventDefault(); closeSrc(); return; }
+      if(e.key==='Tab'){ trap(srcModal,e); }
+    }
   },true);
 }());
 </script>
