@@ -72,19 +72,33 @@ drop the `<script>` and leave a fixed height with `scrolling="yes"`.
 
 ## How the case works (Anas's 2-stage CPD design)
 
-| Station | Screen | What the learner does | Scored |
-|---|---|---|---|
-| 1 · Presentation & bloods | Screen 1 | Reads the vignette; flags the abnormal FBC/biochemistry results | 15 |
-| 2 · The blood film | Screen 1 | Examines 8 fields with the magnifier, drops markers, identifies features | 25 |
-| 3 · Differential & rule-out | Screen 2 | Commits a differential + writes what they'd rule out and how | 20 |
-| 4 · ADAMTS13 & diagnosis | Screen 2 | **Releases ADAMTS13**, then commits one final diagnosis | 40 |
-| 5 · Result & CPD record | Reveal | Score breakdown, model answers, report, record + certificate | — |
+| Station | Screen | What the learner does |
+|---|---|---|
+| 1 · Presentation & bloods | Screen 1 | Reads the vignette; flags the abnormal FBC/biochemistry results |
+| 2 · The blood film | Screen 1 | Examines 8 fields with the magnifier, drops markers, identifies features |
+| 3 · Differential & rule-out | Screen 2 | Commits a differential + writes what they'd rule out and how |
+| 4 · ADAMTS13 & diagnosis | Screen 2 | **Releases ADAMTS13**, then commits one final diagnosis |
+| 5 · Result & CPD record | Reveal | Feedback, model answers, report, record + certificate |
 
 **ADAMTS13 is withheld** until the learner has committed a differential — that is the whole
 point of the design. Releasing it **locks Stations 1–3**, and submitting the diagnosis locks
 the attempt permanently. So "reset → peek → resubmit" is structurally impossible (spec §11.6).
 
-Over-calling is penalised on all three tick sections, so plausible-but-wrong features cost marks.
+### Feedback model — formative, not graded
+
+`CASE.scoring.mode` is **`"formative"`**. The learner is told what they identified, missed and
+over-called ("2 of 3 identified · 1 over-call") and whether their diagnosis matched the
+published answer — but there is **no percentage, no pass mark and no pass/fail verdict**, and
+the certificate records **completion, not attainment**.
+
+That's deliberate: self-certified CPD evidences participation and reflection. A percentage on a
+certificate is an attainment claim Only Cells isn't currently accredited to make, and a
+"Not yet achieved" stamp on a learning activity discourages the engagement it's meant to build.
+
+The scoring machinery (weights, pass mark, percentage, Achieved/Not-achieved) is **still in the
+file and still works** — flipping `mode` to `"scored"` restores it in full. That's the one-word
+change if Anas decides he does want it graded. Over-calls count against the tallies either way,
+so plausible-but-wrong features still register as over-calls.
 
 ## Adding the next case
 
@@ -101,7 +115,8 @@ Carried from the intake; all authored against sensible defaults so the build was
 - [ ] **Case id + month/slot** — using `MM250818` per folder convention
 - [ ] **Reference ranges** — authored standard adult ranges, not supplied by the lab
 - [ ] **Detractor features** (the plausible over-calls) and **distractor diagnoses** — authored
-- [ ] **Scoring weights, pass mark (70%), attempt policy** — all authored/provisional
+- [ ] **Graded or not** — currently formative (no score, no pass mark); confirm, and if graded,
+      the weights, pass mark and attempt policy all need setting
 - [ ] **Rule-out model answer** — authored; the DIC line needs the coagulation screen, which
       wasn't supplied with the case
 - [ ] **Polychromasia** — included as an unscored neutral option pending confirmation

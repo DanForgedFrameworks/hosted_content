@@ -277,12 +277,13 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
 .oc-landing__attr{ font-size:12px; color:var(--oc-text-muted); margin-top:18px; }
 .oc-landing__attr a{ color:var(--oc-teal-bright); text-decoration:none; } .oc-landing__attr a:hover{ text-decoration:underline; }
 .oc-launch{ position:absolute; inset:0; z-index:68; pointer-events:none; overflow:hidden; background:linear-gradient(0deg,#2E9E8F 0%,#2E9E8F 70%,rgba(46,158,143,.55) 100%); transform:translateY(100%); }
-.oc-launch.run{ animation:oc-launch-up 840ms var(--oc-ease-std) forwards; }
-@keyframes oc-launch-up{ 0%{ transform:translateY(100%);} 42%{ transform:translateY(0);} 56%{ transform:translateY(0);} 100%{ transform:translateY(-100%);} }
+.oc-launch.run{ animation:oc-launch-up 960ms var(--oc-ease-std) forwards; }
+/* two-beat rise — a brief tick partway up before the sweep completes, then the usual hold + departure */
+@keyframes oc-launch-up{ 0%{ transform:translateY(100%);} 18%{ transform:translateY(45%);} 26%{ transform:translateY(45%);} 50%{ transform:translateY(0);} 62%{ transform:translateY(0);} 100%{ transform:translateY(-100%);} }
 .oc-launch__glyphs{ position:absolute; inset:0; }
 .oc-launch__glyphs span{ position:absolute; transform:translate(-50%,-50%); }
 .oc-launch__glyphs svg{ width:34px; height:34px; color:rgba(255,255,255,.9); opacity:0; }
-.oc-launch.run .oc-launch__glyphs svg{ animation:oc-glyph 840ms ease forwards; }
+.oc-launch.run .oc-launch__glyphs svg{ animation:oc-glyph 960ms ease forwards; }
 @keyframes oc-glyph{ 0%{ opacity:0; transform:translateY(22px) scale(.8);} 38%,60%{ opacity:.95; transform:translateY(0) scale(1);} 100%{ opacity:0; transform:translateY(-26px) scale(.9);} }
 
 .oc-modal{ position:absolute; inset:0; z-index:70; background:rgba(0,0,0,.5); display:none; place-items:center; padding:20px; backdrop-filter:blur(2px); }
@@ -296,17 +297,26 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
 .oc-donecard{ text-align:center; padding:10px 0 4px; }
 .oc-note{ font-size:12px; color:var(--oc-text-muted); border-left:2px solid var(--oc-warn); padding-left:10px; margin-top:12px; text-align:left; }
 
-.oc-help{ margin-top:16px; background:var(--oc-navy-deep); border:1px solid var(--oc-teal); border-radius:var(--oc-radius-sm); overflow:hidden; }
+/* "How this works" — a floating pill, bottom-right, over the page rather than docked in the
+   flow (so it never inflates the auto-resize iframe height). Shown expanded on arrival at
+   Station 1; auto-collapses to the reopen chip the moment the learner actually starts working
+   (see autoHideHelp()), so it explains the nav once and then gets out of the way. */
+.oc-help{ position:fixed; right:16px; bottom:16px; z-index:55; width:320px; max-width:calc(100vw - 32px);
+  background:var(--oc-navy-deep); border:1px solid var(--oc-teal); border-radius:var(--oc-radius); overflow:hidden;
+  box-shadow:0 12px 32px rgba(0,0,0,.5); }
 .oc-help[hidden]{ display:none; }
 .oc-help__head{ display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 14px; background:rgba(46,158,143,.18); }
 .oc-help__head span{ font-weight:700; color:var(--oc-teal-bright); font-size:13px; letter-spacing:.04em; }
 .oc-help__min{ border:1px solid rgba(255,255,255,.25); background:transparent; color:var(--oc-text); border-radius:999px; padding:4px 12px; cursor:pointer; font-size:12px; transition:transform var(--oc-dur-micro), background var(--oc-dur-state); }
 .oc-help__min:hover{ background:rgba(255,255,255,.08); } .oc-help__min:active{ transform:scale(.95); }
-.oc-help__body{ padding:14px; color:var(--oc-text-muted); font-size:14px; text-align:left; }
+.oc-help__body{ padding:14px; color:var(--oc-text-muted); font-size:14px; text-align:left; max-height:52vh; overflow-y:auto; }
 .oc-help__body ul{ margin:6px 0 0; padding-left:18px; } .oc-help__body li{ margin:4px 0; }
-.oc-helpchip{ position:fixed; bottom:16px; right:16px; z-index:50; width:46px; height:46px; border-radius:50%; border:2px solid var(--oc-teal-bright); background:var(--oc-navy-deep); color:var(--oc-teal-bright); font-size:20px; font-weight:700; cursor:pointer; box-shadow:0 8px 22px rgba(0,0,0,.5); transition:transform var(--oc-dur-micro); }
+.oc-helpchip{ position:fixed; bottom:16px; right:16px; z-index:50; display:inline-flex; align-items:center; gap:8px;
+  border-radius:999px; border:2px solid var(--oc-teal-bright); background:var(--oc-navy-deep); color:var(--oc-teal-bright);
+  font-size:13px; font-weight:700; cursor:pointer; padding:9px 16px 9px 10px; box-shadow:0 8px 22px rgba(0,0,0,.5); transition:transform var(--oc-dur-micro); }
+.oc-helpchip .q{ display:inline-grid; place-items:center; flex:0 0 auto; width:22px; height:22px; border-radius:50%; border:2px solid var(--oc-teal-bright); font-size:12px; }
 .oc-helpchip[hidden]{ display:none; }
-.oc-helpchip:hover{ transform:scale(1.08); } .oc-helpchip:active{ transform:scale(.94); }
+.oc-helpchip:hover{ transform:scale(1.05); } .oc-helpchip:active{ transform:scale(.94); }
 
 @media (prefers-reduced-motion: reduce){
   .oc-case *{ animation:none !important; transition:none !important; }
@@ -378,17 +388,17 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
       <span class="s" id="ocCredit">Case MM250818</span>
     </div>
     <div class="oc-topright">
-      <span class="oc-cpdbadge"><span class="dot"></span>Assessed CPD activity</span>
+      <span class="oc-cpdbadge"><span class="dot"></span>Recorded CPD activity</span>
       <button class="oc-bgbtn" id="ocBgToggle" aria-pressed="true">✦ Background: On</button>
     </div>
   </div>
 
   <div class="oc-landing" id="ocLanding">
     <img class="oc-landing__logo" id="ocLogo" src="https://onlycells.co.uk/wp-content/uploads/Only-Cells-Logo.png" alt="Only Cells" onerror="this.outerHTML='<div class=&quot;oc-landing__word&quot;>Only Cells</div>'">
-    <div class="eye">Morphology Monthly · Assessed CPD Case</div>
+    <div class="eye">Morphology Monthly · CPD Case</div>
     <h1 id="ocLandTitle">MM250818</h1>
     <div class="credit" id="ocLandCredit"></div>
-    <p class="oc-narrate" style="margin:12px auto 0; max-width:52ch">Work through a real blood film case the way you would on the bench: read the numbers, examine the film, build your differential — then commit. Your submission is scored and recorded as CPD evidence.</p>
+    <p class="oc-narrate" style="margin:12px auto 0; max-width:52ch">Work through a real blood film case the way you would on the bench: read the numbers, examine the film, build your differential — then commit. You'll get feedback on what you spotted, and a certificate recording the activity as CPD.</p>
     <div class="oc-landing__meta" id="ocLandMeta"></div>
     <div style="margin-top:18px"><button class="oc-btn oc-btn--primary" id="ocBegin">Begin CPD case</button></div>
     <div style="margin-top:14px"><button class="oc-bgbtn" id="ocBgToggleIntro" aria-pressed="true">✦ Background: On</button></div>
@@ -417,7 +427,7 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
   </div>
 
   <div class="oc-wipe" id="ocWipe" aria-hidden="true"></div>
-  <button class="oc-helpchip" id="ocHelpChip" title="How this works" aria-label="How this works" hidden>?</button>
+  <button class="oc-helpchip" id="ocHelpChip" title="How this works" aria-label="How this works" hidden><span class="q" aria-hidden="true">?</span>How this works</button>
 
   <div class="oc-launch" id="ocLaunch" aria-hidden="true"><div class="oc-launch__glyphs" id="ocLaunchGlyphs"></div></div>
 
@@ -590,18 +600,28 @@ const CASE = {
 
   teachingPoint:"MAHA + thrombocytopenia + AKI after a gastrointestinal illness, with a NORMAL ADAMTS13, = HUS. The normal ADAMTS13 is what distinguishes HUS from TTP.",
 
-  /* Scoring model is AUTHORED — [GAP] intake §6/§8: weights, pass mark and attempt policy all need Anas. */
+  /* FEEDBACK MODEL.
+     mode:"formative" (default) — the learner is told what they identified, missed and over-called,
+     and whether their diagnosis matched, but there is NO percentage, NO pass mark and NO
+     pass/fail verdict, and the certificate records COMPLETION rather than attainment.
+     That matches how self-certified CPD actually works: you evidence participation and
+     reflection, you don't "pass" it. A percentage on a certificate is an attainment claim
+     Only Cells isn't currently accredited to make.
+     mode:"scored" re-enables the percentage, the pass mark and an Achieved/Not-achieved
+     outcome — the machinery below is intact, it's a one-word flip.
+     [GAP] confirm the final position (and, if scored, the weights/pass mark) with Anas. */
   scoring:{
-    passMark:70,
-    weights:{ results:15, features:25, differentials:20, diagnosis:40 },
+    mode:"formative",
+    passMark:70,                      // only used when mode === "scored"
+    weights:{ results:15, features:25, differentials:20, diagnosis:40 }, // only used when mode === "scored"
     labels:{ results:"Abnormal results identified", features:"Film features identified",
              differentials:"Differential considered", diagnosis:"Final diagnosis" }
   },
 
   certificate:{
     backgroundUrl:null,               // [ACTION] Anas is supplying a background template — drop the URL/path here
-    title:"Certificate of CPD Activity",
-    body:"has completed the Only Cells Morphology Monthly assessed interactive blood-film case",
+    title:"Certificate of completion",
+    body:"has completed the Only Cells Morphology Monthly interactive blood-film case as a continuing professional development activity",
     cpdMinutes:null,                  // [GAP] intake §8
     accreditation:"Self-certified CPD — accreditation to be confirmed", // [GAP]
     signatory:"Anas Nasir · Specialist Biomedical Scientist, Only Cells",
@@ -621,7 +641,7 @@ const STATIONS=[
   { id:"film",         title:"The blood film",        screen:"Screen 1 — presentation & film", scaffold:"Identify features · annotate" },
   { id:"reasoning",    title:"Differential & rule-out",screen:"Screen 2 — reasoning",           scaffold:"Commit your differential" },
   { id:"adamts",       title:"ADAMTS13 & diagnosis",  screen:"Screen 2 — the discriminator",   scaffold:"New result · one-shot commit" },
-  { id:"result",       title:"Result & CPD record",   screen:"Reveal & record",                scaffold:"Score · feedback · certificate" }
+  { id:"result",       title:"Result & CPD record",   screen:"Reveal & record",                scaffold:"Feedback · reveal · certificate" }
 ];
 
 const $ = (s,r=document)=> r.querySelector(s);
@@ -642,7 +662,7 @@ let state=loadState();
 function freshState(){ return { ver:STORE_VER, step:0, maxStep:0,
   reflections:{}, confidence:{}, ticks:{}, annotations:{ film:emptyAnno() },
   learner:{ name:"", reg:"" },
-  magStyle:null, hexZoom:3, bgAnim:true, helpMin:false,
+  magStyle:null, hexZoom:2, bgAnim:true, helpMin:false,
   adamtsRevealed:false,
   assess:{ committed:false, choice:null, correct:null, order:null, at:null, score:null, parts:null } }; }
 function loadState(){ try{ const s=JSON.parse(localStorage.getItem(STORE_KEY)); if(s&&s.ver===STORE_VER) return s; }catch(e){} return freshState(); }
@@ -693,13 +713,17 @@ const HELP=["Work through the <strong>stations</strong> left to right using <str
   "Flag the abnormal results, identify the film features, then commit a <strong>differential</strong>.",
   "The <strong>ADAMTS13</strong> result is released only after that — and it <strong>locks</strong> your earlier answers.",
   "The final diagnosis is a <strong>one-shot, recorded</strong> submission. It can’t be changed or reset afterwards.",
-  "You finish with a scored breakdown, a downloadable <strong>CPD record</strong> and a <strong>certificate</strong>."];
+  "You finish with <strong>feedback</strong> on what you spotted, a downloadable <strong>CPD record</strong> and a <strong>certificate of completion</strong>."];
 function renderHelp(){ const body=$("#ocHelpBody"), panel=$("#ocHelp"), chip=$("#ocHelpChip");
   if(root.classList.contains("is-landing")){ panel.hidden=true; chip.hidden=true; return; }
   body.innerHTML='<ul>'+HELP.map(t=>'<li>'+t+'</li>').join("")+'</ul>';
-  const min=!!state.helpMin; panel.hidden=min; chip.hidden=!min; resize(); }
+  const min=!!state.helpMin; panel.hidden=min; chip.hidden=!min; }
 $("#ocHelpMin").addEventListener("click",()=>{ state.helpMin=true; saveState(); renderHelp(); });
 $("#ocHelpChip").addEventListener("click",()=>{ state.helpMin=false; saveState(); renderHelp(); });
+/* Auto-collapse the help pill the moment the learner actually starts working the case —
+   ticking a box, typing a note, or moving to the next station. It only needs to explain
+   the nav once; after that it should get out of the way, reachable again via the chip. */
+function autoHideHelp(){ if(state.helpMin) return; state.helpMin=true; saveState(); renderHelp(); }
 
 function stationShell(st,inner){ const w=document.createElement("div");
   w.innerHTML='<div class="oc-station"><span class="oc-scaffold">'+st.scaffold+'</span><div class="oc-eyebrow">Station '+(state.step+1)+' of '+STATIONS.length+'</div><h2>'+st.title+'</h2>'+inner+'</div>'; return w; }
@@ -747,11 +771,11 @@ function renderStation(st){
   } else if(st.id==="adamts"){
     const revealed=state.adamtsRevealed;
     node=stationShell(st,
-      '<p class="oc-narrate">You have committed a differential. One further result is now available — the test that separates the two front-runners.</p>'+
+      '<p class="oc-narrate">You have committed a differential. One further result is now available.</p>'+
       (revealed?'':'<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocRevealAd">Release the ADAMTS13 result</button></div>'+
         '<div class="oc-note">Releasing this result locks Stations 1–3. Make sure you are happy with your differential first.</div>')+
       '<div class="oc-reveal-panel'+(revealed?' show':'')+'" id="ocAdPanel">'+adamtsHTML()+
-        '<h3>Your diagnosis</h3><p class="oc-narrate">Select the single most likely diagnosis. This is a one-shot, recorded CPD submission — it cannot be changed or reset.</p>'+
+        '<h3>Your diagnosis</h3><p class="oc-narrate">Weigh this result against everything you\'ve seen, then select the single most likely diagnosis. This is a one-shot, recorded CPD submission — it cannot be changed or reset.</p>'+
         '<div class="oc-options" id="ocOptions"></div>'+
         noteBox("further","Any further observations? (optional)","Anything else supporting your diagnosis — recorded with your submission.")+
         confBlock("diagnosis")+
@@ -771,6 +795,7 @@ function renderStation(st){
       '<div id="ocResultBox"></div>'+
       '<h3>The published answer</h3>'+
       '<div class="oc-callout pop"><div class="h">Diagnosis</div><strong style="font-size:20px">'+escapeHtml(CASE.diagnosis.answer)+'</strong><p style="margin-top:6px">'+escapeHtml(CASE.diagnosis.explanation)+'</p></div>'+
+      '<h3>ADAMTS13 — the discriminator</h3>'+adamtsVerdictHTML()+
       '<div class="oc-callout lilac"><div class="h">Teaching point</div>'+escapeHtml(CASE.teachingPoint)+'</div>'+
       '<h3>What you would rule out, and how</h3>'+
       '<div class="oc-callout"><div class="h">Model answer <span style="font-weight:400;color:var(--oc-text-muted)">(confirm with Anas/SME)</span></div><ul>'+CASE.model.ruleout.map(r=>'<li>'+escapeHtml(r)+'</li>').join("")+'</ul></div>'+
@@ -860,9 +885,17 @@ function countUp(el,target,dur,delay){ if(!el) return; const dec=(target%1!==0)?
      number must never render wrong — setTimeout is not rAF-dependent, so it settles. */
   setTimeout(settle, delay+dur+250); }
 
+/* Station 4 gets the raw result only — value, unit, ref range. This is a CPD assessment, not
+   Learn mode: the interpretation (verdict + explanation) would hand the learner the answer
+   before they've committed a diagnosis. That reasoning belongs in the Station 5 reveal instead. */
 function adamtsHTML(){ const a=CASE.adamts13;
   return '<div class="oc-adamts"><div class="lab">'+escapeHtml(a.label)+'</div>'+
     '<div class="val" id="ocAdVal">'+(reduceMotion?a.value:0)+'</div><div class="unit">'+escapeHtml(a.unit)+'</div>'+
+    '<div class="ref">'+escapeHtml(a.ref)+'</div></div>'; }
+/* Station 5 (reveal only) — the same card, now with the verdict and the explanation. */
+function adamtsVerdictHTML(){ const a=CASE.adamts13;
+  return '<div class="oc-adamts"><div class="lab">'+escapeHtml(a.label)+'</div>'+
+    '<div class="val">'+a.value+'</div><div class="unit">'+escapeHtml(a.unit)+'</div>'+
     '<div class="ref">'+escapeHtml(a.ref)+'</div><div class="verdict">'+escapeHtml(a.verdict)+'</div>'+
     '<p class="oc-narrate" style="margin:12px auto 0; text-align:left; max-width:62ch">'+escapeHtml(a.note)+'</p></div>'; }
 
@@ -892,7 +925,7 @@ function wireFigure(node,idx,annoKey,opts){ opts=opts||{}; const readOnly=opts.r
   const img=figure.querySelector("img"), loupe=figure.querySelector(".oc-loupe"), frame=figure.querySelector(".oc-frame"),
     panel=node.querySelector(".oc-zoompanel"), wrap=node.querySelector(".oc-framewrap"), cap=$("#ocFigCap",node);
   if(!img) return;
-  let curIdx=idx, hexZoom=state.hexZoom||3, annotateMode=false, lastX=null, lastY=null, dragPin=null;
+  let curIdx=idx, hexZoom=state.hexZoom||2, annotateMode=false, lastX=null, lastY=null, dragPin=null;
   let style=magOff?"none":(state.magStyle||(finePointer()?"hex":"frame"));
   const zoomVal=$("#ocZoomVal",node); const setZoomLabel=()=>{ if(zoomVal) zoomVal.textContent=hexZoom.toFixed(1)+"×"; }; setZoomLabel();
   const hires=()=> hiresUrl(CASE.media.stills[curIdx]);
@@ -985,6 +1018,20 @@ function toggleHotspots(node,on){ const figure=node.querySelector(".oc-figure");
     pt.addEventListener("click",()=>{ nt.classList.toggle("show"); resize(); }); figure.appendChild(pt); figure.appendChild(nt); }); }
 
 /* ===== scoring (spec §4.4 · weights + pass mark AUTHORED — [GAP] confirm with Anas) ===== */
+const scored=()=> CASE.scoring.mode==="scored";
+/* Qualitative tally used by formative mode — "3 of 4 identified, 1 over-call" says far more
+   to a learner than a percentage does, and makes no attainment claim. */
+function tallyTicks(items,chosen){
+  const scorable=items.filter(i=>!i.neutral);
+  const targets=scorable.filter(i=>i.correct);
+  return { got:targets.filter(i=>chosen[i.id]).length, total:targets.length,
+           over:scorable.filter(i=>!i.correct&&chosen[i.id]).length }; }
+function tallyText(t){ return t.got+" of "+t.total+" identified"+(t.over?" · "+t.over+" over-call"+(t.over>1?"s":""):" · no over-calls"); }
+function sectionTallies(){ return {
+  results:      tallyTicks(CASE.resultItems,   state.ticks["results"]||{}),
+  features:     tallyTicks(CASE.filmItems,     state.ticks["features"]||{}),
+  differentials:tallyTicks(CASE.differentials, state.ticks["differentials"]||{}) }; }
+
 function tickFraction(items,chosen){
   const scorable=items.filter(i=>!i.neutral);
   const totalPos=scorable.filter(i=>i.correct).reduce((s,i)=>s+(i.weight||1),0);
@@ -1015,7 +1062,7 @@ function wireCommit(node){ const optWrap=$("#ocOptions",node), order=shuffledOrd
     else b.disabled=true; });
   if(committed()){ paintCommitted(optWrap,fb); return; }
   if(submit) submit.addEventListener("click",()=>{ if(pick==null) return;
-    openModal("Submit your diagnosis?","This is an assessed CPD activity. Once submitted your answer is recorded, scored, and cannot be changed or reset. Is there anything you want to add first?","Submit","Return to the case",()=> commitDiagnosis(pick)); }); }
+    openModal("Submit your diagnosis?","Once submitted your answer is recorded and cannot be changed or reset. Is there anything you want to add first?","Submit","Return to the case",()=> commitDiagnosis(pick)); }); }
 function commitDiagnosis(oi){ const res=computeScore(oi);
   state.assess.committed=true; state.assess.choice=oi; state.assess.correct=(CASE.diagnosis.options[oi]===CASE.diagnosis.answer);
   state.assess.at=new Date().toISOString(); state.assess.score=res.total; state.assess.parts=res.points;
@@ -1029,20 +1076,35 @@ function paintCommitted(optWrap,fb){ const answerIdx=CASE.diagnosis.options.inde
   fb.className="oc-feedback show "+(state.assess.correct?"ok":"no");
   fb.innerHTML='<strong>'+(state.assess.correct?"Correct":"Not quite")+'.</strong> The diagnosis is <strong>'+escapeHtml(CASE.diagnosis.answer)+'</strong>.'+
     '<p style="margin-top:6px">'+escapeHtml(CASE.diagnosis.explanation)+'</p>'+
-    '<p style="margin-top:6px;color:var(--oc-text-muted)">Continue for your scored breakdown and CPD record →</p>'; }
+    '<p style="margin-top:6px;color:var(--oc-text-muted)">Continue for your feedback and CPD record →</p>'; }
 
-function buildResult(host){ if(!host) return; const W=CASE.scoring.weights, L=CASE.scoring.labels, pts=state.assess.parts||{};
-  const total=state.assess.score||0, pass=total>=CASE.scoring.passMark;
-  host.innerHTML='<div class="oc-feedback show '+(pass?"ok":"no")+'">'+
-    '<div class="oc-scorerow"><div class="oc-score">'+total+'%</div><span class="oc-outcome '+(pass?"ok":"no")+'">'+(pass?"Achieved":"Not yet achieved")+'</span>'+
-    '<span style="color:var(--oc-text-muted);font-size:13px">Pass mark '+CASE.scoring.passMark+'% (provisional)</span></div>'+
-    '<p style="margin-top:10px">Your diagnosis: <strong>'+escapeHtml(state.assess.choice!=null?CASE.diagnosis.options[state.assess.choice]:"—")+'</strong></p>'+
-    '<p>Correct diagnosis: <strong>'+escapeHtml(CASE.diagnosis.answer)+'</strong></p></div>'+
-    '<div class="oc-breakdown">'+Object.keys(W).map(k=>{ const p=pts[k]||0, pc=Math.round((p/W[k])*100);
-      return '<div class="oc-brow"><span>'+L[k]+'</span><span class="pts">'+p+' / '+W[k]+'</span><span class="bar"><i data-w="'+pc+'"></i></span></div>'; }).join("")+'</div>'+
-    '<div class="oc-note">Scoring weights and the pass mark are provisional — to be confirmed with Anas, along with the attempt policy.</div>';
-  const fillBars=()=> host.querySelectorAll(".bar i").forEach(b=> b.style.width=b.dataset.w+"%");
-  requestAnimationFrame(fillBars); setTimeout(fillBars,80); }
+function buildResult(host){ if(!host) return; const L=CASE.scoring.labels, ok=state.assess.correct;
+  const yours=escapeHtml(state.assess.choice!=null?CASE.diagnosis.options[state.assess.choice]:"—");
+
+  if(scored()){ /* only when CASE.scoring.mode === "scored" — see the config note */
+    const W=CASE.scoring.weights, pts=state.assess.parts||{};
+    const total=state.assess.score||0, pass=total>=CASE.scoring.passMark;
+    host.innerHTML='<div class="oc-feedback show '+(pass?"ok":"no")+'">'+
+      '<div class="oc-scorerow"><div class="oc-score">'+total+'%</div><span class="oc-outcome '+(pass?"ok":"no")+'">'+(pass?"Achieved":"Not yet achieved")+'</span>'+
+      '<span style="color:var(--oc-text-muted);font-size:13px">Pass mark '+CASE.scoring.passMark+'%</span></div>'+
+      '<p style="margin-top:10px">Your diagnosis: <strong>'+yours+'</strong></p>'+
+      '<p>Correct diagnosis: <strong>'+escapeHtml(CASE.diagnosis.answer)+'</strong></p></div>'+
+      '<div class="oc-breakdown">'+Object.keys(W).map(k=>{ const p=pts[k]||0, pc=Math.round((p/W[k])*100);
+        return '<div class="oc-brow"><span>'+L[k]+'</span><span class="pts">'+p+' / '+W[k]+'</span><span class="bar"><i data-w="'+pc+'"></i></span></div>'; }).join("")+'</div>';
+    const fillBars=()=> host.querySelectorAll(".bar i").forEach(b=> b.style.width=b.dataset.w+"%");
+    requestAnimationFrame(fillBars); setTimeout(fillBars,80); return; }
+
+  /* formative (default) — feedback, no grade */
+  const t=sectionTallies();
+  host.innerHTML='<div class="oc-feedback show '+(ok?"ok":"no")+'">'+
+    '<div class="oc-scorerow"><span class="oc-outcome '+(ok?"ok":"no")+'">'+(ok?"Diagnosis correct":"Diagnosis not matched")+'</span></div>'+
+    '<p style="margin-top:10px">Your diagnosis: <strong>'+yours+'</strong></p>'+
+    '<p>Published diagnosis: <strong>'+escapeHtml(CASE.diagnosis.answer)+'</strong></p></div>'+
+    '<div class="oc-breakdown">'+
+      ['results','features','differentials'].map(k=>
+        '<div class="oc-brow"><span>'+L[k]+'</span><span class="pts">'+tallyText(t[k])+'</span></div>').join("")+
+    '</div>'+
+    '<div class="oc-note">This activity is recorded as completed, not graded. The feedback above is to support your reflection — your certificate records participation.</div>'; }
 
 /* ===== export (spec §11.6 — Blob download / window.print on a user gesture; never window.open) ===== */
 function ticksText(key,items){ const chosen=state.ticks[key]||{}; const p=items.filter(n=>chosen[n.id]); return p.length?p.map(n=>n.text).join("; "):""; }
@@ -1051,15 +1113,22 @@ function learnerName(){ return (state.learner.name||"").trim(); }
 function stamp(){ return state.assess.at ? new Date(state.assess.at).toLocaleString() : new Date().toLocaleString(); }
 
 function buildRecordDOM(){ const p=$("#oc-print"); p.innerHTML=""; const wrap=document.createElement("div"); wrap.className="ocp";
-  const pass=(state.assess.score||0)>=CASE.scoring.passMark, W=CASE.scoring.weights, L=CASE.scoring.labels, pts=state.assess.parts||{};
-  wrap.innerHTML='<div class="sub">Only Cells · Morphology Monthly '+CASE.id+'</div><h1>CPD Assessment Record</h1>'+
-    '<div class="meta">'+escapeHtml(CASE.answerTitle)+' · specimen '+escapeHtml(CASE.specimen)+' · submitted '+escapeHtml(stamp())+
+  const L=CASE.scoring.labels, ok=state.assess.correct;
+  wrap.innerHTML='<div class="sub">Only Cells · Morphology Monthly '+CASE.id+'</div><h1>'+(scored()?'CPD Assessment Record':'CPD Activity Record')+'</h1>'+
+    '<div class="meta">'+escapeHtml(CASE.answerTitle)+' · specimen '+escapeHtml(CASE.specimen)+' · completed '+escapeHtml(stamp())+
     (learnerName()?' · '+escapeHtml(learnerName()):'')+(state.learner.reg?' ('+escapeHtml(state.learner.reg)+')':'')+'</div><hr>';
 
-  wrap.insertAdjacentHTML("beforeend",'<h2>Outcome</h2><div class="qa">'+
-    '<p><span class="badge '+(pass?"ok":"no")+'">'+(state.assess.score||0)+'% · '+(pass?"ACHIEVED":"NOT YET ACHIEVED")+'</span> <span style="font-size:12px;color:#555">pass mark '+CASE.scoring.passMark+'% (provisional)</span></p>'+
-    '<table><tr><th>Section</th><th>Score</th></tr>'+Object.keys(W).map(k=>'<tr><td>'+L[k]+'</td><td>'+(pts[k]||0)+' / '+W[k]+'</td></tr>').join("")+
-    '<tr><th>Total</th><th>'+(state.assess.score||0)+' / 100</th></tr></table></div>');
+  if(scored()){ const pass=(state.assess.score||0)>=CASE.scoring.passMark, W=CASE.scoring.weights, pts=state.assess.parts||{};
+    wrap.insertAdjacentHTML("beforeend",'<h2>Outcome</h2><div class="qa">'+
+      '<p><span class="badge '+(pass?"ok":"no")+'">'+(state.assess.score||0)+'% · '+(pass?"ACHIEVED":"NOT YET ACHIEVED")+'</span> <span style="font-size:12px;color:#555">pass mark '+CASE.scoring.passMark+'%</span></p>'+
+      '<table><tr><th>Section</th><th>Score</th></tr>'+Object.keys(W).map(k=>'<tr><td>'+L[k]+'</td><td>'+(pts[k]||0)+' / '+W[k]+'</td></tr>').join("")+
+      '<tr><th>Total</th><th>'+(state.assess.score||0)+' / 100</th></tr></table></div>');
+  } else { const t=sectionTallies();
+    wrap.insertAdjacentHTML("beforeend",'<h2>Summary</h2><div class="qa">'+
+      '<p><span class="badge '+(ok?"ok":"no")+'">Diagnosis '+(ok?"matched":"not matched")+' the published answer</span></p>'+
+      '<table><tr><th>Section</th><th>Feedback</th></tr>'+
+      ['results','features','differentials'].map(k=>'<tr><td>'+L[k]+'</td><td>'+tallyText(t[k])+'</td></tr>').join("")+'</table>'+
+      '<p style="font-size:12px;color:#555;margin-top:8px">This activity is recorded as completed, not graded. The feedback above supports reflection; it is not an assessment outcome.</p></div>'); }
 
   wrap.insertAdjacentHTML("beforeend",'<h2>Case</h2><div class="qa"><div class="you">'+escapeHtml(CASE.history)+'</div>'+
     '<table><tr><th>Test</th><th>Result</th><th>Ref</th></tr>'+
@@ -1099,19 +1168,23 @@ function buildRecordDOM(){ const p=$("#oc-print"); p.innerHTML=""; const wrap=do
     '<div class="exp"><strong>Correct answer:</strong> '+escapeHtml(CASE.diagnosis.answer)+'<br>'+escapeHtml(CASE.diagnosis.explanation)+'</div></div>'+
     '<div class="qa"><div class="q">Teaching point</div><div class="exp">'+escapeHtml(CASE.teachingPoint)+'</div></div>'+
     '<h2>Morphology report</h2><table>'+CASE.report.map(([k,v])=>'<tr><th style="width:26%">'+escapeHtml(k)+'</th><td>'+escapeHtml(v)+'</td></tr>').join("")+'</table>'+
-    '<div class="decl">Declaration: I confirm this assessment was completed by me as a CPD activity.'+
+    '<div class="decl">Declaration: I confirm this activity was completed by me as continuing professional development.'+
     (learnerName()?'<br>Completed by: <strong>'+escapeHtml(learnerName())+'</strong>'+(state.learner.reg?' · '+escapeHtml(state.learner.reg):''):'')+
     '<br>An Only Cells educational resource · <strong>onlycells.co.uk</strong> · '+escapeHtml(CASE.credit)+
     '<br><em>Educational CPD resource — not a diagnostic device. Clinical content pending SME sign-off.</em></div>');
   p.appendChild(wrap); }
 
 function buildCertDOM(){ const p=$("#oc-print"); p.innerHTML=""; const C=CASE.certificate;
-  const pass=(state.assess.score||0)>=CASE.scoring.passMark;
   const cert=document.createElement("div"); cert.className="occert";
   if(C.backgroundUrl) cert.style.backgroundImage="url('"+C.backgroundUrl+"')";
+  /* In formative mode the certificate carries NO score and NO pass/fail — it evidences that the
+     activity was completed and reflected on. A percentage here would be an attainment claim. */
+  const scoreCell = scored()
+    ? '<div>Score<b>'+(state.assess.score||0)+'% · '+(((state.assess.score||0)>=CASE.scoring.passMark)?"Achieved":"Not yet achieved")+'</b></div>'
+    : '';
   cert.innerHTML=
     '<img class="clogo" src="https://onlycells.co.uk/wp-content/uploads/Only-Cells-Logo.png" alt="" onerror="this.outerHTML=\'<div class=&quot;cbrand&quot;>Only Cells</div>\'">'+
-    '<div class="ckicker">Morphology Monthly · Assessed CPD</div>'+
+    '<div class="ckicker">Morphology Monthly · Continuing professional development</div>'+
     '<h1>'+escapeHtml(C.title)+'</h1>'+
     '<div class="cname">'+escapeHtml(learnerName()||" ")+'</div>'+
     (state.learner.reg?'<div class="creg">'+escapeHtml(state.learner.reg)+'</div>':'')+
@@ -1119,7 +1192,7 @@ function buildCertDOM(){ const p=$("#oc-print"); p.innerHTML=""; const C=CASE.ce
     '<div class="ccase">'+escapeHtml(CASE.id)+' — '+escapeHtml(CASE.answerTitle)+'</div>'+
     '<div class="cgrid">'+
       '<div>Date completed<b>'+escapeHtml(stamp())+'</b></div>'+
-      '<div>Score<b>'+(state.assess.score||0)+'% · '+(pass?"Achieved":"Not yet achieved")+'</b></div>'+
+      scoreCell+
       '<div>CPD time<b>'+(C.cpdMinutes?C.cpdMinutes+" minutes":"—")+'</b></div>'+
     '</div>'+
     '<div class="clo"><strong>Learning outcomes covered</strong><ul>'+C.outcomes.map(o=>'<li>'+escapeHtml(o)+'</li>').join("")+'</ul></div>'+
@@ -1131,13 +1204,19 @@ function buildCertDOM(){ const p=$("#oc-print"); p.innerHTML=""; const C=CASE.ce
 
 function printOut(kind){ if(kind==="cert") buildCertDOM(); else buildRecordDOM(); window.print(); }
 
-function summaryText(){ const L=[], W=CASE.scoring.weights, LB=CASE.scoring.labels, pts=state.assess.parts||{};
-  L.push("ONLY CELLS — Morphology Monthly "+CASE.id); L.push("CPD ASSESSMENT RECORD");
+function summaryText(){ const L=[], LB=CASE.scoring.labels;
+  L.push("ONLY CELLS — Morphology Monthly "+CASE.id); L.push(scored()?"CPD ASSESSMENT RECORD":"CPD ACTIVITY RECORD");
   L.push("Case: "+CASE.answerTitle+" · specimen "+CASE.specimen);
   if(learnerName()) L.push("Completed by: "+learnerName()+(state.learner.reg?" ("+state.learner.reg+")":""));
-  L.push("Submitted: "+stamp()); L.push("".padEnd(56,"-"));
-  L.push("SCORE: "+(state.assess.score||0)+"% — "+(((state.assess.score||0)>=CASE.scoring.passMark)?"ACHIEVED":"NOT YET ACHIEVED")+" (pass mark "+CASE.scoring.passMark+"%, provisional)");
-  Object.keys(W).forEach(k=> L.push("  "+LB[k]+": "+(pts[k]||0)+" / "+W[k]));
+  L.push("Completed: "+stamp()); L.push("".padEnd(56,"-"));
+  if(scored()){ const W=CASE.scoring.weights, pts=state.assess.parts||{};
+    L.push("SCORE: "+(state.assess.score||0)+"% — "+(((state.assess.score||0)>=CASE.scoring.passMark)?"ACHIEVED":"NOT YET ACHIEVED")+" (pass mark "+CASE.scoring.passMark+"%)");
+    Object.keys(W).forEach(k=> L.push("  "+LB[k]+": "+(pts[k]||0)+" / "+W[k]));
+  } else { const t=sectionTallies();
+    L.push("SUMMARY — activity completed, not graded");
+    L.push("  Diagnosis: "+(state.assess.correct?"matched":"did not match")+" the published answer");
+    ["results","features","differentials"].forEach(k=> L.push("  "+LB[k]+": "+tallyText(t[k])));
+    L.push("  (Feedback supports reflection; it is not an assessment outcome.)"); }
   L.push(""); L.push("YOUR RESPONSES");
   L.push("• Abnormal results flagged: "+(ticksText("results",CASE.resultItems)||"(none)"));
   L.push("• Comment on the numbers: "+(state.reflections["resultNote"]||"(none)"));
@@ -1154,7 +1233,7 @@ function summaryText(){ const L=[], W=CASE.scoring.weights, LB=CASE.scoring.labe
   L.push(""); L.push("TEACHING POINT: "+CASE.teachingPoint);
   L.push(""); L.push("MORPHOLOGY REPORT"); CASE.report.forEach(([k,v])=> L.push("  "+k+": "+v));
   L.push(""); L.push("ADAMTS13: "+CASE.adamts13.value+" "+CASE.adamts13.unit+" — "+CASE.adamts13.verdict);
-  L.push(""); L.push("Declaration: completed by me as a CPD activity.");
+  L.push(""); L.push("Declaration: completed by me as continuing professional development.");
   L.push("An Only Cells educational resource · onlycells.co.uk");
   L.push("Educational CPD resource — not a diagnostic device. Clinical content pending SME sign-off.");
   return L.join("\n"); }
@@ -1169,18 +1248,18 @@ function runWipe(done){ if(reduceMotion){ done&&done(); return; } wipe.classList
 
 /* ===== delegated inputs ===== */
 content.addEventListener("input",(e)=>{ const block=e.target.closest(".oc-reflect");
-  if(block&&e.target.tagName==="TEXTAREA"&&block.dataset.key){ state.reflections[block.dataset.key]=e.target.value; saveState(); } });
+  if(block&&e.target.tagName==="TEXTAREA"&&block.dataset.key){ state.reflections[block.dataset.key]=e.target.value; saveState(); autoHideHelp(); } });
 content.addEventListener("change",(e)=>{ const tick=e.target.closest(".oc-tick");
   if(tick&&e.target.type==="checkbox"){ const wrap=tick.closest(".oc-ticks"); const key=wrap.dataset.tickkey, id=tick.dataset.id;
     state.ticks[key]=state.ticks[key]||{}; state.ticks[key][id]=e.target.checked; tick.setAttribute("aria-checked",e.target.checked); saveState();
-    if(key==="differentials") updateDiffHint(content); } });
+    if(key==="differentials") updateDiffHint(content); autoHideHelp(); } });
 content.addEventListener("click",(e)=>{ const chip=e.target.closest(".oc-conf .chips button"); if(!chip||chip.disabled) return;
   const key=chip.parentElement.dataset.confkey; chip.parentElement.querySelectorAll("button").forEach(b=> b.setAttribute("aria-pressed", b===chip));
   state.confidence[key]=+chip.dataset.c; saveState(); });
 
 /* ===== nav ===== */
 function go(dir){ const target=state.step+dir; if(target<0||target>STATIONS.length-1) return;
-  state.step=target; state.maxStep=Math.max(state.maxStep,state.step); saveState(); runScan(()=> render(), dir<0); }
+  state.step=target; state.maxStep=Math.max(state.maxStep,state.step); saveState(); autoHideHelp(); runScan(()=> render(), dir<0); }
 btnNext.addEventListener("click",()=> go(1)); btnBack.addEventListener("click",()=> go(-1));
 
 /* Reset — guarded, and locked once the attempt is submitted (spec §11.6). */
@@ -1207,7 +1286,7 @@ document.addEventListener("keydown",(e)=>{ if(e.key==="Escape"&&modal.classList.
 
 /* ===== landing → teal cleanse → interactive ===== */
 function runLaunch(){ if(reduceMotion){ root.classList.remove("is-landing"); render(); resize(); return; }
-  launchEl.classList.add("run"); setTimeout(()=>{ root.classList.remove("is-landing"); render(); },380); setTimeout(()=>{ launchEl.classList.remove("run"); resize(); },860); }
+  launchEl.classList.add("run"); setTimeout(()=>{ root.classList.remove("is-landing"); render(); },520); setTimeout(()=>{ launchEl.classList.remove("run"); resize(); },990); }
 $("#ocBegin").addEventListener("click", runLaunch);
 (function buildGlyphs(){ const g=$("#ocLaunchGlyphs"); if(!g) return;
   const I={ cell:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3.4" fill="currentColor" opacity=".5"/></svg>',
