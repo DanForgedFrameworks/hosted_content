@@ -58,17 +58,29 @@ whole block — iframe **plus** the listener — into one Custom HTML block.
 (function(){
   var f = document.getElementById('oc-mm250818');
   window.addEventListener('message', function(e){
-    if (e.data && e.data.type === 'oc-resize' && e.data.id === 'MM250818') {
+    if (!e.data || e.data.id !== 'MM250818') return;
+    if (e.data.type === 'oc-resize') {
       f.style.height = e.data.height + 'px';
+    }
+    if (e.data.type === 'oc-scroll') {
+      var y = f.getBoundingClientRect().top + window.pageYOffset + (e.data.top || 0);
+      window.scrollTo({ top: y, behavior: 'smooth' });
     }
   });
 })();
 </script>
 ```
 
-Verified: the widget posts `{type:'oc-resize', id:'MM250818', height:<px>}` on every content
-change, resize, and orientation change. Fallback if a script-free embed is ever required —
-drop the `<script>` and leave a fixed height with `scrolling="yes"`.
+The widget posts two messages, both tagged with the case id:
+
+- `{type:'oc-resize', height:<px>}` on every content change, resize and orientation change.
+- `{type:'oc-scroll', top:<px>}` when the learner moves to a new station. Because the iframe
+  is full-height, the **parent** owns the scrollbar — without this the learner advances and is
+  left looking at the middle of the next station. Focus moves to the station heading regardless,
+  so keyboard and screen-reader users are handled either way.
+
+Fallback if a script-free embed is ever required — drop the `<script>` and leave a fixed height
+with `scrolling="yes"`; the widget degrades to scrolling internally.
 
 ## How the case works (Anas's 2-stage CPD design)
 

@@ -61,8 +61,24 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
 .oc-step[aria-current="true"]{ border-color:var(--oc-teal); color:var(--oc-text); }
 .oc-step[aria-current="true"] .n{ background:var(--oc-teal); color:#fff; }
 .oc-step.done .n{ background:var(--oc-teal-bright); color:var(--oc-navy-deep); }
-.oc-step:active{ transform:scale(.96); }
+/* reachable steps lift on hover and press in; locked ones read as unavailable and nudge back */
+.oc-step:not(.locked):hover{ background:#454545; border-color:var(--oc-teal); color:var(--oc-text); transform:translateY(-2px); }
+.oc-step:not(.locked):hover .n{ background:var(--oc-teal); color:#fff; }
+.oc-step:not(.locked):active{ transform:translateY(0) scale(.96); filter:brightness(.94); }
+.oc-step:focus-visible{ outline:none; box-shadow:0 0 0 3px rgba(52,198,176,.5); }
+.oc-step.locked{ cursor:not-allowed; opacity:.5; }
+.oc-step.locked .n{ background:rgba(255,255,255,.12); }
+.oc-step.locked:hover{ border-color:var(--oc-warn); }
+.oc-step.nudge{ animation:oc-nudge 320ms var(--oc-ease-std); }
+@keyframes oc-nudge{ 0%,100%{transform:translateX(0);} 25%{transform:translateX(-3px);} 60%{transform:translateX(3px);} }
 .oc-screentag{ font-size:11px; color:var(--oc-text-muted); letter-spacing:.08em; text-transform:uppercase; margin-top:9px; }
+
+/* transient hint — used when a locked station is tapped */
+.oc-toast{ position:fixed; left:50%; bottom:22px; transform:translate(-50%,14px); z-index:80; max-width:min(92vw,420px);
+  background:var(--oc-navy-deep); border:1px solid var(--oc-warn); color:var(--oc-text); border-radius:999px;
+  padding:10px 18px; font-size:13px; text-align:center; box-shadow:0 10px 28px rgba(0,0,0,.5);
+  opacity:0; pointer-events:none; transition:opacity var(--oc-dur-state) var(--oc-ease-out), transform var(--oc-dur-state) var(--oc-ease-out); }
+.oc-toast.show{ opacity:1; transform:translate(-50%,0); }
 
 .oc-station{ background:var(--oc-surface); border:1px solid rgba(255,255,255,.07); border-radius:var(--oc-radius); padding:22px; }
 .oc-eyebrow{ color:var(--oc-teal-bright); font-size:12px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; }
@@ -706,14 +722,54 @@ $("#ocLandTitle").textContent="Morphology Monthly | "+CASE.id;
 $("#ocLandCredit").textContent="Derived from Morphology Monday "+CASE.id+" · "+CASE.credit;
 $("#ocLandMeta").innerHTML=CASE.meta.map(m=>'<span>'+escapeHtml(m)+'</span>').join("");
 
+/* transient hint, bottom-centre; polite so screen readers announce it without stealing focus */
+let toastTimer=null;
+function toast(msg){ let el=document.getElementById("ocToast");
+  if(!el){ el=document.createElement("div"); el.id="ocToast"; el.className="oc-toast";
+    el.setAttribute("role","status"); el.setAttribute("aria-live","polite"); document.body.appendChild(el); }
+  el.textContent=msg; el.classList.add("show");
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=> el.classList.remove("show"), 3200); }
+
+/* Move the reader to the top of the new station. Standalone we can scroll ourselves; embedded
+   the parent owns the scrollbar (the iframe is full-height), so ask it via postMessage — the
+   embed snippet in README.md handles oc-scroll. Focus goes to the heading either way so
+   keyboard and screen-reader users land in the right place. */
+function goToStationTop(){
+  const h=content.querySelector(".oc-station h2");
+  if(h){ h.setAttribute("tabindex","-1"); try{ h.focus({preventScroll:true}); }catch(e){ h.focus(); } }
+  const stepper=document.querySelector(".oc-stepper");
+  const offset=stepper ? Math.max(0, stepper.getBoundingClientRect().top - root.getBoundingClientRect().top - 12) : 0;
+  if(window.parent && window.parent!==window){
+    window.parent.postMessage({ type:"oc-scroll", id:CASE.id, top:offset }, "*");
+  } else if(stepper){
+    const y=Math.max(0, stepper.getBoundingClientRect().top + window.scrollY - 12);
+    const start=window.scrollY;
+    try{ window.scrollTo({ top:y, behavior: reduceMotion?"auto":"smooth" }); }catch(e){ window.scrollTo(0,y); }
+    /* Smooth scrolling is compositor-driven and silently does nothing in a background or
+       offscreen context — leaving the learner stranded mid-page. If nothing has moved by
+       the time the animation should have started, put them there outright. */
+    setTimeout(()=>{ if(Math.abs(window.scrollY-start)<2 && Math.abs(start-y)>4) window.scrollTo(0,y); }, 450);
+  }
+}
+
 /* ===== render ===== */
 function renderCore(){
   const list=STATIONS;
   state.step=clamp(state.step,0,list.length-1); state.maxStep=Math.max(state.maxStep||0,state.step);
   stepsEl.innerHTML="";
-  list.forEach((st,i)=>{ const b=document.createElement("button"); b.className="oc-step"+(i<state.step?" done":"");
-    if(i===state.step) b.setAttribute("aria-current","true"); b.innerHTML='<span class="n">'+(i+1)+'</span>'+st.title;
-    b.addEventListener("click",()=>{ if(i<=state.maxStep){ state.step=i; saveState(); render(); }}); stepsEl.appendChild(b); });
+  list.forEach((st,i)=>{ const locked=i>state.maxStep;
+    const b=document.createElement("button"); b.className="oc-step"+(i<state.step?" done":"")+(locked?" locked":"");
+    if(i===state.step) b.setAttribute("aria-current","true");
+    if(locked) b.setAttribute("aria-disabled","true");
+    b.title = locked ? "Not yet — work through the stations in order" : "Go to "+st.title;
+    b.innerHTML='<span class="n">'+(i+1)+'</span>'+st.title;
+    b.addEventListener("click",()=>{
+      if(!locked){ state.step=i; saveState(); render(); goToStationTop(); return; }
+      /* locked: say why rather than doing nothing silently */
+      b.classList.remove("nudge"); void b.offsetWidth; b.classList.add("nudge");
+      toast("Station "+(i+1)+" isn't open yet — work through the stations in order.");
+    });
+    stepsEl.appendChild(b); });
   railFill.style.width=(list.length<2?100:(state.step/(list.length-1))*100)+"%";
   screenTag.textContent=list[state.step].screen;
   content.innerHTML="";
@@ -841,7 +897,7 @@ function renderStation(st){
       '<div class="oc-lockbar"><span class="k">Not yet submitted</span> Go back to Station 4, release the ADAMTS13 result and commit a diagnosis to generate your CPD record.</div>'+
       '<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocGoBack">Back to Station 4</button></div>');
     node._after=()=>{
-      const gb=$("#ocGoBack",node); if(gb){ gb.addEventListener("click",()=>{ state.step=3; saveState(); render(); }); return; }
+      const gb=$("#ocGoBack",node); if(gb){ gb.addEventListener("click",()=>{ state.step=3; saveState(); render(); goToStationTop(); }); return; }
       buildResult($("#ocResultBox",node));
       wireFigure(node,0,"film",{ readOnly:true, magOff:true });
       const anno=$("#ocAnno",node); let on=false;
@@ -901,9 +957,18 @@ function buildStats(host,rows,animate){ if(!host) return; host.innerHTML="";
     host.appendChild(c); });
   if(animate&&!reduceMotion) host.querySelectorAll(".val").forEach((el,i)=> countUp(el,parseFloat(el.dataset.target),900,i*110)); }
 function countUp(el,target,dur,delay){ if(!el) return; const dec=(target%1!==0)?((target*10)%1!==0?2:1):0;
-  const settle=()=>{ el.textContent=target.toFixed(dec); };
-  setTimeout(()=>{ const t0=performance.now();
-    (function tick(now){ const p=Math.min(1,(now-t0)/dur); const e=1-Math.pow(2,-10*p); el.textContent=(target*e).toFixed(dec); if(p<1) requestAnimationFrame(tick); else settle(); })(performance.now()); }, delay);
+  /* `done` makes the safety net authoritative: once the true value is set, the animation loop
+     stops touching the element. Without it the two race, and if performance.now() ever stalls
+     the loop wins forever and the cell sticks at 0. */
+  let done=false;
+  const settle=()=>{ done=true; el.textContent=target.toFixed(dec); };
+  setTimeout(()=>{ if(done) return; const t0=performance.now();
+    /* p MUST be clamped at both ends. requestAnimationFrame passes the frame-start timestamp,
+       which can predate the performance.now() captured when scheduling — a negative p makes
+       2^(-10p) explode and the cell renders a large negative number. A lab value must never
+       print wrong, even for one frame. */
+    (function tick(now){ if(done) return; const p=Math.max(0,Math.min(1,(now-t0)/dur)); const e=1-Math.pow(2,-10*p);
+      el.textContent=(target*e).toFixed(dec); if(p<1) requestAnimationFrame(tick); else settle(); })(performance.now()); }, delay);
   /* Safety net: requestAnimationFrame is suspended in a hidden tab or an offscreen
      iframe, which would leave a lab value frozen mid-count (showing 0). A clinical
      number must never render wrong — setTimeout is not rAF-dependent, so it settles. */
@@ -1292,7 +1357,8 @@ content.addEventListener("click",(e)=>{ const chip=e.target.closest(".oc-conf .c
 
 /* ===== nav ===== */
 function go(dir){ const target=state.step+dir; if(target<0||target>STATIONS.length-1) return;
-  state.step=target; state.maxStep=Math.max(state.maxStep,state.step); saveState(); autoHideHelp(); runScan(()=> render(), dir<0); }
+  state.step=target; state.maxStep=Math.max(state.maxStep,state.step); saveState(); autoHideHelp();
+  runScan(()=>{ render(); goToStationTop(); }, dir<0); }
 btnNext.addEventListener("click",()=> go(1)); btnBack.addEventListener("click",()=> go(-1));
 
 /* Reset — guarded, and locked once the attempt is submitted (spec §11.6). */
@@ -1340,18 +1406,49 @@ window.addEventListener("resize", resize); window.addEventListener("orientationc
 /* ===== animated background — red cells + schistocyte fragments (this case's own motif),
    drifting slow, diagonal top-left → bottom-right; toggleable, off = gradient only ===== */
 const bg=(function(){ const cv=$("#ocBg"); const ctx=cv.getContext("2d"); let w=0,h=0,parts=[],raf=null,running=false; const tints=["46,158,143","52,198,176","201,184,232"];
+  /* Shape mix mirrors the four motifs from the Begin cleanse: red cell, schistocyte,
+     loupe, droplet — so the background and the transition read as one family. */
+  const SHAPES=[["cell",.50],["frag",.24],["lens",.14],["drop",.12]];
+  function pickShape(){ let r=Math.random(), acc=0; for(const [s,w0] of SHAPES){ acc+=w0; if(r<acc) return s; } return "cell"; }
   function fragPts(){ const n=5+Math.floor(Math.random()*2), pts=[];
     for(let i=0;i<n;i++) pts.push({ ang:(i/n)*Math.PI*2+(Math.random()-0.5)*0.5, rad:0.5+Math.random()*0.7 });
     return pts; }
   function seed(){ w=cv.width=window.innerWidth; h=cv.height=window.innerHeight; parts=[]; const n=Math.max(18,Math.min(40,Math.floor(w/45)));
-    for(let i=0;i<n;i++){ const ang=(30+Math.random()*30)*Math.PI/180, spd=0.05+Math.random()*0.12, shape=Math.random()<0.65?"cell":"frag";
+    for(let i=0;i<n;i++){ const ang=(30+Math.random()*30)*Math.PI/180, spd=0.05+Math.random()*0.12, shape=pickShape();
       parts.push({ x:Math.random()*w, y:Math.random()*h, r:6+Math.random()*22, dx:Math.cos(ang)*spd, dy:Math.sin(ang)*spd,
-        t:tints[i%tints.length], a:0.04+Math.random()*0.07, shape, pts:shape==="frag"?fragPts():null }); } }
-  function drawCell(p){ ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.lineWidth=p.r*0.38; ctx.strokeStyle="rgba("+p.t+","+p.a+")"; ctx.stroke(); }
-  function drawFrag(p){ ctx.beginPath(); p.pts.forEach((pt,i)=>{ const px=p.x+Math.cos(pt.ang)*p.r*pt.rad, py=p.y+Math.sin(pt.ang)*p.r*pt.rad; i?ctx.lineTo(px,py):ctx.moveTo(px,py); });
-    ctx.closePath(); ctx.fillStyle="rgba("+p.t+","+p.a+")"; ctx.fill(); }
-  function frame(){ ctx.clearRect(0,0,w,h); for(const p of parts){ p.shape==="frag"?drawFrag(p):drawCell(p);
-    p.x+=p.dx; p.y+=p.dy; if(p.x>w+p.r){ p.x=-p.r; p.y=Math.random()*h; } if(p.y>h+p.r){ p.y=-p.r; p.x=Math.random()*w; } } }
+        t:tints[i%tints.length], a:0.04+Math.random()*0.07, shape,
+        rot:Math.random()*Math.PI*2, spin:(Math.random()-0.5)*0.0022,
+        squash:0.86+Math.random()*0.14,                 // cells are rarely perfect discs
+        pts:shape==="frag"?fragPts():null }); } }
+
+  const rgba=(t,a)=> "rgba("+t+","+(a<0?0:a)+")";
+  /* A red cell isn't a flat disc — it's biconcave, so it reads as a denser rim around a pale
+     centre. A radial gradient gives that far better than a plain stroke did. */
+  function drawCell(p){ const g=ctx.createRadialGradient(p.x,p.y,p.r*0.12,p.x,p.y,p.r);
+    g.addColorStop(0, rgba(p.t,0));
+    g.addColorStop(0.45, rgba(p.t,p.a*0.32));
+    g.addColorStop(0.82, rgba(p.t,p.a));
+    g.addColorStop(0.96, rgba(p.t,p.a*0.85));
+    g.addColorStop(1, rgba(p.t,0));
+    ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot); ctx.scale(1,p.squash); ctx.translate(-p.x,-p.y);
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill(); ctx.restore(); }
+  function drawFrag(p){ ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+    ctx.beginPath(); p.pts.forEach((pt,i)=>{ const px=Math.cos(pt.ang)*p.r*pt.rad, py=Math.sin(pt.ang)*p.r*pt.rad; i?ctx.lineTo(px,py):ctx.moveTo(px,py); });
+    ctx.closePath(); ctx.fillStyle=rgba(p.t,p.a); ctx.fill();
+    ctx.lineWidth=Math.max(0.6,p.r*0.07); ctx.strokeStyle=rgba(p.t,p.a*1.4); ctx.stroke(); ctx.restore(); }
+  function drawLens(p){ const R=p.r*0.62; ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+    ctx.lineWidth=Math.max(1,p.r*0.13); ctx.strokeStyle=rgba(p.t,p.a*1.5); ctx.lineCap="round";
+    ctx.beginPath(); ctx.arc(-p.r*0.12,-p.r*0.12,R,0,Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(R*0.62,R*0.62); ctx.lineTo(p.r*0.86,p.r*0.86); ctx.stroke(); ctx.restore(); }
+  function drawDrop(p){ ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot); const R=p.r*0.82;
+    ctx.beginPath(); ctx.moveTo(0,-R);
+    ctx.bezierCurveTo(R*0.92,-R*0.08, R*0.64,R*0.86, 0,R*0.86);
+    ctx.bezierCurveTo(-R*0.64,R*0.86, -R*0.92,-R*0.08, 0,-R);
+    ctx.closePath(); ctx.fillStyle=rgba(p.t,p.a*0.9); ctx.fill(); ctx.restore(); }
+  const DRAW={ cell:drawCell, frag:drawFrag, lens:drawLens, drop:drawDrop };
+  function frame(){ ctx.clearRect(0,0,w,h); for(const p of parts){ (DRAW[p.shape]||drawCell)(p);
+    p.x+=p.dx; p.y+=p.dy; p.rot+=p.spin;
+    if(p.x>w+p.r){ p.x=-p.r; p.y=Math.random()*h; } if(p.y>h+p.r){ p.y=-p.r; p.x=Math.random()*w; } } }
   function loop(){ frame(); if(running) raf=requestAnimationFrame(loop); }
   function clear(){ ctx&&ctx.clearRect(0,0,w,h); }
   function start(){ if(running) return; if(state.bgAnim===false) return; if(!parts.length) seed(); if(reduceMotion){ frame(); return; } running=true; loop(); }
