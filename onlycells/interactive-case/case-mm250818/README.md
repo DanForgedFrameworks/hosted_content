@@ -109,6 +109,33 @@ clean:
 It clears `localStorage` for this case only, then redirects to the plain URL. Off the normal
 learner path, so it doesn't weaken the integrity model.
 
+### Station transition
+
+Moving between stations is a true wipe: the outgoing station is cloned into an inert ghost and
+clipped away in lockstep with the teal bar, so the bar rides the reveal edge and the incoming
+station (already live underneath) is uncovered as it passes. Forward wipes down, Back wipes up.
+
+Two constraints shaped it, both worth knowing before changing it:
+
+- **The wipe band is bounded** (`WIPE_BAND`, 820px from the top of the station) rather than the
+  full content height. Stations run 1333–3227px but a screen is ~800px, and when embedded the
+  iframe is sized to the full content height — so `window.innerHeight` inside the widget is
+  useless and the parent is cross-origin. The widget genuinely cannot tell what the learner is
+  looking at. A full-height wipe would cross the visible area in a quarter of the duration and
+  finish off-screen. Since we already scroll to the station top, a bounded band reads as a
+  proper full-screen wipe on every station.
+- **Height is pinned for the duration** to `max(outgoing, incoming)`. Station 4→5 is a 2.4×
+  jump and the parent resizes the iframe on every change, so an unpinned swap makes the whole
+  embed lurch mid-wipe.
+
+Teardown is on a `setTimeout`, not `animationend` — a stalled compositor would otherwise leave
+the ghost covering the new station permanently. Any stranded ghost is also cleared on the next
+render. `prefers-reduced-motion` skips the whole thing for an instant swap.
+
+The "Analysing" scan on the ADAMTS13 release and the diagnosis commit is deliberately left as
+a plain scan — that reads as *the system processing*, which is a different thing from *moving
+to a new station*.
+
 ### Print output
 
 Both exports are generated in-page and printed via `window.print()` on the user's own click —
