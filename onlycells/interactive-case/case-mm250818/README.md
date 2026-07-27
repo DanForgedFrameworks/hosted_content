@@ -84,6 +84,31 @@ drop the `<script>` and leave a fixed height with `scrolling="yes"`.
 point of the design. Releasing it **locks Stations 1–3**, and submitting the diagnosis locks
 the attempt permanently. So "reset → peek → resubmit" is structurally impossible (spec §11.6).
 
+### Testing it repeatedly — `?reset`
+
+A committed attempt is deliberately locked against reset (spec §11.6), which makes reviewing
+it twice impossible. Append **`?reset`** to the URL to wipe this case's saved state and start
+clean:
+
+```
+…/case-mm250818.html?reset
+```
+
+It clears `localStorage` for this case only, then redirects to the plain URL. Off the normal
+learner path, so it doesn't weaken the integrity model.
+
+### Print output
+
+Both exports are generated in-page and printed via `window.print()` on the user's own click —
+no popups. Page setup is injected at print time (`setPageStyle`), because one static `@page`
+rule can't serve both:
+
+- **CPD record** — A4 **portrait**, 14 mm margins, ~4 pages.
+- **Certificate** — A4 **landscape**, full-bleed, single page.
+
+The Only Cells logo is a *white* wordmark, so on the white certificate it sits on a navy band —
+without it, it prints invisible.
+
 ### Feedback model — formative, not graded
 
 `CASE.scoring.mode` is **`"formative"`**. The learner is told what they identified, missed and

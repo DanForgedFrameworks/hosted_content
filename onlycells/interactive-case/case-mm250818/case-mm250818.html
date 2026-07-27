@@ -330,8 +330,11 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
   html,body{ margin:0; padding:0; background:#fff; }
   body > *:not(#oc-print){ display:none !important; }
   #oc-print{ display:block !important; }
-  @page{ margin:14mm; }
-  @page cert{ margin:0; }
+  /* @page size/orientation is injected at print time by setPageStyle() — the record prints
+     A4 portrait, the certificate A4 landscape, and a static @page rule can't do both. */
+  .ocp{ padding:0; max-width:none; }
+  .ocp h2{ page-break-after:avoid; }
+  .ocp .decl{ page-break-inside:avoid; }
 }
 #oc-print{ display:none; color:#111; background:#fff; }
 .ocp{ font-family:"Inter",system-ui,sans-serif; padding:26px; max-width:900px; margin:0 auto; }
@@ -342,7 +345,7 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
 .ocp h2{ font-size:14px; color:#16234D; margin:16px 0 8px; }
 .ocp .imgrow{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:12px; }
 .ocp .figpin{ position:relative; display:inline-block; }
-.ocp .figpin img{ width:210px; max-width:44vw; border-radius:6px; border:1px solid #ddd; display:block; }
+.ocp .figpin img{ width:170px; max-width:44vw; border-radius:6px; border:1px solid #ddd; display:block; }
 .ocp .figpin .cap{ font-size:11px; color:#555; margin-top:3px; }
 .ocp .ppin{ position:absolute; transform:translate(-50%,-50%); min-width:22px; height:22px; padding:0 4px; border-radius:11px; background:#C9B8E8; border:2px solid #16234D; color:#16234D; font-weight:700; font-size:10px; display:grid; place-items:center; white-space:nowrap; }
 .ocp .qa{ border:1px solid #e2e2e2; border-radius:8px; padding:12px 14px; margin-bottom:10px; page-break-inside:avoid; }
@@ -356,23 +359,37 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
 .ocp table th{ background:#f4f7fa; color:#16234D; }
 .ocp .decl{ margin-top:18px; font-size:12px; color:#555; border-top:1px dashed #bbb; padding-top:10px; }
 
-/* certificate — branded fallback until Anas's background template lands (CASE.certificate.backgroundUrl) */
-.occert{ font-family:"Inter",system-ui,sans-serif; position:relative; width:100%; max-width:1000px; margin:0 auto; padding:44px 52px;
-  border:3px solid #16234D; outline:1px solid #2E9E8F; outline-offset:5px; text-align:center; background-size:cover; background-position:center; page-break-after:always; }
-.occert .cbrand{ font-family:"Poppins",sans-serif; font-weight:700; font-size:22px; color:#16234D; letter-spacing:.02em; }
-.occert .clogo{ max-width:180px; margin:0 auto 8px; display:block; }
-.occert .ckicker{ font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:#2E9E8F; font-weight:700; margin-top:14px; }
-.occert h1{ font-family:"Poppins",sans-serif; font-size:30px; color:#16234D; margin:6px 0 2px; }
-.occert .cname{ font-family:"Poppins",sans-serif; font-size:26px; color:#16234D; border-bottom:2px solid #2E9E8F; display:inline-block; padding:6px 34px 4px; margin:18px 0 6px; min-width:320px; }
+/* certificate — landscape A4, full-bleed. Branded fallback until Anas's background template
+   lands (CASE.certificate.backgroundUrl). Sized in mm so it fills the sheet exactly when
+   setPageStyle("cert") sets @page{ size:A4 landscape; margin:0 }. */
+.occert{ font-family:"Inter",system-ui,sans-serif; position:relative; box-sizing:border-box;
+  width:297mm; height:210mm; margin:0 auto; padding:15mm 18mm; overflow:hidden;
+  display:flex; flex-direction:column; justify-content:flex-start; text-align:center;
+  background-size:cover; background-position:center; }
+/* decorative frame as a pseudo-element so it insets cleanly and never adds page height */
+.occert::after{ content:""; position:absolute; inset:7mm; border:2px solid #16234D;
+  outline:1px solid #2E9E8F; outline-offset:3px; pointer-events:none; }
+.occert > *{ position:relative; z-index:1; }
+/* auto top+bottom margins centre the content in the space above the footer, so the sheet
+   reads balanced rather than top-heavy with a dead band underneath */
+.occert .cmain{ margin:auto 0; width:100%; }
+/* The Only Cells logo is a WHITE wordmark — on a white certificate it prints invisible.
+   Sitting it on a navy band keeps it legible, and the text fallback reads too. */
+.occert .cband{ display:inline-block; background:#16234D; border-radius:6px; padding:9px 20px; margin:0 auto; }
+.occert .cbrand{ font-family:"Poppins",sans-serif; font-weight:700; font-size:19px; color:#fff; letter-spacing:.02em; }
+.occert .clogo{ max-width:140px; height:auto; margin:0 auto; display:block; }
+.occert .ckicker{ font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:#2E9E8F; font-weight:700; margin-top:9px; }
+.occert h1{ font-family:"Poppins",sans-serif; font-size:27px; color:#16234D; margin:3px 0 0; }
+.occert .cname{ font-family:"Poppins",sans-serif; font-size:25px; color:#16234D; border-bottom:2px solid #2E9E8F; display:inline-block; padding:5px 40px 3px; margin:10px 0 4px; min-width:340px; }
 .occert .creg{ font-size:12px; color:#555; }
-.occert .cbody{ font-size:14px; color:#333; max-width:60ch; margin:16px auto 0; line-height:1.6; }
-.occert .ccase{ font-family:"Poppins",sans-serif; font-size:17px; color:#16234D; font-weight:600; margin:8px 0 0; }
-.occert .cgrid{ display:flex; gap:26px; justify-content:center; flex-wrap:wrap; margin:20px 0 4px; }
-.occert .cgrid div{ font-size:12px; color:#555; }
-.occert .cgrid b{ display:block; font-family:"Poppins",sans-serif; font-size:16px; color:#16234D; }
-.occert .clo{ text-align:left; max-width:70ch; margin:18px auto 0; font-size:12px; color:#444; }
-.occert .clo ul{ margin:5px 0 0; padding-left:18px; }
-.occert .cfoot{ display:flex; justify-content:space-between; gap:22px; margin-top:26px; font-size:11px; color:#666; flex-wrap:wrap; text-align:left; }
+.occert .cbody{ font-size:13px; color:#333; max-width:70ch; margin:9px auto 0; line-height:1.55; }
+.occert .ccase{ font-family:"Poppins",sans-serif; font-size:16px; color:#16234D; font-weight:600; margin:6px 0 0; }
+.occert .cgrid{ display:flex; gap:34px; justify-content:center; flex-wrap:wrap; margin:12px 0 0; }
+.occert .cgrid div{ font-size:11px; color:#555; }
+.occert .cgrid b{ display:block; font-family:"Poppins",sans-serif; font-size:15px; color:#16234D; margin-top:2px; }
+.occert .clo{ text-align:left; max-width:78ch; margin:12px auto 0; font-size:11px; color:#444; }
+.occert .clo ul{ margin:4px 0 0; padding-left:18px; } .occert .clo li{ margin:1px 0; }
+.occert .cfoot{ display:flex; justify-content:space-between; gap:26px; font-size:10px; color:#666; flex-wrap:nowrap; text-align:left; }
 .occert .csig{ border-top:1px solid #999; padding-top:5px; min-width:200px; flex:1; }
 </style>
 </head>
@@ -658,6 +675,13 @@ function escapeHtml(s){ return (s||"").replace(/[&<>"']/g,c=>({ "&":"&amp;","<":
 function emptyAnno(){ return CASE.media.stills.map(()=>[]); }
 
 /* ===== state ===== */
+/* ?reset in the URL wipes this case's saved state and reloads clean. A committed CPD attempt
+   is deliberately locked against reset in the UI (spec §11.6 integrity), which makes repeat
+   testing impossible — this is the reviewer's way round it, off the normal learner path. */
+(function(){ if(!/[?&]reset\b/.test(location.search)) return;
+  try{ localStorage.removeItem(STORE_KEY); }catch(e){}
+  location.replace(location.pathname); })();
+
 let state=loadState();
 function freshState(){ return { ver:STORE_VER, step:0, maxStep:0,
   reflections:{}, confidence:{}, ticks:{}, annotations:{ film:emptyAnno() },
@@ -1183,7 +1207,8 @@ function buildCertDOM(){ const p=$("#oc-print"); p.innerHTML=""; const C=CASE.ce
     ? '<div>Score<b>'+(state.assess.score||0)+'% · '+(((state.assess.score||0)>=CASE.scoring.passMark)?"Achieved":"Not yet achieved")+'</b></div>'
     : '';
   cert.innerHTML=
-    '<img class="clogo" src="https://onlycells.co.uk/wp-content/uploads/Only-Cells-Logo.png" alt="" onerror="this.outerHTML=\'<div class=&quot;cbrand&quot;>Only Cells</div>\'">'+
+    '<div class="cmain">'+
+    '<div class="cband"><img class="clogo" src="https://onlycells.co.uk/wp-content/uploads/Only-Cells-Logo.png" alt="Only Cells" onerror="this.outerHTML=\'<div class=&quot;cbrand&quot;>Only Cells</div>\'"></div>'+
     '<div class="ckicker">Morphology Monthly · Continuing professional development</div>'+
     '<h1>'+escapeHtml(C.title)+'</h1>'+
     '<div class="cname">'+escapeHtml(learnerName()||" ")+'</div>'+
@@ -1196,13 +1221,21 @@ function buildCertDOM(){ const p=$("#oc-print"); p.innerHTML=""; const C=CASE.ce
       '<div>CPD time<b>'+(C.cpdMinutes?C.cpdMinutes+" minutes":"—")+'</b></div>'+
     '</div>'+
     '<div class="clo"><strong>Learning outcomes covered</strong><ul>'+C.outcomes.map(o=>'<li>'+escapeHtml(o)+'</li>').join("")+'</ul></div>'+
+    '</div>'+
     '<div class="cfoot">'+
       '<div class="csig">'+escapeHtml(C.signatory)+'</div>'+
       '<div class="csig">'+escapeHtml(C.accreditation)+'<br>onlycells.co.uk · Case '+escapeHtml(CASE.id)+'</div>'+
     '</div>';
   p.appendChild(cert); }
 
-function printOut(kind){ if(kind==="cert") buildCertDOM(); else buildRecordDOM(); window.print(); }
+/* @page can't be switched with a class selector, so the size/orientation is injected here:
+   the record is A4 portrait with margins, the certificate A4 landscape full-bleed. */
+function setPageStyle(kind){ let el=document.getElementById("ocPageStyle");
+  if(!el){ el=document.createElement("style"); el.id="ocPageStyle"; document.head.appendChild(el); }
+  el.textContent = (kind==="cert")
+    ? "@page{ size:A4 landscape; margin:0; }"
+    : "@page{ size:A4 portrait; margin:14mm; }"; }
+function printOut(kind){ setPageStyle(kind); if(kind==="cert") buildCertDOM(); else buildRecordDOM(); window.print(); }
 
 function summaryText(){ const L=[], LB=CASE.scoring.labels;
   L.push("ONLY CELLS — Morphology Monthly "+CASE.id); L.push(scored()?"CPD ASSESSMENT RECORD":"CPD ACTIVITY RECORD");
