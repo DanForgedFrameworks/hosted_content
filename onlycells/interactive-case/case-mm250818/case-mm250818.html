@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Only Cells — Morphology Monthly CPD Case MM250818</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== ONLY CELLS — MORPHOLOGY MONTHLY · CPD INTERACTIVE CASE =====
+   Case MM250818 — Haemolytic Uraemic Syndrome (HUS)
+   Cloned from the case-mm260615 flagship prototype (spec §11 locked design).
+   CPD / Assess mode only — the unscored Learn pathway is parked (CLAUDE.md rule 2).
+   All styles scoped under .oc-case; brand values are CSS custom properties. */
+html,body{ margin:0; padding:0; }
+body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2c5c 0%, #101c40 55%, #0b1430 100%); }
+.oc-bg{ position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+.oc-proto{ position:fixed; top:10px; left:12px; z-index:90; font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+  background:rgba(0,0,0,.5); color:var(--oc-teal-bright,#34C6B0); border:1px solid #2E9E8F; border-radius:999px; padding:4px 10px; font-weight:600; pointer-events:none; }
+
+.oc-case{
+  --oc-navy:#16234D; --oc-navy-deep:#0F1A3A; --oc-teal:#2E9E8F; --oc-teal-bright:#34C6B0;
+  --oc-bg:#3f3f3f; --oc-surface:#3A3A3A; --oc-surface-2:#2E2E2E; --oc-text:#FFFFFF; --oc-text-muted:#C9C9C9;
+  --oc-lilac:#C9B8E8; --oc-correct:#34C6B0; --oc-incorrect:#E0736B; --oc-warn:#E8B84B;
+  --oc-dur-micro:150ms; --oc-dur-state:300ms; --oc-dur-reveal:700ms;
+  --oc-ease-std:cubic-bezier(0.4,0,0.2,1); --oc-ease-out:cubic-bezier(0.25,1,0.5,1); --oc-ease-spring:cubic-bezier(0.34,1.56,0.64,1);
+  --oc-radius:14px; --oc-radius-sm:8px;
+  --oc-font-head:"Poppins","Montserrat",system-ui,sans-serif; --oc-font-body:"Inter",system-ui,-apple-system,sans-serif;
+  box-sizing:border-box; font-family:var(--oc-font-body); color:var(--oc-text); background:var(--oc-bg);
+  line-height:1.6; position:relative; z-index:1; max-width:1200px; margin:24px auto; border-radius:18px; overflow:hidden;
+  box-shadow:0 24px 60px rgba(0,0,0,.45); -webkit-font-smoothing:antialiased;
+}
+.oc-case *, .oc-case *::before, .oc-case *::after{ box-sizing:border-box; }
+.oc-case h1,.oc-case h2,.oc-case h3{ font-family:var(--oc-font-head); margin:0; line-height:1.25; }
+.oc-case p{ margin:0 0 0.6em; }
+.oc-case button{ font-family:inherit; }
+
+.oc-top{ position:relative; z-index:2; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  padding:18px 22px; background:var(--oc-navy-deep); border-bottom:1px solid rgba(255,255,255,.08); }
+.oc-brandline{ display:flex; flex-direction:column; }
+.oc-brandline .t{ font-family:var(--oc-font-head); font-weight:600; font-size:15px; }
+.oc-brandline .s{ font-size:12px; color:var(--oc-text-muted); }
+.oc-topright{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.oc-cpdbadge{ display:inline-flex; align-items:center; gap:7px; font-size:12px; font-weight:600; letter-spacing:.04em;
+  border:1px solid var(--oc-teal); background:rgba(46,158,143,.16); color:var(--oc-teal-bright); border-radius:999px; padding:6px 14px; }
+.oc-cpdbadge .dot{ width:7px; height:7px; border-radius:50%; background:var(--oc-teal-bright); }
+.oc-bgbtn{ border:1px solid rgba(255,255,255,.2); background:var(--oc-surface-2); color:var(--oc-teal-bright); cursor:pointer; font-size:12px; font-weight:600; border-radius:999px; padding:7px 14px;
+  transition:transform var(--oc-dur-micro) var(--oc-ease-std), background var(--oc-dur-state); }
+.oc-bgbtn[aria-pressed="false"]{ color:var(--oc-text-muted); }
+.oc-bgbtn:hover{ background:#444; } .oc-bgbtn:active{ transform:scale(.95); }
+
+.oc-stage{ position:relative; z-index:2; padding:22px; min-height:360px; }
+.oc-stepper{ margin-bottom:18px; }
+.oc-rail{ position:relative; height:4px; background:var(--oc-surface-2); border-radius:999px; }
+.oc-rail__fill{ position:absolute; inset:0 auto 0 0; width:0%; background:var(--oc-teal); border-radius:999px; transition:width var(--oc-dur-reveal) var(--oc-ease-std); }
+.oc-steps{ display:flex; gap:6px; margin-top:12px; flex-wrap:wrap; }
+.oc-step{ display:inline-flex; align-items:center; gap:7px; background:var(--oc-surface); border:1px solid rgba(255,255,255,.08);
+  color:var(--oc-text-muted); border-radius:999px; padding:6px 12px; font-size:12px; cursor:pointer; transition:all var(--oc-dur-state) var(--oc-ease-std); }
+.oc-step .n{ width:20px; height:20px; border-radius:50%; display:grid; place-items:center; background:var(--oc-surface-2); font-weight:700; font-size:11px; }
+.oc-step[aria-current="true"]{ border-color:var(--oc-teal); color:var(--oc-text); }
+.oc-step[aria-current="true"] .n{ background:var(--oc-teal); color:#fff; }
+.oc-step.done .n{ background:var(--oc-teal-bright); color:var(--oc-navy-deep); }
+.oc-step:active{ transform:scale(.96); }
+.oc-screentag{ font-size:11px; color:var(--oc-text-muted); letter-spacing:.08em; text-transform:uppercase; margin-top:9px; }
+
+.oc-station{ background:var(--oc-surface); border:1px solid rgba(255,255,255,.07); border-radius:var(--oc-radius); padding:22px; }
+.oc-eyebrow{ color:var(--oc-teal-bright); font-size:12px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; }
+.oc-station h2{ font-size:clamp(20px,3.2vw,28px); margin:4px 0 10px; }
+.oc-station h3{ font-size:18px; margin-top:22px; }
+.oc-narrate{ color:var(--oc-text-muted); max-width:66ch; }
+.oc-scaffold{ display:inline-block; font-size:11px; padding:2px 9px; border-radius:999px; border:1px solid rgba(255,255,255,.15); color:var(--oc-text-muted); margin-bottom:10px; }
+.oc-enter{ opacity:0; transform:translateY(18px); }
+.oc-enter.in{ opacity:1; transform:none; transition:opacity var(--oc-dur-reveal) var(--oc-ease-out), transform var(--oc-dur-reveal) var(--oc-ease-out); }
+.oc-locked{ opacity:.72; }
+.oc-lockbar{ display:flex; align-items:center; gap:9px; background:rgba(232,184,75,.12); border:1px solid var(--oc-warn); color:var(--oc-text);
+  border-radius:var(--oc-radius-sm); padding:10px 13px; margin-bottom:14px; font-size:13px; }
+.oc-lockbar .k{ font-weight:700; color:var(--oc-warn); }
+
+/* results grids — FBC + biochemistry */
+.oc-resgroup{ margin:16px 0; }
+.oc-resgroup__h{ font-size:12px; letter-spacing:.09em; text-transform:uppercase; color:var(--oc-text-muted); font-weight:600; margin-bottom:8px; }
+.oc-fbc{ display:grid; grid-template-columns:repeat(auto-fit,minmax(132px,1fr)); gap:10px; }
+.oc-fbc .cell{ background:var(--oc-surface-2); border-radius:var(--oc-radius-sm); padding:14px; border-left:3px solid rgba(255,255,255,.2); }
+.oc-fbc .cell.low, .oc-fbc .cell.high{ border-left-color:var(--oc-warn); }
+.oc-fbc .cell.critical{ border-left-color:var(--oc-incorrect); }
+.oc-fbc .cell.normal{ border-left-color:var(--oc-teal); }
+.oc-fbc .lab{ font-size:12px; color:var(--oc-text-muted); }
+.oc-fbc .val{ font-family:var(--oc-font-head); font-size:clamp(22px,4vw,30px); font-weight:700; }
+.oc-fbc .unit{ font-size:12px; color:var(--oc-text-muted); }
+.oc-fbc .ref{ font-size:11px; color:var(--oc-text-muted); margin-top:3px; }
+.oc-fbc .flag{ font-size:11px; margin-top:4px; font-weight:600; }
+.oc-fbc .flag.low, .oc-fbc .flag.high{ color:var(--oc-warn); }
+.oc-fbc .flag.critical{ color:var(--oc-incorrect); }
+.oc-fbc .flag.normal{ color:var(--oc-teal-bright); }
+
+.oc-callout{ background:rgba(46,158,143,.12); border:1px solid var(--oc-teal); border-radius:var(--oc-radius-sm); padding:14px; margin:14px 0; }
+.oc-callout .h{ font-weight:600; color:var(--oc-teal-bright); margin-bottom:4px; }
+.oc-callout ul{ margin:6px 0 0; padding-left:18px; } .oc-callout li{ margin:2px 0; }
+.oc-callout.pop{ animation:oc-pop var(--oc-dur-reveal) var(--oc-ease-spring); }
+.oc-callout.lilac{ background:rgba(201,184,232,.12); border-color:var(--oc-lilac); } .oc-callout.lilac .h{ color:var(--oc-lilac); }
+@keyframes oc-pop{ 0%{transform:scale(.96);opacity:0;} 100%{transform:scale(1);opacity:1;} }
+
+.oc-reveal-panel{ max-height:0; opacity:0; overflow:hidden; transition:max-height 950ms var(--oc-ease-out), opacity 760ms var(--oc-ease-out); }
+.oc-reveal-panel.show{ max-height:1400px; opacity:1; }
+
+.oc-ticks{ display:grid; gap:8px; margin:14px 0; }
+.oc-ticks.two{ grid-template-columns:1fr; }
+@media (min-width:760px){ .oc-ticks.two{ grid-template-columns:1fr 1fr; } }
+.oc-tick{ display:flex; align-items:center; gap:10px; background:var(--oc-surface-2); border:1px solid rgba(255,255,255,.1); border-radius:10px; padding:10px 14px; cursor:pointer; transition:border-color var(--oc-dur-state), transform var(--oc-dur-micro); font-size:14px; }
+.oc-tick input{ width:18px; height:18px; flex:0 0 auto; accent-color:var(--oc-teal); }
+.oc-tick[aria-checked="true"]{ border-color:var(--oc-teal); } .oc-tick:active{ transform:scale(.99); }
+.oc-tick.marked-correct{ border-color:var(--oc-correct); background:rgba(52,198,176,.13); }
+.oc-tick.marked-missed{ border-color:var(--oc-teal); border-style:dashed; }
+.oc-tick.marked-wrong{ border-color:var(--oc-incorrect); background:rgba(224,115,107,.13); }
+.oc-tick .mk{ margin-left:auto; font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; white-space:nowrap; }
+.oc-tick.marked-correct .mk{ color:var(--oc-correct); } .oc-tick.marked-missed .mk{ color:var(--oc-teal-bright); } .oc-tick.marked-wrong .mk{ color:var(--oc-incorrect); }
+.oc-tick input:disabled{ cursor:default; }
+.oc-softhint{ font-size:12px; color:var(--oc-warn); margin-top:-6px; }
+
+.oc-media{ margin:16px 0; text-align:center; }
+.oc-framewrap{ display:grid; grid-template-columns:1fr; gap:12px; justify-items:center; }
+@media (min-width:620px){ .oc-framewrap.with-panel{ grid-template-columns:1fr 300px; align-items:start; justify-items:center; } }
+.oc-figure{ position:relative; display:inline-block; max-width:100%; border-radius:var(--oc-radius-sm); overflow:hidden; background:var(--oc-surface-2); touch-action:none; outline:none; line-height:0; }
+.oc-figure:focus-visible{ box-shadow:0 0 0 3px rgba(52,198,176,.6); }
+.oc-figure img{ display:block; max-width:100%; height:auto; user-select:none; -webkit-user-drag:none; }
+.oc-figure.focuspull img{ filter:blur(14px); transform:scale(1.06); }
+.oc-figure.focuspull.sharp img{ filter:none; transform:none; transition:filter 900ms var(--oc-ease-std), transform 900ms var(--oc-ease-std); }
+.oc-figure.annotate-on{ cursor:crosshair; }
+.oc-imgfallback{ display:grid; place-items:center; min-height:220px; color:var(--oc-text-muted); font-size:13px; text-align:center; padding:20px; background:linear-gradient(135deg,var(--oc-surface),var(--oc-surface-2)); }
+.oc-figcap{ font-size:12px; color:var(--oc-text-muted); margin-top:8px; letter-spacing:.04em; }
+
+.oc-loupe{ position:absolute; width:min(40vw,200px); aspect-ratio:1; pointer-events:none;
+  clip-path:polygon(25% 4%,75% 4%,98% 50%,75% 96%,25% 96%,2% 50%); background-repeat:no-repeat; box-shadow:0 8px 24px rgba(0,0,0,.45); display:none; z-index:20; }
+.oc-loupe::after{ content:""; position:absolute; inset:0; clip-path:inherit; box-shadow:inset 0 0 0 3px var(--oc-teal); }
+.oc-figure.loupe-on:not(.annotate-on) .oc-loupe{ display:block; }
+.oc-frame{ position:absolute; width:90px; aspect-ratio:1; border:2px solid var(--oc-teal-bright); background:rgba(52,198,176,.10); border-radius:6px; cursor:grab; display:none; z-index:20; touch-action:none; }
+.oc-frame:active{ cursor:grabbing; }
+.oc-figure.frame-on:not(.annotate-on) .oc-frame{ display:block; }
+.oc-zoompanel{ display:none; background:var(--oc-surface-2); border:1px solid var(--oc-teal); border-radius:var(--oc-radius-sm); width:300px; max-width:100%; aspect-ratio:1; background-repeat:no-repeat; }
+.oc-zoompanel.show{ display:block; }
+
+.oc-magtools{ display:flex; gap:10px; align-items:center; margin-top:10px; font-size:12px; color:var(--oc-text-muted); flex-wrap:wrap; justify-content:center; }
+.oc-magcontrols{ display:inline-flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:center; }
+.oc-magcontrols[hidden]{ display:none; }
+.oc-seg{ display:inline-flex; background:var(--oc-surface-2); border-radius:999px; padding:3px; }
+.oc-seg button{ border:0; background:transparent; color:var(--oc-text-muted); padding:5px 12px; border-radius:999px; cursor:pointer; font-size:12px; transition:transform var(--oc-dur-micro); }
+.oc-seg button[aria-pressed="true"]{ background:var(--oc-teal); color:#fff; } .oc-seg button:active{ transform:scale(.94); }
+.oc-zoomctl{ display:inline-flex; align-items:center; gap:6px; }
+.oc-zoomctl button{ width:26px; height:26px; border-radius:50%; border:1px solid rgba(255,255,255,.2); background:var(--oc-surface-2); color:var(--oc-text); cursor:pointer; font-weight:700; transition:transform var(--oc-dur-micro); }
+.oc-zoomctl button:active{ transform:scale(.88); }
+.oc-hint{ font-size:11px; color:var(--oc-text-muted); opacity:.85; }
+.oc-annobtn{ border:1px solid var(--oc-lilac); background:transparent; color:var(--oc-lilac); border-radius:999px; padding:5px 14px; cursor:pointer; font-size:12px; transition:transform var(--oc-dur-micro), background var(--oc-dur-state); }
+.oc-annobtn[aria-pressed="true"]{ background:var(--oc-lilac); color:var(--oc-navy-deep); } .oc-annobtn:active{ transform:scale(.95); }
+.oc-markbanner{ background:rgba(201,184,232,.15); border:1px solid var(--oc-lilac); color:var(--oc-text); border-radius:8px; padding:9px 12px; font-size:13px; margin-top:10px; text-align:left; }
+
+.oc-pin{ position:absolute; transform:translate(-50%,-50%); min-width:28px; height:28px; padding:0 5px; border-radius:14px; border:2px solid #fff; color:#fff; font-weight:700; font-size:11px; display:grid; place-items:center; z-index:25; pointer-events:none; white-space:nowrap; }
+.oc-pin.user{ background:rgba(201,184,232,.75); box-shadow:0 0 0 2px var(--oc-lilac); }
+.oc-figure.annotate-on .oc-pin.user{ pointer-events:auto; cursor:grab; }
+.oc-pin.sme{ background:rgba(46,158,143,.7); box-shadow:0 0 0 2px var(--oc-teal); cursor:pointer; pointer-events:auto; }
+.oc-hotnote{ position:absolute; z-index:26; background:var(--oc-navy-deep); border:1px solid var(--oc-teal); color:var(--oc-text); padding:8px 10px; border-radius:8px; font-size:12px; max-width:220px; transform:translate(-50%,8px); display:none; text-align:left; }
+.oc-hotnote.show{ display:block; }
+.oc-annolist{ margin-top:12px; display:grid; gap:8px; text-align:left; }
+.oc-annorow{ display:flex; gap:8px; align-items:center; background:var(--oc-surface-2); border:1px solid rgba(255,255,255,.1); border-radius:8px; padding:8px 10px; }
+.oc-annorow .num{ min-width:44px; height:22px; padding:0 8px; flex:0 0 auto; border-radius:11px; background:var(--oc-lilac); color:var(--oc-navy-deep); font-weight:700; display:grid; place-items:center; font-size:12px; }
+.oc-annorow input{ flex:1; min-width:0; background:var(--oc-surface); border:1px solid rgba(255,255,255,.15); color:var(--oc-text); border-radius:6px; padding:6px 8px; font:inherit; font-size:13px; }
+.oc-annorow button{ border:0; background:transparent; color:var(--oc-incorrect); cursor:pointer; font-size:18px; line-height:1; }
+
+.oc-thumbs{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; justify-content:center; }
+.oc-thumbs button{ position:relative; border:2px solid transparent; border-radius:8px; overflow:hidden; padding:0; cursor:pointer; background:var(--oc-surface-2); line-height:0; transition:transform var(--oc-dur-micro) var(--oc-ease-out), box-shadow var(--oc-dur-micro) var(--oc-ease-out); }
+.oc-thumbs button:hover{ transform:scale(1.04); box-shadow:0 6px 16px rgba(0,0,0,.4); } .oc-thumbs button:active{ transform:scale(.97); }
+.oc-thumbs button[aria-pressed="true"]{ border-color:var(--oc-teal); }
+.oc-thumbs img{ width:78px; height:59px; object-fit:cover; display:block; }
+.oc-thumbs .rn{ position:absolute; top:2px; left:2px; background:rgba(15,26,58,.8); color:#fff; font-size:10px; font-weight:700; padding:1px 5px; border-radius:6px; }
+.oc-thumbs .mkd{ position:absolute; bottom:2px; right:2px; background:var(--oc-lilac); color:var(--oc-navy-deep); font-size:9px; font-weight:700; padding:1px 5px; border-radius:6px; }
+
+.oc-reflect{ margin-top:18px; background:var(--oc-surface-2); border:1px solid rgba(255,255,255,.08); border-radius:var(--oc-radius-sm); padding:16px; text-align:left; }
+.oc-reflect label{ display:block; font-weight:600; margin-bottom:8px; }
+.oc-reflect .sub{ font-size:12px; color:var(--oc-text-muted); font-weight:400; display:block; margin-top:-4px; margin-bottom:8px; }
+.oc-reflect textarea{ width:100%; min-height:96px; resize:vertical; border-radius:8px; border:1px solid rgba(255,255,255,.15); background:var(--oc-surface); color:var(--oc-text); padding:10px; font:inherit; }
+.oc-reflect textarea:focus{ outline:none; border-color:var(--oc-teal); box-shadow:0 0 0 3px rgba(52,198,176,.25); }
+.oc-reflect textarea:disabled{ opacity:.75; }
+.oc-conf{ display:flex; gap:8px; align-items:center; margin-top:10px; font-size:13px; color:var(--oc-text-muted); flex-wrap:wrap; }
+.oc-conf .chips{ display:inline-flex; gap:6px; }
+.oc-conf .chips button{ border:1px solid rgba(255,255,255,.15); background:transparent; color:var(--oc-text-muted); border-radius:999px; padding:5px 12px; cursor:pointer; font-size:12px; transition:transform var(--oc-dur-micro), background var(--oc-dur-state); }
+.oc-conf .chips button[aria-pressed="true"]{ background:var(--oc-lilac); color:var(--oc-navy-deep); border-color:var(--oc-lilac); }
+.oc-conf .chips button:hover:not(:disabled){ border-color:var(--oc-lilac); } .oc-conf .chips button:active{ transform:scale(.92); }
+
+.oc-field{ display:grid; gap:6px; margin-top:12px; text-align:left; }
+.oc-field label{ font-size:13px; font-weight:600; }
+.oc-field input{ background:var(--oc-surface); border:1px solid rgba(255,255,255,.15); color:var(--oc-text); border-radius:8px; padding:10px; font:inherit; }
+.oc-field input:focus{ outline:none; border-color:var(--oc-teal); box-shadow:0 0 0 3px rgba(52,198,176,.25); }
+.oc-fieldrow{ display:grid; gap:12px; grid-template-columns:1fr; }
+@media (min-width:640px){ .oc-fieldrow{ grid-template-columns:1fr 1fr; } }
+
+.oc-recap{ margin:6px 0 14px; text-align:left; }
+.oc-recap__h{ font-size:13px; color:var(--oc-lilac); font-weight:600; margin-bottom:10px; text-transform:uppercase; letter-spacing:.08em; }
+.oc-acc{ background:var(--oc-surface); border:1px solid rgba(201,184,232,.35); border-left:4px solid var(--oc-lilac); border-radius:8px; margin-bottom:8px; box-shadow:0 2px 8px rgba(0,0,0,.18); transition:border-color var(--oc-dur-state), background var(--oc-dur-state); }
+.oc-acc[open]{ border-color:var(--oc-lilac); background:rgba(201,184,232,.12); }
+.oc-acc summary{ cursor:pointer; padding:12px 14px; font-weight:600; font-size:14px; list-style:none; display:flex; justify-content:space-between; align-items:center; gap:10px; transition:background var(--oc-dur-micro); }
+.oc-acc summary:hover{ background:rgba(255,255,255,.04); }
+.oc-acc summary::after{ content:"⌄"; color:var(--oc-text-muted); }
+.oc-acc[open] summary::after{ content:"⌃"; color:var(--oc-lilac); }
+.oc-acc summary::-webkit-details-marker{ display:none; }
+.oc-acc[open] .oc-acc__b{ animation:oc-acc-open 280ms var(--oc-ease-out); }
+@keyframes oc-acc-open{ from{ opacity:0; transform:translateY(-6px);} to{ opacity:1; transform:none;} }
+.oc-acc__b{ padding:0 12px 11px; color:var(--oc-text-muted); white-space:pre-wrap; font-size:14px; }
+
+.oc-nav{ display:flex; justify-content:space-between; gap:10px; margin-top:18px; flex-wrap:wrap; position:relative; z-index:2; }
+.oc-navright{ display:flex; gap:10px; flex-wrap:wrap; margin-left:auto; }
+.oc-btn{ display:inline-flex; align-items:center; gap:8px; border:1px solid transparent; border-radius:10px; padding:11px 20px; font-weight:600; cursor:pointer; font-size:14px;
+  transition:transform var(--oc-dur-micro) var(--oc-ease-std), background var(--oc-dur-state) var(--oc-ease-std), filter var(--oc-dur-micro); }
+.oc-btn:hover{ transform:translateY(-2px); } .oc-btn:active{ transform:translateY(0) scale(.97); filter:brightness(.93); }
+.oc-btn--primary{ background:var(--oc-teal); color:#fff; } .oc-btn--primary:hover{ background:var(--oc-teal-bright); }
+.oc-btn--ghost{ background:transparent; color:var(--oc-text); border-color:rgba(255,255,255,.25); } .oc-btn--ghost:hover{ background:rgba(255,255,255,.08); }
+.oc-btn[disabled]{ opacity:.45; cursor:not-allowed; transform:none; }
+.oc-btn:focus-visible{ outline:none; box-shadow:0 0 0 3px rgba(52,198,176,.5); }
+
+.oc-options{ display:grid; gap:10px; margin:16px 0; text-align:left; }
+.oc-opt{ display:flex; gap:10px; align-items:flex-start; text-align:left; width:100%; background:var(--oc-surface-2); border:1px solid rgba(255,255,255,.12); color:var(--oc-text); border-radius:10px; padding:14px 16px; cursor:pointer; font-size:15px;
+  transition:border-color var(--oc-dur-state), background var(--oc-dur-state), transform var(--oc-dur-micro); }
+.oc-opt:hover:not(:disabled){ transform:translateY(-1px); border-color:var(--oc-teal); } .oc-opt:active{ transform:scale(.99); }
+.oc-opt[aria-pressed="true"]{ border-color:var(--oc-teal); box-shadow:0 0 0 2px rgba(46,158,143,.4); }
+.oc-opt .box{ width:18px; height:18px; flex:0 0 auto; margin-top:3px; border-radius:5px; border:2px solid rgba(255,255,255,.35); display:grid; place-items:center; font-size:12px; font-weight:700; color:var(--oc-navy-deep); }
+.oc-opt[aria-pressed="true"] .box{ background:var(--oc-teal); border-color:var(--oc-teal); color:#fff; }
+.oc-opt.correct{ border-color:var(--oc-correct); background:rgba(52,198,176,.14); }
+.oc-opt.incorrect{ border-color:var(--oc-incorrect); background:rgba(224,115,107,.14); }
+.oc-opt .tag{ margin-left:auto; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; }
+.oc-opt.correct .tag{ color:var(--oc-correct); } .oc-opt.incorrect .tag{ color:var(--oc-incorrect); }
+.oc-feedback{ margin-top:16px; border-radius:var(--oc-radius-sm); padding:16px; display:none; text-align:left; }
+.oc-feedback.show{ display:block; }
+.oc-feedback.ok{ background:rgba(52,198,176,.12); border:1px solid var(--oc-correct); }
+.oc-feedback.no{ background:rgba(224,115,107,.12); border:1px solid var(--oc-incorrect); }
+.oc-score{ font-family:var(--oc-font-head); font-size:44px; font-weight:700; line-height:1; }
+.oc-scorerow{ display:flex; gap:18px; align-items:center; flex-wrap:wrap; }
+.oc-outcome{ font-size:13px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; border-radius:999px; padding:6px 14px; }
+.oc-outcome.ok{ background:rgba(52,198,176,.2); color:var(--oc-correct); border:1px solid var(--oc-correct); }
+.oc-outcome.no{ background:rgba(224,115,107,.2); color:var(--oc-incorrect); border:1px solid var(--oc-incorrect); }
+.oc-breakdown{ display:grid; gap:8px; margin:16px 0; }
+.oc-brow{ display:grid; grid-template-columns:1fr auto; gap:6px 12px; align-items:center; background:var(--oc-surface-2); border:1px solid rgba(255,255,255,.1); border-radius:10px; padding:11px 14px; font-size:14px; }
+.oc-brow .pts{ font-family:var(--oc-font-head); font-weight:700; white-space:nowrap; }
+.oc-brow .bar{ grid-column:1/-1; height:5px; background:rgba(255,255,255,.12); border-radius:999px; overflow:hidden; }
+.oc-brow .bar i{ display:block; height:100%; width:0%; background:var(--oc-teal); border-radius:999px; transition:width 900ms var(--oc-ease-out); }
+
+/* ADAMTS13 reveal card */
+.oc-adamts{ background:linear-gradient(135deg,var(--oc-navy),var(--oc-navy-deep)); border:1px solid var(--oc-teal); border-radius:var(--oc-radius); padding:20px; margin:16px 0; text-align:center; }
+.oc-adamts .lab{ font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--oc-teal-bright); font-weight:600; }
+.oc-adamts .val{ font-family:var(--oc-font-head); font-size:clamp(34px,7vw,52px); font-weight:700; line-height:1.1; }
+.oc-adamts .unit{ font-size:14px; color:var(--oc-text-muted); }
+.oc-adamts .ref{ font-size:13px; color:var(--oc-text-muted); margin-top:8px; }
+.oc-adamts .verdict{ display:inline-block; margin-top:12px; border:1px solid var(--oc-teal-bright); background:rgba(52,198,176,.16); color:var(--oc-teal-bright); border-radius:999px; padding:6px 16px; font-size:13px; font-weight:600; }
+
+.oc-scan{ position:absolute; inset:0; pointer-events:none; z-index:40; opacity:0; }
+.oc-scan.run{ opacity:1; }
+.oc-scan .bar{ position:absolute; left:0; right:0; height:3px; top:0; background:var(--oc-teal-bright); box-shadow:0 0 16px 4px rgba(52,198,176,.6); }
+.oc-scan .lbl{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:var(--oc-teal-bright); font-family:var(--oc-font-head); letter-spacing:.18em; text-transform:uppercase; font-size:13px; opacity:0; }
+.oc-scan.run .bar{ animation:oc-scan-move 700ms var(--oc-ease-std) forwards; }
+.oc-scan.up.run .bar{ animation:oc-scan-up 700ms var(--oc-ease-std) forwards; }
+.oc-scan.run .lbl{ animation:oc-scan-lbl 700ms ease forwards; }
+@keyframes oc-scan-move{ 0%{top:0;} 100%{top:100%;} }
+@keyframes oc-scan-up{ 0%{top:100%;} 100%{top:0;} }
+@keyframes oc-scan-lbl{ 0%,100%{opacity:0;} 40%,70%{opacity:1;} }
+.oc-wipe{ position:absolute; inset:0; z-index:66; pointer-events:none; background:linear-gradient(0deg,#C9B8E8 0%,#C9B8E8 72%,rgba(201,184,232,.5) 100%); transform:translateY(100%); }
+.oc-wipe.run{ animation:oc-wipe-up 760ms var(--oc-ease-std) forwards; }
+@keyframes oc-wipe-up{ 0%{ transform:translateY(100%);} 45%{ transform:translateY(0);} 58%{ transform:translateY(0);} 100%{ transform:translateY(-100%);} }
+
+.oc-landing{ display:none; background:var(--oc-navy-deep); padding:34px 24px 40px; text-align:center; }
+.oc-case.is-landing .oc-stage{ display:none; }
+.oc-case.is-landing .oc-landing{ display:block; }
+.oc-landing__logo{ max-width:200px; height:auto; margin:0 auto 14px; display:block; }
+.oc-landing__word{ font-family:var(--oc-font-head); font-weight:700; font-size:26px; color:#fff; margin-bottom:14px; }
+.oc-landing .eye{ color:var(--oc-teal-bright); letter-spacing:.16em; text-transform:uppercase; font-size:12px; font-weight:600; }
+.oc-landing h1{ font-size:clamp(24px,5vw,38px); margin-top:4px; }
+.oc-landing .credit{ color:var(--oc-text-muted); font-size:13px; margin-top:6px; }
+.oc-landing__meta{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:16px; }
+.oc-landing__meta span{ font-size:12px; color:var(--oc-text-muted); border:1px solid rgba(255,255,255,.18); border-radius:999px; padding:5px 13px; }
+.oc-landing__attr{ font-size:12px; color:var(--oc-text-muted); margin-top:18px; }
+.oc-landing__attr a{ color:var(--oc-teal-bright); text-decoration:none; } .oc-landing__attr a:hover{ text-decoration:underline; }
+.oc-launch{ position:absolute; inset:0; z-index:68; pointer-events:none; overflow:hidden; background:linear-gradient(0deg,#2E9E8F 0%,#2E9E8F 70%,rgba(46,158,143,.55) 100%); transform:translateY(100%); }
+.oc-launch.run{ animation:oc-launch-up 840ms var(--oc-ease-std) forwards; }
+@keyframes oc-launch-up{ 0%{ transform:translateY(100%);} 42%{ transform:translateY(0);} 56%{ transform:translateY(0);} 100%{ transform:translateY(-100%);} }
+.oc-launch__glyphs{ position:absolute; inset:0; }
+.oc-launch__glyphs span{ position:absolute; transform:translate(-50%,-50%); }
+.oc-launch__glyphs svg{ width:34px; height:34px; color:rgba(255,255,255,.9); opacity:0; }
+.oc-launch.run .oc-launch__glyphs svg{ animation:oc-glyph 840ms ease forwards; }
+@keyframes oc-glyph{ 0%{ opacity:0; transform:translateY(22px) scale(.8);} 38%,60%{ opacity:.95; transform:translateY(0) scale(1);} 100%{ opacity:0; transform:translateY(-26px) scale(.9);} }
+
+.oc-modal{ position:absolute; inset:0; z-index:70; background:rgba(0,0,0,.5); display:none; place-items:center; padding:20px; backdrop-filter:blur(2px); }
+.oc-modal.show{ display:grid; }
+.oc-modal__card{ background:var(--oc-surface); border:1px solid var(--oc-teal); border-radius:var(--oc-radius); padding:22px; max-width:440px; width:100%; animation:oc-pop 280ms var(--oc-ease-spring); }
+.oc-modal__card h3{ font-size:18px; margin-bottom:8px; }
+.oc-modal__card p{ color:var(--oc-text-muted); }
+.oc-modal__row{ display:flex; gap:10px; justify-content:flex-end; margin-top:16px; flex-wrap:wrap; }
+
+.oc-tools{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+.oc-donecard{ text-align:center; padding:10px 0 4px; }
+.oc-note{ font-size:12px; color:var(--oc-text-muted); border-left:2px solid var(--oc-warn); padding-left:10px; margin-top:12px; text-align:left; }
+
+.oc-help{ margin-top:16px; background:var(--oc-navy-deep); border:1px solid var(--oc-teal); border-radius:var(--oc-radius-sm); overflow:hidden; }
+.oc-help[hidden]{ display:none; }
+.oc-help__head{ display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 14px; background:rgba(46,158,143,.18); }
+.oc-help__head span{ font-weight:700; color:var(--oc-teal-bright); font-size:13px; letter-spacing:.04em; }
+.oc-help__min{ border:1px solid rgba(255,255,255,.25); background:transparent; color:var(--oc-text); border-radius:999px; padding:4px 12px; cursor:pointer; font-size:12px; transition:transform var(--oc-dur-micro), background var(--oc-dur-state); }
+.oc-help__min:hover{ background:rgba(255,255,255,.08); } .oc-help__min:active{ transform:scale(.95); }
+.oc-help__body{ padding:14px; color:var(--oc-text-muted); font-size:14px; text-align:left; }
+.oc-help__body ul{ margin:6px 0 0; padding-left:18px; } .oc-help__body li{ margin:4px 0; }
+.oc-helpchip{ position:fixed; bottom:16px; right:16px; z-index:50; width:46px; height:46px; border-radius:50%; border:2px solid var(--oc-teal-bright); background:var(--oc-navy-deep); color:var(--oc-teal-bright); font-size:20px; font-weight:700; cursor:pointer; box-shadow:0 8px 22px rgba(0,0,0,.5); transition:transform var(--oc-dur-micro); }
+.oc-helpchip[hidden]{ display:none; }
+.oc-helpchip:hover{ transform:scale(1.08); } .oc-helpchip:active{ transform:scale(.94); }
+
+@media (prefers-reduced-motion: reduce){
+  .oc-case *{ animation:none !important; transition:none !important; }
+  .oc-enter{ opacity:1; transform:none; }
+  .oc-figure.focuspull img{ filter:none; transform:none; }
+  .oc-reveal-panel{ max-height:none; }
+}
+
+/* ===== print: CPD record + certificate (spec §11.6 — Blob/print, never window.open) ===== */
+@media print{
+  html,body{ margin:0; padding:0; background:#fff; }
+  body > *:not(#oc-print){ display:none !important; }
+  #oc-print{ display:block !important; }
+  @page{ margin:14mm; }
+  @page cert{ margin:0; }
+}
+#oc-print{ display:none; color:#111; background:#fff; }
+.ocp{ font-family:"Inter",system-ui,sans-serif; padding:26px; max-width:900px; margin:0 auto; }
+.ocp h1{ font-family:"Poppins",sans-serif; color:#16234D; font-size:22px; margin:0; }
+.ocp .sub{ color:#16234D; font-weight:600; letter-spacing:.04em; text-transform:uppercase; font-size:11px; }
+.ocp .meta{ color:#555; font-size:12px; margin:4px 0 14px; }
+.ocp hr{ border:0; border-top:2px solid #2E9E8F; margin:10px 0 16px; }
+.ocp h2{ font-size:14px; color:#16234D; margin:16px 0 8px; }
+.ocp .imgrow{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:12px; }
+.ocp .figpin{ position:relative; display:inline-block; }
+.ocp .figpin img{ width:210px; max-width:44vw; border-radius:6px; border:1px solid #ddd; display:block; }
+.ocp .figpin .cap{ font-size:11px; color:#555; margin-top:3px; }
+.ocp .ppin{ position:absolute; transform:translate(-50%,-50%); min-width:22px; height:22px; padding:0 4px; border-radius:11px; background:#C9B8E8; border:2px solid #16234D; color:#16234D; font-weight:700; font-size:10px; display:grid; place-items:center; white-space:nowrap; }
+.ocp .qa{ border:1px solid #e2e2e2; border-radius:8px; padding:12px 14px; margin-bottom:10px; page-break-inside:avoid; }
+.ocp .qa .q{ font-weight:700; color:#16234D; margin-bottom:4px; }
+.ocp .qa .you{ margin:4px 0; }
+.ocp .qa .exp{ background:#f0faf8; border-left:3px solid #2E9E8F; padding:8px 10px; border-radius:4px; font-size:14px; }
+.ocp .badge{ display:inline-block; border-radius:999px; padding:3px 12px; font-size:12px; font-weight:700; }
+.ocp .badge.ok{ background:#dff5f0; color:#1c7a6b; } .ocp .badge.no{ background:#fbe3e1; color:#a23c34; }
+.ocp table{ border-collapse:collapse; width:100%; font-size:13px; margin-bottom:10px; }
+.ocp table th,.ocp table td{ border:1px solid #e2e2e2; padding:6px 9px; text-align:left; }
+.ocp table th{ background:#f4f7fa; color:#16234D; }
+.ocp .decl{ margin-top:18px; font-size:12px; color:#555; border-top:1px dashed #bbb; padding-top:10px; }
+
+/* certificate — branded fallback until Anas's background template lands (CASE.certificate.backgroundUrl) */
+.occert{ font-family:"Inter",system-ui,sans-serif; position:relative; width:100%; max-width:1000px; margin:0 auto; padding:44px 52px;
+  border:3px solid #16234D; outline:1px solid #2E9E8F; outline-offset:5px; text-align:center; background-size:cover; background-position:center; page-break-after:always; }
+.occert .cbrand{ font-family:"Poppins",sans-serif; font-weight:700; font-size:22px; color:#16234D; letter-spacing:.02em; }
+.occert .clogo{ max-width:180px; margin:0 auto 8px; display:block; }
+.occert .ckicker{ font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:#2E9E8F; font-weight:700; margin-top:14px; }
+.occert h1{ font-family:"Poppins",sans-serif; font-size:30px; color:#16234D; margin:6px 0 2px; }
+.occert .cname{ font-family:"Poppins",sans-serif; font-size:26px; color:#16234D; border-bottom:2px solid #2E9E8F; display:inline-block; padding:6px 34px 4px; margin:18px 0 6px; min-width:320px; }
+.occert .creg{ font-size:12px; color:#555; }
+.occert .cbody{ font-size:14px; color:#333; max-width:60ch; margin:16px auto 0; line-height:1.6; }
+.occert .ccase{ font-family:"Poppins",sans-serif; font-size:17px; color:#16234D; font-weight:600; margin:8px 0 0; }
+.occert .cgrid{ display:flex; gap:26px; justify-content:center; flex-wrap:wrap; margin:20px 0 4px; }
+.occert .cgrid div{ font-size:12px; color:#555; }
+.occert .cgrid b{ display:block; font-family:"Poppins",sans-serif; font-size:16px; color:#16234D; }
+.occert .clo{ text-align:left; max-width:70ch; margin:18px auto 0; font-size:12px; color:#444; }
+.occert .clo ul{ margin:5px 0 0; padding-left:18px; }
+.occert .cfoot{ display:flex; justify-content:space-between; gap:22px; margin-top:26px; font-size:11px; color:#666; flex-wrap:wrap; text-align:left; }
+.occert .csig{ border-top:1px solid #999; padding-top:5px; min-width:200px; flex:1; }
+</style>
+</head>
+<body>
+
+<canvas class="oc-bg" id="ocBg" aria-hidden="true"></canvas>
+<span class="oc-proto">Concept prototype · content pending SME sign-off</span>
+
+<div class="oc-case" id="ocRoot">
+  <div class="oc-top">
+    <div class="oc-brandline">
+      <span class="t">Morphology Monthly — Interactive CPD Case</span>
+      <span class="s" id="ocCredit">Case MM250818</span>
+    </div>
+    <div class="oc-topright">
+      <span class="oc-cpdbadge"><span class="dot"></span>Assessed CPD activity</span>
+      <button class="oc-bgbtn" id="ocBgToggle" aria-pressed="true">✦ Background: On</button>
+    </div>
+  </div>
+
+  <div class="oc-landing" id="ocLanding">
+    <img class="oc-landing__logo" id="ocLogo" src="https://onlycells.co.uk/wp-content/uploads/Only-Cells-Logo.png" alt="Only Cells" onerror="this.outerHTML='<div class=&quot;oc-landing__word&quot;>Only Cells</div>'">
+    <div class="eye">Morphology Monthly · Assessed CPD Case</div>
+    <h1 id="ocLandTitle">MM250818</h1>
+    <div class="credit" id="ocLandCredit"></div>
+    <p class="oc-narrate" style="margin:12px auto 0; max-width:52ch">Work through a real blood film case the way you would on the bench: read the numbers, examine the film, build your differential — then commit. Your submission is scored and recorded as CPD evidence.</p>
+    <div class="oc-landing__meta" id="ocLandMeta"></div>
+    <div style="margin-top:18px"><button class="oc-btn oc-btn--primary" id="ocBegin">Begin CPD case</button></div>
+    <div style="margin-top:14px"><button class="oc-bgbtn" id="ocBgToggleIntro" aria-pressed="true">✦ Background: On</button></div>
+    <div class="oc-landing__attr">An <strong>Only Cells</strong> resource · <a href="https://onlycells.co.uk/" target="_blank" rel="noopener">onlycells.co.uk</a></div>
+  </div>
+
+  <div class="oc-stage">
+    <div class="oc-stepper">
+      <div class="oc-rail"><div class="oc-rail__fill" id="ocRailFill"></div></div>
+      <div class="oc-steps" id="ocSteps"></div>
+      <div class="oc-screentag" id="ocScreenTag"></div>
+    </div>
+    <div id="ocContent" aria-live="polite"></div>
+    <div class="oc-help" id="ocHelp" hidden>
+      <div class="oc-help__head"><span>How this works</span><button class="oc-help__min" id="ocHelpMin">Minimise ✕</button></div>
+      <div class="oc-help__body" id="ocHelpBody"></div>
+    </div>
+    <div class="oc-nav">
+      <button class="oc-btn oc-btn--ghost" id="ocBack">‹ Back</button>
+      <div class="oc-navright">
+        <button class="oc-btn oc-btn--ghost" id="ocReset">Reset</button>
+        <button class="oc-btn oc-btn--primary" id="ocNext">Next ›</button>
+      </div>
+    </div>
+    <div class="oc-scan" id="ocScan" aria-hidden="true"><div class="bar"></div><div class="lbl">Analysing</div></div>
+  </div>
+
+  <div class="oc-wipe" id="ocWipe" aria-hidden="true"></div>
+  <button class="oc-helpchip" id="ocHelpChip" title="How this works" aria-label="How this works" hidden>?</button>
+
+  <div class="oc-launch" id="ocLaunch" aria-hidden="true"><div class="oc-launch__glyphs" id="ocLaunchGlyphs"></div></div>
+
+  <div class="oc-modal" id="ocModal" role="dialog" aria-modal="true" aria-labelledby="ocModalTitle">
+    <div class="oc-modal__card">
+      <h3 id="ocModalTitle">Reset this case?</h3>
+      <p id="ocModalBody">This will clear all your work for this case.</p>
+      <div class="oc-modal__row">
+        <button class="oc-btn oc-btn--ghost" id="ocModalCancel">Cancel</button>
+        <button class="oc-btn oc-btn--primary" id="ocModalOk">Yes, reset</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="oc-print"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================================================================
+   CASE CONFIG — content separate from code (spec §3).
+   Swap this block to build the next case; the engine below stays untouched.
+
+   PROVENANCE: clinical text, FBC, biochemistry, ADAMTS13 and the answer are
+   VERBATIM from the Only Cells pages (onlycells.co.uk/mm250818/ and /mm250818-hus/)
+   via interactive-case/case-mm250818/case-mm250818_intake.md.
+
+   [GAP] = flagged open item in the intake — authored here so the build isn't
+   blocked; must be confirmed with Anas / the SME before this goes live.
+   ========================================================================== */
+const CASE = {
+  id:"MM250818",                       // [GAP] final case id/month TBC by Anas — working id per folder convention
+  answerTitle:"Haemolytic Uraemic Syndrome (HUS)",
+  credit:"Only Cells",
+  specimen:"28U956324",
+  meta:[
+    "CPD time: to be confirmed",       // [GAP] intake §8
+    "Level & audience: to be confirmed",// [GAP] intake §8
+    "Stain / magnification: to be confirmed" // [GAP] intake §4 — likely MGG, ×100 oil
+  ],
+  history:"35-year-old male presented with fatigue and pallor, easy bruising, reduced urine output and mild abdominal pain following a recent gastrointestinal illness.",
+  filmTrigger:"Due to the severely low PLT results a blood film was made.",
+
+  /* Reference ranges are AUTHORED (not supplied in the intake) — [GAP] confirm against the reporting lab's ranges. */
+  fbc:[
+    { key:"plt",  label:"Platelets",   value:16,   unit:"x10⁹/L", flag:"critical", flagText:"▼▼ critically low", ref:"150–400" },
+    { key:"hb",   label:"Haemoglobin", value:113,  unit:"g/L",    flag:"low",      flagText:"▼ low",             ref:"130–170" },
+    { key:"wbc",  label:"WBC",         value:5.46, unit:"x10⁹/L", flag:"normal",   flagText:"normal",            ref:"4.0–11.0" }
+  ],
+  biochem:[
+    { key:"creat",label:"Creatinine",  value:257,  unit:"µmol/L", flag:"high", flagText:"▲ raised", ref:"60–110" },
+    { key:"bili", label:"Bilirubin",   value:49,   unit:"µmol/L", flag:"high", flagText:"▲ raised", ref:"< 21" },
+    { key:"alt",  label:"ALT",         value:77,   unit:"U/L",    flag:"high", flagText:"▲ raised", ref:"10–50" },
+    { key:"ca",   label:"Calcium",     value:1.84, unit:"mmol/L", flag:"low",  flagText:"▼ low",    ref:"2.20–2.60" },
+    { key:"phos", label:"Phosphate",   value:0.4,  unit:"mmol/L", flag:"low",  flagText:"▼ low",    ref:"0.80–1.50" }
+  ],
+
+  /* The discriminator — WITHHELD until the learner has committed a differential (Anas's 2-stage design). */
+  adamts13:{ label:"ADAMTS13 activity", value:64.7, unit:"IU/dL", ref:"normal range · severe deficiency < 10 IU/dL",
+    verdict:"Within normal range — TTP excluded",
+    note:"A severely reduced ADAMTS13 (typically < 10 IU/dL) is what defines TTP. A normal result takes TTP off the table and, with the AKI and the preceding GI illness, points to HUS." },
+
+  media:{ base:"assets/",
+    /* display = webp (fast first paint); hires = the source PNG the loupe pulls from.
+       Swap `hires` for Anas's full-resolution originals when they land — no other change needed. */
+    stills:[
+      { src:"film-01-1024x768.webp", hires:"film-01-1024x768.png" },
+      { src:"film-02-1024x768.webp", hires:"film-02-1024x768.png" },
+      { src:"film-03-1024x768.webp", hires:"film-03-1024x768.png" },
+      { src:"film-04-1024x768.webp", hires:"film-04-1024x768.png" },
+      { src:"film-05-1024x768.webp", hires:"film-05-1024x768.png" },
+      { src:"film-06-1024x768.webp", hires:"film-06-1024x768.png" },
+      { src:"film-07-1024x768.webp", hires:"film-07-1024x768.png" },
+      { src:"film-08-1024x768.webp", hires:"film-08-1024x768.png" }
+    ],
+    videos:[]                          // no videos this case (stills only)
+  },
+
+  /* SME-marked reveal layer. Anas offered to mark the fragments as SEPARATE files (intake §4).
+     Leave EMPTY until those land — we do not guess marker positions on a clinical image. */
+  hotspots:[],
+
+  /* ---- Part A(i): which results are abnormal / significant? (Screen 1) ---- */
+  resultItems:[
+    { id:"r-plt",   text:"Platelets 16 ×10⁹/L — severe thrombocytopenia", correct:true, weight:3 },
+    { id:"r-creat", text:"Creatinine 257 µmol/L — acute kidney injury",   correct:true, weight:3 },
+    { id:"r-hb",    text:"Haemoglobin 113 g/L — anaemia",                 correct:true, weight:2 },
+    { id:"r-bili",  text:"Bilirubin 49 µmol/L — raised (haemolysis)",     correct:true, weight:2 },
+    { id:"r-alt",   text:"ALT 77 U/L — mildly raised",                    correct:true, weight:1 },
+    { id:"r-caphos",text:"Calcium 1.84 and phosphate 0.4 mmol/L — both low", correct:true, weight:1 },
+    { id:"r-wbc",   text:"WBC 5.46 ×10⁹/L — leucocytosis",                correct:false, penalty:2 },
+    { id:"r-neut",  text:"Neutropenia",                                    correct:false, penalty:2 },
+    { id:"r-mcv",   text:"Macrocytosis — raised MCV",                      correct:false, penalty:2 }
+  ],
+
+  /* ---- Part A(ii): morphological features on the film (Screen 1) ----
+     Correct set is VERBATIM from the reveal page. Detractors are AUTHORED
+     plausible over-calls — [GAP] intake §5 asks Anas to confirm/replace them. */
+  filmItems:[
+    { id:"f-frag",   text:"Red-cell fragmentation — schistocytes (‘helmet’ cells)", correct:true, weight:4 },
+    { id:"f-fewplt", text:"Markedly reduced platelets on the film",                          correct:true, weight:4 },
+    { id:"f-micro",  text:"Occasional microspherocytes",                                     correct:true, weight:2 },
+    { id:"f-poly",   text:"Polychromasia",                                                   neutral:true },   // [GAP] not stated in the reveal — scored 0 either way
+    { id:"f-clump",  text:"Platelet clumps — EDTA artefact",                                 correct:false, penalty:2 },
+    { id:"f-nrbc",   text:"Nucleated red cells",                                             correct:false, penalty:2 },
+    { id:"f-blast",  text:"Blast cells",                                                     correct:false, penalty:2 },
+    { id:"f-spher",  text:"Spherocytes as the dominant abnormality",                         correct:false, penalty:2 },
+    { id:"f-hyper",  text:"Hypersegmented neutrophils",                                      correct:false, penalty:2 }
+  ],
+
+  /* ---- Part B: differential (Screen 2, before ADAMTS13) ---- */
+  differentials:[
+    { id:"d-hus",  text:"Haemolytic uraemic syndrome (HUS)",            correct:true, weight:2 },
+    { id:"d-ttp",  text:"Thrombotic thrombocytopenic purpura (TTP)",    correct:true, weight:2 },
+    { id:"d-dic",  text:"Disseminated intravascular coagulation (DIC)", correct:true, weight:1 },
+    { id:"d-itp",  text:"Immune thrombocytopenia (ITP)",                correct:true, weight:1 },
+    { id:"d-hs",   text:"Hereditary spherocytosis",                     correct:false, penalty:1 },
+    { id:"d-aiha", text:"Warm autoimmune haemolytic anaemia",           correct:false, penalty:1 },
+    { id:"d-meg",  text:"Megaloblastic anaemia (B12 / folate)",         correct:false, penalty:1 },
+    { id:"d-leuk", text:"Acute leukaemia",                              correct:false, penalty:1 }
+  ],
+
+  /* ---- Part C: the final commit (Screen 2, after ADAMTS13) ---- */
+  diagnosis:{
+    answer:"Haemolytic uraemic syndrome (HUS)",
+    options:[
+      "Haemolytic uraemic syndrome (HUS)",
+      "Thrombotic thrombocytopenic purpura (TTP)",
+      "Disseminated intravascular coagulation (DIC)",
+      "Immune thrombocytopenia (ITP)",
+      "Hereditary spherocytosis",
+      "EDTA-induced pseudothrombocytopenia (artefact)"
+    ],
+    explanation:"Microangiopathic haemolytic anaemia (fragments / schistocytes) + severe thrombocytopenia + acute kidney injury (raised creatinine) + a recent gastrointestinal illness, with a NORMAL ADAMTS13 → haemolytic uraemic syndrome, not TTP."
+  },
+
+  /* Model answers shown against the learner's free text in the record (formative, unscored). */
+  model:{
+    ruleout:[
+      "TTP — the key differential. Excluded here by a NORMAL ADAMTS13 activity (severe deficiency, typically < 10 IU/dL, defines TTP).",
+      "DIC — would expect a deranged coagulation screen (prolonged PT/APTT, low fibrinogen, raised D-dimer). [GAP: coagulation results were not supplied with this case — confirm with Anas.]",
+      "ITP — explains isolated thrombocytopenia but not the fragmentation, the haemolysis or the acute kidney injury.",
+      "EDTA pseudothrombocytopenia — excluded by the film itself: platelets are genuinely reduced, with no clumps.",
+      "Hereditary spherocytosis — spherocytes are only occasional here, not the dominant abnormality, and it does not explain the AKI or the thrombocytopenia."
+    ],
+    filmObs:[
+      "Red-cell fragmentation with schistocytes — the hallmark of a microangiopathic process",
+      "Occasional microspherocytes",
+      "Markedly reduced platelets on the film, confirming true thrombocytopenia"
+    ],
+    resultObs:[
+      "Severe thrombocytopenia (PLT 16) — the trigger for the film",
+      "Anaemia (Hb 113) with a raised bilirubin — consistent with haemolysis",
+      "Raised creatinine (257) — acute kidney injury",
+      "Normal WBC — no leucocytosis"
+    ]
+  },
+
+  /* Morphology report skeleton — intake §7. [GAP] confirm mandatory vs optional fields with Anas. */
+  report:[
+    ["RBC","Red-cell fragmentation with schistocytes; occasional microspherocytes."],
+    ["WBC","Normal count; no abnormal cells."],
+    ["Platelets","Markedly reduced."],
+    ["Other","Features of a microangiopathic haemolytic anaemia (MAHA)."],
+    ["Conclusion","Appearances consistent with MAHA; with AKI, recent GI illness and a normal ADAMTS13, consistent with HUS."],
+    ["Recommended action","Exclude TTP (ADAMTS13 — normal); clinical correlation."]
+  ],
+
+  teachingPoint:"MAHA + thrombocytopenia + AKI after a gastrointestinal illness, with a NORMAL ADAMTS13, = HUS. The normal ADAMTS13 is what distinguishes HUS from TTP.",
+
+  /* Scoring model is AUTHORED — [GAP] intake §6/§8: weights, pass mark and attempt policy all need Anas. */
+  scoring:{
+    passMark:70,
+    weights:{ results:15, features:25, differentials:20, diagnosis:40 },
+    labels:{ results:"Abnormal results identified", features:"Film features identified",
+             differentials:"Differential considered", diagnosis:"Final diagnosis" }
+  },
+
+  certificate:{
+    backgroundUrl:null,               // [ACTION] Anas is supplying a background template — drop the URL/path here
+    title:"Certificate of CPD Activity",
+    body:"has completed the Only Cells Morphology Monthly assessed interactive blood-film case",
+    cpdMinutes:null,                  // [GAP] intake §8
+    accreditation:"Self-certified CPD — accreditation to be confirmed", // [GAP]
+    signatory:"Anas Nasir · Specialist Biomedical Scientist, Only Cells",
+    outcomes:[                        // [GAP] drafted in intake §8 — confirm wording
+      "Recognise a microangiopathic blood-film picture — red-cell fragmentation and schistocytes.",
+      "Build a differential for thrombocytopenia with red-cell fragmentation.",
+      "Use ADAMTS13 activity to distinguish HUS from TTP."
+    ]
+  },
+
+  references:[]                        // [GAP] intake §9 — none supplied
+};
+
+/* ===== stations — Anas's 2-screen CPD design (intake §6) ===== */
+const STATIONS=[
+  { id:"presentation", title:"Presentation & bloods", screen:"Screen 1 — presentation & film", scaffold:"Review · flag the abnormal results" },
+  { id:"film",         title:"The blood film",        screen:"Screen 1 — presentation & film", scaffold:"Identify features · annotate" },
+  { id:"reasoning",    title:"Differential & rule-out",screen:"Screen 2 — reasoning",           scaffold:"Commit your differential" },
+  { id:"adamts",       title:"ADAMTS13 & diagnosis",  screen:"Screen 2 — the discriminator",   scaffold:"New result · one-shot commit" },
+  { id:"result",       title:"Result & CPD record",   screen:"Reveal & record",                scaffold:"Score · feedback · certificate" }
+];
+
+const $ = (s,r=document)=> r.querySelector(s);
+const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const finePointer = ()=> window.matchMedia('(pointer:fine)').matches;
+const STORE_KEY="oc-case-"+CASE.id, STORE_VER=1;
+const imgUrl=(m)=> CASE.media.base+m;
+const hiresUrl=(s)=> s.hires ? CASE.media.base+s.hires : imgUrl(s.src);
+const CONF=["Unsure","Fairly sure","Confident"];
+const ROMAN=["I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII"];
+const roman=(i)=> ROMAN[i]||String(i+1);
+const clamp=(v,a,b)=> Math.max(a,Math.min(b,v));
+function escapeHtml(s){ return (s||"").replace(/[&<>"']/g,c=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c])); }
+function emptyAnno(){ return CASE.media.stills.map(()=>[]); }
+
+/* ===== state ===== */
+let state=loadState();
+function freshState(){ return { ver:STORE_VER, step:0, maxStep:0,
+  reflections:{}, confidence:{}, ticks:{}, annotations:{ film:emptyAnno() },
+  learner:{ name:"", reg:"" },
+  magStyle:null, hexZoom:3, bgAnim:true, helpMin:false,
+  adamtsRevealed:false,
+  assess:{ committed:false, choice:null, correct:null, order:null, at:null, score:null, parts:null } }; }
+function loadState(){ try{ const s=JSON.parse(localStorage.getItem(STORE_KEY)); if(s&&s.ver===STORE_VER) return s; }catch(e){} return freshState(); }
+function saveState(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){} }
+function annoFor(key,idx){ state.annotations[key]=state.annotations[key]||emptyAnno(); state.annotations[key][idx]=state.annotations[key][idx]||[]; return state.annotations[key][idx]; }
+/* Integrity (spec §11.6): everything before the discriminator locks the moment ADAMTS13 is revealed,
+   and the whole attempt locks on commit. "Reset → peek → resubmit" is structurally impossible. */
+const committed=()=> !!state.assess.committed;
+const lockedBefore=()=> !!state.adamtsRevealed;
+
+const root=$("#ocRoot"), content=$("#ocContent"), stepsEl=$("#ocSteps"), railFill=$("#ocRailFill"), screenTag=$("#ocScreenTag"),
+  btnNext=$("#ocNext"), btnBack=$("#ocBack"), btnReset=$("#ocReset"), scan=$("#ocScan"), wipe=$("#ocWipe"),
+  launchEl=$("#ocLaunch"), modal=$("#ocModal");
+
+$("#ocCredit").textContent="Case "+CASE.id+" · specimen "+CASE.specimen+" · "+CASE.credit;
+$("#ocLandTitle").textContent="Morphology Monthly | "+CASE.id;
+$("#ocLandCredit").textContent="Derived from Morphology Monday "+CASE.id+" · "+CASE.credit;
+$("#ocLandMeta").innerHTML=CASE.meta.map(m=>'<span>'+escapeHtml(m)+'</span>').join("");
+
+/* ===== render ===== */
+function renderCore(){
+  const list=STATIONS;
+  state.step=clamp(state.step,0,list.length-1); state.maxStep=Math.max(state.maxStep||0,state.step);
+  stepsEl.innerHTML="";
+  list.forEach((st,i)=>{ const b=document.createElement("button"); b.className="oc-step"+(i<state.step?" done":"");
+    if(i===state.step) b.setAttribute("aria-current","true"); b.innerHTML='<span class="n">'+(i+1)+'</span>'+st.title;
+    b.addEventListener("click",()=>{ if(i<=state.maxStep){ state.step=i; saveState(); render(); }}); stepsEl.appendChild(b); });
+  railFill.style.width=(list.length<2?100:(state.step/(list.length-1))*100)+"%";
+  screenTag.textContent=list[state.step].screen;
+  content.innerHTML="";
+  const st=list[state.step]; const node=renderStation(st); content.appendChild(node);
+  const card=node.querySelector(".oc-station")||node; card.classList.add("oc-enter");
+  /* rAF for the smooth entrance, setTimeout as the guarantee — .oc-enter starts at
+     opacity:0, so if rAF is suspended (hidden tab / offscreen iframe) the station
+     would never become visible. */
+  requestAnimationFrame(()=> requestAnimationFrame(()=> card.classList.add("in")));
+  setTimeout(()=> card.classList.add("in"), 80);
+  btnBack.style.display = state.step===0 ? "none" : "";
+  const last=state.step===list.length-1; btnNext.style.display=last?"none":"";
+  if(st.id==="adamts" && !committed()) btnNext.style.display="none";
+  btnReset.textContent=committed()?"Reset (locked)":"Reset";
+  resize();
+}
+function render(){ renderCore(); const n=content.firstChild; if(n&&n._after) n._after(); renderHelp(); }
+
+const HELP=["Work through the <strong>stations</strong> left to right using <strong>Next</strong>. Everything you type is saved in this browser as you go.",
+  "Examine each film with the <strong>magnifier</strong> (scroll, +/− or keyboard to zoom) and drop your own numbered <strong>markers</strong> — they become part of your record.",
+  "Flag the abnormal results, identify the film features, then commit a <strong>differential</strong>.",
+  "The <strong>ADAMTS13</strong> result is released only after that — and it <strong>locks</strong> your earlier answers.",
+  "The final diagnosis is a <strong>one-shot, recorded</strong> submission. It can’t be changed or reset afterwards.",
+  "You finish with a scored breakdown, a downloadable <strong>CPD record</strong> and a <strong>certificate</strong>."];
+function renderHelp(){ const body=$("#ocHelpBody"), panel=$("#ocHelp"), chip=$("#ocHelpChip");
+  if(root.classList.contains("is-landing")){ panel.hidden=true; chip.hidden=true; return; }
+  body.innerHTML='<ul>'+HELP.map(t=>'<li>'+t+'</li>').join("")+'</ul>';
+  const min=!!state.helpMin; panel.hidden=min; chip.hidden=!min; resize(); }
+$("#ocHelpMin").addEventListener("click",()=>{ state.helpMin=true; saveState(); renderHelp(); });
+$("#ocHelpChip").addEventListener("click",()=>{ state.helpMin=false; saveState(); renderHelp(); });
+
+function stationShell(st,inner){ const w=document.createElement("div");
+  w.innerHTML='<div class="oc-station"><span class="oc-scaffold">'+st.scaffold+'</span><div class="oc-eyebrow">Station '+(state.step+1)+' of '+STATIONS.length+'</div><h2>'+st.title+'</h2>'+inner+'</div>'; return w; }
+function lockBar(){ if(committed()) return '<div class="oc-lockbar"><span class="k">Submitted</span> This attempt has been recorded as CPD evidence — your answers are locked.</div>';
+  if(lockedBefore()) return '<div class="oc-lockbar"><span class="k">Locked</span> The ADAMTS13 result has been released, so answers given before it can no longer be changed.</div>'; return ''; }
+
+/* ===== stations ===== */
+function renderStation(st){
+  let node;
+
+  if(st.id==="presentation"){
+    node=stationShell(st, lockBar()+
+      '<p class="oc-narrate">'+escapeHtml(CASE.history)+'</p>'+
+      '<div class="oc-callout"><div class="h">Why the film was made</div>'+escapeHtml(CASE.filmTrigger)+'</div>'+
+      '<div class="oc-resgroup"><div class="oc-resgroup__h">Full blood count</div><div class="oc-fbc" id="ocFbc"></div></div>'+
+      '<div class="oc-resgroup"><div class="oc-resgroup__h">Biochemistry</div><div class="oc-fbc" id="ocBio"></div></div>'+
+      '<h3>Flag the abnormal results</h3>'+
+      '<p class="oc-narrate">Tick every result you would call abnormal or significant. Over-calling costs you marks, so be deliberate.</p>'+
+      tickBlock("results",CASE.resultItems,"two")+
+      noteBox("resultNote","Comment on the blood count and biochemistry in your own words.","What is the overall picture these numbers describe?"));
+    node._after=()=>{ buildStats($("#ocFbc",node),CASE.fbc,true); buildStats($("#ocBio",node),CASE.biochem,true); markTicks(node,"results",CASE.resultItems); };
+
+  } else if(st.id==="film"){
+    node=stationShell(st, lockBar()+
+      '<p class="oc-narrate">Eight fields from the film (specimen '+escapeHtml(CASE.specimen)+'). Work across the thumbnails, use the magnifier, then <strong>drop your own markers</strong> on anything you would report.</p>'+
+      figureHTML(0,{annotate:!lockedBefore(), annoKey:"film"})+
+      '<h3>Identify the features</h3>'+
+      '<p class="oc-narrate">Tick the morphological features you can actually see. Again — plausible over-calls are penalised.</p>'+
+      tickBlock("features",CASE.filmItems,"two")+
+      noteBox("filmNote","Describe the film in your own words.","Red cells, white cells, platelets — what stands out?"));
+    node._after=()=>{ wireFigure(node,0,"film",{ readOnly:lockedBefore() }); markTicks(node,"features",CASE.filmItems); };
+
+  } else if(st.id==="reasoning"){
+    node=stationShell(st, lockBar()+
+      priorRecapHTML()+
+      '<h3 style="margin-top:6px">Your differential</h3>'+
+      '<p class="oc-narrate">Based on the presentation, the numbers and the film — and <strong>before</strong> any further tests — which diagnoses are on your list?</p>'+
+      tickBlock("differentials",CASE.differentials,"two")+
+      '<div class="oc-softhint" id="ocDiffHint" hidden>Nothing selected — this section will score 0.</div>'+
+      noteBox("ruleout","What would you rule out, and how?","Name each differential you want off the list and the test or feature that removes it. This is marked formatively — you’ll see the model answer at the end.")+
+      confBlock("ruleout")+
+      '<div class="oc-note">Once you continue past this station and release the ADAMTS13 result, these answers lock.</div>');
+    node._after=()=>{ markTicks(node,"differentials",CASE.differentials); updateDiffHint(node); };
+
+  } else if(st.id==="adamts"){
+    const revealed=state.adamtsRevealed;
+    node=stationShell(st,
+      '<p class="oc-narrate">You have committed a differential. One further result is now available — the test that separates the two front-runners.</p>'+
+      (revealed?'':'<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocRevealAd">Release the ADAMTS13 result</button></div>'+
+        '<div class="oc-note">Releasing this result locks Stations 1–3. Make sure you are happy with your differential first.</div>')+
+      '<div class="oc-reveal-panel'+(revealed?' show':'')+'" id="ocAdPanel">'+adamtsHTML()+
+        '<h3>Your diagnosis</h3><p class="oc-narrate">Select the single most likely diagnosis. This is a one-shot, recorded CPD submission — it cannot be changed or reset.</p>'+
+        '<div class="oc-options" id="ocOptions"></div>'+
+        noteBox("further","Any further observations? (optional)","Anything else supporting your diagnosis — recorded with your submission.")+
+        confBlock("diagnosis")+
+        (committed()?'':'<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocSubmit" disabled>Submit diagnosis</button></div>')+
+        '<div class="oc-feedback" id="ocFeedback"></div>'+
+      '</div>');
+    node._after=()=>{
+      const rv=$("#ocRevealAd",node);
+      if(rv) rv.addEventListener("click",()=> openModal("Release the ADAMTS13 result?",
+        "This locks your earlier answers — the results you flagged, the film features you identified and your differential. You can still change your final diagnosis until you submit it.",
+        "Release the result","Not yet",()=> revealAdamts()));
+      if(revealed){ if(!reduceMotion) countUp($("#ocAdVal",node), CASE.adamts13.value, 900, 120); wireCommit(node); }
+    };
+
+  } else if(st.id==="result"){
+    node=stationShell(st, committed()?
+      '<div id="ocResultBox"></div>'+
+      '<h3>The published answer</h3>'+
+      '<div class="oc-callout pop"><div class="h">Diagnosis</div><strong style="font-size:20px">'+escapeHtml(CASE.diagnosis.answer)+'</strong><p style="margin-top:6px">'+escapeHtml(CASE.diagnosis.explanation)+'</p></div>'+
+      '<div class="oc-callout lilac"><div class="h">Teaching point</div>'+escapeHtml(CASE.teachingPoint)+'</div>'+
+      '<h3>What you would rule out, and how</h3>'+
+      '<div class="oc-callout"><div class="h">Model answer <span style="font-weight:400;color:var(--oc-text-muted)">(confirm with Anas/SME)</span></div><ul>'+CASE.model.ruleout.map(r=>'<li>'+escapeHtml(r)+'</li>').join("")+'</ul></div>'+
+      '<h3>Morphology report</h3>'+reportHTML()+
+      '<h3>The film, marked</h3>'+
+      '<div style="margin:10px 0"><button class="oc-btn oc-btn--ghost" id="ocAnno">Show published annotations</button></div>'+
+      figureHTML(0,{annotate:false, annoKey:"film", magOff:true})+
+      '<h3>Your CPD record</h3>'+
+      '<p class="oc-narrate">Your name is used only on your downloaded record and certificate. It is stored in this browser and never sent anywhere.</p>'+
+      '<div class="oc-fieldrow">'+
+        '<div class="oc-field"><label for="ocName">Your name (as it should appear on the certificate)</label><input id="ocName" type="text" autocomplete="name" value="'+escapeHtml(state.learner.name||"")+'" placeholder="e.g. A. Nasir"></div>'+
+        '<div class="oc-field"><label for="ocReg">Registration number (optional)</label><input id="ocReg" type="text" value="'+escapeHtml(state.learner.reg||"")+'" placeholder="e.g. HCPC BS000000"></div>'+
+      '</div>'+
+      '<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocPdf">Download CPD record (PDF)</button>'+
+        '<button class="oc-btn oc-btn--primary" id="ocCert">Download certificate (PDF)</button>'+
+        '<button class="oc-btn oc-btn--ghost" id="ocTxt">Plain text</button></div>'+
+      '<div class="oc-note">Certificate is rendering on a branded fallback design — it will move onto the Only Cells background template once Anas supplies it.</div>'
+      :
+      '<div class="oc-lockbar"><span class="k">Not yet submitted</span> Go back to Station 4, release the ADAMTS13 result and commit a diagnosis to generate your CPD record.</div>'+
+      '<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocGoBack">Back to Station 4</button></div>');
+    node._after=()=>{
+      const gb=$("#ocGoBack",node); if(gb){ gb.addEventListener("click",()=>{ state.step=3; saveState(); render(); }); return; }
+      buildResult($("#ocResultBox",node));
+      wireFigure(node,0,"film",{ readOnly:true, magOff:true });
+      const anno=$("#ocAnno",node); let on=false;
+      anno.addEventListener("click",()=>{ on=!on; toggleHotspots(node,on); anno.textContent=on?"Hide published annotations":"Show published annotations"; resize(); });
+      $("#ocName",node).addEventListener("input",(e)=>{ state.learner.name=e.target.value; saveState(); });
+      $("#ocReg",node).addEventListener("input",(e)=>{ state.learner.reg=e.target.value; saveState(); });
+      $("#ocPdf",node).addEventListener("click",()=> printOut("record"));
+      $("#ocCert",node).addEventListener("click",()=> printOut("cert"));
+      $("#ocTxt",node).addEventListener("click",()=> download(CASE.id+"_CPD-record.txt", summaryText()));
+    };
+  }
+  return node;
+}
+
+/* ===== components ===== */
+function tickBlock(key,items,cls){ const chosen=state.ticks[key]||{}; const dis=lockedBefore();
+  const list=items.map(n=>'<label class="oc-tick" data-id="'+n.id+'" aria-checked="'+(!!chosen[n.id])+'"><input type="checkbox" '+(chosen[n.id]?'checked':'')+(dis?' disabled':'')+'> <span>'+escapeHtml(n.text)+'</span></label>').join("");
+  return '<div class="oc-ticks '+(cls||"")+'" data-tickkey="'+key+'">'+list+'</div>'; }
+function confBlock(key){ return '<div class="oc-conf"><span>How sure are you?</span><span class="chips" data-confkey="'+key+'">'+confChips(key)+'</span></div>'; }
+function confChips(key){ const c=state.confidence[key]||null; const dis=(key==="diagnosis")?committed():lockedBefore();
+  return [1,2,3].map(n=>'<button data-c="'+n+'" aria-pressed="'+(c===n)+'"'+(dis?' disabled':'')+'>'+CONF[n-1]+'</button>').join(""); }
+function noteBox(key,label,sub){ const dis=(key==="further")?committed():lockedBefore();
+  return '<div class="oc-reflect" data-key="'+key+'"><label for="ocTa-'+key+'">'+label+'</label>'+(sub?'<span class="sub">'+sub+'</span>':'')+
+    '<textarea id="ocTa-'+key+'"'+(dis?' disabled':'')+' placeholder="Type here… (saved automatically)">'+escapeHtml(state.reflections[key]||"")+'</textarea></div>'; }
+
+/* Post-submission marking overlay on the tick lists. */
+function markTicks(node,key,items){ if(!committed()) return; const chosen=state.ticks[key]||{};
+  node.querySelectorAll('.oc-ticks[data-tickkey="'+key+'"] .oc-tick').forEach(el=>{
+    const it=items.find(i=>i.id===el.dataset.id); if(!it) return; const picked=!!chosen[it.id];
+    let cls="", mk="";
+    if(it.neutral){ if(picked){ cls=""; mk="not scored"; } }
+    else if(it.correct && picked){ cls="marked-correct"; mk="correct"; }
+    else if(it.correct && !picked){ cls="marked-missed"; mk="missed"; }
+    else if(!it.correct && picked){ cls="marked-wrong"; mk="over-call"; }
+    if(cls) el.classList.add(cls);
+    if(mk) el.insertAdjacentHTML("beforeend",'<span class="mk">'+mk+'</span>'); }); }
+
+function updateDiffHint(node){ const hint=$("#ocDiffHint",node); if(!hint) return;
+  const chosen=state.ticks["differentials"]||{}; hint.hidden=Object.keys(chosen).some(k=>chosen[k]); }
+
+function priorRecapHTML(){
+  const rows=[
+    ["Abnormal results you flagged", ticksText("results",CASE.resultItems)],
+    ["Your comment on the numbers", state.reflections["resultNote"]||""],
+    ["Film features you identified", ticksText("features",CASE.filmItems)],
+    ["Your description of the film", state.reflections["filmNote"]||""],
+    ["Your markers on the film", annoText()]
+  ];
+  let html='<div class="oc-recap"><div class="oc-recap__h">Screen 1 — your answers so far</div>';
+  rows.forEach(([label,ans])=>{ const body=ans?escapeHtml(ans):'<span style="color:var(--oc-text-muted)">Nothing captured.</span>';
+    html+='<details class="oc-acc"><summary>'+label+'</summary><div class="oc-acc__b">'+body+'</div></details>'; });
+  return html+'</div>'; }
+
+function buildStats(host,rows,animate){ if(!host) return; host.innerHTML="";
+  rows.forEach(f=>{ const c=document.createElement("div"); c.className="cell "+f.flag;
+    c.innerHTML='<div class="lab">'+f.label+'</div><div class="val" data-target="'+f.value+'">'+(animate&&!reduceMotion?"0":f.value)+'</div><div class="unit">'+f.unit+'</div><div class="ref">Ref '+f.ref+'</div><div class="flag '+f.flag+'">'+f.flagText+'</div>';
+    host.appendChild(c); });
+  if(animate&&!reduceMotion) host.querySelectorAll(".val").forEach((el,i)=> countUp(el,parseFloat(el.dataset.target),900,i*110)); }
+function countUp(el,target,dur,delay){ if(!el) return; const dec=(target%1!==0)?((target*10)%1!==0?2:1):0;
+  const settle=()=>{ el.textContent=target.toFixed(dec); };
+  setTimeout(()=>{ const t0=performance.now();
+    (function tick(now){ const p=Math.min(1,(now-t0)/dur); const e=1-Math.pow(2,-10*p); el.textContent=(target*e).toFixed(dec); if(p<1) requestAnimationFrame(tick); else settle(); })(performance.now()); }, delay);
+  /* Safety net: requestAnimationFrame is suspended in a hidden tab or an offscreen
+     iframe, which would leave a lab value frozen mid-count (showing 0). A clinical
+     number must never render wrong — setTimeout is not rAF-dependent, so it settles. */
+  setTimeout(settle, delay+dur+250); }
+
+function adamtsHTML(){ const a=CASE.adamts13;
+  return '<div class="oc-adamts"><div class="lab">'+escapeHtml(a.label)+'</div>'+
+    '<div class="val" id="ocAdVal">'+(reduceMotion?a.value:0)+'</div><div class="unit">'+escapeHtml(a.unit)+'</div>'+
+    '<div class="ref">'+escapeHtml(a.ref)+'</div><div class="verdict">'+escapeHtml(a.verdict)+'</div>'+
+    '<p class="oc-narrate" style="margin:12px auto 0; text-align:left; max-width:62ch">'+escapeHtml(a.note)+'</p></div>'; }
+
+function reportHTML(){ return '<div class="oc-recap">'+CASE.report.map(([k,v])=>
+  '<details class="oc-acc"><summary>'+escapeHtml(k)+'</summary><div class="oc-acc__b">'+escapeHtml(v)+'</div></details>').join("")+
+  '</div><div class="oc-note">Report skeleton authored from the published reveal — confirm mandatory vs optional fields with Anas/SME.</div>'; }
+
+/* ---- figure: magnifier + per-image annotations (add/drag/delete), Roman-numeral labels ---- */
+function figureHTML(idx,opts){ opts=opts||{};
+  const still=CASE.media.stills[idx];
+  const thumbs=CASE.media.stills.map((s,i)=>{ const n=((state.annotations.film||[])[i]||[]).length;
+    return '<button data-i="'+i+'" aria-pressed="'+(i===idx)+'" aria-label="Field '+roman(i)+(n?(", "+n+" markers"):"")+'"><span class="rn">'+roman(i)+'</span><img src="'+imgUrl(s.src)+'" alt="" loading="lazy" onerror="this.style.opacity=.3">'+(n?'<span class="mkd">'+n+'</span>':'')+'</button>'; }).join("");
+  const annoBtn=opts.annotate?'<button class="oc-annobtn" id="ocAnnoBtn" aria-pressed="false">✎ Add / adjust markers</button>':'';
+  const controls='<span class="oc-seg" id="ocMagSeg"><button data-m="hex">Hexagon</button><button data-m="frame">Frame + panel</button></span>'+
+    '<span class="oc-zoomctl">zoom <button id="ocZoomDown" title="Zoom out" aria-label="Zoom out">−</button><span id="ocZoomVal">3.0×</span><button id="ocZoomUp" title="Zoom in" aria-label="Zoom in">+</button></span>'+
+    '<span class="oc-hint">scroll · + / − · keyboard</span>'+annoBtn;
+  const tools=opts.magOff?'<button class="oc-annobtn" id="ocEnableZoom">🔍 Enable zoom to review the film</button><span class="oc-magcontrols" id="ocMagControls" hidden>'+controls+'</span>':'<span class="oc-magcontrols">'+controls+'</span>';
+  return '<div class="oc-media"><div class="oc-framewrap"><div class="oc-figure focuspull" data-idx="'+idx+'" data-annokey="'+(opts.annoKey||"")+'" tabindex="0" aria-label="Blood film field — scroll or +/- to zoom">'+
+    '<img src="'+imgUrl(still.src)+'" alt="Blood film field '+roman(idx)+' — specimen '+CASE.specimen+'" onerror="this.outerHTML=\'<div class=&quot;oc-imgfallback&quot;>Image preview unavailable here.<br>(Live file: '+still.src+')</div>\'"><div class="oc-loupe"></div><div class="oc-frame"></div></div><div class="oc-zoompanel"></div></div>'+
+    '<div class="oc-figcap" id="ocFigCap">Field '+roman(idx)+' of '+roman(CASE.media.stills.length-1)+'</div>'+
+    (opts.annotate?'<div class="oc-markbanner" id="ocMarkBanner" hidden>Marker mode is on — <strong>tap the film</strong> to drop a marker, or <strong>drag</strong> one to move it. Remove with × below. Markers are saved per field and labelled '+roman(idx)+'-1, '+roman(idx)+'-2…</div>':'')+
+    '<div class="oc-magtools">'+tools+'</div><div class="oc-annolist" id="ocAnnoList"></div><div class="oc-thumbs" id="ocThumbs">'+thumbs+'</div></div>'; }
+
+function wireFigure(node,idx,annoKey,opts){ opts=opts||{}; const readOnly=opts.readOnly, magOff=opts.magOff;
+  const figure=node.querySelector(".oc-figure"); if(!figure) return;
+  if(!reduceMotion) setTimeout(()=> figure.classList.add("sharp"),120); else figure.classList.add("sharp");
+  const img=figure.querySelector("img"), loupe=figure.querySelector(".oc-loupe"), frame=figure.querySelector(".oc-frame"),
+    panel=node.querySelector(".oc-zoompanel"), wrap=node.querySelector(".oc-framewrap"), cap=$("#ocFigCap",node);
+  if(!img) return;
+  let curIdx=idx, hexZoom=state.hexZoom||3, annotateMode=false, lastX=null, lastY=null, dragPin=null;
+  let style=magOff?"none":(state.magStyle||(finePointer()?"hex":"frame"));
+  const zoomVal=$("#ocZoomVal",node); const setZoomLabel=()=>{ if(zoomVal) zoomVal.textContent=hexZoom.toFixed(1)+"×"; }; setZoomLabel();
+  const hires=()=> hiresUrl(CASE.media.stills[curIdx]);
+  const arr=()=> annoFor(annoKey,curIdx);
+
+  function applyStyle(){ const isHex=style==="hex", isFrame=style==="frame";
+    figure.classList.toggle("loupe-on",isHex); figure.classList.toggle("frame-on",isFrame);
+    if(!isHex) updateLoupe(null);
+    wrap.classList.toggle("with-panel", isFrame&&!annotateMode); panel.classList.toggle("show", isFrame&&!annotateMode);
+    const seg=$("#ocMagSeg",node); if(seg) seg.querySelectorAll("button").forEach(b=> b.setAttribute("aria-pressed", b.dataset.m===style));
+    if(isFrame&&!annotateMode) positionFrameInit(); resize(); }
+  function updateLoupe(x,y){ if(style!=="hex"||x==null){ loupe.style.display="none"; return; } const r=img.getBoundingClientRect();
+    if(x<0||y<0||x>r.width||y>r.height){ loupe.style.display="none"; return; } loupe.style.display="block"; const L=loupe.offsetWidth;
+    loupe.style.backgroundImage="url('"+hires()+"')"; loupe.style.backgroundSize=(r.width*hexZoom)+"px "+(r.height*hexZoom)+"px";
+    loupe.style.left=(x-L/2)+"px"; loupe.style.top=(y-L/2)+"px"; loupe.style.backgroundPosition=(-(x*hexZoom-L/2))+"px "+(-(y*hexZoom-L/2))+"px"; lastX=x; lastY=y; }
+  function applyZoom(z){ hexZoom=clamp(z,2,5); state.hexZoom=hexZoom; saveState(); setZoomLabel();
+    if(style==="hex"){ const r=img.getBoundingClientRect(); updateLoupe(lastX!=null?lastX:r.width/2, lastY!=null?lastY:r.height/2); }
+    else if(style==="frame") paintPanel(); }
+
+  const seg=$("#ocMagSeg",node); if(seg) seg.querySelectorAll("button").forEach(b=> b.addEventListener("click",()=>{ style=b.dataset.m; state.magStyle=style; saveState(); applyStyle(); }));
+  const zUp=$("#ocZoomUp",node), zDn=$("#ocZoomDown",node);
+  if(zUp) zUp.addEventListener("click",()=> applyZoom(hexZoom+0.5)); if(zDn) zDn.addEventListener("click",()=> applyZoom(hexZoom-0.5));
+  const enable=$("#ocEnableZoom",node);
+  if(enable) enable.addEventListener("click",()=>{ if(style==="none"){ style=finePointer()?"hex":"frame"; state.magStyle=style; const mc=$("#ocMagControls",node); if(mc) mc.hidden=false; enable.textContent="Disable zoom"; }
+    else { style="none"; const mc=$("#ocMagControls",node); if(mc) mc.hidden=true; enable.textContent="🔍 Enable zoom to review the film"; } applyStyle(); });
+
+  figure.addEventListener("pointermove",(e)=>{ if(dragPin!=null){ const r=img.getBoundingClientRect(); const a=arr()[dragPin];
+      if(a){ a.x=+clamp(((e.clientX-r.left)/r.width)*100,0,100).toFixed(1); a.y=+clamp(((e.clientY-r.top)/r.height)*100,0,100).toFixed(1);
+        const el=figure.querySelector('.oc-pin.user[data-i="'+dragPin+'"]'); if(el){ el.style.left=a.x+"%"; el.style.top=a.y+"%"; } } return; }
+    if(style!=="hex"||annotateMode) return; const r=img.getBoundingClientRect(); updateLoupe(e.clientX-r.left, e.clientY-r.top); });
+  figure.addEventListener("pointerleave",()=>{ if(style==="hex") updateLoupe(null); });
+  figure.addEventListener("wheel",(e)=>{ if(style!=="hex"||annotateMode) return; e.preventDefault(); applyZoom(hexZoom+(e.deltaY<0?0.25:-0.25)); },{passive:false});
+  figure.addEventListener("keydown",(e)=>{ if(style==="none") return; if(e.key==="+"||e.key==="="){ applyZoom(hexZoom+0.5); e.preventDefault(); } else if(e.key==="-"||e.key==="_"){ applyZoom(hexZoom-0.5); e.preventDefault(); } });
+
+  let dragging=false;
+  function positionFrameInit(){ const r=img.getBoundingClientRect(); frame.style.left=Math.max(0,(r.width-frame.offsetWidth)/2)+"px"; frame.style.top=Math.max(0,(r.height-frame.offsetHeight)/2)+"px"; paintPanel(); }
+  function paintPanel(){ if(!panel.clientWidth) return; const r=img.getBoundingClientRect(); const fx=parseFloat(frame.style.left||0), fy=parseFloat(frame.style.top||0);
+    const sc=panel.clientWidth/frame.offsetWidth; panel.style.backgroundImage="url('"+hires()+"')"; panel.style.backgroundSize=(r.width*sc)+"px "+(r.height*sc)+"px"; panel.style.backgroundPosition=(-(fx*sc))+"px "+(-(fy*sc))+"px"; }
+  frame.addEventListener("pointerdown",(e)=>{ if(annotateMode) return; dragging=true; frame.setPointerCapture(e.pointerId); });
+  frame.addEventListener("pointerup",()=> dragging=false);
+  frame.addEventListener("pointermove",(e)=>{ if(!dragging) return; const r=img.getBoundingClientRect();
+    let x=clamp(e.clientX-r.left-frame.offsetWidth/2,0,r.width-frame.offsetWidth), y=clamp(e.clientY-r.top-frame.offsetHeight/2,0,r.height-frame.offsetHeight);
+    frame.style.left=x+"px"; frame.style.top=y+"px"; paintPanel(); });
+
+  const annoBtn=$("#ocAnnoBtn",node), banner=$("#ocMarkBanner",node);
+  if(annoBtn) annoBtn.addEventListener("click",()=>{ annotateMode=!annotateMode; annoBtn.setAttribute("aria-pressed",annotateMode);
+    annoBtn.textContent=annotateMode?"✓ Done with markers":"✎ Add / adjust markers"; figure.classList.toggle("annotate-on",annotateMode);
+    if(banner) banner.hidden=!annotateMode; if(annotateMode) updateLoupe(null); applyStyle(); });
+  figure.addEventListener("pointerdown",(e)=>{ if(!annotateMode||readOnly) return;
+    const pinEl=e.target.closest(".oc-pin.user"); if(pinEl){ dragPin=+pinEl.dataset.i; figure.setPointerCapture(e.pointerId); e.preventDefault(); return; }
+    const r=img.getBoundingClientRect(); const x=((e.clientX-r.left)/r.width)*100, y=((e.clientY-r.top)/r.height)*100; if(x<0||y<0||x>100||y>100) return;
+    arr().push({ x:+x.toFixed(1), y:+y.toFixed(1), note:"" }); saveState(); renderPins(); renderAnnoList(); refreshThumbCounts(); resize(); });
+  figure.addEventListener("pointerup",()=>{ if(dragPin!=null){ dragPin=null; saveState(); } });
+
+  function renderPins(){ figure.querySelectorAll(".oc-pin.user").forEach(p=> p.remove());
+    arr().forEach((a,i)=>{ const p=document.createElement("div"); p.className="oc-pin user"; p.dataset.i=i; p.style.left=a.x+"%"; p.style.top=a.y+"%"; p.textContent=roman(curIdx)+"-"+(i+1); figure.appendChild(p); }); }
+  function renderAnnoList(){ const list=$("#ocAnnoList",node); if(!list) return; list.innerHTML=""; const a=arr();
+    a.forEach((it,i)=>{ const row=document.createElement("div"); row.className="oc-annorow";
+      row.innerHTML='<span class="num">'+roman(curIdx)+'-'+(i+1)+'</span><input value="'+escapeHtml(it.note)+'" placeholder="What did you spot here?" '+(readOnly?"disabled":"")+'>'+(readOnly?'':'<button title="Remove marker" aria-label="Remove marker" data-rm="'+i+'">×</button>');
+      list.appendChild(row);
+      if(!readOnly){ row.querySelector("input").addEventListener("input",(e)=>{ it.note=e.target.value; saveState(); });
+        row.querySelector("[data-rm]").addEventListener("click",()=>{ a.splice(i,1); saveState(); renderPins(); renderAnnoList(); refreshThumbCounts(); resize(); }); } }); }
+  function refreshThumbCounts(){ const t=$("#ocThumbs",node); if(!t) return;
+    t.querySelectorAll("button").forEach(b=>{ const n=((state.annotations.film||[])[+b.dataset.i]||[]).length; const badge=b.querySelector(".mkd");
+      if(n&&!badge) b.insertAdjacentHTML("beforeend",'<span class="mkd">'+n+'</span>'); else if(n&&badge) badge.textContent=n; else if(!n&&badge) badge.remove(); }); }
+  renderPins(); renderAnnoList();
+
+  const thumbs=$("#ocThumbs",node);
+  if(thumbs) thumbs.querySelectorAll("button").forEach(b=> b.addEventListener("click",()=>{ curIdx=+b.dataset.i;
+    figure.classList.remove("sharp");
+    img.onload=function(){ if(!reduceMotion) setTimeout(()=> figure.classList.add("sharp"),30); else figure.classList.add("sharp"); if(style==="frame"&&!annotateMode) paintPanel(); img.onload=null; };
+    img.src=imgUrl(CASE.media.stills[curIdx].src);
+    img.alt="Blood film field "+roman(curIdx)+" — specimen "+CASE.specimen;
+    if(cap) cap.textContent="Field "+roman(curIdx)+" of "+roman(CASE.media.stills.length-1);
+    thumbs.querySelectorAll("button").forEach(x=> x.setAttribute("aria-pressed", x===b));
+    renderPins(); renderAnnoList(); resize(); }));
+
+  applyStyle();
+}
+
+function toggleHotspots(node,on){ const figure=node.querySelector(".oc-figure"); if(!figure) return;
+  figure.querySelectorAll(".oc-pin.sme,.oc-hotnote").forEach(e=> e.remove());
+  const note=$("#ocSmeNote",node); if(note) note.remove();
+  if(!on) return;
+  if(!CASE.hotspots.length){ figure.insertAdjacentHTML("afterend",
+    '<div class="oc-markbanner" id="ocSmeNote">SME-marked films are pending — Anas is supplying highlighted copies of these fields as a separate reveal layer. They will appear here as numbered callouts.</div>'); return; }
+  const curIdx=+(figure.dataset.idx||0);
+  CASE.hotspots.filter(h=>h.image===curIdx).forEach(h=>{ const pt=document.createElement("button"); pt.className="oc-pin sme"; pt.style.left=h.x+"%"; pt.style.top=h.y+"%"; pt.textContent=h.label;
+    const nt=document.createElement("div"); nt.className="oc-hotnote"; nt.style.left=h.x+"%"; nt.style.top=h.y+"%"; nt.textContent=h.note;
+    pt.addEventListener("click",()=>{ nt.classList.toggle("show"); resize(); }); figure.appendChild(pt); figure.appendChild(nt); }); }
+
+/* ===== scoring (spec §4.4 · weights + pass mark AUTHORED — [GAP] confirm with Anas) ===== */
+function tickFraction(items,chosen){
+  const scorable=items.filter(i=>!i.neutral);
+  const totalPos=scorable.filter(i=>i.correct).reduce((s,i)=>s+(i.weight||1),0);
+  let got=0; scorable.forEach(i=>{ if(chosen[i.id]) got += i.correct ? (i.weight||1) : -(i.penalty||1); });
+  return totalPos ? clamp(got/totalPos,0,1) : 0; }
+function computeScore(choiceIdx){
+  const W=CASE.scoring.weights;
+  const parts={
+    results:      tickFraction(CASE.resultItems,   state.ticks["results"]||{}),
+    features:     tickFraction(CASE.filmItems,     state.ticks["features"]||{}),
+    differentials:tickFraction(CASE.differentials, state.ticks["differentials"]||{}),
+    diagnosis:    (CASE.diagnosis.options[choiceIdx]===CASE.diagnosis.answer)?1:0
+  };
+  const total=Object.keys(W).reduce((s,k)=> s+parts[k]*W[k], 0);
+  return { parts, points:Object.keys(W).reduce((o,k)=>(o[k]=+(parts[k]*W[k]).toFixed(1),o),{}), total:Math.round(total) }; }
+
+/* ===== commit ===== */
+function revealAdamts(){ state.adamtsRevealed=true; saveState(); runScan(()=> render()); }
+function shuffledOrder(){ if(state.assess.order) return state.assess.order; const idx=CASE.diagnosis.options.map((_,i)=>i);
+  for(let i=idx.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [idx[i],idx[j]]=[idx[j],idx[i]]; } state.assess.order=idx; saveState(); return idx; }
+function wireCommit(node){ const optWrap=$("#ocOptions",node), order=shuffledOrder(), submit=$("#ocSubmit",node), fb=$("#ocFeedback",node);
+  if(!optWrap) return;
+  let pick=committed()?state.assess.choice:null;
+  order.forEach(oi=>{ const b=document.createElement("button"); b.className="oc-opt"; b.dataset.oi=oi;
+    b.innerHTML='<span class="box" aria-hidden="true">✓</span><span>'+escapeHtml(CASE.diagnosis.options[oi])+'</span>';
+    b.setAttribute("aria-pressed", committed()&&state.assess.choice===oi); optWrap.appendChild(b);
+    if(!committed()) b.addEventListener("click",()=>{ pick=oi; optWrap.querySelectorAll(".oc-opt").forEach(x=> x.setAttribute("aria-pressed", x===b)); if(submit) submit.disabled=false; });
+    else b.disabled=true; });
+  if(committed()){ paintCommitted(optWrap,fb); return; }
+  if(submit) submit.addEventListener("click",()=>{ if(pick==null) return;
+    openModal("Submit your diagnosis?","This is an assessed CPD activity. Once submitted your answer is recorded, scored, and cannot be changed or reset. Is there anything you want to add first?","Submit","Return to the case",()=> commitDiagnosis(pick)); }); }
+function commitDiagnosis(oi){ const res=computeScore(oi);
+  state.assess.committed=true; state.assess.choice=oi; state.assess.correct=(CASE.diagnosis.options[oi]===CASE.diagnosis.answer);
+  state.assess.at=new Date().toISOString(); state.assess.score=res.total; state.assess.parts=res.points;
+  state.maxStep=Math.max(state.maxStep,state.step+1); saveState(); runScan(()=> render()); }
+function paintCommitted(optWrap,fb){ const answerIdx=CASE.diagnosis.options.indexOf(CASE.diagnosis.answer);
+  optWrap.querySelectorAll(".oc-opt").forEach(x=>{ const oi=+x.dataset.oi; x.style.cursor="default";
+    if(oi===answerIdx) x.classList.add("correct");
+    if(oi===state.assess.choice&&!state.assess.correct) x.classList.add("incorrect");
+    if(oi===answerIdx) x.insertAdjacentHTML("beforeend",'<span class="tag">correct answer</span>');
+    else if(oi===state.assess.choice) x.insertAdjacentHTML("beforeend",'<span class="tag">your answer</span>'); });
+  fb.className="oc-feedback show "+(state.assess.correct?"ok":"no");
+  fb.innerHTML='<strong>'+(state.assess.correct?"Correct":"Not quite")+'.</strong> The diagnosis is <strong>'+escapeHtml(CASE.diagnosis.answer)+'</strong>.'+
+    '<p style="margin-top:6px">'+escapeHtml(CASE.diagnosis.explanation)+'</p>'+
+    '<p style="margin-top:6px;color:var(--oc-text-muted)">Continue for your scored breakdown and CPD record →</p>'; }
+
+function buildResult(host){ if(!host) return; const W=CASE.scoring.weights, L=CASE.scoring.labels, pts=state.assess.parts||{};
+  const total=state.assess.score||0, pass=total>=CASE.scoring.passMark;
+  host.innerHTML='<div class="oc-feedback show '+(pass?"ok":"no")+'">'+
+    '<div class="oc-scorerow"><div class="oc-score">'+total+'%</div><span class="oc-outcome '+(pass?"ok":"no")+'">'+(pass?"Achieved":"Not yet achieved")+'</span>'+
+    '<span style="color:var(--oc-text-muted);font-size:13px">Pass mark '+CASE.scoring.passMark+'% (provisional)</span></div>'+
+    '<p style="margin-top:10px">Your diagnosis: <strong>'+escapeHtml(state.assess.choice!=null?CASE.diagnosis.options[state.assess.choice]:"—")+'</strong></p>'+
+    '<p>Correct diagnosis: <strong>'+escapeHtml(CASE.diagnosis.answer)+'</strong></p></div>'+
+    '<div class="oc-breakdown">'+Object.keys(W).map(k=>{ const p=pts[k]||0, pc=Math.round((p/W[k])*100);
+      return '<div class="oc-brow"><span>'+L[k]+'</span><span class="pts">'+p+' / '+W[k]+'</span><span class="bar"><i data-w="'+pc+'"></i></span></div>'; }).join("")+'</div>'+
+    '<div class="oc-note">Scoring weights and the pass mark are provisional — to be confirmed with Anas, along with the attempt policy.</div>';
+  const fillBars=()=> host.querySelectorAll(".bar i").forEach(b=> b.style.width=b.dataset.w+"%");
+  requestAnimationFrame(fillBars); setTimeout(fillBars,80); }
+
+/* ===== export (spec §11.6 — Blob download / window.print on a user gesture; never window.open) ===== */
+function ticksText(key,items){ const chosen=state.ticks[key]||{}; const p=items.filter(n=>chosen[n.id]); return p.length?p.map(n=>n.text).join("; "):""; }
+function annoText(){ const out=[]; (state.annotations.film||[]).forEach((a,ii)=> (a||[]).forEach((p,i)=> out.push(roman(ii)+"-"+(i+1)+" "+(p.note||"(no note)")))); return out.join("; "); }
+function learnerName(){ return (state.learner.name||"").trim(); }
+function stamp(){ return state.assess.at ? new Date(state.assess.at).toLocaleString() : new Date().toLocaleString(); }
+
+function buildRecordDOM(){ const p=$("#oc-print"); p.innerHTML=""; const wrap=document.createElement("div"); wrap.className="ocp";
+  const pass=(state.assess.score||0)>=CASE.scoring.passMark, W=CASE.scoring.weights, L=CASE.scoring.labels, pts=state.assess.parts||{};
+  wrap.innerHTML='<div class="sub">Only Cells · Morphology Monthly '+CASE.id+'</div><h1>CPD Assessment Record</h1>'+
+    '<div class="meta">'+escapeHtml(CASE.answerTitle)+' · specimen '+escapeHtml(CASE.specimen)+' · submitted '+escapeHtml(stamp())+
+    (learnerName()?' · '+escapeHtml(learnerName()):'')+(state.learner.reg?' ('+escapeHtml(state.learner.reg)+')':'')+'</div><hr>';
+
+  wrap.insertAdjacentHTML("beforeend",'<h2>Outcome</h2><div class="qa">'+
+    '<p><span class="badge '+(pass?"ok":"no")+'">'+(state.assess.score||0)+'% · '+(pass?"ACHIEVED":"NOT YET ACHIEVED")+'</span> <span style="font-size:12px;color:#555">pass mark '+CASE.scoring.passMark+'% (provisional)</span></p>'+
+    '<table><tr><th>Section</th><th>Score</th></tr>'+Object.keys(W).map(k=>'<tr><td>'+L[k]+'</td><td>'+(pts[k]||0)+' / '+W[k]+'</td></tr>').join("")+
+    '<tr><th>Total</th><th>'+(state.assess.score||0)+' / 100</th></tr></table></div>');
+
+  wrap.insertAdjacentHTML("beforeend",'<h2>Case</h2><div class="qa"><div class="you">'+escapeHtml(CASE.history)+'</div>'+
+    '<table><tr><th>Test</th><th>Result</th><th>Ref</th></tr>'+
+    CASE.fbc.concat(CASE.biochem).map(f=>'<tr><td>'+f.label+'</td><td>'+f.value+' '+f.unit+' ('+f.flagText.replace(/[▲▼]/g,"").trim()+')</td><td>'+f.ref+'</td></tr>').join("")+
+    '<tr><td>'+CASE.adamts13.label+'</td><td>'+CASE.adamts13.value+' '+CASE.adamts13.unit+'</td><td>'+escapeHtml(CASE.adamts13.ref)+'</td></tr></table></div>');
+
+  const secs=[
+    ["Abnormal results flagged", ticksText("results",CASE.resultItems)||"(none selected)", CASE.model.resultObs.join("; ")],
+    ["Comment on the numbers", state.reflections["resultNote"]||"(none)", ""],
+    ["Film features identified", ticksText("features",CASE.filmItems)||"(none selected)", CASE.model.filmObs.join("; ")],
+    ["Description of the film", state.reflections["filmNote"]||"(none)", ""],
+    ["Differential considered", ticksText("differentials",CASE.differentials)||"(none selected)", "HUS; TTP; DIC; ITP"],
+    ["What would you rule out, and how"+(state.confidence["ruleout"]?" · "+CONF[state.confidence["ruleout"]-1]:""), state.reflections["ruleout"]||"(none)", CASE.model.ruleout.join(" ")]
+  ];
+  wrap.insertAdjacentHTML("beforeend",'<h2>Your responses</h2>');
+  secs.forEach(([q,you,exp])=> wrap.insertAdjacentHTML("beforeend",
+    '<div class="qa"><div class="q">'+escapeHtml(q)+'</div><div class="you"><strong>Your response:</strong> '+escapeHtml(you)+'</div>'+
+    (exp?'<div class="exp"><strong>Expected:</strong> '+escapeHtml(exp)+'</div>':'')+'</div>'));
+
+  const gallery=document.createElement("div"); gallery.innerHTML='<h2>The film &amp; your markers</h2>'; const row=document.createElement("div"); row.className="imgrow";
+  const imgs=state.annotations.film||emptyAnno();
+  CASE.media.stills.forEach((s,ii)=>{ const figp=document.createElement("div"); figp.className="figpin";
+    const im=document.createElement("img"); im.src=imgUrl(s.src); im.alt="Field "+roman(ii); figp.appendChild(im);
+    (imgs[ii]||[]).forEach((a,i)=>{ const pin=document.createElement("div"); pin.className="ppin"; pin.style.left=a.x+"%"; pin.style.top=a.y+"%"; pin.textContent=roman(ii)+"-"+(i+1); figp.appendChild(pin); });
+    const cap=document.createElement("div"); cap.className="cap"; cap.textContent="Field "+roman(ii)+((imgs[ii]&&imgs[ii].length)?"":" — no markers"); figp.appendChild(cap); row.appendChild(figp); });
+  gallery.appendChild(row);
+  let nh='<div class="qa"><div class="q">Marker notes</div>', any=false;
+  imgs.forEach((a,ii)=>{ if(a&&a.length){ any=true; nh+='<div class="you"><strong>Field '+roman(ii)+':</strong><ul style="margin:4px 0 0; padding-left:18px">'+
+    a.map((pp,i)=>'<li>'+roman(ii)+'-'+(i+1)+' — '+escapeHtml(pp.note||"(no note)")+'</li>').join("")+'</ul></div>'; } });
+  nh+=(any?'':'<div class="you">No markers added.</div>')+'</div>';
+  gallery.insertAdjacentHTML("beforeend",nh); wrap.appendChild(gallery);
+
+  wrap.insertAdjacentHTML("beforeend",'<h2>Diagnosis submitted</h2><div class="qa">'+
+    '<div class="you"><strong>Your answer:</strong> '+escapeHtml(state.assess.choice!=null?CASE.diagnosis.options[state.assess.choice]:"—")+
+    (state.confidence["diagnosis"]?' <span style="color:#555">('+CONF[state.confidence["diagnosis"]-1]+')</span>':'')+'</div>'+
+    (state.reflections["further"]?'<div class="you"><strong>Further observations:</strong> '+escapeHtml(state.reflections["further"])+'</div>':'')+
+    '<div class="exp"><strong>Correct answer:</strong> '+escapeHtml(CASE.diagnosis.answer)+'<br>'+escapeHtml(CASE.diagnosis.explanation)+'</div></div>'+
+    '<div class="qa"><div class="q">Teaching point</div><div class="exp">'+escapeHtml(CASE.teachingPoint)+'</div></div>'+
+    '<h2>Morphology report</h2><table>'+CASE.report.map(([k,v])=>'<tr><th style="width:26%">'+escapeHtml(k)+'</th><td>'+escapeHtml(v)+'</td></tr>').join("")+'</table>'+
+    '<div class="decl">Declaration: I confirm this assessment was completed by me as a CPD activity.'+
+    (learnerName()?'<br>Completed by: <strong>'+escapeHtml(learnerName())+'</strong>'+(state.learner.reg?' · '+escapeHtml(state.learner.reg):''):'')+
+    '<br>An Only Cells educational resource · <strong>onlycells.co.uk</strong> · '+escapeHtml(CASE.credit)+
+    '<br><em>Educational CPD resource — not a diagnostic device. Clinical content pending SME sign-off.</em></div>');
+  p.appendChild(wrap); }
+
+function buildCertDOM(){ const p=$("#oc-print"); p.innerHTML=""; const C=CASE.certificate;
+  const pass=(state.assess.score||0)>=CASE.scoring.passMark;
+  const cert=document.createElement("div"); cert.className="occert";
+  if(C.backgroundUrl) cert.style.backgroundImage="url('"+C.backgroundUrl+"')";
+  cert.innerHTML=
+    '<img class="clogo" src="https://onlycells.co.uk/wp-content/uploads/Only-Cells-Logo.png" alt="" onerror="this.outerHTML=\'<div class=&quot;cbrand&quot;>Only Cells</div>\'">'+
+    '<div class="ckicker">Morphology Monthly · Assessed CPD</div>'+
+    '<h1>'+escapeHtml(C.title)+'</h1>'+
+    '<div class="cname">'+escapeHtml(learnerName()||" ")+'</div>'+
+    (state.learner.reg?'<div class="creg">'+escapeHtml(state.learner.reg)+'</div>':'')+
+    '<div class="cbody">'+escapeHtml(C.body)+'</div>'+
+    '<div class="ccase">'+escapeHtml(CASE.id)+' — '+escapeHtml(CASE.answerTitle)+'</div>'+
+    '<div class="cgrid">'+
+      '<div>Date completed<b>'+escapeHtml(stamp())+'</b></div>'+
+      '<div>Score<b>'+(state.assess.score||0)+'% · '+(pass?"Achieved":"Not yet achieved")+'</b></div>'+
+      '<div>CPD time<b>'+(C.cpdMinutes?C.cpdMinutes+" minutes":"—")+'</b></div>'+
+    '</div>'+
+    '<div class="clo"><strong>Learning outcomes covered</strong><ul>'+C.outcomes.map(o=>'<li>'+escapeHtml(o)+'</li>').join("")+'</ul></div>'+
+    '<div class="cfoot">'+
+      '<div class="csig">'+escapeHtml(C.signatory)+'</div>'+
+      '<div class="csig">'+escapeHtml(C.accreditation)+'<br>onlycells.co.uk · Case '+escapeHtml(CASE.id)+'</div>'+
+    '</div>';
+  p.appendChild(cert); }
+
+function printOut(kind){ if(kind==="cert") buildCertDOM(); else buildRecordDOM(); window.print(); }
+
+function summaryText(){ const L=[], W=CASE.scoring.weights, LB=CASE.scoring.labels, pts=state.assess.parts||{};
+  L.push("ONLY CELLS — Morphology Monthly "+CASE.id); L.push("CPD ASSESSMENT RECORD");
+  L.push("Case: "+CASE.answerTitle+" · specimen "+CASE.specimen);
+  if(learnerName()) L.push("Completed by: "+learnerName()+(state.learner.reg?" ("+state.learner.reg+")":""));
+  L.push("Submitted: "+stamp()); L.push("".padEnd(56,"-"));
+  L.push("SCORE: "+(state.assess.score||0)+"% — "+(((state.assess.score||0)>=CASE.scoring.passMark)?"ACHIEVED":"NOT YET ACHIEVED")+" (pass mark "+CASE.scoring.passMark+"%, provisional)");
+  Object.keys(W).forEach(k=> L.push("  "+LB[k]+": "+(pts[k]||0)+" / "+W[k]));
+  L.push(""); L.push("YOUR RESPONSES");
+  L.push("• Abnormal results flagged: "+(ticksText("results",CASE.resultItems)||"(none)"));
+  L.push("• Comment on the numbers: "+(state.reflections["resultNote"]||"(none)"));
+  L.push("• Film features identified: "+(ticksText("features",CASE.filmItems)||"(none)"));
+  L.push("• Description of the film: "+(state.reflections["filmNote"]||"(none)"));
+  const an=annoText(); if(an) L.push("• Markers: "+an);
+  L.push("• Differential considered: "+(ticksText("differentials",CASE.differentials)||"(none)"));
+  L.push("• Rule-out reasoning: "+(state.reflections["ruleout"]||"(none)"));
+  L.push(""); L.push("DIAGNOSIS SUBMITTED: "+(state.assess.choice!=null?CASE.diagnosis.options[state.assess.choice]:"—"));
+  if(state.reflections["further"]) L.push("Further observations: "+state.reflections["further"]);
+  L.push("CORRECT ANSWER: "+CASE.diagnosis.answer);
+  L.push("Explanation: "+CASE.diagnosis.explanation);
+  L.push(""); L.push("MODEL RULE-OUT REASONING:"); CASE.model.ruleout.forEach(r=> L.push("  - "+r));
+  L.push(""); L.push("TEACHING POINT: "+CASE.teachingPoint);
+  L.push(""); L.push("MORPHOLOGY REPORT"); CASE.report.forEach(([k,v])=> L.push("  "+k+": "+v));
+  L.push(""); L.push("ADAMTS13: "+CASE.adamts13.value+" "+CASE.adamts13.unit+" — "+CASE.adamts13.verdict);
+  L.push(""); L.push("Declaration: completed by me as a CPD activity.");
+  L.push("An Only Cells educational resource · onlycells.co.uk");
+  L.push("Educational CPD resource — not a diagnostic device. Clinical content pending SME sign-off.");
+  return L.join("\n"); }
+function download(filename,text){ const blob=new Blob([text],{type:"text/plain;charset=utf-8"}); const url=URL.createObjectURL(blob);
+  const a=document.createElement("a"); a.href=url; a.download=filename; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=> URL.revokeObjectURL(url),1500); }
+
+/* ===== transitions ===== */
+function runScan(done,reverse){ if(reduceMotion){ done&&done(); return; } scan.classList.toggle("up",!!reverse); scan.classList.add("run");
+  setTimeout(()=>{ scan.classList.remove("run"); scan.classList.remove("up"); done&&done(); },700); }
+function runWipe(done){ if(reduceMotion){ done&&done(); return; } wipe.classList.add("run");
+  setTimeout(()=>{ if(done) done(); },360); setTimeout(()=>{ wipe.classList.remove("run"); },780); }
+
+/* ===== delegated inputs ===== */
+content.addEventListener("input",(e)=>{ const block=e.target.closest(".oc-reflect");
+  if(block&&e.target.tagName==="TEXTAREA"&&block.dataset.key){ state.reflections[block.dataset.key]=e.target.value; saveState(); } });
+content.addEventListener("change",(e)=>{ const tick=e.target.closest(".oc-tick");
+  if(tick&&e.target.type==="checkbox"){ const wrap=tick.closest(".oc-ticks"); const key=wrap.dataset.tickkey, id=tick.dataset.id;
+    state.ticks[key]=state.ticks[key]||{}; state.ticks[key][id]=e.target.checked; tick.setAttribute("aria-checked",e.target.checked); saveState();
+    if(key==="differentials") updateDiffHint(content); } });
+content.addEventListener("click",(e)=>{ const chip=e.target.closest(".oc-conf .chips button"); if(!chip||chip.disabled) return;
+  const key=chip.parentElement.dataset.confkey; chip.parentElement.querySelectorAll("button").forEach(b=> b.setAttribute("aria-pressed", b===chip));
+  state.confidence[key]=+chip.dataset.c; saveState(); });
+
+/* ===== nav ===== */
+function go(dir){ const target=state.step+dir; if(target<0||target>STATIONS.length-1) return;
+  state.step=target; state.maxStep=Math.max(state.maxStep,state.step); saveState(); runScan(()=> render(), dir<0); }
+btnNext.addEventListener("click",()=> go(1)); btnBack.addEventListener("click",()=> go(-1));
+
+/* Reset — guarded, and locked once the attempt is submitted (spec §11.6). */
+btnReset.addEventListener("click",()=>{
+  if(committed()){ openModal("Locked","Your CPD diagnosis has been submitted and recorded, so this attempt can't be reset. Download your record and certificate from Station 5.",null,"Close"); return; }
+  openModal("Reset this case?","This will clear everything you've entered — flagged results, film features, markers, differential and notes — and return you to Station 1. This can't be undone.","Reset this case","Cancel",
+    ()=>{ runWipe(()=>{ const bg=state.bgAnim, hm=state.helpMin, learner=state.learner; state=freshState(); state.bgAnim=bg; state.helpMin=hm; state.learner=learner; saveState(); render(); }); }); });
+
+/* ===== modal ===== */
+let modalOk=null, lastFocus=null;
+function openModal(title,body,okLabel,cancelLabel,onOk){
+  /* The prototype this was cloned from used (…,okLabel,onOk,cancelLabel). Getting the
+     order wrong here fails SILENTLY and blocks the commit path entirely, so normalise
+     rather than trust the call site. */
+  if(typeof cancelLabel==="function" && typeof onOk!=="function"){ const t=cancelLabel; cancelLabel=onOk; onOk=t; }
+  $("#ocModalTitle").textContent=title; $("#ocModalBody").textContent=body;
+  const ok=$("#ocModalOk"), cancel=$("#ocModalCancel"); modalOk=onOk||null; cancel.textContent=cancelLabel||"Cancel";
+  if(okLabel){ ok.style.display=""; ok.textContent=okLabel; } else ok.style.display="none";
+  lastFocus=document.activeElement; modal.classList.add("show"); (okLabel?ok:cancel).focus(); resize(); }
+function closeModal(){ modal.classList.remove("show"); modalOk=null; if(lastFocus&&lastFocus.focus) lastFocus.focus(); resize(); }
+$("#ocModalCancel").addEventListener("click", closeModal);
+$("#ocModalOk").addEventListener("click",()=>{ const fn=modalOk; closeModal(); if(fn) fn(); });
+document.addEventListener("keydown",(e)=>{ if(e.key==="Escape"&&modal.classList.contains("show")) closeModal(); });
+
+/* ===== landing → teal cleanse → interactive ===== */
+function runLaunch(){ if(reduceMotion){ root.classList.remove("is-landing"); render(); resize(); return; }
+  launchEl.classList.add("run"); setTimeout(()=>{ root.classList.remove("is-landing"); render(); },380); setTimeout(()=>{ launchEl.classList.remove("run"); resize(); },860); }
+$("#ocBegin").addEventListener("click", runLaunch);
+(function buildGlyphs(){ const g=$("#ocLaunchGlyphs"); if(!g) return;
+  const I={ cell:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3.4" fill="currentColor" opacity=".5"/></svg>',
+    drop:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg>',
+    lens:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="10" r="6"/><path d="M15 15l5 5" stroke-linecap="round"/></svg>',
+    /* schistocyte / helmet-cell glyph — the motif of this case */
+    frag:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 0 1 8-8v8z" fill="currentColor" opacity=".45" stroke="none"/><path d="M12 20a8 8 0 0 1-6.9-4l6.9-4" stroke-linejoin="round"/></svg>' };
+  const seq=[I.cell,I.frag,I.lens,I.drop,I.frag,I.cell,I.frag,I.lens,I.cell,I.frag];
+  const POS=[[12,72],[26,42],[40,80],[54,32],[66,66],[78,48],[88,74],[20,20],[60,14],[34,56]];
+  POS.forEach((p,i)=>{ const s=document.createElement("span"); s.style.left=p[0]+"%"; s.style.top=p[1]+"%"; s.innerHTML=seq[i];
+    const svg=s.querySelector("svg"); if(svg) svg.style.animationDelay=(i*42)+"ms"; g.appendChild(s); }); })();
+
+/* ===== auto-resize iframe (spec §6.2) ===== */
+function resize(){ const h=root.scrollHeight; if(window.parent&&window.parent!==window) window.parent.postMessage({ type:"oc-resize", id:CASE.id, height:h }, "*"); }
+if("ResizeObserver" in window) new ResizeObserver(()=> resize()).observe(root);
+window.addEventListener("resize", resize); window.addEventListener("orientationchange", resize); window.addEventListener("load", resize);
+
+/* ===== animated background — red cells + schistocyte fragments (this case's own motif),
+   drifting slow, diagonal top-left → bottom-right; toggleable, off = gradient only ===== */
+const bg=(function(){ const cv=$("#ocBg"); const ctx=cv.getContext("2d"); let w=0,h=0,parts=[],raf=null,running=false; const tints=["46,158,143","52,198,176","201,184,232"];
+  function fragPts(){ const n=5+Math.floor(Math.random()*2), pts=[];
+    for(let i=0;i<n;i++) pts.push({ ang:(i/n)*Math.PI*2+(Math.random()-0.5)*0.5, rad:0.5+Math.random()*0.7 });
+    return pts; }
+  function seed(){ w=cv.width=window.innerWidth; h=cv.height=window.innerHeight; parts=[]; const n=Math.max(18,Math.min(40,Math.floor(w/45)));
+    for(let i=0;i<n;i++){ const ang=(30+Math.random()*30)*Math.PI/180, spd=0.05+Math.random()*0.12, shape=Math.random()<0.65?"cell":"frag";
+      parts.push({ x:Math.random()*w, y:Math.random()*h, r:6+Math.random()*22, dx:Math.cos(ang)*spd, dy:Math.sin(ang)*spd,
+        t:tints[i%tints.length], a:0.04+Math.random()*0.07, shape, pts:shape==="frag"?fragPts():null }); } }
+  function drawCell(p){ ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.lineWidth=p.r*0.38; ctx.strokeStyle="rgba("+p.t+","+p.a+")"; ctx.stroke(); }
+  function drawFrag(p){ ctx.beginPath(); p.pts.forEach((pt,i)=>{ const px=p.x+Math.cos(pt.ang)*p.r*pt.rad, py=p.y+Math.sin(pt.ang)*p.r*pt.rad; i?ctx.lineTo(px,py):ctx.moveTo(px,py); });
+    ctx.closePath(); ctx.fillStyle="rgba("+p.t+","+p.a+")"; ctx.fill(); }
+  function frame(){ ctx.clearRect(0,0,w,h); for(const p of parts){ p.shape==="frag"?drawFrag(p):drawCell(p);
+    p.x+=p.dx; p.y+=p.dy; if(p.x>w+p.r){ p.x=-p.r; p.y=Math.random()*h; } if(p.y>h+p.r){ p.y=-p.r; p.x=Math.random()*w; } } }
+  function loop(){ frame(); if(running) raf=requestAnimationFrame(loop); }
+  function clear(){ ctx&&ctx.clearRect(0,0,w,h); }
+  function start(){ if(running) return; if(state.bgAnim===false) return; if(!parts.length) seed(); if(reduceMotion){ frame(); return; } running=true; loop(); }
+  function stop(){ running=false; if(raf) cancelAnimationFrame(raf); raf=null; clear(); }
+  window.addEventListener("resize",()=>{ seed(); if(reduceMotion&&state.bgAnim!==false) frame(); });
+  document.addEventListener("visibilitychange",()=>{ document.hidden?stop():(state.bgAnim!==false&&start()); });
+  return { start, stop };
+})();
+function setBg(on){ state.bgAnim=on; saveState(); ["#ocBgToggle","#ocBgToggleIntro"].forEach(sel=>{ const b=$(sel);
+  if(b){ b.setAttribute("aria-pressed",on); b.textContent="✦ Background: "+(on?"On":"Off"); } }); on?bg.start():bg.stop(); }
+$("#ocBgToggle").addEventListener("click",()=> setBg(state.bgAnim===false));
+$("#ocBgToggleIntro").addEventListener("click",()=> setBg(state.bgAnim===false));
+
+/* ===== boot ===== */
+root.classList.add("is-landing"); setBg(state.bgAnim!==false); resize();
+})();
+</script>
+</body>
+</html>
