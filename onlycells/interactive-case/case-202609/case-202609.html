@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Only Cells — Morphology Monthly CPD Case MM250818</title>
+<title>Only Cells — Morphology Monthly CPD Case 202609</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ===== ONLY CELLS — MORPHOLOGY MONTHLY · CPD INTERACTIVE CASE =====
-   Case MM250818 — Haemolytic Uraemic Syndrome (HUS)
+   Case 202609 — Haemolytic Uraemic Syndrome (HUS)
    Cloned from the case-mm260615 flagship prototype (spec §11 locked design).
    CPD / Assess mode only — the unscored Learn pathway is parked (CLAUDE.md rule 2).
    All styles scoped under .oc-case; brand values are CSS custom properties. */
@@ -96,19 +96,39 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
 /* results grids — FBC + biochemistry */
 .oc-resgroup{ margin:16px 0; }
 .oc-resgroup__h{ font-size:12px; letter-spacing:.09em; text-transform:uppercase; color:var(--oc-text-muted); font-weight:600; margin-bottom:8px; }
+/* headline results sit at the top; supporting detail folds away underneath */
+.oc-headline{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; }
+.oc-subval{ margin-top:8px; padding-top:7px; border-top:1px dashed rgba(255,255,255,.16); text-align:center; }
+.oc-subval .lab{ font-size:11px; color:var(--oc-text-muted); }
+.oc-subval .v{ font-family:var(--oc-font-head); font-size:19px; font-weight:700; }
+.oc-subval .u{ font-size:11px; color:var(--oc-text-muted); }
+.oc-fold{ background:var(--oc-surface-2); border:1px solid rgba(255,255,255,.1); border-radius:var(--oc-radius-sm); margin-top:10px; overflow:hidden; }
+.oc-fold summary{ cursor:pointer; padding:11px 14px; font-size:13px; font-weight:600; color:var(--oc-text);
+  list-style:none; display:flex; align-items:center; justify-content:space-between; gap:10px;
+  transition:background var(--oc-dur-micro); }
+.oc-fold summary::-webkit-details-marker{ display:none; }
+.oc-fold summary::after{ content:"⌄ show"; font-size:11px; font-weight:600; color:var(--oc-teal-bright); white-space:nowrap; }
+.oc-fold[open] summary::after{ content:"⌃ hide"; }
+.oc-fold summary:hover{ background:rgba(255,255,255,.05); }
+.oc-fold summary .n{ font-size:11px; color:var(--oc-text-muted); font-weight:400; }
+.oc-fold__b{ padding:0 12px 12px; }
+.oc-fold[open] .oc-fold__b{ animation:oc-acc-open 260ms var(--oc-ease-out); }
 .oc-fbc{ display:grid; grid-template-columns:repeat(auto-fit,minmax(132px,1fr)); gap:10px; }
-.oc-fbc .cell{ background:var(--oc-surface-2); border-radius:var(--oc-radius-sm); padding:14px; border-left:3px solid rgba(255,255,255,.2); }
-.oc-fbc .cell.low, .oc-fbc .cell.high{ border-left-color:var(--oc-warn); }
-.oc-fbc .cell.critical{ border-left-color:var(--oc-incorrect); }
-.oc-fbc .cell.normal{ border-left-color:var(--oc-teal); }
-.oc-fbc .lab{ font-size:12px; color:var(--oc-text-muted); }
-.oc-fbc .val{ font-family:var(--oc-font-head); font-size:clamp(22px,4vw,30px); font-weight:700; }
-.oc-fbc .unit{ font-size:12px; color:var(--oc-text-muted); }
-.oc-fbc .ref{ font-size:11px; color:var(--oc-text-muted); margin-top:3px; }
-.oc-fbc .flag{ font-size:11px; margin-top:4px; font-weight:600; }
-.oc-fbc .flag.low, .oc-fbc .flag.high{ color:var(--oc-warn); }
-.oc-fbc .flag.critical{ color:var(--oc-incorrect); }
-.oc-fbc .flag.normal{ color:var(--oc-teal-bright); }
+.oc-fbc .cell, .oc-headline .cell{ background:var(--oc-surface-2); border-radius:var(--oc-radius-sm); padding:14px; border-left:3px solid rgba(255,255,255,.2);
+  /* centred, and a grid so label / value / unit / ref sit on the same baseline across cards
+     regardless of how long each label is */
+  text-align:center; display:grid; grid-template-rows:auto auto auto auto; align-content:start; row-gap:2px; }
+.oc-fbc .cell.low, .oc-fbc .cell.high, .oc-headline .cell.low, .oc-headline .cell.high{ border-left-color:var(--oc-warn); }
+.oc-fbc .cell.critical, .oc-headline .cell.critical{ border-left-color:var(--oc-incorrect); }
+.oc-fbc .cell.normal, .oc-headline .cell.normal{ border-left-color:var(--oc-teal); }
+.oc-fbc .lab, .oc-headline .lab{ font-size:12px; color:var(--oc-text-muted); }
+.oc-fbc .val, .oc-headline .val{ font-family:var(--oc-font-head); font-size:clamp(22px,4vw,30px); font-weight:700; }
+.oc-fbc .unit, .oc-headline .unit{ font-size:12px; color:var(--oc-text-muted); }
+.oc-fbc .ref, .oc-headline .ref{ font-size:11px; color:var(--oc-text-muted); margin-top:3px; }
+.oc-fbc .flag, .oc-headline .flag{ font-size:11px; margin-top:4px; font-weight:600; }
+.oc-fbc .flag.low, .oc-fbc .flag.high, .oc-headline .flag.low, .oc-headline .flag.high{ color:var(--oc-warn); }
+.oc-fbc .flag.critical, .oc-headline .flag.critical{ color:var(--oc-incorrect); }
+.oc-fbc .flag.normal, .oc-headline .flag.normal{ color:var(--oc-teal-bright); }
 
 .oc-callout{ background:rgba(46,158,143,.12); border:1px solid var(--oc-teal); border-radius:var(--oc-radius-sm); padding:14px; margin:14px 0; }
 .oc-callout .h{ font-weight:600; color:var(--oc-teal-bright); margin-bottom:4px; }
@@ -133,6 +153,10 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
 .oc-tick.marked-correct .mk{ color:var(--oc-correct); } .oc-tick.marked-missed .mk{ color:var(--oc-teal-bright); } .oc-tick.marked-wrong .mk{ color:var(--oc-incorrect); }
 .oc-tick input:disabled{ cursor:default; }
 .oc-softhint{ font-size:12px; color:var(--oc-warn); margin-top:-6px; }
+/* where a call would have sent you — shown under the tick after submission */
+.oc-consequence{ grid-column:1/-1; font-size:13px; line-height:1.55; color:var(--oc-text-muted);
+  background:rgba(232,184,75,.08); border-left:3px solid var(--oc-warn); border-radius:0 6px 6px 0;
+  padding:9px 12px; margin:-2px 0 2px; }
 
 .oc-media{ margin:16px 0; text-align:center; }
 .oc-framewrap{ display:grid; grid-template-columns:1fr; gap:12px; justify-items:center; }
@@ -173,7 +197,33 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
 .oc-pin{ position:absolute; transform:translate(-50%,-50%); min-width:28px; height:28px; padding:0 5px; border-radius:14px; border:2px solid #fff; color:#fff; font-weight:700; font-size:11px; display:grid; place-items:center; z-index:25; pointer-events:none; white-space:nowrap; }
 .oc-pin.user{ background:rgba(201,184,232,.75); box-shadow:0 0 0 2px var(--oc-lilac); }
 .oc-figure.annotate-on .oc-pin.user{ pointer-events:auto; cursor:grab; }
-.oc-pin.sme{ background:rgba(46,158,143,.7); box-shadow:0 0 0 2px var(--oc-teal); cursor:pointer; pointer-events:auto; }
+/* Anas's marks: a RING around the cell, never a filled pin. A solid marker covers the cell it
+   is pointing at, which defeats the purpose. Centre stays clear; the number sits outside. */
+.oc-sme{ position:absolute; transform:translate(-50%,-50%); border-radius:50%; z-index:24;
+  border:2.5px solid var(--oc-teal-bright); background:transparent; cursor:pointer;
+  box-shadow:0 0 0 1.5px rgba(0,0,0,.45), inset 0 0 0 1.5px rgba(0,0,0,.35);
+  transition:transform var(--oc-dur-micro) var(--oc-ease-out), border-color var(--oc-dur-state); padding:0; }
+.oc-sme:hover, .oc-sme.on{ border-color:#fff; transform:translate(-50%,-50%) scale(1.12); }
+.oc-sme .n{ position:absolute; left:100%; bottom:100%; transform:translate(-25%,25%);
+  background:var(--oc-teal); color:#fff; font-size:10px; font-weight:700; line-height:1;
+  padding:2px 5px; border-radius:8px; white-space:nowrap; box-shadow:0 1px 4px rgba(0,0,0,.5); }
+.oc-sme.on .n{ background:#fff; color:var(--oc-navy-deep); }
+
+/* description list beside the film */
+.oc-smewrap{ display:grid; grid-template-columns:1fr; gap:14px; align-items:start; }
+/* list to the LEFT of the film, so the descriptions are read before the eye lands on the cell */
+@media (min-width:900px){ .oc-smewrap{ grid-template-columns:300px minmax(0,1fr); }
+  .oc-smewrap .oc-media{ order:2; } .oc-smewrap .oc-smelist{ order:1; } }
+.oc-smelist{ text-align:left; display:grid; gap:8px; align-content:start; }
+.oc-smelist__h{ font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--oc-text-muted); font-weight:600; }
+.oc-smeitem{ display:flex; gap:10px; align-items:flex-start; background:var(--oc-surface-2);
+  border:1px solid rgba(255,255,255,.1); border-left:3px solid var(--oc-teal); border-radius:8px;
+  padding:9px 11px; cursor:pointer; transition:border-color var(--oc-dur-state), background var(--oc-dur-state); }
+.oc-smeitem:hover, .oc-smeitem.on{ background:#3d3d3d; border-color:var(--oc-teal-bright); }
+.oc-smeitem .num{ flex:0 0 auto; min-width:26px; height:20px; border-radius:10px; background:var(--oc-teal);
+  color:#fff; font-size:11px; font-weight:700; display:grid; place-items:center; }
+.oc-smeitem .t{ font-size:13px; font-weight:600; }
+.oc-smeitem .d{ font-size:12px; color:var(--oc-text-muted); margin-top:2px; line-height:1.45; }
 .oc-hotnote{ position:absolute; z-index:26; background:var(--oc-navy-deep); border:1px solid var(--oc-teal); color:var(--oc-text); padding:8px 10px; border-radius:8px; font-size:12px; max-width:220px; transform:translate(-50%,8px); display:none; text-align:left; }
 .oc-hotnote.show{ display:block; }
 .oc-annolist{ margin-top:12px; display:grid; gap:8px; text-align:left; }
@@ -189,6 +239,7 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
 .oc-thumbs img{ width:78px; height:59px; object-fit:cover; display:block; }
 .oc-thumbs .rn{ position:absolute; top:2px; left:2px; background:rgba(15,26,58,.8); color:#fff; font-size:10px; font-weight:700; padding:1px 5px; border-radius:6px; }
 .oc-thumbs .mkd{ position:absolute; bottom:2px; right:2px; background:var(--oc-lilac); color:var(--oc-navy-deep); font-size:9px; font-weight:700; padding:1px 5px; border-radius:6px; }
+.oc-thumbs .smek{ position:absolute; top:2px; right:2px; background:var(--oc-teal); color:#fff; font-size:9px; font-weight:700; padding:1px 4px; border-radius:6px; }
 
 .oc-reflect{ margin-top:18px; background:var(--oc-surface-2); border:1px solid rgba(255,255,255,.08); border-radius:var(--oc-radius-sm); padding:16px; text-align:left; }
 .oc-reflect label{ display:block; font-weight:600; margin-bottom:8px; }
@@ -394,50 +445,23 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
 .ocp table th{ background:#f4f7fa; color:#16234D; }
 .ocp .decl{ margin-top:18px; font-size:12px; color:#555; border-top:1px dashed #bbb; padding-top:10px; }
 
-/* certificate — landscape A4, full-bleed. Branded fallback until Anas's background template
-   lands (CASE.certificate.backgroundUrl). Sized in mm so it fills the sheet exactly when
-   setPageStyle("cert") sets @page{ size:A4 landscape; margin:0 }. */
-.occert{ font-family:"Inter",system-ui,sans-serif; position:relative; box-sizing:border-box;
-  width:297mm; height:210mm; margin:0 auto; padding:15mm 18mm; overflow:hidden;
-  display:flex; flex-direction:column; justify-content:flex-start; text-align:center;
-  background-size:cover; background-position:center; }
-/* decorative frame as a pseudo-element so it insets cleanly and never adds page height */
-.occert::after{ content:""; position:absolute; inset:7mm; border:2px solid #16234D;
-  outline:1px solid #2E9E8F; outline-offset:3px; pointer-events:none; }
-.occert > *{ position:relative; z-index:1; }
-/* auto top+bottom margins centre the content in the space above the footer, so the sheet
-   reads balanced rather than top-heavy with a dead band underneath */
-.occert .cmain{ margin:auto 0; width:100%; }
-/* The Only Cells logo is a WHITE wordmark — on a white certificate it prints invisible.
-   Sitting it on a navy band keeps it legible, and the text fallback reads too. */
-.occert .cband{ display:inline-block; background:#16234D; border-radius:6px; padding:9px 20px; margin:0 auto; }
-.occert .cbrand{ font-family:"Poppins",sans-serif; font-weight:700; font-size:19px; color:#fff; letter-spacing:.02em; }
-.occert .clogo{ max-width:140px; height:auto; margin:0 auto; display:block; }
-.occert .ckicker{ font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:#2E9E8F; font-weight:700; margin-top:9px; }
-.occert h1{ font-family:"Poppins",sans-serif; font-size:27px; color:#16234D; margin:3px 0 0; }
-.occert .cname{ font-family:"Poppins",sans-serif; font-size:25px; color:#16234D; border-bottom:2px solid #2E9E8F; display:inline-block; padding:5px 40px 3px; margin:10px 0 4px; min-width:340px; }
-.occert .creg{ font-size:12px; color:#555; }
-.occert .cbody{ font-size:13px; color:#333; max-width:70ch; margin:9px auto 0; line-height:1.55; }
-.occert .ccase{ font-family:"Poppins",sans-serif; font-size:16px; color:#16234D; font-weight:600; margin:6px 0 0; }
-.occert .cgrid{ display:flex; gap:34px; justify-content:center; flex-wrap:wrap; margin:12px 0 0; }
-.occert .cgrid div{ font-size:11px; color:#555; }
-.occert .cgrid b{ display:block; font-family:"Poppins",sans-serif; font-size:15px; color:#16234D; margin-top:2px; }
-.occert .clo{ text-align:left; max-width:78ch; margin:12px auto 0; font-size:11px; color:#444; }
-.occert .clo ul{ margin:4px 0 0; padding-left:18px; } .occert .clo li{ margin:1px 0; }
-.occert .cfoot{ display:flex; justify-content:space-between; gap:26px; font-size:10px; color:#666; flex-wrap:nowrap; text-align:left; }
-.occert .csig{ border-top:1px solid #999; padding-top:5px; min-width:200px; flex:1; }
+/* ===== certificate =====
+   Rendered as a single flat image (see renderCertificate). Sized to fit whatever sheet the
+   browser is given — no fixed millimetres, because the user's paper choice overrides @page. */
+.occertimg{ display:block; width:100%; height:auto; max-height:100vh; object-fit:contain; margin:0 auto; }
+@media print{ .occertimg{ width:100%; height:100vh; object-fit:contain; } }
 </style>
 </head>
 <body>
 
 <canvas class="oc-bg" id="ocBg" aria-hidden="true"></canvas>
-<span class="oc-proto">Concept prototype · content pending SME sign-off</span>
+
 
 <div class="oc-case" id="ocRoot">
   <div class="oc-top">
     <div class="oc-brandline">
       <span class="t">Morphology Monthly — Interactive CPD Case</span>
-      <span class="s" id="ocCredit">Case MM250818</span>
+      <span class="s" id="ocCredit">Case 202609</span>
     </div>
     <div class="oc-topright">
       <span class="oc-cpdbadge"><span class="dot"></span>Recorded CPD activity</span>
@@ -448,7 +472,7 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
   <div class="oc-landing" id="ocLanding">
     <img class="oc-landing__logo" id="ocLogo" src="https://onlycells.co.uk/wp-content/uploads/Only-Cells-Logo.png" alt="Only Cells" onerror="this.outerHTML='<div class=&quot;oc-landing__word&quot;>Only Cells</div>'">
     <div class="eye">Morphology Monthly · CPD Case</div>
-    <h1 id="ocLandTitle">MM250818</h1>
+    <h1 id="ocLandTitle">202609</h1>
     <div class="credit" id="ocLandCredit"></div>
     <p class="oc-narrate" style="margin:12px auto 0; max-width:52ch">Work through a real blood film case the way you would on the bench: read the numbers, examine the film, build your differential — then commit. You'll get feedback on what you spotted, and a certificate recording the activity as CPD.</p>
     <div class="oc-landing__meta" id="ocLandMeta"></div>
@@ -513,60 +537,152 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
    blocked; must be confirmed with Anas / the SME before this goes live.
    ========================================================================== */
 const CASE = {
-  id:"MM250818",                       // [GAP] final case id/month TBC by Anas — working id per folder convention
+  id:"202609",                         /* year + month, per Anas 2026-08-04. His email typed
+                                        "2020609" but the highlighted films he supplied are named
+                                        202609_1..3, so 202609 is the intended form. The old
+                                        202609 was the legacy Morphology Monday reference. */
   answerTitle:"Haemolytic Uraemic Syndrome (HUS)",
-  credit:"Only Cells",
-  specimen:"28U956324",
+  credit:"",                          // blank by default — see the note by ocLandCredit below
+  contributor:"",                     // e.g. "Case shared by …" when someone contributes one
   meta:[
-    "CPD time: to be confirmed",       // [GAP] intake §8
-    "Level & audience: to be confirmed",// [GAP] intake §8
-    "Stain / magnification: to be confirmed" // [GAP] intake §4 — likely MGG, ×100 oil
+    "MGG, ×100 oil"                    /* CPD time and audience omitted until confirmed —
+                                          placeholders aren't learner-facing content */
   ],
   history:"35-year-old male presented with fatigue and pallor, easy bruising, reduced urine output and mild abdominal pain following a recent gastrointestinal illness.",
   filmTrigger:"Due to the severely low PLT results a blood film was made.",
 
-  /* Reference ranges are AUTHORED (not supplied in the intake) — [GAP] confirm against the reporting lab's ranges. */
+  /* ---- TIER 0 · shown upfront ----------------------------------------------------------
+     Anas placed the full FBC and the coagulation screen upfront (answers doc §2.2, 2026-08-04).
+     `flag`/`flagText` are computed but NOT displayed until the reveal — he asked for reference
+     ranges only, so the learner decides what's significant (§2.5). See buildStats().
+     Platelets: lab record gives impedance 19 with optical 22. Both shown deliberately — in a
+     thrombocytopenia this severe the two methods disagreeing is itself informative.
+     [GAP] reference ranges are still ours, not the reporting lab's. */
+  /* Four headline numbers a learner reads first. The optical platelet count rides on the
+     platelet card as a sub-value rather than competing as a card of its own. */
   fbc:[
-    { key:"plt",  label:"Platelets",   value:16,   unit:"x10⁹/L", flag:"critical", flagText:"▼▼ critically low", ref:"150–400" },
-    { key:"hb",   label:"Haemoglobin", value:113,  unit:"g/L",    flag:"low",      flagText:"▼ low",             ref:"130–170" },
-    { key:"wbc",  label:"WBC",         value:5.46, unit:"x10⁹/L", flag:"normal",   flagText:"normal",            ref:"4.0–11.0" }
+    { key:"plt",  label:"Platelets",   value:19,   unit:"x10⁹/L", flag:"critical", flagText:"▼▼ critically low", ref:"150–400",
+      sub:{ label:"Optical count", value:22, unit:"x10⁹/L" } },
+    { key:"hb",   label:"Haemoglobin", value:113,  unit:"g/L",    flag:"low",      flagText:"▼ low",    ref:"130–170" },
+    { key:"rbc",  label:"Red cell count", value:3.72, unit:"x10¹²/L", flag:"low",   flagText:"▼ low",    ref:"4.5–5.5" },
+    { key:"wbc",  label:"WBC",         value:5.46, unit:"x10⁹/L", flag:"normal",   flagText:"normal",   ref:"4.0–11.0" }
+  ],
+  wbcDiff:[
+    { key:"neut", label:"Neutrophils", value:3.31, unit:"x10⁹/L", flag:"normal",   flagText:"normal",   ref:"2.0–7.5" },
+    { key:"lymph",label:"Lymphocytes", value:1.13, unit:"x10⁹/L", flag:"normal",   flagText:"normal",   ref:"1.0–4.0" },
+    { key:"mono", label:"Monocytes",   value:0.86, unit:"x10⁹/L", flag:"normal",   flagText:"normal",   ref:"0.2–1.0" }
+  ],
+  rbcIndices:[
+    { key:"hct",  label:"HCT",         value:0.320,unit:"L/L",    flag:"low",      flagText:"▼ low",    ref:"0.40–0.50" },
+    { key:"mcv",  label:"MCV",         value:86,   unit:"fL",     flag:"normal",   flagText:"normal",   ref:"80–100" },
+    { key:"mch",  label:"MCH",         value:30.4, unit:"pg",     flag:"normal",   flagText:"normal",   ref:"27–33" },
+    { key:"mchc", label:"MCHC",        value:353,  unit:"g/L",    flag:"normal",   flagText:"normal",   ref:"320–360" }
   ],
   biochem:[
-    { key:"creat",label:"Creatinine",  value:257,  unit:"µmol/L", flag:"high", flagText:"▲ raised", ref:"60–110" },
-    { key:"bili", label:"Bilirubin",   value:49,   unit:"µmol/L", flag:"high", flagText:"▲ raised", ref:"< 21" },
+    /* ⚠️ DISPUTED — these four came from the public Only Cells page. The lab record reads
+       bilirubin 35, ALT 185, calcium 2.08 (albumin-adjusted 2.24, in range) and phosphate 0.73.
+       Creatinine matches. Left as published pending Anas's confirmation (asked 2026-08-04);
+       see build log §4c. Do not change without his answer. */
+    { key:"creat",label:"Creatinine",  value:257,  unit:"µmol/L", flag:"high", flagText:"▲ raised", ref:"59–104" },
+    { key:"bili", label:"Bilirubin",   value:49,   unit:"µmol/L", flag:"high", flagText:"▲ raised", ref:"< 20" },
     { key:"alt",  label:"ALT",         value:77,   unit:"U/L",    flag:"high", flagText:"▲ raised", ref:"10–50" },
     { key:"ca",   label:"Calcium",     value:1.84, unit:"mmol/L", flag:"low",  flagText:"▼ low",    ref:"2.20–2.60" },
     { key:"phos", label:"Phosphate",   value:0.4,  unit:"mmol/L", flag:"low",  flagText:"▼ low",    ref:"0.80–1.50" }
   ],
+  /* Anas: upfront, because a normal screen is what separates DIC from a localised microangiopathy. */
+  coag:[
+    { key:"pt",   label:"PT",          value:11.8, unit:"s",      flag:"normal", flagText:"normal", ref:"9.6–13.0" },
+    { key:"aptt", label:"APTT",        value:28.5, unit:"s",      flag:"normal", flagText:"normal", ref:"24–35" },
+    { key:"fib",  label:"Fibrinogen",  value:3.2,  unit:"g/L",    flag:"normal", flagText:"normal", ref:"2.0–4.0" }
+  ],
 
-  /* The discriminator — WITHHELD until the learner has committed a differential (Anas's 2-stage design). */
-  adamts13:{ label:"ADAMTS13 activity", value:64.7, unit:"IU/dL", ref:"normal range · severe deficiency < 10 IU/dL",
+  /* ---- TIER 1 · released after the differential is committed ----------------------------
+     Confirms the process is haemolytic and mechanical. Notes are Anas's own wording. */
+  haemolysis:{
+    title:"Haemolysis screen",
+    intro:"You've committed a differential. These were held back until you had.",
+    results:[
+      { key:"ldh",   label:"LDH",           value:1240, unit:"IU/L",  flag:"high",   flagText:"▲▲ markedly raised", ref:"135–225",
+        note:"Confirms severe intracellular destruction. LDH is a key biomarker for ongoing intravascular microangiopathic haemolysis and tissue ischaemia." },
+      { key:"hapto", label:"Haptoglobin",   value:0.1,  unit:"g/L",   flag:"critical", flagText:"▼▼ undetectable", ref:"0.3–2.0", prefix:"<",
+        note:"Confirms intravascular haemolysis. Free haptoglobin rapidly binds released cell-free haemoglobin and is cleared by the reticuloendothelial system." },
+      { key:"retic", label:"Reticulocytes", value:33.5, unit:"x10⁹/L", flag:"high",  flagText:"▲ raised", ref:"20–100",
+        note:"Assesses bone-marrow response — compensatory erythropoiesis against acute mechanical red-cell destruction." },
+      { key:"dat",   label:"DAT (Coombs)",  text:"Negative",           flag:"normal", flagText:"negative", ref:"negative",
+        note:"Rules out immune haemolytic anaemia. A negative direct antiglobulin test confirms the fragmentation is mechanically driven by microvascular fibrin/platelet thrombi." }
+    ],
+    verdict:"Intravascular, mechanical haemolysis — and not immune-mediated",
+    summary:"Raised LDH with undetectable haptoglobin and a reticulocytosis confirms active intravascular haemolysis. The negative DAT tells you it is mechanical, not immune — which, with the fragments on the film, is a microangiopathy."
+  },
+
+  /* ---- TIER 2 · the discriminator + the trigger -----------------------------------------
+     Anas: holding STEC alongside ADAMTS13 makes the learner establish a thrombotic
+     microangiopathy first, before being handed the specific infectious cause. */
+  adamts13:{ label:"ADAMTS13 activity", value:64.7, unit:"IU/dL", ref:"60–146 · severe deficiency < 10 IU/dL",
     verdict:"Within normal range — TTP excluded",
     note:"A severely reduced ADAMTS13 (typically < 10 IU/dL) is what defines TTP. A normal result takes TTP off the table and, with the AKI and the preceding GI illness, points to HUS." },
+  stec:{ label:"Stool culture / PCR",
+    lines:["PCR: positive for stx1 / stx2 genes","Culture: E. coli O157:H7 isolated"],
+    verdict:"Shiga toxin-producing E. coli — the trigger",
+    note:"Confirms STEC-HUS (typical HUS). The preceding gastrointestinal illness was the source; Shiga toxin drives the endothelial injury that produces the microangiopathy." },
 
   media:{ base:"assets/",
     /* display = webp (fast first paint); hires = the source PNG the loupe pulls from.
        Swap `hires` for Anas's full-resolution originals when they land — no other change needed. */
     stills:[
-      { src:"film-01-1024x768.webp", hires:"film-01-1024x768.png" },
-      { src:"film-02-1024x768.webp", hires:"film-02-1024x768.png" },
-      { src:"film-03-1024x768.webp", hires:"film-03-1024x768.png" },
-      { src:"film-04-1024x768.webp", hires:"film-04-1024x768.png" },
-      { src:"film-05-1024x768.webp", hires:"film-05-1024x768.png" },
-      { src:"film-06-1024x768.webp", hires:"film-06-1024x768.png" },
-      { src:"film-07-1024x768.webp", hires:"film-07-1024x768.png" },
-      { src:"film-08-1024x768.webp", hires:"film-08-1024x768.png" }
+      { src:"film-01-1024x768.webp", hires:"film-01-hires.webp" },
+      { src:"film-02-1024x768.webp", hires:"film-02-hires.webp" },
+      { src:"film-03-1024x768.webp", hires:"film-03-hires.webp" },
+      { src:"film-04-1024x768.webp", hires:"film-04-hires.webp" },
+      { src:"film-05-1024x768.webp", hires:"film-05-hires.webp" },
+      { src:"film-06-1024x768.webp", hires:"film-06-hires.webp" },
+      { src:"film-07-1024x768.webp", hires:"film-07-hires.webp" },
+      { src:"film-08-1024x768.webp", hires:"film-08-hires.webp" }
     ],
     videos:[]                          // no videos this case (stills only)
   },
 
-  /* SME-marked reveal layer. Anas offered to mark the fragments as SEPARATE files (intake §4).
-     Leave EMPTY until those land — we do not guess marker positions on a clinical image. */
-  hotspots:[],
+  /* SME-marked reveal layer. Positions derived from Anas's highlighted films (2026-08-04) by
+     tools/extract_highlights.py — his overlays are baked into the pixels, so we take only the
+     coordinates and draw our own markers, which stay sharp under the loupe and carry a note.
+     Matching was by image similarity, not filename: 202609_1→field II, _2→field VI, _3→field VIII
+     (best-match error ~1.0 against ~32 for the runner-up, so unambiguous).
+     [GAP] `note` text is empty until Anas labels each mark individually — asked 2026-08-04.
+     Themes by inspection: II = fragments/schistocytes · VI = microspherocytes · VIII = mixed. */
+  /* Ring positions AND radii derived from Anas's own highlighted films via
+     tools/extract_highlights.py — the ring sits where his circle sat, at his size.
+     Drawn as an outline, never a filled pin: a solid marker hides the very cell it
+     points at, which is useless for morphology.
+     `title`/`note` are per-FIELD descriptions taken from what Anas said he highlighted
+     plus the reported film comment. [GAP] his per-mark wording still to come. */
+  hotspots:[
+    { image:1, x:74.6, y:25.1, r:3.91, label:"2-1", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor \u2014 mechanically damaged passing through fibrin strands." },
+    { image:1, x:55.5, y:27.8, r:4.88, label:"2-2", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor \u2014 mechanically damaged passing through fibrin strands." },
+    { image:1, x:48.3, y:42.2, r:4.30, label:"2-3", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor \u2014 mechanically damaged passing through fibrin strands." },
+    { image:1, x:51.3, y:56.4, r:3.32, label:"2-4", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor \u2014 mechanically damaged passing through fibrin strands." },
+    { image:1, x:79.6, y:95.6, r:3.86, label:"2-5", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor \u2014 mechanically damaged passing through fibrin strands." },
+    { image:5, x:30.3, y:13.1, r:3.52, label:"6-1", title:"Microspherocyte", note:"Small, dense and round with no central pallor \u2014 a by-product of the same mechanical damage." },
+    { image:5, x:34.3, y:22.5, r:2.49, label:"6-2", title:"Microspherocyte", note:"Small, dense and round with no central pallor \u2014 a by-product of the same mechanical damage." },
+    { image:5, x:21.8, y:34.2, r:3.17, label:"6-3", title:"Microspherocyte", note:"Small, dense and round with no central pallor \u2014 a by-product of the same mechanical damage." },
+    { image:5, x:43.6, y:35.8, r:3.32, label:"6-4", title:"Microspherocyte", note:"Small, dense and round with no central pallor \u2014 a by-product of the same mechanical damage." },
+    { image:5, x:91.1, y:81.4, r:3.37, label:"6-5", title:"Microspherocyte", note:"Small, dense and round with no central pallor \u2014 a by-product of the same mechanical damage." },
+    { image:5, x:90.0, y:88.8, r:2.93, label:"6-6", title:"Microspherocyte", note:"Small, dense and round with no central pallor \u2014 a by-product of the same mechanical damage." },
+    { image:7, x:28.0, y:13.4, r:4.54, label:"8-1", title:"Fragment / microspherocyte", note:"Fragmented and small dense cells together \u2014 the mixed picture of an active microangiopathy." },
+    { image:7, x:21.7, y:23.0, r:4.10, label:"8-2", title:"Fragment / microspherocyte", note:"Fragmented and small dense cells together \u2014 the mixed picture of an active microangiopathy." },
+    { image:7, x:77.4, y:32.6, r:3.71, label:"8-3", title:"Fragment / microspherocyte", note:"Fragmented and small dense cells together \u2014 the mixed picture of an active microangiopathy." },
+    { image:7, x:28.3, y:38.2, r:4.69, label:"8-4", title:"Fragment / microspherocyte", note:"Fragmented and small dense cells together \u2014 the mixed picture of an active microangiopathy." },
+    { image:7, x:61.4, y:43.5, r:4.05, label:"8-5", title:"Fragment / microspherocyte", note:"Fragmented and small dense cells together \u2014 the mixed picture of an active microangiopathy." },
+    { image:7, x:18.7, y:51.4, r:2.93, label:"8-6", title:"Fragment / microspherocyte", note:"Fragmented and small dense cells together \u2014 the mixed picture of an active microangiopathy." },
+    { image:7, x:52.5, y:54.1, r:3.47, label:"8-7", title:"Fragment / microspherocyte", note:"Fragmented and small dense cells together \u2014 the mixed picture of an active microangiopathy." },
+    { image:7, x:89.6, y:68.0, r:2.25, label:"8-8", title:"Fragment / microspherocyte", note:"Fragmented and small dense cells together \u2014 the mixed picture of an active microangiopathy." },
+    { image:7, x:84.1, y:91.0, r:4.69, label:"8-9", title:"Fragment / microspherocyte", note:"Fragmented and small dense cells together \u2014 the mixed picture of an active microangiopathy." },
+  ],
+  /* Which fields carry marks, for the "show published annotations" prompt. */
+  markedFields:[1,5,7],
 
   /* ---- Part A(i): which results are abnormal / significant? (Screen 1) ---- */
   resultItems:[
-    { id:"r-plt",   text:"Platelets 16 ×10⁹/L — severe thrombocytopenia", correct:true, weight:3 },
+    { id:"r-plt",   text:"Platelets 19 ×10⁹/L (optical 22) — severe thrombocytopenia", correct:true, weight:3 },
     { id:"r-creat", text:"Creatinine 257 µmol/L — acute kidney injury",   correct:true, weight:3 },
     { id:"r-hb",    text:"Haemoglobin 113 g/L — anaemia",                 correct:true, weight:2 },
     { id:"r-bili",  text:"Bilirubin 49 µmol/L — raised (haemolysis)",     correct:true, weight:2 },
@@ -578,30 +694,46 @@ const CASE = {
   ],
 
   /* ---- Part A(ii): morphological features on the film (Screen 1) ----
-     Correct set is VERBATIM from the reveal page. Detractors are AUTHORED
-     plausible over-calls — [GAP] intake §5 asks Anas to confirm/replace them. */
+     Correct set verbatim from the reveal page. Detractors CONFIRMED genuinely absent by Anas
+     (2026-08-04), each with the clinical consequence of calling it — in his words. The
+     consequence is the teaching; it is shown instead of simply marking the tick wrong. */
   filmItems:[
     { id:"f-frag",   text:"Red-cell fragmentation — schistocytes (‘helmet’ cells)", correct:true, weight:4 },
-    { id:"f-fewplt", text:"Markedly reduced platelets on the film",                          correct:true, weight:4 },
-    { id:"f-micro",  text:"Occasional microspherocytes",                                     correct:true, weight:2 },
-    { id:"f-poly",   text:"Polychromasia",                                                   neutral:true },   // [GAP] not stated in the reveal — scored 0 either way
-    { id:"f-clump",  text:"Platelet clumps — EDTA artefact",                                 correct:false, penalty:2 },
-    { id:"f-nrbc",   text:"Nucleated red cells",                                             correct:false, penalty:2 },
-    { id:"f-blast",  text:"Blast cells",                                                     correct:false, penalty:2 },
-    { id:"f-spher",  text:"Spherocytes as the dominant abnormality",                         correct:false, penalty:2 },
-    { id:"f-hyper",  text:"Hypersegmented neutrophils",                                      correct:false, penalty:2 }
+    { id:"f-fewplt", text:"Markedly reduced platelets on the film",                 correct:true, weight:4 },
+    { id:"f-micro",  text:"Occasional microspherocytes",                            correct:true, weight:2 },
+    { id:"f-poly",   text:"Polychromasia",                                          neutral:true },   // [GAP] Anas hasn't confirmed — scores 0 either way
+    { id:"f-clump",  text:"Platelet clumps — EDTA artefact",                        correct:false, penalty:2,
+      consequence:"EDTA-induced pseudothrombocytopenia. Calling artefact here would have you dismiss a genuinely severe platelet count as a lab error — missing a haematological emergency." },
+    { id:"f-nrbc",   text:"Nucleated red cells",                                    correct:false, penalty:2,
+      consequence:"A leucoerythroblastic or marrow-stress picture — suggesting marrow infiltration, myelofibrosis or extramedullary haemopoiesis rather than microvascular fragmentation." },
+    { id:"f-blast",  text:"Blast cells",                                            correct:false, penalty:2,
+      consequence:"Acute leukaemia or MDS. Sends you chasing a primary haematological malignancy or marrow failure instead of a thrombotic microangiopathy." },
+    { id:"f-spher",  text:"Spherocytes as the dominant abnormality",                correct:false, penalty:2,
+      consequence:"Immune or intrinsic haemolytic anaemia — warm AIHA or hereditary spherocytosis — overlooking the microvascular fibrin shear that produces schistocytes." },
+    { id:"f-hyper",  text:"Hypersegmented neutrophils",                             correct:false, penalty:2,
+      consequence:"Megaloblastic anaemia (B12 / folate). Sends you down a metabolic pathway, mistaking the raised LDH for ineffective erythropoiesis rather than mechanical intravascular haemolysis." }
   ],
 
-  /* ---- Part B: differential (Screen 2, before ADAMTS13) ---- */
+  /* ---- Part B: differential (Screen 2, before the haemolysis screen) ----
+     ITP moved out of the correct set (Anas, 2026-08-04): "Primary ITP is a diagnosis of
+     exclusion characterised by isolated thrombocytopenia… once fragments are seen on the film,
+     ITP is essentially ruled out." We ask for the differential AFTER the film, so on his
+     reasoning it no longer qualifies — but it's marked neutral rather than wrong, since it is a
+     defensible thought before the film is examined. */
   differentials:[
     { id:"d-hus",  text:"Haemolytic uraemic syndrome (HUS)",            correct:true, weight:2 },
     { id:"d-ttp",  text:"Thrombotic thrombocytopenic purpura (TTP)",    correct:true, weight:2 },
     { id:"d-dic",  text:"Disseminated intravascular coagulation (DIC)", correct:true, weight:1 },
-    { id:"d-itp",  text:"Immune thrombocytopenia (ITP)",                correct:true, weight:1 },
-    { id:"d-hs",   text:"Hereditary spherocytosis",                     correct:false, penalty:1 },
-    { id:"d-aiha", text:"Warm autoimmune haemolytic anaemia",           correct:false, penalty:1 },
-    { id:"d-meg",  text:"Megaloblastic anaemia (B12 / folate)",         correct:false, penalty:1 },
-    { id:"d-leuk", text:"Acute leukaemia",                              correct:false, penalty:1 }
+    { id:"d-itp",  text:"Immune thrombocytopenia (ITP)",                neutral:true,
+      consequence:"Defensible before the film, but not after it. ITP is isolated thrombocytopenia — it does not produce red-cell fragmentation, haemolysis or acute kidney injury." },
+    { id:"d-hs",   text:"Hereditary spherocytosis",                     correct:false, penalty:1,
+      consequence:"An intrinsic membrane defect. It does not cause schistocytic fragmentation or acute renal failure." },
+    { id:"d-aiha", text:"Warm autoimmune haemolytic anaemia",           correct:false, penalty:1,
+      consequence:"Immune-mediated haemolysis — which the negative DAT excludes." },
+    { id:"d-meg",  text:"Megaloblastic anaemia (B12 / folate)",         correct:false, penalty:1,
+      consequence:"Does not explain the fragmentation, the thrombocytopenia or the AKI." },
+    { id:"d-leuk", text:"Acute leukaemia",                              correct:false, penalty:1,
+      consequence:"No blasts on the film and a normal white count — this is not a marrow process." }
   ],
 
   /* ---- Part C: the final commit (Screen 2, after ADAMTS13) ---- */
@@ -618,14 +750,15 @@ const CASE = {
     explanation:"Microangiopathic haemolytic anaemia (fragments / schistocytes) + severe thrombocytopenia + acute kidney injury (raised creatinine) + a recent gastrointestinal illness, with a NORMAL ADAMTS13 → haemolytic uraemic syndrome, not TTP."
   },
 
-  /* Model answers shown against the learner's free text in the record (formative, unscored). */
+  /* Model answers shown against the learner's free text in the record (formative, unscored).
+     Rule-out lines are Anas's own wording where he rewrote them (2026-08-04). */
   model:{
     ruleout:[
-      "TTP — the key differential. Excluded here by a NORMAL ADAMTS13 activity (severe deficiency, typically < 10 IU/dL, defines TTP).",
-      "DIC — would expect a deranged coagulation screen (prolonged PT/APTT, low fibrinogen, raised D-dimer). [GAP: coagulation results were not supplied with this case — confirm with Anas.]",
-      "ITP — explains isolated thrombocytopenia but not the fragmentation, the haemolysis or the acute kidney injury.",
-      "EDTA pseudothrombocytopenia — excluded by the film itself: platelets are genuinely reduced, with no clumps.",
-      "Hereditary spherocytosis — spherocytes are only occasional here, not the dominant abnormality, and it does not explain the AKI or the thrombocytopenia."
+      "TTP — the key differential. Ruled out by a normal ADAMTS13 (severe deficiency, usually < 10 IU/dL, defines TTP).",
+      "DIC — unlikely without active coagulation factor consumption; a normal PT, APTT and fibrinogen screen cleanly separates DIC from localised microvascular thrombosis.",
+      "ITP — explains the platelets but not the fragmentation, the haemolysis or the AKI.",
+      "EDTA pseudothrombocytopenia — excluded by the film itself: genuinely low, no clumps.",
+      "Hereditary spherocytosis — spherocytes are only a minor secondary feature here; HS is an intrinsic membrane defect that does not cause schistocytic fragmentation or acute renal failure."
     ],
     filmObs:[
       "Red-cell fragmentation with schistocytes — the hallmark of a microangiopathic process",
@@ -633,10 +766,11 @@ const CASE = {
       "Markedly reduced platelets on the film, confirming true thrombocytopenia"
     ],
     resultObs:[
-      "Severe thrombocytopenia (PLT 16) — the trigger for the film",
+      "Severe thrombocytopenia (PLT 19, optical 22) — the trigger for the film",
       "Anaemia (Hb 113) with a raised bilirubin — consistent with haemolysis",
       "Raised creatinine (257) — acute kidney injury",
-      "Normal WBC — no leucocytosis"
+      "A normal coagulation screen — which is what separates this from DIC",
+      "Normal WBC and differential — not a marrow process"
     ]
   },
 
@@ -646,11 +780,11 @@ const CASE = {
     ["WBC","Normal count; no abnormal cells."],
     ["Platelets","Markedly reduced."],
     ["Other","Features of a microangiopathic haemolytic anaemia (MAHA)."],
-    ["Conclusion","Appearances consistent with MAHA; with AKI, recent GI illness and a normal ADAMTS13, consistent with HUS."],
-    ["Recommended action","Exclude TTP (ADAMTS13 — normal); clinical correlation."]
+    ["Conclusion","Appearances consistent with MAHA; with AKI, recent GI illness, a normal coagulation screen and a normal ADAMTS13, consistent with STEC-HUS."],
+    ["Recommended action","Exclude TTP (ADAMTS13 — normal); confirm STEC; clinical correlation."]
   ],
 
-  teachingPoint:"MAHA + thrombocytopenia + AKI after a gastrointestinal illness, with a NORMAL ADAMTS13, = HUS. The normal ADAMTS13 is what distinguishes HUS from TTP.",
+  teachingPoint:"MAHA + thrombocytopenia + AKI after a gastrointestinal illness, with a normal coagulation screen and a normal ADAMTS13, = HUS. The coagulation screen separates it from DIC; the normal ADAMTS13 separates it from TTP; the stool PCR names the trigger.",
 
   /* FEEDBACK MODEL.
      mode:"formative" (default) — the learner is told what they identified, missed and over-called,
@@ -671,12 +805,20 @@ const CASE = {
   },
 
   certificate:{
-    backgroundUrl:null,               // [ACTION] Anas is supplying a background template — drop the URL/path here
+    /* Only Cells' own design, supplied by Anas as PowerPoint and exported to webp with the
+       case-title line blanked so it's reusable across cases. Wording, logo and both signatures
+       (Anas Nasir / Only Cells and Dan Boyland / Forged Frameworks) are part of the artwork —
+       the widget overlays only the participant name, case title, date and outcomes. */
+    /* Two variants from Anas's deck: slide 1 reads "successfully participating", slide 2 just
+       "participating". Which one is issued follows the diagnosis. */
+    backgroundPass:"certificate-bg-pass.webp",
+    backgroundPart:"certificate-bg-part.webp",
+    slideRatio:"16:9",                // the artwork's own aspect
     title:"Certificate of completion",
-    body:"has completed the Only Cells Morphology Monthly interactive blood-film case as a continuing professional development activity",
+    body:"",                          // wording is in the artwork
     cpdMinutes:null,                  // [GAP] intake §8
-    accreditation:"Self-certified CPD — accreditation to be confirmed", // [GAP]
-    signatory:"Anas Nasir · Specialist Biomedical Scientist, Only Cells",
+    accreditation:"Self-certified CPD",   // [GAP] accreditation route still to confirm
+    signatory:"",                     // signatures are in the artwork
     outcomes:[                        // [GAP] drafted in intake §8 — confirm wording
       "Recognise a microangiopathic blood-film picture — red-cell fragmentation and schistocytes.",
       "Build a differential for thrombocytopenia with red-cell fragmentation.",
@@ -692,7 +834,8 @@ const STATIONS=[
   { id:"presentation", title:"Presentation & bloods", screen:"Screen 1 — presentation & film", scaffold:"Review · flag the abnormal results" },
   { id:"film",         title:"The blood film",        screen:"Screen 1 — presentation & film", scaffold:"Identify features · annotate" },
   { id:"reasoning",    title:"Differential & rule-out",screen:"Screen 2 — reasoning",           scaffold:"Commit your differential" },
-  { id:"adamts",       title:"ADAMTS13 & diagnosis",  screen:"Screen 2 — the discriminator",   scaffold:"New result · one-shot commit" },
+  { id:"haemolysis",   title:"Haemolysis screen",     screen:"Screen 2 — reasoning",           scaffold:"Results released · reconsider" },
+  { id:"adamts",       title:"ADAMTS13 & the trigger",screen:"Screen 2 — the discriminator",   scaffold:"New results · one-shot commit" },
   { id:"result",       title:"Result & CPD record",   screen:"Reveal & record",                scaffold:"Feedback · reveal · certificate" }
 ];
 
@@ -722,23 +865,32 @@ function freshState(){ return { ver:STORE_VER, step:0, maxStep:0,
   reflections:{}, confidence:{}, ticks:{}, annotations:{ film:emptyAnno() },
   learner:{ name:"", reg:"" },
   magStyle:null, hexZoom:2, bgAnim:true, helpMin:false,
-  adamtsRevealed:false,
+  haemolysisRevealed:false, adamtsRevealed:false,
   assess:{ committed:false, choice:null, correct:null, order:null, at:null, score:null, parts:null } }; }
 function loadState(){ try{ const s=JSON.parse(localStorage.getItem(STORE_KEY)); if(s&&s.ver===STORE_VER) return s; }catch(e){} return freshState(); }
 function saveState(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){} }
 function annoFor(key,idx){ state.annotations[key]=state.annotations[key]||emptyAnno(); state.annotations[key][idx]=state.annotations[key][idx]||[]; return state.annotations[key][idx]; }
-/* Integrity (spec §11.6): everything before the discriminator locks the moment ADAMTS13 is revealed,
-   and the whole attempt locks on commit. "Reset → peek → resubmit" is structurally impossible. */
+/* Integrity (spec §11.6), now across two withheld tiers.
+   Tier 1 (haemolysis screen) locks Stations 1–3: the learner has committed a differential.
+   Tier 2 (ADAMTS13 + STEC) locks Station 4 too, and gates the diagnosis.
+   Commit locks everything. "Reset → peek → resubmit" remains structurally impossible. */
 const committed=()=> !!state.assess.committed;
-const lockedBefore=()=> !!state.adamtsRevealed;
+const lockedBefore=()=> !!state.haemolysisRevealed;   // Stations 1–3
+const lockedTier1=()=> !!state.adamtsRevealed;        // Station 4
+/* Flags (▼/▲) are withheld until the reveal — Anas asked for ranges only, so the learner
+   decides what's significant (answers doc §2.5). */
+const showFlags=()=> committed();
 
 const root=$("#ocRoot"), content=$("#ocContent"), stepsEl=$("#ocSteps"), railFill=$("#ocRailFill"), screenTag=$("#ocScreenTag"),
   btnNext=$("#ocNext"), btnBack=$("#ocBack"), btnReset=$("#ocReset"), scan=$("#ocScan"), wipe=$("#ocWipe"),
   launchEl=$("#ocLaunch"), modal=$("#ocModal");
 
-$("#ocCredit").textContent="Case "+CASE.id+" · specimen "+CASE.specimen+" · "+CASE.credit;
+$("#ocCredit").textContent="Case "+CASE.id+(CASE.credit?" · "+CASE.credit:"");
 $("#ocLandTitle").textContent="Morphology Monthly | "+CASE.id;
-$("#ocLandCredit").textContent="Derived from Morphology Monday "+CASE.id+" · "+CASE.credit;
+/* Credit line left blank by default (Anas, 2026-08-04): naming the legacy Morphology Monday
+   case lets learners look it up and read the answer. Set CASE.credit only when a case is
+   contributed by someone and needs acknowledging. */
+$("#ocLandCredit").textContent=CASE.credit||"";
 $("#ocLandMeta").innerHTML=CASE.meta.map(m=>'<span>'+escapeHtml(m)+'</span>').join("");
 
 /* transient hint, bottom-centre; polite so screen readers announce it without stealing focus */
@@ -814,9 +966,39 @@ function runStationWipe(dir,swap,after){
      stranded ghost would cover the new station permanently */
   setTimeout(()=>{ clearGhost(); if(wrap) wrap.style.minHeight=""; transitioning=false; after&&after(); resize(); }, WIPE_MS+60);
 }
-function gotoStep(i){
+/* A soft nudge, not a gate: if a station has been left blank or barely touched, say so once and
+   let them through anyway. Only fires moving forward, only before commit, and only once per
+   station per session — nagging on every pass would be worse than saying nothing. */
+const nudged={};
+function incompleteWarning(stepIdx){
+  if(committed()) return null;
+  const st=STATIONS[stepIdx]; if(!st) return null;
+  if(st.id==="presentation"){
+    const ticks=Object.values(state.ticks["results"]||{}).filter(Boolean).length;
+    const note=(state.reflections["resultNote"]||"").trim();
+    if(ticks===0 && !note) return "You haven't flagged any results or written anything about them.";
+    if(ticks===0) return "You haven't flagged any of the results as abnormal.";
+    if(!note) return "You haven't commented on the blood count and biochemistry.";
+  }
+  if(st.id==="film"){
+    const ticks=Object.values(state.ticks["features"]||{}).filter(Boolean).length;
+    const note=(state.reflections["filmNote"]||"").trim();
+    const marks=(state.annotations.film||[]).reduce((n,a)=>n+((a&&a.length)||0),0);
+    if(ticks===0 && !note && !marks) return "You haven't identified any film features, added a marker, or described the film.";
+    if(ticks===0) return "You haven't ticked any of the film features.";
+    if(!note) return "You haven't described the film in your own words.";
+  }
+  return null; }
+
+function gotoStep(i,opts){
   if(transitioning) return;
   i=clamp(i,0,STATIONS.length-1); if(i===state.step) return;
+  if(i>state.step && !(opts&&opts.skipCheck) && !nudged[state.step]){
+    const warn=incompleteWarning(state.step);
+    if(warn){ nudged[state.step]=true;
+      openModal("Before you move on", warn+" You can carry on and come back to it, or go back and add it now.",
+        "Continue anyway","Stay here",()=> gotoStep(i,{skipCheck:true}));
+      return; } }
   const dir=i>state.step?1:-1;
   transitioning=true;
   state.step=i; state.maxStep=Math.max(state.maxStep,i); saveState(); autoHideHelp();
@@ -866,7 +1048,7 @@ function render(){ renderCore(); const n=content.firstChild; if(n&&n._after) n._
 const HELP=["Work through the <strong>stations</strong> left to right using <strong>Next</strong>. Everything you type is saved in this browser as you go.",
   "Examine each film with the <strong>magnifier</strong> (scroll, +/− or keyboard to zoom) and drop your own numbered <strong>markers</strong> — they become part of your record.",
   "Flag the abnormal results, identify the film features, then commit a <strong>differential</strong>.",
-  "The <strong>ADAMTS13</strong> result is released only after that — and it <strong>locks</strong> your earlier answers.",
+  "Results are released in two stages once you have — the <strong>haemolysis screen</strong>, then <strong>ADAMTS13</strong> and the trigger. Each release <strong>locks</strong> what came before it.",
   "The final diagnosis is a <strong>one-shot, recorded</strong> submission. It can’t be changed or reset afterwards.",
   "You finish with <strong>feedback</strong> on what you spotted, a downloadable <strong>CPD record</strong> and a <strong>certificate of completion</strong>."];
 function renderHelp(){ const body=$("#ocHelpBody"), panel=$("#ocHelp"), chip=$("#ocHelpChip");
@@ -883,7 +1065,8 @@ function autoHideHelp(){ if(state.helpMin) return; state.helpMin=true; saveState
 function stationShell(st,inner){ const w=document.createElement("div");
   w.innerHTML='<div class="oc-station"><span class="oc-scaffold">'+st.scaffold+'</span><div class="oc-eyebrow">Station '+(state.step+1)+' of '+STATIONS.length+'</div><h2>'+st.title+'</h2>'+inner+'</div>'; return w; }
 function lockBar(){ if(committed()) return '<div class="oc-lockbar"><span class="k">Submitted</span> This attempt has been recorded as CPD evidence — your answers are locked.</div>';
-  if(lockedBefore()) return '<div class="oc-lockbar"><span class="k">Locked</span> The ADAMTS13 result has been released, so answers given before it can no longer be changed.</div>'; return ''; }
+  /* name the tier that actually locked it — saying "ADAMTS13" at Station 4 was simply wrong */
+  if(lockedBefore()) return '<div class="oc-lockbar"><span class="k">Locked</span> The haemolysis screen has been released, so the results, film features and differential you committed before it can no longer be changed.</div>'; return ''; }
 
 /* ===== stations ===== */
 function renderStation(st){
@@ -893,20 +1076,32 @@ function renderStation(st){
     node=stationShell(st, lockBar()+
       '<p class="oc-narrate">'+escapeHtml(CASE.history)+'</p>'+
       '<div class="oc-callout"><div class="h">Why the film was made</div>'+escapeHtml(CASE.filmTrigger)+'</div>'+
-      '<div class="oc-resgroup"><div class="oc-resgroup__h">Full blood count</div><div class="oc-fbc" id="ocFbc"></div></div>'+
-      '<div class="oc-resgroup"><div class="oc-resgroup__h">Biochemistry</div><div class="oc-fbc" id="ocBio"></div></div>'+
+      '<div class="oc-resgroup"><div class="oc-resgroup__h">Full blood count</div>'+
+        '<div class="oc-headline" id="ocFbc"></div>'+
+        foldHTML("ocDiff","White cell differential","neutrophils · lymphocytes · monocytes")+
+        foldHTML("ocIndices","Red cell indices","HCT · MCV · MCH · MCHC")+
+      '</div>'+
+      foldHTML("ocCoag","Coagulation screen","PT · APTT · fibrinogen")+
+      foldHTML("ocBio","Biochemistry","renal · liver · bone profile")+
+      (showFlags()?'':'<div class="oc-note">Reference ranges are given, but nothing is flagged for you — deciding what matters is the exercise.</div>')+
       '<h3>Flag the abnormal results</h3>'+
-      '<p class="oc-narrate">Tick every result you would call abnormal or significant. Over-calling costs you marks, so be deliberate.</p>'+
+      '<p class="oc-narrate">Tick every result you would call abnormal or significant. Be deliberate — over-calling is recorded too.</p>'+
       tickBlock("results",CASE.resultItems,"two")+
       noteBox("resultNote","Comment on the blood count and biochemistry in your own words.","What is the overall picture these numbers describe?"));
-    node._after=()=>{ buildStats($("#ocFbc",node),CASE.fbc,true); buildStats($("#ocBio",node),CASE.biochem,true); markTicks(node,"results",CASE.resultItems); };
+    node._after=()=>{
+      buildStats($("#ocFbc",node),CASE.fbc,true);
+      buildStats($("#ocDiff",node),CASE.wbcDiff,true);
+      buildStats($("#ocIndices",node),CASE.rbcIndices,true);
+      buildStats($("#ocCoag",node),CASE.coag,true);
+      buildStats($("#ocBio",node),CASE.biochem,true);
+      markTicks(node,"results",CASE.resultItems); };
 
   } else if(st.id==="film"){
     node=stationShell(st, lockBar()+
-      '<p class="oc-narrate">Eight fields from the film (specimen '+escapeHtml(CASE.specimen)+'). Work across the thumbnails, use the magnifier, then <strong>drop your own markers</strong> on anything you would report.</p>'+
+      '<p class="oc-narrate">Eight fields from the film. Work across the thumbnails, use the magnifier, then <strong>drop your own markers</strong> on anything you would report.</p>'+
       figureHTML(0,{annotate:!lockedBefore(), annoKey:"film"})+
       '<h3>Identify the features</h3>'+
-      '<p class="oc-narrate">Tick the morphological features you can actually see. Again — plausible over-calls are penalised.</p>'+
+      '<p class="oc-narrate">Tick the morphological features you can actually see. Again — be deliberate; where a call would send you clinically is part of the feedback.</p>'+
       tickBlock("features",CASE.filmItems,"two")+
       noteBox("filmNote","Describe the film in your own words.","Red cells, white cells, platelets — what stands out?"));
     node._after=()=>{ wireFigure(node,0,"film",{ readOnly:lockedBefore() }); markTicks(node,"features",CASE.filmItems); };
@@ -917,70 +1112,113 @@ function renderStation(st){
       '<h3 style="margin-top:6px">Your differential</h3>'+
       '<p class="oc-narrate">Based on the presentation, the numbers and the film — and <strong>before</strong> any further tests — which diagnoses are on your list?</p>'+
       tickBlock("differentials",CASE.differentials,"two")+
-      '<div class="oc-softhint" id="ocDiffHint" hidden>Nothing selected — this section will score 0.</div>'+
-      noteBox("ruleout","What would you rule out, and how?","Name each differential you want off the list and the test or feature that removes it. This is marked formatively — you’ll see the model answer at the end.")+
+      '<div class="oc-softhint" id="ocDiffHint" hidden>Nothing selected — nothing will be recorded for this section.</div>'+
+      noteBox("ruleout","What would you rule out, and how?","Name each differential you want off the list and the test or feature that removes it. Unmarked — you’ll see the model answer at the end.")+
       confBlock("ruleout")+
-      '<div class="oc-note">Once you continue past this station and release the ADAMTS13 result, these answers lock.</div>');
+      (committed()?
+        '<h3>The model rule-out</h3>'+
+        '<div class="oc-callout"><div class="h">How each one is excluded</div><ul>'+
+          CASE.model.ruleout.map(r=>'<li>'+escapeHtml(r)+'</li>').join("")+'</ul></div>'
+        :'<div class="oc-note">Once you continue and release the haemolysis screen, these answers lock.</div>'));
     node._after=()=>{ markTicks(node,"differentials",CASE.differentials); updateDiffHint(node); };
+
+  } else if(st.id==="haemolysis"){
+    const H=CASE.haemolysis, revealed=state.haemolysisRevealed;
+    node=stationShell(st, lockBar()+
+      '<p class="oc-narrate">'+escapeHtml(H.intro)+'</p>'+
+      (revealed?'':'<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocRevealHaem">Release the haemolysis screen</button></div>'+
+        '<div class="oc-note">Releasing these locks Stations 1–3. Make sure you are happy with your differential first.</div>')+
+      /* Withheld content is NOT rendered into the DOM until released — a hidden panel still
+         exposes the answer in the page source and to a screen reader. */
+      '<div class="oc-reveal-panel'+(revealed?' show':'')+'" id="ocHaemPanel">'+(revealed?
+        '<div class="oc-fbc" id="ocHaem"></div>'+
+        '<div class="oc-callout"><div class="h">'+escapeHtml(H.verdict)+'</div>'+escapeHtml(H.summary)+'</div>'+
+        '<div class="oc-recap"><div class="oc-recap__h">Why each of these was held back</div>'+
+          H.results.map(r=>'<details class="oc-acc"><summary>'+escapeHtml(r.label)+'</summary><div class="oc-acc__b">'+escapeHtml(r.note)+'</div></details>').join("")+
+        '</div>'+
+        noteBox("haemNote","Does this change your differential?","You committed a list before these came back. Which of them does this narrow, and which does it remove?")+
+        confBlock("haemolysis")
+      :'')+'</div>');
+    node._after=()=>{
+      const rv=$("#ocRevealHaem",node);
+      if(rv) rv.addEventListener("click",()=> openModal("Release the haemolysis screen?",
+        "This locks your earlier answers — the results you flagged, the film features you identified and your differential. You'll still have the final diagnosis to make.",
+        "Release the results","Not yet",()=> revealHaemolysis()));
+      if(revealed) buildStats($("#ocHaem",node),H.results,true,true);
+    };
 
   } else if(st.id==="adamts"){
     const revealed=state.adamtsRevealed;
-    node=stationShell(st,
-      '<p class="oc-narrate">You have committed a differential. One further result is now available.</p>'+
-      (revealed?'':'<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocRevealAd">Release the ADAMTS13 result</button></div>'+
-        '<div class="oc-note">Releasing this result locks Stations 1–3. Make sure you are happy with your differential first.</div>')+
-      '<div class="oc-reveal-panel'+(revealed?' show':'')+'" id="ocAdPanel">'+adamtsHTML()+
-        '<h3>Your diagnosis</h3><p class="oc-narrate">Weigh this result against everything you\'ve seen, then select the single most likely diagnosis. This is a one-shot, recorded CPD submission — it cannot be changed or reset.</p>'+
+    node=stationShell(st, (lockedTier1()&&!committed()?'<div class="oc-lockbar"><span class="k">Locked</span> The haemolysis screen has been released, so your differential can no longer be changed.</div>':'')+
+      '<p class="oc-narrate">You know this is a mechanical, non-immune haemolysis. Two final results separate the causes — and name the trigger.</p>'+
+      (revealed?'':'<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocRevealAd">Release the final results</button></div>')+
+      /* Same rule as tier 1 — nothing withheld reaches the DOM before release. */
+      '<div class="oc-reveal-panel'+(revealed?' show':'')+'" id="ocAdPanel">'+(revealed?
+        adamtsHTML()+stecHTML()+
+        '<h3>Your diagnosis</h3><p class="oc-narrate">Weigh these against everything you\'ve seen, then select the single most likely diagnosis. This is a one-shot, recorded CPD submission — it cannot be changed or reset.</p>'+
         '<div class="oc-options" id="ocOptions"></div>'+
         noteBox("further","Any further observations? (optional)","Anything else supporting your diagnosis — recorded with your submission.")+
         confBlock("diagnosis")+
         (committed()?'':'<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocSubmit" disabled>Submit diagnosis</button></div>')+
-        '<div class="oc-feedback" id="ocFeedback"></div>'+
-      '</div>');
+        '<div class="oc-feedback" id="ocFeedback"></div>'
+      :'')+'</div>');
     node._after=()=>{
       const rv=$("#ocRevealAd",node);
-      if(rv) rv.addEventListener("click",()=> openModal("Release the ADAMTS13 result?",
-        "This locks your earlier answers — the results you flagged, the film features you identified and your differential. You can still change your final diagnosis until you submit it.",
-        "Release the result","Not yet",()=> revealAdamts()));
+      /* No confirmation step: releasing the haemolysis screen already committed them, so there
+         is nothing behind this they could still go back and change. */
+      if(rv) rv.addEventListener("click",()=> revealAdamts());
       if(revealed){ if(!reduceMotion) countUp($("#ocAdVal",node), CASE.adamts13.value, 900, 120); wireCommit(node); }
     };
 
   } else if(st.id==="result"){
     node=stationShell(st, committed()?
       '<div id="ocResultBox"></div>'+
+      '<div class="oc-callout lilac"><div class="h">Your answers are now marked up</div>'+
+        'Every station is open again and now shows how your responses compare — what you identified, what you missed, and where an over-call would have led. Use the numbered stations at the top to look back through them.</div>'+
       '<h3>The published answer</h3>'+
       '<div class="oc-callout pop"><div class="h">Diagnosis</div><strong style="font-size:20px">'+escapeHtml(CASE.diagnosis.answer)+'</strong><p style="margin-top:6px">'+escapeHtml(CASE.diagnosis.explanation)+'</p></div>'+
       '<h3>ADAMTS13 — the discriminator</h3>'+adamtsVerdictHTML()+
+      '<h3>The trigger</h3>'+stecHTML(true)+
       '<div class="oc-callout lilac"><div class="h">Teaching point</div>'+escapeHtml(CASE.teachingPoint)+'</div>'+
       '<h3>What you would rule out, and how</h3>'+
-      '<div class="oc-callout"><div class="h">Model answer <span style="font-weight:400;color:var(--oc-text-muted)">(confirm with Anas/SME)</span></div><ul>'+CASE.model.ruleout.map(r=>'<li>'+escapeHtml(r)+'</li>').join("")+'</ul></div>'+
+      '<div class="oc-callout"><div class="h">Model answer</div><ul>'+CASE.model.ruleout.map(r=>'<li>'+escapeHtml(r)+'</li>').join("")+'</ul></div>'+
       '<h3>Morphology report</h3>'+reportHTML()+
-      '<h3>The film, marked</h3>'+
-      '<div style="margin:10px 0"><button class="oc-btn oc-btn--ghost" id="ocAnno">Show published annotations</button></div>'+
-      figureHTML(0,{annotate:false, annoKey:"film", magOff:true})+
+      '<h3>The film, marked by Only Cells</h3>'+
+      '<p class="oc-narrate">These are the '+(CASE.markedFields||[]).length+' fields Anas marked. Each ring circles the cell without covering it — hover a ring or an entry in the list to link the two.</p>'+
+      '<div style="margin:10px 0"><button class="oc-btn oc-btn--primary" id="ocAnno">Show the marked cells</button></div>'+
+      '<div class="oc-smewrap">'+
+        figureHTML((CASE.markedFields&&CASE.markedFields[0])||0,{annotate:false, annoKey:"film", magOff:true, sme:true, only:CASE.markedFields})+
+        '<div class="oc-smelist" id="ocSmeList"></div>'+
+      '</div>'+
+      '<div class="oc-tools" style="justify-content:center; margin-top:18px">'+
+        '<button class="oc-btn oc-btn--ghost" id="ocBackToResults">‹ Return to earlier stations to review your results</button>'+
+      '</div>'+
       '<h3>Your CPD record</h3>'+
-      '<p class="oc-narrate">Your name is used only on your downloaded record and certificate. It is stored in this browser and never sent anywhere.</p>'+
+      '<p class="oc-narrate">Your name appears on your certificate and record. It stays in this browser and is never sent anywhere.</p>'+
       '<div class="oc-fieldrow">'+
         '<div class="oc-field"><label for="ocName">Your name (as it should appear on the certificate)</label><input id="ocName" type="text" autocomplete="name" value="'+escapeHtml(state.learner.name||"")+'" placeholder="e.g. A. Nasir"></div>'+
         '<div class="oc-field"><label for="ocReg">Registration number (optional)</label><input id="ocReg" type="text" value="'+escapeHtml(state.learner.reg||"")+'" placeholder="e.g. HCPC BS000000"></div>'+
       '</div>'+
       '<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocPdf">Download CPD record (PDF)</button>'+
         '<button class="oc-btn oc-btn--primary" id="ocCert">Download certificate (PDF)</button>'+
-        '<button class="oc-btn oc-btn--ghost" id="ocTxt">Plain text</button></div>'+
-      '<div class="oc-note">Certificate is rendering on a branded fallback design — it will move onto the Only Cells background template once Anas supplies it.</div>'
+        '<button class="oc-btn oc-btn--ghost" id="ocTxt">CPD record (plain text backup)</button></div>'+
+      '<div class="oc-note">Your certificate downloads as a PDF, signed by Anas Nasir and Dan Boyland. The plain-text record is a backup if the PDF will not open.</div>'
       :
       '<div class="oc-lockbar"><span class="k">Not yet submitted</span> Go back to Station 4, release the ADAMTS13 result and commit a diagnosis to generate your CPD record.</div>'+
       '<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocGoBack">Back to Station 4</button></div>');
     node._after=()=>{
       const gb=$("#ocGoBack",node); if(gb){ gb.addEventListener("click",()=> gotoStep(3)); return; }
       buildResult($("#ocResultBox",node));
-      wireFigure(node,0,"film",{ readOnly:true, magOff:true });
+      wireFigure(node,(CASE.markedFields&&CASE.markedFields[0])||0,"film",{ readOnly:true, magOff:true, only:CASE.markedFields });
       const anno=$("#ocAnno",node); let on=false;
-      anno.addEventListener("click",()=>{ on=!on; toggleHotspots(node,on); anno.textContent=on?"Hide published annotations":"Show published annotations"; resize(); });
+      anno.addEventListener("click",()=>{ on=!on; toggleHotspots(node,on);
+        anno.textContent=on?"Hide the marked cells":"Show the marked cells";
+        anno.className="oc-btn "+(on?"oc-btn--ghost":"oc-btn--primary"); resize(); });
+      const back=$("#ocBackToResults",node); if(back) back.addEventListener("click",()=> gotoStep(0));
       $("#ocName",node).addEventListener("input",(e)=>{ state.learner.name=e.target.value; saveState(); });
       $("#ocReg",node).addEventListener("input",(e)=>{ state.learner.reg=e.target.value; saveState(); });
       $("#ocPdf",node).addEventListener("click",()=> printOut("record"));
-      $("#ocCert",node).addEventListener("click",()=> printOut("cert"));
+      $("#ocCert",node).addEventListener("click",()=> downloadCertificate());
       $("#ocTxt",node).addEventListener("click",()=> download(CASE.id+"_CPD-record.txt", summaryText()));
     };
   }
@@ -988,13 +1226,30 @@ function renderStation(st){
 }
 
 /* ===== components ===== */
+/* Collapsible result group. Open by default *before* submission so nothing needed for the
+   "flag the abnormal results" task is hidden behind a click — the exercise is interpretation,
+   not hunting. Folds shut once the attempt is committed, to keep the reveal readable. */
+function foldHTML(id,label,hint){
+  /* Collapsed by default (Daniel, 2026-08-04). The headline four carry the story; the detail is
+     there when wanted. The flagging tick-list names its values in full, so nothing needed for
+     the task is hidden by this. */
+  return '<details class="oc-fold">'+
+    '<summary>'+escapeHtml(label)+' <span class="n">'+escapeHtml(hint)+'</span></summary>'+
+    '<div class="oc-fold__b"><div class="oc-headline" id="'+id+'"></div></div></details>'; }
+
 function tickBlock(key,items,cls){ const chosen=state.ticks[key]||{}; const dis=lockedBefore();
   const list=items.map(n=>'<label class="oc-tick" data-id="'+n.id+'" aria-checked="'+(!!chosen[n.id])+'"><input type="checkbox" '+(chosen[n.id]?'checked':'')+(dis?' disabled':'')+'> <span>'+escapeHtml(n.text)+'</span></label>').join("");
   return '<div class="oc-ticks '+(cls||"")+'" data-tickkey="'+key+'">'+list+'</div>'; }
 function confBlock(key){ return '<div class="oc-conf"><span>How sure are you?</span><span class="chips" data-confkey="'+key+'">'+confChips(key)+'</span></div>'; }
-function confChips(key){ const c=state.confidence[key]||null; const dis=(key==="diagnosis")?committed():lockedBefore();
+/* Which tier locks a given input: tier-2 fields lock on commit, tier-1 fields lock when
+   ADAMTS13 is released, everything earlier locks when the haemolysis screen is released. */
+function inputLocked(key){
+  if(key==="further"||key==="diagnosis") return committed();
+  if(key==="haemNote"||key==="haemolysis") return lockedTier1();
+  return lockedBefore(); }
+function confChips(key){ const c=state.confidence[key]||null; const dis=inputLocked(key);
   return [1,2,3].map(n=>'<button data-c="'+n+'" aria-pressed="'+(c===n)+'"'+(dis?' disabled':'')+'>'+CONF[n-1]+'</button>').join(""); }
-function noteBox(key,label,sub){ const dis=(key==="further")?committed():lockedBefore();
+function noteBox(key,label,sub){ const dis=inputLocked(key);
   return '<div class="oc-reflect" data-key="'+key+'"><label for="ocTa-'+key+'">'+label+'</label>'+(sub?'<span class="sub">'+sub+'</span>':'')+
     '<textarea id="ocTa-'+key+'"'+(dis?' disabled':'')+' placeholder="Type here… (saved automatically)">'+escapeHtml(state.reflections[key]||"")+'</textarea></div>'; }
 
@@ -1003,12 +1258,16 @@ function markTicks(node,key,items){ if(!committed()) return; const chosen=state.
   node.querySelectorAll('.oc-ticks[data-tickkey="'+key+'"] .oc-tick').forEach(el=>{
     const it=items.find(i=>i.id===el.dataset.id); if(!it) return; const picked=!!chosen[it.id];
     let cls="", mk="";
-    if(it.neutral){ if(picked){ cls=""; mk="not scored"; } }
+    if(it.neutral){ if(picked){ cls=""; mk="not counted"; } }
     else if(it.correct && picked){ cls="marked-correct"; mk="correct"; }
     else if(it.correct && !picked){ cls="marked-missed"; mk="missed"; }
     else if(!it.correct && picked){ cls="marked-wrong"; mk="over-call"; }
     if(cls) el.classList.add(cls);
-    if(mk) el.insertAdjacentHTML("beforeend",'<span class="mk">'+mk+'</span>'); }); }
+    if(mk) el.insertAdjacentHTML("beforeend",'<span class="mk">'+mk+'</span>');
+    /* The consequence is the teaching — show it on anything they actually called, rather than
+       leaving a red cross to speak for itself (Anas's wording, answers doc §3.5). */
+    if(picked && it.consequence)
+      el.insertAdjacentHTML("afterend",'<div class="oc-consequence">'+escapeHtml(it.consequence)+'</div>'); }); }
 
 function updateDiffHint(node){ const hint=$("#ocDiffHint",node); if(!hint) return;
   const chosen=state.ticks["differentials"]||{}; hint.hidden=Object.keys(chosen).some(k=>chosen[k]); }
@@ -1026,24 +1285,41 @@ function priorRecapHTML(){
     html+='<details class="oc-acc"><summary>'+label+'</summary><div class="oc-acc__b">'+body+'</div></details>'; });
   return html+'</div>'; }
 
-function buildStats(host,rows,animate){ if(!host) return; host.innerHTML="";
-  rows.forEach(f=>{ const c=document.createElement("div"); c.className="cell "+f.flag;
-    c.innerHTML='<div class="lab">'+f.label+'</div><div class="val" data-target="'+f.value+'">'+(animate&&!reduceMotion?"0":f.value)+'</div><div class="unit">'+f.unit+'</div><div class="ref">Ref '+f.ref+'</div><div class="flag '+f.flag+'">'+f.flagText+'</div>';
+/* `flags` false = show the number and its reference range but not our ▼/▲ verdict, so the
+   learner has to work out what's significant. Released at the reveal. */
+function buildStats(host,rows,animate,flags){ if(!host) return; host.innerHTML="";
+  const showFlag = (flags===undefined) ? showFlags() : flags;
+  rows.forEach(f=>{ const c=document.createElement("div");
+    c.className="cell"+(showFlag?" "+f.flag:" plain");
+    const val = (f.text!=null) ? f.text : ((f.prefix||"")+f.value);
+    const animatable = animate && !reduceMotion && f.text==null;
+    c.innerHTML='<div class="lab">'+f.label+'</div>'+
+      '<div class="val"'+(f.text==null?' data-target="'+f.value+'"'+(f.prefix?' data-prefix="'+f.prefix+'"':''):'')+'>'+(animatable?(f.prefix||"")+"0":val)+'</div>'+
+      '<div class="unit">'+(f.unit||"")+'</div>'+
+      '<div class="ref">Ref '+f.ref+'</div>'+
+      (showFlag?'<div class="flag '+f.flag+'">'+f.flagText+'</div>':'')+
+      (f.sub?'<div class="oc-subval"><div class="lab">'+escapeHtml(f.sub.label)+'</div>'+
+             '<div class="v">'+f.sub.value+'</div><div class="u">'+escapeHtml(f.sub.unit||"")+'</div></div>':'');
     host.appendChild(c); });
-  if(animate&&!reduceMotion) host.querySelectorAll(".val").forEach((el,i)=> countUp(el,parseFloat(el.dataset.target),900,i*110)); }
-function countUp(el,target,dur,delay){ if(!el) return; const dec=(target%1!==0)?((target*10)%1!==0?2:1):0;
+  if(animate&&!reduceMotion) host.querySelectorAll(".val[data-target]").forEach((el,i)=>
+    countUp(el,parseFloat(el.dataset.target),900,i*70,el.dataset.prefix||"")); }
+function countUp(el,target,dur,delay,prefix){ if(!el) return; prefix=prefix||"";
+  /* Decimal places come from the literal, not float arithmetic: (1.13*100)%1 is 0.999… not 0,
+     which rendered lymphocytes as "1.130". String form has no such artefact. */
+  const sv=String(target), dot=sv.indexOf(".");
+  const dec = dot<0 ? 0 : Math.min(3, sv.length-dot-1);
   /* `done` makes the safety net authoritative: once the true value is set, the animation loop
      stops touching the element. Without it the two race, and if performance.now() ever stalls
      the loop wins forever and the cell sticks at 0. */
   let done=false;
-  const settle=()=>{ done=true; el.textContent=target.toFixed(dec); };
+  const settle=()=>{ done=true; el.textContent=prefix+target.toFixed(dec); };
   setTimeout(()=>{ if(done) return; const t0=performance.now();
     /* p MUST be clamped at both ends. requestAnimationFrame passes the frame-start timestamp,
        which can predate the performance.now() captured when scheduling — a negative p makes
        2^(-10p) explode and the cell renders a large negative number. A lab value must never
        print wrong, even for one frame. */
     (function tick(now){ if(done) return; const p=Math.max(0,Math.min(1,(now-t0)/dur)); const e=1-Math.pow(2,-10*p);
-      el.textContent=(target*e).toFixed(dec); if(p<1) requestAnimationFrame(tick); else settle(); })(performance.now()); }, delay);
+      el.textContent=prefix+(target*e).toFixed(dec); if(p<1) requestAnimationFrame(tick); else settle(); })(performance.now()); }, delay);
   /* Safety net: requestAnimationFrame is suspended in a hidden tab or an offscreen
      iframe, which would leave a lab value frozen mid-count (showing 0). A clinical
      number must never render wrong — setTimeout is not rAF-dependent, so it settles. */
@@ -1056,7 +1332,14 @@ function adamtsHTML(){ const a=CASE.adamts13;
   return '<div class="oc-adamts"><div class="lab">'+escapeHtml(a.label)+'</div>'+
     '<div class="val" id="ocAdVal">'+(reduceMotion?a.value:0)+'</div><div class="unit">'+escapeHtml(a.unit)+'</div>'+
     '<div class="ref">'+escapeHtml(a.ref)+'</div></div>'; }
-/* Station 5 (reveal only) — the same card, now with the verdict and the explanation. */
+/* Stool result — released with ADAMTS13 (tier 2). Raw at Station 5, interpreted at the reveal. */
+function stecHTML(withVerdict){ const s=CASE.stec;
+  return '<div class="oc-adamts" style="margin-top:14px"><div class="lab">'+escapeHtml(s.label)+'</div>'+
+    s.lines.map(l=>'<div style="font-family:var(--oc-font-head);font-size:clamp(15px,2.4vw,19px);font-weight:600;margin-top:4px">'+escapeHtml(l)+'</div>').join("")+
+    (withVerdict?'<div class="verdict">'+escapeHtml(s.verdict)+'</div>'+
+      '<p class="oc-narrate" style="margin:12px auto 0; text-align:left; max-width:62ch">'+escapeHtml(s.note)+'</p>':'')+
+    '</div>'; }
+/* Station 6 (reveal only) — the same card, now with the verdict and the explanation. */
 function adamtsVerdictHTML(){ const a=CASE.adamts13;
   return '<div class="oc-adamts"><div class="lab">'+escapeHtml(a.label)+'</div>'+
     '<div class="val">'+a.value+'</div><div class="unit">'+escapeHtml(a.unit)+'</div>'+
@@ -1065,21 +1348,29 @@ function adamtsVerdictHTML(){ const a=CASE.adamts13;
 
 function reportHTML(){ return '<div class="oc-recap">'+CASE.report.map(([k,v])=>
   '<details class="oc-acc"><summary>'+escapeHtml(k)+'</summary><div class="oc-acc__b">'+escapeHtml(v)+'</div></details>').join("")+
-  '</div><div class="oc-note">Report skeleton authored from the published reveal — confirm mandatory vs optional fields with Anas/SME.</div>'; }
+  '</div>'; }
 
 /* ---- figure: magnifier + per-image annotations (add/drag/delete), Roman-numeral labels ---- */
 function figureHTML(idx,opts){ opts=opts||{};
   const still=CASE.media.stills[idx];
-  const thumbs=CASE.media.stills.map((s,i)=>{ const n=((state.annotations.film||[])[i]||[]).length;
-    return '<button data-i="'+i+'" aria-pressed="'+(i===idx)+'" aria-label="Field '+roman(i)+(n?(", "+n+" markers"):"")+'"><span class="rn">'+roman(i)+'</span><img src="'+imgUrl(s.src)+'" alt="" loading="lazy" onerror="this.style.opacity=.3">'+(n?'<span class="mkd">'+n+'</span>':'')+'</button>'; }).join("");
+  const marked=(CASE.markedFields||[]);
+  /* `only` restricts the strip to specific fields — on the reveal the learner should be looking
+     at the marked ones, not hunting through eight */
+  const shown=opts.only && opts.only.length ? opts.only : CASE.media.stills.map((_,i)=>i);
+  const thumbs=CASE.media.stills.map((s,i)=>{ if(shown.indexOf(i)<0) return "";
+    const n=((state.annotations.film||[])[i]||[]).length;
+    const isMarked=opts.sme && marked.indexOf(i)>=0;
+    return '<button data-i="'+i+'" aria-pressed="'+(i===idx)+'" aria-label="Field '+roman(i)+(n?(", "+n+" of your markers"):"")+(isMarked?", marked by Only Cells":"")+'">'+
+      '<span class="rn">'+roman(i)+'</span><img src="'+imgUrl(s.src)+'" alt="" loading="lazy" onerror="this.style.opacity=.3">'+
+      (n?'<span class="mkd">'+n+'</span>':'')+(isMarked?'<span class="smek">★</span>':'')+'</button>'; }).join("");
   const annoBtn=opts.annotate?'<button class="oc-annobtn" id="ocAnnoBtn" aria-pressed="false">✎ Add / adjust markers</button>':'';
   const controls='<span class="oc-seg" id="ocMagSeg"><button data-m="hex">Hexagon</button><button data-m="frame">Frame + panel</button></span>'+
     '<span class="oc-zoomctl">zoom <button id="ocZoomDown" title="Zoom out" aria-label="Zoom out">−</button><span id="ocZoomVal">3.0×</span><button id="ocZoomUp" title="Zoom in" aria-label="Zoom in">+</button></span>'+
     '<span class="oc-hint">scroll · + / − · keyboard</span>'+annoBtn;
   const tools=opts.magOff?'<button class="oc-annobtn" id="ocEnableZoom">🔍 Enable zoom to review the film</button><span class="oc-magcontrols" id="ocMagControls" hidden>'+controls+'</span>':'<span class="oc-magcontrols">'+controls+'</span>';
   return '<div class="oc-media"><div class="oc-framewrap"><div class="oc-figure focuspull" data-idx="'+idx+'" data-annokey="'+(opts.annoKey||"")+'" tabindex="0" aria-label="Blood film field — scroll or +/- to zoom">'+
-    '<img src="'+imgUrl(still.src)+'" alt="Blood film field '+roman(idx)+' — specimen '+CASE.specimen+'" onerror="this.outerHTML=\'<div class=&quot;oc-imgfallback&quot;>Image preview unavailable here.<br>(Live file: '+still.src+')</div>\'"><div class="oc-loupe"></div><div class="oc-frame"></div></div><div class="oc-zoompanel"></div></div>'+
-    '<div class="oc-figcap" id="ocFigCap">Field '+roman(idx)+' of '+roman(CASE.media.stills.length-1)+'</div>'+
+    '<img src="'+imgUrl(still.src)+'" alt="Blood film field '+roman(idx)+'" onerror="this.outerHTML=\'<div class=&quot;oc-imgfallback&quot;>Image preview unavailable here.<br>(Live file: '+still.src+')</div>\'"><div class="oc-loupe"></div><div class="oc-frame"></div></div><div class="oc-zoompanel"></div></div>'+
+    '<div class="oc-figcap" id="ocFigCap">Field '+roman(idx)+(opts.only&&opts.only.length?'':' of '+roman(CASE.media.stills.length-1))+'</div>'+
     (opts.annotate?'<div class="oc-markbanner" id="ocMarkBanner" hidden>Marker mode is on — <strong>tap the film</strong> to drop a marker, or <strong>drag</strong> one to move it. Remove with × below. Markers are saved per field and labelled '+roman(idx)+'-1, '+roman(idx)+'-2…</div>':'')+
     '<div class="oc-magtools">'+tools+'</div><div class="oc-annolist" id="ocAnnoList"></div><div class="oc-thumbs" id="ocThumbs">'+thumbs+'</div></div>'; }
 
@@ -1107,7 +1398,15 @@ function wireFigure(node,idx,annoKey,opts){ opts=opts||{}; const readOnly=opts.r
     loupe.style.left=(x-L/2)+"px"; loupe.style.top=(y-L/2)+"px"; loupe.style.backgroundPosition=(-(x*hexZoom-L/2))+"px "+(-(y*hexZoom-L/2))+"px"; lastX=x; lastY=y; }
   function applyZoom(z){ hexZoom=clamp(z,2,5); state.hexZoom=hexZoom; saveState(); setZoomLabel();
     if(style==="hex"){ const r=img.getBoundingClientRect(); updateLoupe(lastX!=null?lastX:r.width/2, lastY!=null?lastY:r.height/2); }
-    else if(style==="frame") paintPanel(); }
+    else if(style==="frame"){ sizeFrame(); paintPanel(); } }
+  /* The panel magnifies by (panel width / frame width). The frame was a fixed 90px in CSS, so
+     that ratio never changed and the zoom control did nothing in frame mode. Sizing the frame
+     from the zoom makes the ratio *be* the zoom. */
+  function sizeFrame(){ const r=img.getBoundingClientRect(); if(!r.width||!panel.clientWidth) return;
+    const size=clamp(panel.clientWidth/hexZoom, 24, Math.min(r.width, r.height));
+    frame.style.width=size+"px"; frame.style.height=size+"px";
+    frame.style.left=clamp(parseFloat(frame.style.left)||0, 0, Math.max(0,r.width-size))+"px";
+    frame.style.top =clamp(parseFloat(frame.style.top) ||0, 0, Math.max(0,r.height-size))+"px"; }
 
   const seg=$("#ocMagSeg",node); if(seg) seg.querySelectorAll("button").forEach(b=> b.addEventListener("click",()=>{ style=b.dataset.m; state.magStyle=style; saveState(); applyStyle(); }));
   const zUp=$("#ocZoomUp",node), zDn=$("#ocZoomDown",node);
@@ -1121,11 +1420,12 @@ function wireFigure(node,idx,annoKey,opts){ opts=opts||{}; const readOnly=opts.r
         const el=figure.querySelector('.oc-pin.user[data-i="'+dragPin+'"]'); if(el){ el.style.left=a.x+"%"; el.style.top=a.y+"%"; } } return; }
     if(style!=="hex"||annotateMode) return; const r=img.getBoundingClientRect(); updateLoupe(e.clientX-r.left, e.clientY-r.top); });
   figure.addEventListener("pointerleave",()=>{ if(style==="hex") updateLoupe(null); });
-  figure.addEventListener("wheel",(e)=>{ if(style!=="hex"||annotateMode) return; e.preventDefault(); applyZoom(hexZoom+(e.deltaY<0?0.25:-0.25)); },{passive:false});
+  figure.addEventListener("wheel",(e)=>{ if(style==="none"||annotateMode) return; e.preventDefault(); applyZoom(hexZoom+(e.deltaY<0?0.25:-0.25)); },{passive:false});
   figure.addEventListener("keydown",(e)=>{ if(style==="none") return; if(e.key==="+"||e.key==="="){ applyZoom(hexZoom+0.5); e.preventDefault(); } else if(e.key==="-"||e.key==="_"){ applyZoom(hexZoom-0.5); e.preventDefault(); } });
 
   let dragging=false;
-  function positionFrameInit(){ const r=img.getBoundingClientRect(); frame.style.left=Math.max(0,(r.width-frame.offsetWidth)/2)+"px"; frame.style.top=Math.max(0,(r.height-frame.offsetHeight)/2)+"px"; paintPanel(); }
+  function positionFrameInit(){ sizeFrame(); const r=img.getBoundingClientRect();
+    frame.style.left=Math.max(0,(r.width-frame.offsetWidth)/2)+"px"; frame.style.top=Math.max(0,(r.height-frame.offsetHeight)/2)+"px"; paintPanel(); }
   function paintPanel(){ if(!panel.clientWidth) return; const r=img.getBoundingClientRect(); const fx=parseFloat(frame.style.left||0), fy=parseFloat(frame.style.top||0);
     const sc=panel.clientWidth/frame.offsetWidth; panel.style.backgroundImage="url('"+hires()+"')"; panel.style.backgroundSize=(r.width*sc)+"px "+(r.height*sc)+"px"; panel.style.backgroundPosition=(-(fx*sc))+"px "+(-(fy*sc))+"px"; }
   frame.addEventListener("pointerdown",(e)=>{ if(annotateMode) return; dragging=true; frame.setPointerCapture(e.pointerId); });
@@ -1162,24 +1462,55 @@ function wireFigure(node,idx,annoKey,opts){ opts=opts||{}; const readOnly=opts.r
     figure.classList.remove("sharp");
     img.onload=function(){ if(!reduceMotion) setTimeout(()=> figure.classList.add("sharp"),30); else figure.classList.add("sharp"); if(style==="frame"&&!annotateMode) paintPanel(); img.onload=null; };
     img.src=imgUrl(CASE.media.stills[curIdx].src);
-    img.alt="Blood film field "+roman(curIdx)+" — specimen "+CASE.specimen;
-    if(cap) cap.textContent="Field "+roman(curIdx)+" of "+roman(CASE.media.stills.length-1);
+    img.alt="Blood film field "+roman(curIdx);
+    if(cap) cap.textContent="Field "+roman(curIdx)+(opts.only&&opts.only.length?"":" of "+roman(CASE.media.stills.length-1));
     thumbs.querySelectorAll("button").forEach(x=> x.setAttribute("aria-pressed", x===b));
-    renderPins(); renderAnnoList(); resize(); }));
+    figure.dataset.idx=curIdx;
+    renderPins(); renderAnnoList();
+    applySmeHotspots(figure, node.querySelector("#ocSmeList")); resize(); }));
 
   applyStyle();
 }
 
+/* Anas's marked fields, drawn as rings over the cell and listed beside the image.
+   Ring and list are linked both ways — hovering either highlights the other, so a learner can
+   read "microspherocyte" and see exactly which cell is meant. */
+function applySmeHotspots(figure,listHost){
+  figure.querySelectorAll(".oc-sme").forEach(e=> e.remove());
+  if(listHost) listHost.innerHTML="";
+  if(figure.dataset.sme!=="1"){ if(listHost) listHost.innerHTML=""; return; }
+  const idx=+(figure.dataset.idx||0);
+  const marks=CASE.hotspots.filter(h=>h.image===idx);
+  if(listHost){
+    listHost.innerHTML = marks.length
+      ? '<div class="oc-smelist__h">Field '+roman(idx)+' — '+marks.length+' marked</div>'
+      : '<div class="oc-smelist__h">Field '+roman(idx)+' — not marked</div>';
+  }
+  marks.forEach((h,i)=>{
+    const size=(h.r||2.6)*2;
+    const ring=document.createElement("button");
+    ring.className="oc-sme"; ring.type="button";
+    ring.style.left=h.x+"%"; ring.style.top=h.y+"%";
+    ring.style.width=size+"%"; ring.style.aspectRatio="1";
+    ring.setAttribute("aria-label",(h.title||"Marked cell")+" — "+(h.note||""));
+    ring.innerHTML='<span class="n">'+(i+1)+'</span>';
+    figure.appendChild(ring);
+    if(!listHost) return;
+    const item=document.createElement("div");
+    item.className="oc-smeitem";
+    item.innerHTML='<span class="num">'+(i+1)+'</span><div><div class="t">'+escapeHtml(h.title||"Marked cell")+'</div>'+
+      (h.note?'<div class="d">'+escapeHtml(h.note)+'</div>':'')+'</div>';
+    listHost.appendChild(item);
+    const on=(v)=>{ ring.classList.toggle("on",v); item.classList.toggle("on",v); };
+    item.addEventListener("mouseenter",()=>on(true)); item.addEventListener("mouseleave",()=>on(false));
+    ring.addEventListener("mouseenter",()=>on(true)); ring.addEventListener("mouseleave",()=>on(false));
+    ring.addEventListener("focus",()=>on(true)); ring.addEventListener("blur",()=>on(false));
+  }); }
 function toggleHotspots(node,on){ const figure=node.querySelector(".oc-figure"); if(!figure) return;
-  figure.querySelectorAll(".oc-pin.sme,.oc-hotnote").forEach(e=> e.remove());
-  const note=$("#ocSmeNote",node); if(note) note.remove();
-  if(!on) return;
-  if(!CASE.hotspots.length){ figure.insertAdjacentHTML("afterend",
-    '<div class="oc-markbanner" id="ocSmeNote">SME-marked films are pending — Anas is supplying highlighted copies of these fields as a separate reveal layer. They will appear here as numbered callouts.</div>'); return; }
-  const curIdx=+(figure.dataset.idx||0);
-  CASE.hotspots.filter(h=>h.image===curIdx).forEach(h=>{ const pt=document.createElement("button"); pt.className="oc-pin sme"; pt.style.left=h.x+"%"; pt.style.top=h.y+"%"; pt.textContent=h.label;
-    const nt=document.createElement("div"); nt.className="oc-hotnote"; nt.style.left=h.x+"%"; nt.style.top=h.y+"%"; nt.textContent=h.note;
-    pt.addEventListener("click",()=>{ nt.classList.toggle("show"); resize(); }); figure.appendChild(pt); figure.appendChild(nt); }); }
+  figure.dataset.sme = on?"1":"0";
+  applySmeHotspots(figure, node.querySelector("#ocSmeList"));
+  const wrap=node.querySelector(".oc-smewrap"); if(wrap) wrap.classList.toggle("showlist",on);
+  resize(); }
 
 /* ===== scoring (spec §4.4 · weights + pass mark AUTHORED — [GAP] confirm with Anas) ===== */
 const scored=()=> CASE.scoring.mode==="scored";
@@ -1213,6 +1544,7 @@ function computeScore(choiceIdx){
   return { parts, points:Object.keys(W).reduce((o,k)=>(o[k]=+(parts[k]*W[k]).toFixed(1),o),{}), total:Math.round(total) }; }
 
 /* ===== commit ===== */
+function revealHaemolysis(){ state.haemolysisRevealed=true; saveState(); runScan(()=> render()); }
 function revealAdamts(){ state.adamtsRevealed=true; saveState(); runScan(()=> render()); }
 function shuffledOrder(){ if(state.assess.order) return state.assess.order; const idx=CASE.diagnosis.options.map((_,i)=>i);
   for(let i=idx.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [idx[i],idx[j]]=[idx[j],idx[i]]; } state.assess.order=idx; saveState(); return idx; }
@@ -1279,7 +1611,7 @@ function stamp(){ return state.assess.at ? new Date(state.assess.at).toLocaleStr
 function buildRecordDOM(){ const p=$("#oc-print"); p.innerHTML=""; const wrap=document.createElement("div"); wrap.className="ocp";
   const L=CASE.scoring.labels, ok=state.assess.correct;
   wrap.innerHTML='<div class="sub">Only Cells · Morphology Monthly '+CASE.id+'</div><h1>'+(scored()?'CPD Assessment Record':'CPD Activity Record')+'</h1>'+
-    '<div class="meta">'+escapeHtml(CASE.answerTitle)+' · specimen '+escapeHtml(CASE.specimen)+' · completed '+escapeHtml(stamp())+
+    '<div class="meta">'+escapeHtml(CASE.answerTitle)+' · completed '+escapeHtml(stamp())+
     (learnerName()?' · '+escapeHtml(learnerName()):'')+(state.learner.reg?' ('+escapeHtml(state.learner.reg)+')':'')+'</div><hr>';
 
   if(scored()){ const pass=(state.assess.score||0)>=CASE.scoring.passMark, W=CASE.scoring.weights, pts=state.assess.parts||{};
@@ -1296,7 +1628,7 @@ function buildRecordDOM(){ const p=$("#oc-print"); p.innerHTML=""; const wrap=do
 
   wrap.insertAdjacentHTML("beforeend",'<h2>Case</h2><div class="qa"><div class="you">'+escapeHtml(CASE.history)+'</div>'+
     '<table><tr><th>Test</th><th>Result</th><th>Ref</th></tr>'+
-    CASE.fbc.concat(CASE.biochem).map(f=>'<tr><td>'+f.label+'</td><td>'+f.value+' '+f.unit+' ('+f.flagText.replace(/[▲▼]/g,"").trim()+')</td><td>'+f.ref+'</td></tr>').join("")+
+    CASE.fbc.concat(CASE.wbcDiff, CASE.rbcIndices, CASE.coag, CASE.biochem, CASE.haemolysis.results).map(f=>'<tr><td>'+f.label+'</td><td>'+((f.text!=null)?f.text:((f.prefix||'')+f.value+' '+(f.unit||'')))+' ('+f.flagText.replace(/[▲▼]/g,"").trim()+')</td><td>'+f.ref+'</td></tr>').join("")+
     '<tr><td>'+CASE.adamts13.label+'</td><td>'+CASE.adamts13.value+' '+CASE.adamts13.unit+'</td><td>'+escapeHtml(CASE.adamts13.ref)+'</td></tr></table></div>');
 
   const secs=[
@@ -1305,12 +1637,31 @@ function buildRecordDOM(){ const p=$("#oc-print"); p.innerHTML=""; const wrap=do
     ["Film features identified", ticksText("features",CASE.filmItems)||"(none selected)", CASE.model.filmObs.join("; ")],
     ["Description of the film", state.reflections["filmNote"]||"(none)", ""],
     ["Differential considered", ticksText("differentials",CASE.differentials)||"(none selected)", "HUS; TTP; DIC; ITP"],
+    ["Did the haemolysis screen change your differential"+(state.confidence["haemolysis"]?" · "+CONF[state.confidence["haemolysis"]-1]:""),
+      state.reflections["haemNote"]||"(none)", CASE.haemolysis.summary],
     ["What would you rule out, and how"+(state.confidence["ruleout"]?" · "+CONF[state.confidence["ruleout"]-1]:""), state.reflections["ruleout"]||"(none)", CASE.model.ruleout.join(" ")]
   ];
   wrap.insertAdjacentHTML("beforeend",'<h2>Your responses</h2>');
   secs.forEach(([q,you,exp])=> wrap.insertAdjacentHTML("beforeend",
     '<div class="qa"><div class="q">'+escapeHtml(q)+'</div><div class="you"><strong>Your response:</strong> '+escapeHtml(you)+'</div>'+
     (exp?'<div class="exp"><strong>Expected:</strong> '+escapeHtml(exp)+'</div>':'')+'</div>'));
+
+  /* Confidence was only appearing as a suffix on a section heading — easy to miss entirely.
+     Given as its own section, it also shows how certainty moved across the case, which is the
+     point of asking three times. */
+  const CONFPTS=[["ruleout","After the film, committing a differential"],
+                 ["haemolysis","After the haemolysis screen"],
+                 ["diagnosis","At the final diagnosis"]];
+  const anyConf=CONFPTS.some(([k])=> state.confidence[k]);
+  wrap.insertAdjacentHTML("beforeend",'<h2>Your confidence through the case</h2><div class="qa">'+
+    (anyConf
+      ? '<table><tr><th style="width:56%">Checkpoint</th><th>How sure you were</th></tr>'+
+        CONFPTS.map(([k,label])=>'<tr><td>'+label+'</td><td>'+
+          (state.confidence[k]?'<strong>'+CONF[state.confidence[k]-1]+'</strong>':'<span style="color:#888">not recorded</span>')+
+        '</td></tr>').join("")+'</table>'+
+        '<p style="font-size:12px;color:#555;margin:8px 0 0">Worth reflecting on where your certainty changed, and what changed it.</p>'
+      : '<div class="you" style="color:#888">No confidence ratings were recorded.</div>')+
+    '</div>');
 
   const gallery=document.createElement("div"); gallery.innerHTML='<h2>The film &amp; your markers</h2>'; const row=document.createElement("div"); row.className="imgrow";
   const imgs=state.annotations.film||emptyAnno();
@@ -1332,54 +1683,130 @@ function buildRecordDOM(){ const p=$("#oc-print"); p.innerHTML=""; const wrap=do
     '<div class="exp"><strong>Correct answer:</strong> '+escapeHtml(CASE.diagnosis.answer)+'<br>'+escapeHtml(CASE.diagnosis.explanation)+'</div></div>'+
     '<div class="qa"><div class="q">Teaching point</div><div class="exp">'+escapeHtml(CASE.teachingPoint)+'</div></div>'+
     '<h2>Morphology report</h2><table>'+CASE.report.map(([k,v])=>'<tr><th style="width:26%">'+escapeHtml(k)+'</th><td>'+escapeHtml(v)+'</td></tr>').join("")+'</table>'+
+    '<h2>Learning outcomes covered</h2><div class="qa"><ul style="margin:0; padding-left:18px">'+
+      CASE.certificate.outcomes.map(o=>'<li>'+escapeHtml(o)+'</li>').join("")+'</ul>'+
+      '<p style="font-size:12px;color:#555;margin:8px 0 0">'+escapeHtml(CASE.certificate.accreditation)+'</p></div>'+
     '<div class="decl">Declaration: I confirm this activity was completed by me as continuing professional development.'+
     (learnerName()?'<br>Completed by: <strong>'+escapeHtml(learnerName())+'</strong>'+(state.learner.reg?' · '+escapeHtml(state.learner.reg):''):'')+
-    '<br>An Only Cells educational resource · <strong>onlycells.co.uk</strong> · '+escapeHtml(CASE.credit)+
-    '<br><em>Educational CPD resource — not a diagnostic device. Clinical content pending SME sign-off.</em></div>');
+    '<br>An Only Cells educational resource · <strong>onlycells.co.uk</strong>'+(CASE.credit?' · '+escapeHtml(CASE.credit):'')+
+    '<br><em>Educational CPD resource — not a diagnostic device.</em></div>');
   p.appendChild(wrap); }
 
-function buildCertDOM(){ const p=$("#oc-print"); p.innerHTML=""; const C=CASE.certificate;
-  const cert=document.createElement("div"); cert.className="occert";
-  if(C.backgroundUrl) cert.style.backgroundImage="url('"+C.backgroundUrl+"')";
-  /* In formative mode the certificate carries NO score and NO pass/fail — it evidences that the
-     activity was completed and reflected on. A percentage here would be an attainment claim. */
-  const scoreCell = scored()
-    ? '<div>Score<b>'+(state.assess.score||0)+'% · '+(((state.assess.score||0)>=CASE.scoring.passMark)?"Achieved":"Not yet achieved")+'</b></div>'
-    : '';
-  cert.innerHTML=
-    '<div class="cmain">'+
-    '<div class="cband"><img class="clogo" src="https://onlycells.co.uk/wp-content/uploads/Only-Cells-Logo.png" alt="Only Cells" onerror="this.outerHTML=\'<div class=&quot;cbrand&quot;>Only Cells</div>\'"></div>'+
-    '<div class="ckicker">Morphology Monthly · Continuing professional development</div>'+
-    '<h1>'+escapeHtml(C.title)+'</h1>'+
-    '<div class="cname">'+escapeHtml(learnerName()||" ")+'</div>'+
-    (state.learner.reg?'<div class="creg">'+escapeHtml(state.learner.reg)+'</div>':'')+
-    '<div class="cbody">'+escapeHtml(C.body)+'</div>'+
-    '<div class="ccase">'+escapeHtml(CASE.id)+' — '+escapeHtml(CASE.answerTitle)+'</div>'+
-    '<div class="cgrid">'+
-      '<div>Date completed<b>'+escapeHtml(stamp())+'</b></div>'+
-      scoreCell+
-      '<div>CPD time<b>'+(C.cpdMinutes?C.cpdMinutes+" minutes":"—")+'</b></div>'+
-    '</div>'+
-    '<div class="clo"><strong>Learning outcomes covered</strong><ul>'+C.outcomes.map(o=>'<li>'+escapeHtml(o)+'</li>').join("")+'</ul></div>'+
-    '</div>'+
-    '<div class="cfoot">'+
-      '<div class="csig">'+escapeHtml(C.signatory)+'</div>'+
-      '<div class="csig">'+escapeHtml(C.accreditation)+'<br>onlycells.co.uk · Case '+escapeHtml(CASE.id)+'</div>'+
-    '</div>';
-  p.appendChild(cert); }
+/* ===== certificate =====
+   Composed onto a CANVAS and emitted as one flat image, deliberately.
+   The previous HTML+CSS version printed wrong in the real world: a fixed-mm page box loses to
+   whatever paper the user picks in the print dialog, so the sheet came out portrait Letter with
+   the artwork off-page and the content rotated to fit. A single image has no layout left to go
+   wrong — it scales to any paper, in any orientation, with background graphics on or off. */
+function certMetaLine(){
+  const C=CASE.certificate, bits=[stamp()];
+  if(C.cpdMinutes) bits.push(C.cpdMinutes+" minutes CPD");
+  if(scored()) bits.push((state.assess.score||0)+"% · "+(((state.assess.score||0)>=CASE.scoring.passMark)?"Achieved":"Not yet achieved"));
+  return bits.join("   ·   "); }
+
+function renderCertificate(cb){
+  const C=CASE.certificate, W=2400, H=1350;
+  const cv=document.createElement("canvas"); cv.width=W; cv.height=H;
+  const ctx=cv.getContext("2d");
+  const NAVY="#1F3864", MUTED="#55607a";
+  function paintText(){
+    ctx.textAlign="center"; ctx.textBaseline="alphabetic";
+    const name=learnerName();
+    if(name){ ctx.fillStyle=NAVY; ctx.font='600 84px Poppins, "Segoe UI", sans-serif';
+      ctx.fillText(name, W/2, H*0.455); }
+    if(state.learner.reg){ ctx.fillStyle=MUTED; ctx.font='30px Inter, "Segoe UI", sans-serif';
+      ctx.fillText(state.learner.reg, W/2, H*0.515); }
+    ctx.fillStyle=NAVY; ctx.font='italic 600 48px Poppins, "Segoe UI", sans-serif';
+    ctx.fillText(CASE.id+" \u2013 "+CASE.answerTitle, W/2, H*0.715);
+    ctx.fillStyle=MUTED; ctx.font='26px Inter, "Segoe UI", sans-serif';
+    ctx.fillText(certMetaLine(), W/2, H*0.775);
+  }
+  const done=()=>{ paintText(); cb(cv); };
+  /* "successfully participating" only when the diagnosis actually matched; otherwise the
+     participation wording. Two slides from Anas's deck. */
+  const art = state.assess.correct ? C.backgroundPass : C.backgroundPart;
+  if(!art){ ctx.fillStyle="#fff"; ctx.fillRect(0,0,W,H); done(); return; }
+  const img=new Image();
+  img.onload=()=>{ ctx.drawImage(img,0,0,W,H); done(); };
+  img.onerror=()=>{ ctx.fillStyle="#fff"; ctx.fillRect(0,0,W,H); done(); };
+  img.src=CASE.media.base+art;
+}
+
+/* Minimal single-image PDF writer. The widget carries no dependencies by design (spec §2), and
+   a PDF wrapping one JPEG is simple enough to emit by hand: catalog, pages, page, an image
+   XObject with /DCTDecode (the JPEG bytes go in untouched) and a content stream. Page is the
+   artwork's own aspect at A4-landscape width, so nothing is cropped or letterboxed. */
+function jpegPdf(jpeg, wpx, hpx){
+  const pw=842, ph=Math.round(842*hpx/wpx);
+  const enc=(str)=>{ const a=new Uint8Array(str.length);
+    for(let i=0;i<str.length;i++) a[i]=str.charCodeAt(i)&0xff; return a; };
+  const parts=[], offs=[]; let len=0;
+  const push=(c)=>{ const b=(c instanceof Uint8Array)?c:enc(c); parts.push(b); len+=b.length; };
+  const obj=(n,body)=>{ offs[n]=len; push(n+" 0 obj\n"+body+"\nendobj\n"); };
+  push("%PDF-1.4\n%\xE2\xE3\xCF\xD3\n");
+  obj(1,"<< /Type /Catalog /Pages 2 0 R >>");
+  obj(2,"<< /Type /Pages /Kids [3 0 R] /Count 1 >>");
+  obj(3,"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 "+pw+" "+ph+"] "+
+        "/Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>");
+  offs[4]=len;
+  push("4 0 obj\n<< /Type /XObject /Subtype /Image /Width "+wpx+" /Height "+hpx+
+       " /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length "+jpeg.length+" >>\nstream\n");
+  push(jpeg);
+  push("\nendstream\nendobj\n");
+  const content="q "+pw+" 0 0 "+ph+" 0 0 cm /Im0 Do Q";
+  obj(5,"<< /Length "+content.length+" >>\nstream\n"+content+"\nendstream");
+  const xref=len;
+  let x="xref\n0 6\n0000000000 65535 f \n";
+  for(let i=1;i<=5;i++){ let o=String(offs[i]); while(o.length<10) o="0"+o; x+=o+" 00000 n \n"; }
+  push(x);
+  push("trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n"+xref+"\n%%EOF\n");
+  const out=new Uint8Array(len); let o=0; parts.forEach(b=>{ out.set(b,o); o+=b.length; });
+  return new Blob([out],{type:"application/pdf"});
+}
+
+/* Downloads as a PDF, not an image — a certificate should arrive as a document. */
+function downloadCertificate(){
+  const go=()=> renderCertificate(cv=>{
+    const b64=cv.toDataURL("image/jpeg",0.92).split(",")[1], bin=atob(b64);
+    const bytes=new Uint8Array(bin.length);
+    for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
+    const url=URL.createObjectURL(jpegPdf(bytes,cv.width,cv.height));
+    const a=document.createElement("a"); a.href=url; a.download=CASE.id+"_certificate.pdf";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=> URL.revokeObjectURL(url),1500);
+  });
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(go).catch(go); else go();
+}
+
+/* Print route: the same flat image, sized to the sheet. */
+function buildCertDOM(cb){ const p=$("#oc-print");
+  const go=()=> renderCertificate(cv=>{
+    p.innerHTML='<img class="occertimg" src="'+cv.toDataURL("image/png")+'" alt="Certificate">';
+    cb&&cb();
+  });
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(go).catch(go); else go(); }
 
 /* @page can't be switched with a class selector, so the size/orientation is injected here:
    the record is A4 portrait with margins, the certificate A4 landscape full-bleed. */
 function setPageStyle(kind){ let el=document.getElementById("ocPageStyle");
   if(!el){ el=document.createElement("style"); el.id="ocPageStyle"; document.head.appendChild(el); }
+  /* The certificate prints at the slide's own 16:9 (338.7 x 190.5 mm) so Anas's artwork is
+     neither cropped nor stretched. The record stays A4 portrait. */
+  /* Ask for landscape, but never depend on it — the certificate is one image sized to fit
+     whatever sheet the user actually chooses. margin:0 also removes the strip the browser
+     prints its own header/footer into. */
   el.textContent = (kind==="cert")
     ? "@page{ size:A4 landscape; margin:0; }"
     : "@page{ size:A4 portrait; margin:14mm; }"; }
-function printOut(kind){ setPageStyle(kind); if(kind==="cert") buildCertDOM(); else buildRecordDOM(); window.print(); }
+function printOut(kind){ setPageStyle(kind);
+  if(kind==="cert"){ buildCertDOM(()=> window.print()); return; }   /* async: image must exist first */
+  buildRecordDOM(); window.print(); }
 
 function summaryText(){ const L=[], LB=CASE.scoring.labels;
+  /* confidence was captured but never written to the text export — only the PDF */
+  const conf=(k)=> state.confidence[k] ? "  [confidence: "+CONF[state.confidence[k]-1]+"]" : "";
   L.push("ONLY CELLS — Morphology Monthly "+CASE.id); L.push(scored()?"CPD ASSESSMENT RECORD":"CPD ACTIVITY RECORD");
-  L.push("Case: "+CASE.answerTitle+" · specimen "+CASE.specimen);
+  L.push("Case: "+CASE.answerTitle);
   if(learnerName()) L.push("Completed by: "+learnerName()+(state.learner.reg?" ("+state.learner.reg+")":""));
   L.push("Completed: "+stamp()); L.push("".padEnd(56,"-"));
   if(scored()){ const W=CASE.scoring.weights, pts=state.assess.parts||{};
@@ -1397,8 +1824,9 @@ function summaryText(){ const L=[], LB=CASE.scoring.labels;
   L.push("• Description of the film: "+(state.reflections["filmNote"]||"(none)"));
   const an=annoText(); if(an) L.push("• Markers: "+an);
   L.push("• Differential considered: "+(ticksText("differentials",CASE.differentials)||"(none)"));
-  L.push("• Rule-out reasoning: "+(state.reflections["ruleout"]||"(none)"));
-  L.push(""); L.push("DIAGNOSIS SUBMITTED: "+(state.assess.choice!=null?CASE.diagnosis.options[state.assess.choice]:"—"));
+  L.push("• Rule-out reasoning: "+(state.reflections["ruleout"]||"(none)")+conf("ruleout"));
+  L.push("• After the haemolysis screen: "+(state.reflections["haemNote"]||"(none)")+conf("haemolysis"));
+  L.push(""); L.push("DIAGNOSIS SUBMITTED: "+(state.assess.choice!=null?CASE.diagnosis.options[state.assess.choice]:"—")+conf("diagnosis"));
   if(state.reflections["further"]) L.push("Further observations: "+state.reflections["further"]);
   L.push("CORRECT ANSWER: "+CASE.diagnosis.answer);
   L.push("Explanation: "+CASE.diagnosis.explanation);
@@ -1408,7 +1836,7 @@ function summaryText(){ const L=[], LB=CASE.scoring.labels;
   L.push(""); L.push("ADAMTS13: "+CASE.adamts13.value+" "+CASE.adamts13.unit+" — "+CASE.adamts13.verdict);
   L.push(""); L.push("Declaration: completed by me as continuing professional development.");
   L.push("An Only Cells educational resource · onlycells.co.uk");
-  L.push("Educational CPD resource — not a diagnostic device. Clinical content pending SME sign-off.");
+  L.push("Educational CPD resource — not a diagnostic device.");
   return L.join("\n"); }
 function download(filename,text){ const blob=new Blob([text],{type:"text/plain;charset=utf-8"}); const url=URL.createObjectURL(blob);
   const a=document.createElement("a"); a.href=url; a.download=filename; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=> URL.revokeObjectURL(url),1500); }
