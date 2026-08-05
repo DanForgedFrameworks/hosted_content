@@ -507,7 +507,17 @@ body.is-fullscreen{ padding-top:56px; }
   var pendingURL=null, interTrigger=null, launchTimer=null;
   function orgFromHost(h){ return ({'doi.org':'Publisher (resolved via doi.org)'})[h]||h; }
   function esc(s){ return String(s).replace(/[&<>"]/g,function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); }
-  function italMET(s){ return String(s).replace(/\bMET\b/g,'<em>MET</em>').replace(/\bMET(?=ex14)/g,'<em>MET</em>'); }
+  /* §0.10 as amended 2026-08-05: MET is italic as a GENE STEM only. The protein, the
+     receptor, and any agent acting on it (MET inhibitor, MET TKI, MET pathway) stay roman.
+     Wraps only when a gene-context word follows; METex14 is always the gene. */
+  function italMET(s){
+    var GENE_FOLLOW = /^[\s\u00a0\u2011-]*(?:exon\s*14|amplification|amplified|fusions?|mutations?|alterations?|altered|rearrangements?|gene|skipping|variants?)\b/i;
+    return String(s).replace(/\bMET(ex14)?/g, function(m, ex, off, str){
+      if (ex) return '<em>MET</em>ex14';
+      if (/[A-Za-z0-9]/.test(str.charAt(off + 3))) return m;
+      return GENE_FOLLOW.test(str.slice(off + 3)) ? '<em>MET</em>' : m;
+    });
+  }
   function fmtRef(s){ return italMET(s).replace(/(J Thorac Oncol\.|Ann Oncol\.|JAMA Oncol\.)/g,'<em>$1</em>'); }
   function openInter(url,ref,trigger){
     pendingURL=url; interTrigger=trigger;

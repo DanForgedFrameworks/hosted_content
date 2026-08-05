@@ -450,7 +450,17 @@ const STATEMENTS = [
 
   // ---- render statements ----
   // italicise the gene symbol MET for display only (data/attributes stay plain); run on esc()'d text
-  function italMET(s){ return String(s).replace(/\bMET\b/g,'<em>MET</em>').replace(/\bMET(?=ex14)/g,'<em>MET</em>'); }
+  /* §0.10 as amended 2026-08-05: MET is italic as a GENE STEM only. The protein, the
+     receptor, and any agent acting on it (MET inhibitor, MET TKI, MET pathway) stay roman.
+     Wraps only when a gene-context word follows; METex14 is always the gene. */
+  function italMET(s){
+    var GENE_FOLLOW = /^[\s\u00a0\u2011-]*(?:exon\s*14|amplification|amplified|fusions?|mutations?|alterations?|altered|rearrangements?|gene|skipping|variants?)\b/i;
+    return String(s).replace(/\bMET(ex14)?/g, function(m, ex, off, str){
+      if (ex) return '<em>MET</em>ex14';
+      if (/[A-Za-z0-9]/.test(str.charAt(off + 3))) return m;
+      return GENE_FOLLOW.test(str.slice(off + 3)) ? '<em>MET</em>' : m;
+    });
+  }
   // Each citation is a compact chip; full reference + URL + Open/Copy live in the launch dialog.
   function chipHTML(c){
     const label = c.short || c.ref;
