@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Consistency across subgroups (VISION study) — tepotinib in METex14 skipping NSCLC</title>
+<title>Outcomes across subgroups (VISION study) — tepotinib in METex14 skipping NSCLC</title>
 <style>
 /* ============================================================
    TOUCH MEDICAL — TM9035 · VISUAL ABSTRACT · SCENE 6
-   Consistency across subgroups (VISION, >=3-year follow-up).
+   Outcomes across subgroups (VISION, >=3-year follow-up).
    Segmented three-lens switcher: Subgroups · Line of therapy · Asian,
    anchored to overall ORR (callout box on the cohort image);
    sources open from a bottom-corner pill.
@@ -101,6 +101,7 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 .lot__name{ font-size:.84rem; font-weight:700; color:var(--navy); }
 .lot__name span{ font-weight:600; color:var(--faint); font-size:.82em; }
 .lot__val{ font-size:.9rem; font-weight:700; color:var(--teal-strong); font-variant-numeric:tabular-nums; }
+.lot__ci{ font-size:.78em; font-weight:600; color:var(--faint); white-space:nowrap; }   /* R3-049 */
 .lot__track{ position:relative; height:13px; border-radius:7px; background:var(--mist); box-shadow:inset 0 0 0 1px var(--line); overflow:hidden; }
 .lot__fill{ position:absolute; left:0; top:0; height:100%; border-radius:7px; }
 .lot__ref{ position:absolute; left:51.8%; top:2px; bottom:26px; width:2px; margin-left:-1px; background:repeating-linear-gradient(180deg,var(--navy) 0 4px,transparent 4px 8px); z-index:3; }
@@ -284,10 +285,10 @@ body.is-fullscreen{ padding-top:56px; }
 </style>
 </head>
 <body>
-<main class="slide" id="slide" aria-label="Consistency of tepotinib efficacy across subgroups in the VISION study">
+<main class="slide" id="slide" aria-label="Outcomes across subgroups in the VISION study">
 
   <header class="hd">
-    <h1 class="hd__title">Consistency across subgroups</h1>
+    <h1 class="hd__title">Outcomes across subgroups</h1>
     <div class="hd__rule" aria-hidden="true"><i></i><b></b><i></i></div>
     <p class="hd__sub">VISION study &middot; &ge;3-year follow-up &middot; overall response rate (ORR)</p>
   </header>
@@ -304,7 +305,7 @@ body.is-fullscreen{ padding-top:56px; }
       <!-- diverse cohort image + overall ORR callout -->
       <figure class="sg__media">
         <img src="assets/s6.jpg" alt="A grid of portraits of diverse adults across ages, ethnicities and sexes — consistent outcomes across subgroups." />
-        <div class="sg__hero" aria-hidden="true"><b>Consistency across subgroups</b></div>
+        <div class="sg__hero" aria-hidden="true"><b>Outcomes across subgroups</b></div>
         <div class="sg__center">
           <div class="orrbox">
             <div class="orrbox__lab">Overall response rate</div>
@@ -335,7 +336,7 @@ body.is-fullscreen{ padding-top:56px; }
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
               ORR was consistent across every subgroup assessed
             </div>
-            <p class="panel__note">Overall ORR 51.8 % (95% CI 46.1, 57.4) held irrespective of the clinical subgroups below.</p>
+            <p class="panel__note">Overall ORR 51.8 % (95% CI 46.1, 57.4) held irrespective of the clinically relevant subgroups below.</p>
             <div class="chips">
               <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Sex</span>
               <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Age</span>
@@ -348,7 +349,7 @@ body.is-fullscreen{ padding-top:56px; }
 
           <!-- Lens 2 -->
           <div class="panel" id="p1" role="tabpanel" aria-labelledby="tab1" tabindex="0" hidden>
-            <p class="panel__lead">Efficacy across lines was consistent with prior reports &mdash; <b>particularly first-line</b>.</p>
+            <p class="panel__lead">Consistent efficacy across therapy lines &mdash; <b>particularly first-line</b>.</p>
             <div class="lot">
               <span class="lot__ref" aria-hidden="true"></span>
               <div class="lot__row">
@@ -356,7 +357,7 @@ body.is-fullscreen{ padding-top:56px; }
                 <div class="lot__track"><span class="lot__fill" style="width:57.9%;background:var(--c2)"></span></div>
               </div>
               <div class="lot__row">
-                <div class="lot__top"><span class="lot__name">2L+ <span>second-line or later</span></span><span class="lot__val">45.0 %</span></div>
+                <div class="lot__top"><span class="lot__name">2L+ <span>second-line or later</span></span><span class="lot__val">45.0 % <span class="lot__ci">(95% CI 36.8, 53.3)</span></span></div>
                 <div class="lot__track"><span class="lot__fill" style="width:45.0%;background:var(--c3)"></span></div>
               </div>
               <div class="lot__row">
@@ -380,7 +381,7 @@ body.is-fullscreen{ padding-top:56px; }
                 <div class="asian__stat"><b>&#10003;</b><span>Robust, durable long-term efficacy and a manageable safety profile</span></div>
               </div>
             </div>
-            <p class="panel__note">Asian patients showed robust, durable long-term efficacy &mdash; particularly first-line.</p>
+            <p class="panel__note">Asian patients showed robust, durable long-term efficacy &mdash; particularly in the first line.</p>
           </div>
         </div>
       </section>
@@ -442,7 +443,7 @@ body.is-fullscreen{ padding-top:56px; }
 <!-- embedded-mobile launch card -->
 <div class="mlaunch" role="group" aria-label="Open the activity full screen">
   <span class="mlaunch__badge">touchONCOLOGY &middot; CPD activity</span>
-  <h1 class="mlaunch__title">Consistency across subgroups</h1>
+  <h1 class="mlaunch__title">Outcomes across subgroups</h1>
   <p class="mlaunch__lead">This interactive subgroup summary is best viewed full screen on your phone. Tap below to open it.</p>
   <a class="mlaunch__btn" id="mlaunchBtn" href="#" target="_blank" rel="noopener">Open the activity <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><polyline points="13 6 19 12 13 18"/></svg></a>
   <p class="mlaunch__note">On a computer, the activity appears here directly.</p>

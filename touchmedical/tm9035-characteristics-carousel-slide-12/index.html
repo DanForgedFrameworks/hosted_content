@@ -121,6 +121,18 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 
 /* ---------- controls (chrome): chevrons + progress + dots ---------- */
 .controls{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:clamp(10px,2vw,20px); padding:clamp(6px,1.2vh,12px) clamp(12px,3vw,24px); }
+/* R3-079 — denominator chip beside each panel title, anchors every % on the panel */
+.panel__n{ flex:0 0 auto; font-size:clamp(.72rem,1.3vw,.86rem); font-weight:600; color:var(--muted); border:1.5px solid var(--line); border-radius:999px; padding:3px 10px; white-space:nowrap; }
+/* R3-082/083 — house glossary term: underlined, hover/focus tooltip (pattern from slide 31) */
+.gloss{ font:inherit; color:inherit; font-weight:700; text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:3px; text-decoration-color:currentColor; cursor:help; }
+.gloss:focus-visible{ outline:3px solid var(--teal); outline-offset:2px; border-radius:4px; }
+.gtip{ position:fixed; z-index:95; max-width:min(340px,80vw); padding:11px 17px; border-radius:14px; border:2px solid #b7d2ef; background:#e9f1fc; color:var(--navy); font-family:var(--font); font-size:clamp(.92rem,1.35vw,1.08rem); font-weight:600; line-height:1.3; text-align:center; box-shadow:0 16px 34px rgba(16,26,38,.24); opacity:0; visibility:hidden; transform:translateY(4px); transition:opacity .14s ease, transform .14s ease, visibility .14s ease; pointer-events:none; }
+.gtip.show{ opacity:1; visibility:visible; transform:translateY(0); }
+.gtip::after{ content:""; position:absolute; left:var(--arrow,50%); width:12px; height:12px; background:#e9f1fc; transform:translateX(-50%) rotate(45deg); }
+.gtip.above::after{ bottom:-7px; border-right:2px solid #b7d2ef; border-bottom:2px solid #b7d2ef; }
+.gtip.below::after{ top:-7px; border-left:2px solid #b7d2ef; border-top:2px solid #b7d2ef; }
+/* R3-077/078 — scene-level data cut-off, sits inline in the existing controls row */
+.meta{ font-size:clamp(.68rem,1.2vw,.8rem); color:var(--muted); white-space:nowrap; }
 .nav-btn{ flex:0 0 auto; width:42px; height:42px; border-radius:50%; border:2px solid var(--teal); background:#fff; color:var(--teal); cursor:pointer; display:grid; place-items:center; transition:background .16s ease,color .16s ease,transform .12s ease; }
 .nav-btn svg{ width:19px; height:19px; }
 /* side chevrons flanking the stage */
@@ -292,6 +304,7 @@ body.is-fullscreen{ padding-top:56px; }
   <div class="controls">
     <span class="progress" aria-hidden="true"><b id="progNum">0</b> / 7 explored</span>
     <div class="dots" id="dots" role="group" aria-label="Choose a characteristic"></div>
+    <span class="meta">Data cut-off: May 20, 2024</span>
   </div>
 
   <p class="sr-only" id="live" aria-live="polite" aria-atomic="true"></p>
@@ -399,8 +412,14 @@ body.is-fullscreen{ padding-top:56px; }
   const citeModal = document.getElementById('citeModal');
 
   function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  /* R3-082/083 — glossary terms. Data stays plain; the abbr element is added at RENDER time only,
+     so data-*, aria-label and the donut role=img text are never polluted with markup. */
+  const GLOSS = { 'NOS':'not otherwise specified' };
+  function glossify(label){ const d=GLOSS[label];
+    return d ? '<abbr class="gloss" data-def="'+esc(d)+'">'+esc(label)+'</abbr>' : esc(label); }
+  function glossAria(label){ const d=GLOSS[label]; return d ? label+' ('+d+')' : label; }
   function dataAttrs(it){ return 'data-n="'+it.n+'" data-pct="'+it.pct+'" data-label="'+esc(it.label)+'"'; }
-  function ariaFig(it){ return 'aria-label="'+it.n+' of '+N+' ('+it.pct+'%) '+esc(it.label)+'"'; }
+  function ariaFig(it){ return 'aria-label="'+it.n+' of '+N+' ('+it.pct+'%) '+esc(glossAria(it.label))+'"'; }
 
   /* ---------- viz builders ---------- */
   function vizHTML(c){
@@ -449,7 +468,7 @@ body.is-fullscreen{ padding-top:56px; }
       const idx=c.items.indexOf(it);
       return '<button class="legend__item" type="button" '+dataAttrs(it)+' '+ariaFig(it)+'>'+
         '<span class="legend__sw" style="background:'+SEG[Math.min(idx,4)]+'"></span>'+
-        '<span class="legend__txt">'+esc(it.label)+'</span><span class="legend__pct">'+it.pct+' %</span></button>';
+        '<span class="legend__txt">'+glossify(it.label)+'</span><span class="legend__pct">'+it.pct+' %</span></button>';
     }).join('');
     // wrap a long centre label onto two lines (e.g. "Line of treatment")
     const _lab=String(c.label); const _w=_lab.split(' '); let labSVG;
@@ -492,7 +511,8 @@ body.is-fullscreen{ padding-top:56px; }
     panel.className='panel'; panel.id='panel-'+c.id; panel.setAttribute('role','tabpanel');
     panel.setAttribute('aria-labelledby','tab-'+c.id); panel.setAttribute('aria-roledescription','slide');
     panel.setAttribute('aria-label',(i+1)+' of '+CHARS.length+': '+c.label);
-    panel.innerHTML='<div class="panel__head"><span class="panel__icon">'+ICON[c.id]+'</span><h2 class="panel__title">'+esc(c.label)+'</h2></div>'+vizHTML(c);
+    panel.innerHTML='<div class="panel__head"><span class="panel__icon">'+ICON[c.id]+'</span><h2 class="panel__title">'+esc(c.label)+'</h2>'+
+      '<span class="panel__n">N='+N+'</span></div>'+vizHTML(c);
     track.appendChild(panel);
 
     const dot=document.createElement('button');
@@ -674,6 +694,45 @@ body.is-fullscreen{ padding-top:56px; }
   if (inIframe && isMobile && !fullscreen) { document.body.classList.add('is-embedded-mobile'); }
   if (fullscreen) { document.body.classList.add('is-fullscreen'); }
 }());
+</script>
+<script>
+  /* Glossary tooltip — one fixed pill, above/below flip + horizontal clamp so it never clips
+     the embed frame. The term sits inside a <button> legend item, so it carries no tabindex
+     of its own (no nested interactives); focus is taken from the button that contains it. */
+  (function(){
+    var terms = Array.prototype.slice.call(document.querySelectorAll('.gloss'));
+    if(!terms.length) return;
+    var tip = document.createElement('div');
+    tip.className = 'gtip'; tip.setAttribute('role','tooltip');
+    document.body.appendChild(tip);
+    var current = null;
+    function place(el){
+      var r = el.getBoundingClientRect();
+      tip.classList.remove('above','below');
+      var tw = tip.offsetWidth, th = tip.offsetHeight;
+      var vw = window.innerWidth, vh = window.innerHeight, m = 8, gap = 10;
+      var below = (r.top - th - gap) < m;
+      if(below && (r.bottom + gap + th) > (vh - m) && (r.top - th - gap) > 0) below = false;
+      tip.classList.add(below ? 'below' : 'above');
+      var top = below ? (r.bottom + gap) : (r.top - th - gap);
+      var cx = r.left + r.width/2;
+      var left = Math.max(m, Math.min(cx - tw/2, vw - tw - m));
+      tip.style.top = Math.round(top)+'px';
+      tip.style.left = Math.round(left)+'px';
+      tip.style.setProperty('--arrow', Math.max(16, Math.min(cx-left, tw-16))+'px');
+    }
+    function show(el){ current = el; tip.textContent = el.getAttribute('data-def')||''; tip.classList.add('show'); place(el); }
+    function hide(){ current = null; tip.classList.remove('show'); }
+    terms.forEach(function(el){
+      el.addEventListener('mouseenter', function(){ show(el); });
+      el.addEventListener('mouseleave', hide);
+      var host = el.closest('button,a,[tabindex]');
+      if(host){ host.addEventListener('focus', function(){ show(el); }); host.addEventListener('blur', hide); }
+      else { el.tabIndex = 0; el.addEventListener('focus', function(){ show(el); }); el.addEventListener('blur', hide); }
+    });
+    window.addEventListener('resize', function(){ if(current) place(current); });
+    window.addEventListener('scroll', function(){ if(current) place(current); }, true);
+  }());
 </script>
 </body>
 </html>
