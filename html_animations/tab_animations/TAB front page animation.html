@@ -61,6 +61,8 @@
       background: rgba(12, 10, 26, 0.72);
       border: 1px solid rgba(255,255,255,0.16);
       color: #fff; padding: 10px 16px; border-radius: 10px; cursor: pointer;
+      min-height: 44px;   /* 2026-08-05: measured 41px at 360/390/414 — under the 44px house floor.
+                             Padding cannot guarantee a target size, only a floor can. */
       font-family: inherit; font-size: 14px; font-weight: 600; letter-spacing: 0.2px;
       backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
       box-shadow: 0 4px 14px rgba(0,0,0,0.28); text-align: left;
@@ -91,6 +93,22 @@
       width:4px; height:55%; border-radius:4px;
       background: rgba(var(--accentA), 0.95); box-shadow: 0 0 12px rgba(var(--accentA),0.7);
     }
+    /* ---- motion toggle: four redundant indicators, never colour alone ----
+       Semantics follow the canonical pill (_behaviours/motion-toggle, CONSISTENCY-STANDARD
+       §4.1): pip, crossed-out symbol, the word On/Off, and aria-pressed. Rendered in this
+       engine's dark .btn-control chrome rather than copied verbatim — the canonical pill is
+       a light-surface component that requires tokens-tiro.css, which this standalone file
+       does not bundle. Recorded deviation, not drift.
+       State is keyed off aria-pressed on the button, not a body class, so the button is the
+       single source of truth. */
+    .btn-motion{ display: inline-flex; align-items: center; gap: 8px; text-align: left; }
+    .btn-motion .pip{ width: 10px; height: 10px; border-radius: 50%; background: #34d399; flex: none; }
+    .btn-motion[aria-pressed="false"] .pip{ background: rgba(229,231,235,0.38); }   /* off: neutral, not red */
+    .btn-motion .motion-ic{ display: inline-flex; flex: none; }
+    .btn-motion .motion-ic svg{ width: 16px; height: 16px; display: block; }
+    .btn-motion[aria-pressed="false"] .motion-ic{ opacity: 0.55; }
+    .btn-motion[aria-pressed="false"]{ color: rgba(229,231,235,0.62); }
+
     .btn-resume{
       margin-top: 4px; background: rgba(var(--accentA), 0.18);
       border-color: rgba(var(--accentA), 0.45); text-align: center;
@@ -224,7 +242,7 @@
     <div class="controls-left" id="controlsLeft" role="group" aria-label="Pathway summary views"></div>
     <div class="controls-right">
       <button class="btn-control" id="btnPause" onclick="togglePause()">Pause Tour</button>
-      <button class="btn-control" id="btnBgAnim" onclick="toggleBgAnim()">Disable Background Animation</button>
+      <button class="btn-control btn-motion" id="btnBgAnim" type="button" aria-pressed="true" onclick="toggleBgAnim()"><span class="pip" aria-hidden="true"></span><span class="motion-ic" id="motionIc" aria-hidden="true"></span>Background animation: <span id="motionState">On</span></button>
     </div>
 
     <div class="headerCard" id="headerCard" aria-hidden="true">
@@ -298,9 +316,19 @@
       rs.setProperty('--bg0', TH.bg0); rs.setProperty('--bg1', TH.bg1);
       rs.setProperty('--accentA', TH.accentA); rs.setProperty('--accentB', TH.accentB);
       rs.setProperty('--node', TH.node);
-      const C = { a: TH.accentA, b: TH.accentB, n: TH.node };
+      const C = { a: TH.accentA, b: TH.accentB, n: TH.node, s: TH.star || '229,231,235' };
+
+      /* Per-programme fade overrides. Absent -> the :root defaults stand. */
+      const FADES = PROGRAMME.timing || {};
+      ['activeFadeIn','activeFadeOut','miniFadeIn','miniFadeOut'].forEach(k => {
+        if(FADES[k] != null) rs.setProperty('--' + k, FADES[k] + 'ms');
+      });
 
       /* ===== State ===== */
+      /* D13 — defaults ON. prefers-reduced-motion stops the MOVEMENT (see drawBackdrop), it
+         does not hide the layer; canon reserves disappearing for the explicit toggle only.
+         Briefly defaulted this to !prefersReducedMotion, which removed the motif outright for
+         those users — an over-reach, and a second route to "no background at all". */
       let mode = 'auto', animBg = true, paused = false, lastCycle = -1;
 
       function levelOfIndex(i){ for(let k=0;k<levels.length;k++){ if(i>=levels[k].start && i<=levels[k].end) return k; } return 0; }
@@ -322,9 +350,23 @@
         document.getElementById('btnPause').textContent = paused ? "Play Tour" : "Pause Tour";
         updateButtons();
       };
+      /* ON  = heartbeat pulse. OFF = flat line + slash, "no signal" (D29).
+         Icons lifted from the canonical motion toggle so the symbol means the same thing
+         here as everywhere else. Dimming is done in CSS, never as inline opacity on the
+         slash — the two compound and the slash becomes near-invisible. */
+      const IC_ON  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>';
+      const IC_OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="m3 4 18 18"/></svg>';
+
+      function applyMotionState(){
+        const b = document.getElementById('btnBgAnim');
+        if(!b) return;
+        b.setAttribute('aria-pressed', String(animBg));   /* pressed = motion ON */
+        const st = document.getElementById('motionState'); if(st) st.textContent = animBg ? 'On' : 'Off';
+        const ic = document.getElementById('motionIc');   if(ic) ic.innerHTML = animBg ? IC_ON : IC_OFF;
+      }
       window.toggleBgAnim = function(){
         animBg = !animBg;
-        document.getElementById('btnBgAnim').textContent = animBg ? "Disable Background Animation" : "Enable Background Animation";
+        applyMotionState();
       };
 
       /* ===== Controls ===== */
@@ -427,8 +469,21 @@
       /* ===== Backdrops ===== */
       let cells=[], molecules=[], lattice=[], sparks=[], stars=[], bgNodes=[];
       const formulas = ["H₂O","CO₂","C₆H₆","CH₄","NH₃","O₂","N₂","NaCl"];
+      /* Backdrop parallax, opt-in per programme (2026-08-05).
+         0 = the previous behaviour: drawBackdrop() ran BEFORE applyCamera(), so the field
+         was painted in screen space and never moved with the camera — the pathway
+         traversed, the background did not. >0 pans the field against the camera at that
+         fraction, so the tour reads as a journey across a place.
+         The field is grown by BG_PAD on every side and wraps at the padded bounds; without
+         that, panning would drag an empty edge into frame. With BG_PARALLAX 0 the padding
+         is 0 and every expression below reduces to the original. */
+      const BG_PARALLAX = +(PROGRAMME.parallax || 0);
+      const BG_PAD_FRAC = 0.22;
+      let BG_PAD = 0;
+
       function initBackdrop(){
         cells=[]; molecules=[]; lattice=[]; sparks=[]; stars=[]; bgNodes=[];
+        BG_PAD = BG_PARALLAX > 0 ? Math.max(w,h)*BG_PAD_FRAC : 0;
         const bd = PROGRAMME.backdrop;
         if(bd==='bio'){
           const n = clamp(Math.round((w*h)/25000), 15, 30);
@@ -441,19 +496,31 @@
           for(let i=0;i<n;i++) lattice.push({ x:Math.random()*w, y:Math.random()*h, r:Math.random()*3+2, vx:(Math.random()*2-1)*0.1, vy:(Math.random()*2-1)*0.1 });
           for(let i=0;i<20;i++) sparks.push({ x:Math.random()*w, y:Math.random()*h, vx:(Math.random()-0.5)*4, vy:Math.random()*3+1, life:Math.random() });
         } else if(bd==='network'){
-          const ns = clamp(Math.round((w*h)/8500), 130, 260);
-          for(let i=0;i<ns;i++) stars.push({ x:Math.random()*w, y:Math.random()*h, r:Math.random()*1.2+0.2, a:Math.random()*0.55+0.15, vx:(Math.random()*2-1)*0.06, vy:(Math.random()*2-1)*0.06 });
-          const nn = clamp(Math.round((w*h)/65000), 14, 22);
-          for(let i=0;i<nn;i++) bgNodes.push({ x:Math.random()*w, y:Math.random()*h, vx:(Math.random()*2-1)*0.11, vy:(Math.random()*2-1)*0.11 });
+          /* Spread over the PADDED field, and scale the counts by the same factor so the
+             per-pixel density is exactly what it was before padding existed. */
+          /* areaScale guards against a 0x0 init: (0*0)/(0*0) is NaN, Math.round(n*NaN) is NaN,
+             and `i < NaN` is false, so the seeding loop silently produced ZERO particles. */
+          const bw = w + BG_PAD*2, bh = h + BG_PAD*2;
+          const areaScale = (w > 0 && h > 0) ? (bw*bh)/(w*h) : 1;
+          const ns = Math.round(clamp(Math.round((w*h)/8500), 130, 260) * areaScale);
+          for(let i=0;i<ns;i++) stars.push({ x:Math.random()*bw-BG_PAD, y:Math.random()*bh-BG_PAD, r:Math.random()*1.2+0.2, a:Math.random()*0.55+0.15, vx:(Math.random()*2-1)*0.06, vy:(Math.random()*2-1)*0.06 });
+          const nn = Math.round(clamp(Math.round((w*h)/65000), 14, 22) * areaScale);
+          for(let i=0;i<nn;i++) bgNodes.push({ x:Math.random()*bw-BG_PAD, y:Math.random()*bh-BG_PAD, vx:(Math.random()*2-1)*0.11, vy:(Math.random()*2-1)*0.11 });
         }
       }
       function drawBackdrop(nowT){
-        const moving = animBg && !prefersReducedMotion;
+        /* OFF means GONE, not frozen (motion-toggle canon / D36). This used to fall through
+           to the draw calls with `moving` false, which left the field sitting there as a
+           still image — the control appeared to do nothing but stop the drift. */
+        if(!animBg) return;
+        const moving = !prefersReducedMotion;
         const bd = PROGRAMME.backdrop;
+        if(BG_PARALLAX > 0){ ctx.save(); ctx.translate(-(cam.x - w*0.5)*BG_PARALLAX, -(cam.y - h*0.5)*BG_PARALLAX); }
         if(bd==='bio') drawBio(nowT, moving);
         else if(bd==='chem') drawChem(nowT, moving);
         else if(bd==='materials') drawMaterials(nowT, moving);
         else if(bd==='network') drawNetwork(moving);
+        if(BG_PARALLAX > 0) ctx.restore();
       }
       function drawBio(nowT, moving){
         ctx.lineCap="round";
@@ -519,9 +586,13 @@
         }
       }
       function drawNetwork(moving){
-        for(const s of stars){ if(moving){ s.x+=s.vx; s.y+=s.vy; } if(s.x<-10)s.x=w+10; if(s.x>w+10)s.x=-10; if(s.y<-10)s.y=h+10; if(s.y>h+10)s.y=-10;
-          ctx.fillStyle=`rgba(229,231,235,${s.a})`; ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill(); }
-        for(const n of bgNodes){ if(moving){ n.x+=n.vx; n.y+=n.vy; } if(n.x<-40)n.x=w+40; if(n.x>w+40)n.x=-40; if(n.y<-40)n.y=h+40; if(n.y>h+40)n.y=-40; }
+        /* Wrap at the PADDED bounds, not the viewport — with BG_PAD 0 these are the
+           original -10 / w+10 and -40 / w+40 values. */
+        const sL=-BG_PAD-10, sR=w+BG_PAD+10, sT=-BG_PAD-10, sB=h+BG_PAD+10;
+        const nL=-BG_PAD-40, nR=w+BG_PAD+40, nT=-BG_PAD-40, nB=h+BG_PAD+40;
+        for(const s of stars){ if(moving){ s.x+=s.vx; s.y+=s.vy; } if(s.x<sL)s.x=sR; if(s.x>sR)s.x=sL; if(s.y<sT)s.y=sB; if(s.y>sB)s.y=sT;
+          ctx.fillStyle=`rgba(${C.s},${s.a})`; ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill(); }
+        for(const n of bgNodes){ if(moving){ n.x+=n.vx; n.y+=n.vy; } if(n.x<nL)n.x=nR; if(n.x>nR)n.x=nL; if(n.y<nT)n.y=nB; if(n.y>nB)n.y=nT; }
         for(let i=0;i<bgNodes.length;i++){ for(let j=i+1;j<bgNodes.length;j++){ const a=bgNodes[i], b=bgNodes[j], dist=Math.hypot(a.x-b.x,a.y-b.y);
           if(dist<260){ const k=1-dist/260; ctx.strokeStyle=`rgba(${C.b},${0.10*k})`; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); } } }
         for(const n of bgNodes){ ctx.fillStyle=`rgba(${C.b},0.10)`; ctx.beginPath(); ctx.arc(n.x,n.y,10,0,Math.PI*2); ctx.fill(); ctx.fillStyle=`rgba(${C.a},0.48)`; ctx.beginPath(); ctx.arc(n.x,n.y,2.0,0,Math.PI*2); ctx.fill(); }
@@ -543,10 +614,16 @@
         });
         return layout;
       }
-      let nodes = pathwayLayout();
-      initBackdrop();
+      /* ORDER MATTERS. resize() is what first assigns w/h — they are declared `let w=0,h=0`.
+         initBackdrop() and pathwayLayout() both read them, so resize() must run FIRST.
+         It used to run last, so the opening init built its field against a 0x0 viewport and
+         every particle landed at (0,0); nothing re-seeded it until the user resized the
+         window. Latent for as long as this engine has existed. */
+      let nodes = pathwayLayout();   /* declared first: resize() assigns to `nodes`, and a
+                                        `let` cannot be written before its declaration (TDZ). */
+      resize();                      /* assigns w/h AND recomputes nodes at the real size */
+      initBackdrop();                /* now reads real w/h, not 0x0 */
       window.addEventListener('resize', () => { resize(); initBackdrop(); }, { passive:true });
-      resize();
 
       function calcBounds(s, e){
         let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
@@ -562,24 +639,42 @@
       /* ===== Timeline ===== */
       const timeline = []; let tTotal = 0;
       function addPhase(kind, duration, props={}){ timeline.push({ kind, t0:tTotal, t1:tTotal+duration, ...props }); tTotal += duration; }
+      /* Phase durations. Defaults reproduce the pre-2026-08-05 hardcoded values exactly, per
+         branch; a programme overrides only what it names in PROGRAMME.timing. Omit the key and
+         the default stands, so adding `timing` to one data file cannot move any other. */
+      const T = Object.assign({
+        travel:             1000,
+        hold:               isFlat ? 3200 : 3400,
+        fadeOut:            400,
+        gap:                200,
+        levelTravel:        1200,
+        camMoveLevel:       1400,
+        overviewLevel:      4500,
+        overviewFadeOut:    500,
+        camMoveAll:         isFlat ? 1600 : 1800,
+        overviewAll:        isFlat ? 6500 : 7000,
+        overviewFadeOutAll: 600,
+        pause:              1000
+      }, PROGRAMME.timing || {});
+
       function buildTimeline(){
         if(isFlat){
           for(let i=0;i<modules.length;i++){
-            if(i>0) addPhase("travel",1000,{i,from:i-1});
-            addPhase("hold",3200,{i}); addPhase("fadeOut",400,{i}); addPhase("gap",200,{i});
+            if(i>0) addPhase("travel",T.travel,{i,from:i-1});
+            addPhase("hold",T.hold,{i}); addPhase("fadeOut",T.fadeOut,{i}); addPhase("gap",T.gap,{i});
           }
-          addPhase("camMoveAll",1600); addPhase("overviewAll",6500); addPhase("overviewFadeOutAll",600); addPhase("pause",1000);
+          addPhase("camMoveAll",T.camMoveAll); addPhase("overviewAll",T.overviewAll); addPhase("overviewFadeOutAll",T.overviewFadeOutAll); addPhase("pause",T.pause);
           return;
         }
         const buildLevel = (levelNum, s, e) => {
           for(let i=s;i<=e;i++){
-            if(i>s) addPhase("travel",1000,{i,from:i-1});
-            addPhase("hold",3400,{i}); addPhase("fadeOut",400,{i}); addPhase("gap",200,{i});
+            if(i>s) addPhase("travel",T.travel,{i,from:i-1});
+            addPhase("hold",T.hold,{i}); addPhase("fadeOut",T.fadeOut,{i}); addPhase("gap",T.gap,{i});
           }
-          addPhase("camMoveLevel",1400,{startIdx:s,endIdx:e}); addPhase("overviewLevel",4500,{startIdx:s,endIdx:e}); addPhase("overviewFadeOut",500,{startIdx:s,endIdx:e});
+          addPhase("camMoveLevel",T.camMoveLevel,{startIdx:s,endIdx:e}); addPhase("overviewLevel",T.overviewLevel,{startIdx:s,endIdx:e}); addPhase("overviewFadeOut",T.overviewFadeOut,{startIdx:s,endIdx:e});
         };
-        levels.forEach((L,k) => { buildLevel(L.num, L.start, L.end); if(k<levels.length-1) addPhase("travel",1200,{i:levels[k+1].start, from:L.end}); });
-        addPhase("camMoveAll",1800); addPhase("overviewAll",7000); addPhase("overviewFadeOutAll",600); addPhase("pause",1000);
+        levels.forEach((L,k) => { buildLevel(L.num, L.start, L.end); if(k<levels.length-1) addPhase("travel",T.levelTravel,{i:levels[k+1].start, from:L.end}); });
+        addPhase("camMoveAll",T.camMoveAll); addPhase("overviewAll",T.overviewAll); addPhase("overviewFadeOutAll",T.overviewFadeOutAll); addPhase("pause",T.pause);
       }
       buildTimeline();
       const CYCLE_MS = tTotal;
@@ -701,6 +796,7 @@
       buildControls();
       buildSummary();
       updateButtons();
+      applyMotionState();          /* paint the pip, icon, word and aria-pressed on load */
       requestAnimationFrame(tick);
     })();
   </script>
