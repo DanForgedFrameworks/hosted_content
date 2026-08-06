@@ -287,10 +287,15 @@
      tlm.js — do not reword them here, or the two routes drift apart.
      Theme is shared with tlm.js; keep them in step. */
   theme: { bg0: "#04141a", bg1: "#062333", accentA: "45,212,191", accentB: "56,189,248", node: "20,184,166", star: "150,180,196" },
-  /* Four nodes rather than seven, so the cycle lands near 22s on the same per-phase values.
-     `hold` is the readability lever if any card feels rushed — raise that, not the fades. */
+  /* PACING: a journey, not a dash to an endpoint (owner, 2026-08-05).
+     `travel` is the journey lever — it is the time the camera spends MOVING between nodes,
+     and it is the only phase the learner reads as distance covered. Raised 650 -> 1500 so
+     the gap between modules feels earned rather than skipped; `gap` 120 -> 220 adds a beat
+     of stillness on arrival before the next card commits. Cycle 22.3s -> 25.5s.
+     Do NOT buy journey feel by raising `hold` — that just makes each card outstay its text.
+     hold = reading time. travel = distance. They are different sensations. */
   timing: {
-    travel: 650, hold: 2800, fadeOut: 350, gap: 120,
+    travel: 1500, hold: 2800, fadeOut: 350, gap: 220,
     camMoveAll: 1200, overviewAll: 5000, overviewFadeOutAll: 500, pause: 600,
     activeFadeIn: 500, activeFadeOut: 320, miniFadeIn: 450, miniFadeOut: 340
   },
