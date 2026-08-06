@@ -629,9 +629,28 @@
          window. Latent for as long as this engine has existed. */
       let nodes = pathwayLayout();   /* declared first: resize() assigns to `nodes`, and a
                                         `let` cannot be written before its declaration (TDZ). */
-      resize();                      /* assigns w/h AND recomputes nodes at the real size */
-      initBackdrop();                /* now reads real w/h, not 0x0 */
-      window.addEventListener('resize', () => { resize(); initBackdrop(); }, { passive:true });
+
+      /* SEEDING. An embed can load at ZERO size — a hidden Rise tab, a closed accordion, a
+         lazy iframe below the fold. resize() then has nothing to work with and the field
+         would seed into a 0x0 box, putting every particle at (0,0) with nothing to recover
+         it. So: never seed at zero, and re-seed on the first real size.
+         A window 'resize' event is NOT sufficient on its own — an element inside
+         display:none has no layout box at all, and revealing it does not reliably fire one
+         inside the iframe. ResizeObserver on the root element does see 0 -> N.
+         seedW/seedH dedupe the two sources so a normal resize does the work once. */
+      let seedW = -1, seedH = -1;
+      function reseed(){
+        const nw = Math.floor(window.innerWidth), nh = Math.floor(window.innerHeight);
+        if(nw === seedW && nh === seedH) return;
+        seedW = nw; seedH = nh;
+        resize();
+        if(nw > 0 && nh > 0) initBackdrop();   /* the arrays stay [] until there is a real box */
+      }
+      reseed();
+      window.addEventListener('resize', reseed, { passive:true });
+      if(typeof ResizeObserver !== 'undefined'){
+        new ResizeObserver(reseed).observe(document.documentElement);
+      }
 
       function calcBounds(s, e){
         let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
@@ -745,6 +764,16 @@
       function levelSub(){ return "Modules completed for this phase of the programme."; }
 
       function tick(now){
+        /* ZERO-SIZE RECOVERY. If we were seeded against a 0x0 box (hidden Rise tab, closed
+           accordion, lazy iframe) and there is now a real one, re-seed here. rAF is the one
+           trigger that cannot be missed: it is suspended while the document is hidden and
+           resumes the moment it renders, which is exactly when the size is known good.
+           ResizeObserver and window 'resize' are BOTH unreliable for this — their callbacks
+           are driven by the rendering lifecycle, so a document that is hidden when it gains
+           its box never receives them. Measured 2026-08-05. Two integer comparisons a frame,
+           and only in the pathological case. */
+        if((w === 0 || h === 0) && window.innerWidth > 0 && window.innerHeight > 0) reseed();
+
         let dt = now - lastTime; if(dt > 100) dt = 16; lastTime = now;
         if(mode === 'auto' && !paused) virtualTime += dt;
         if(animBg && !prefersReducedMotion) bgTime += dt;
