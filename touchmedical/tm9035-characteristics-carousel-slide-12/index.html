@@ -96,7 +96,22 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 .donut-stack{ position:relative; height:92%; aspect-ratio:1; flex:0 0 auto; display:grid; place-items:center; }
 .donut-stack svg{ width:100%; height:100%; display:block; }
 .donut__seg{ cursor:pointer; transition:opacity .16s ease; }
-.donut__seg:hover,.donut__seg.is-active{ opacity:.82; }
+/* B1 (F-10): exploded is the RESTING state, so a frame that never animates still
+   renders the finished chart (contract §6). .is-tight is applied by JS inside the
+   first rAF and released, which plays the explode outwards. */
+/* Entrance: staggered, with a slight overshoot so it reads as a spring rather than a slide. */
+.donut-stack g.seg{ transform:translate(var(--dx,0px),var(--dy,0px));
+  transition:transform .8s cubic-bezier(.34,1.56,.64,1); transition-delay:calc(var(--i,0) * 70ms); }
+.donut-stack.is-tight g.seg{ transform:none; }
+/* Hover/focus must feel immediate, so it overrides the entrance stagger. */
+/* Hover/focus must feel immediate, so it overrides the entrance stagger. */
+.donut-stack g.seg.seg-on{ transition-duration:.22s; transition-delay:0s;
+  transform:translate(calc(var(--dx,0px) * 1.75), calc(var(--dy,0px) * 1.75)); }
+/* Definitive contrast: everything else recedes so the picked value stands alone. */
+.donut-stack.has-active .donut__seg{ opacity:.22; }
+.donut-stack .donut__seg.is-active{ opacity:1; stroke-width:7.6; }
+@media (prefers-reduced-motion: reduce){ .donut-stack g.seg{ transition:none; } .donut-stack.is-tight g.seg{ transform:translate(var(--dx,0px),var(--dy,0px)); } }
+/* superseded by the .donut-stack highlight rules above */
 /* centre text lives INSIDE the svg (scales with the donut at any size — never clips) */
 .donut-stack svg text{ font-family:var(--font); text-anchor:middle; }
 .dc__big{ font-size:6px; font-weight:700; fill:var(--navy); font-variant-numeric:tabular-nums; }
@@ -399,6 +414,9 @@ body.is-fullscreen{ padding-top:56px; }
       items:[ {label:'Treatment-naïve', n:164, pct:'52.4'}, {label:'Previously treated', n:149, pct:'47.6'} ] }
   ];
   const SEG = ['var(--c1)','var(--c2)','var(--c3)','var(--c4)','var(--c5)'];
+  /* B1: base radius + explode offset. 14.3 + 3 (half stroke) + 1.6 = 18.9, the same
+     outer extent 15.915 + 3 gave before, so the donut occupies the same space. */
+  const DR = 14.3, DEXP = 1.6;
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const rail = document.getElementById('rail');
@@ -460,8 +478,14 @@ body.is-fullscreen{ padding-top:56px; }
     let cum=0;
     const segs=c.items.filter(it=>parseFloat(it.pct)>0).map((it)=>{
       const idx=c.items.indexOf(it), p=parseFloat(it.pct);
-      const circle='<circle class="donut__seg" r="15.915" cx="21" cy="21" fill="none" stroke="'+SEG[Math.min(idx,4)]+'" stroke-width="6" '+
-        'stroke-dasharray="'+p+' '+(100-p)+'" stroke-dashoffset="'+(-cum)+'" '+dataAttrs(it)+' '+ariaFig(it)+' tabindex="0" role="button"></circle>';
+      /* B1 (F-10): segments are pushed out along their own bisector so neighbours
+         separate naturally. Nothing is subtracted from any arc, so a 0.3 % value is
+         still drawn at true size. Footprint is unchanged - see DR/DEXP below. */
+      const mid = (cum + p/2) / 100 * Math.PI * 2;          // mid-angle, rotated frame
+      const dx = (DEXP * Math.cos(mid)).toFixed(3), dy = (DEXP * Math.sin(mid)).toFixed(3);
+      const circle='<g class="seg" style="--dx:'+dx+'px;--dy:'+dy+'px;--i:'+idx+'">'+
+        '<circle class="donut__seg" r="'+DR+'" cx="21" cy="21" pathLength="100" fill="none" stroke="'+SEG[Math.min(idx,4)]+'" stroke-width="6" '+
+        'stroke-dasharray="'+p+' '+(100-p)+'" stroke-dashoffset="'+(-cum)+'" '+dataAttrs(it)+' '+ariaFig(it)+' tabindex="0" role="button"></circle></g>';
       cum+=p; return circle;
     }).join('');
     const legend=c.items.map((it)=>{
@@ -487,7 +511,7 @@ body.is-fullscreen{ padding-top:56px; }
       '<div class="donut-stack" role="img" aria-label="'+N+' patients — '+esc(c.label)+'">'+
         '<svg viewBox="0 0 42 42">'+
           '<g transform="rotate(-90 21 21)">'+
-            '<circle r="15.915" cx="21" cy="21" fill="none" stroke="var(--mist)" stroke-width="6"></circle>'+segs+
+            segs+
           '</g>'+
           '<text class="dc__big" x="21" y="19.2">'+N+'</text>'+
           '<text class="dc__sub" x="21" y="24">patients</text>'+
@@ -546,7 +570,25 @@ body.is-fullscreen{ padding-top:56px; }
     }
     countRAF=requestAnimationFrame(tick);
   }
-  function playPanel(){ const a=panels[index]; panels.forEach(p=>{ if(p!==a){ p.classList.remove('is-live'); snapCounts(p); } }); a.classList.remove('is-live'); void a.offsetWidth; requestAnimationFrame(function(){ a.classList.add('is-live'); playCounts(a,820); }); }
+  /* B1 (F-10): play the donut explode. The EXPLODED state is what is baked into the
+     DOM, so this only ever collapses it briefly and lets it back out - if this rAF
+     never fires the chart still renders finished and correct (contract §6, §0.11). */
+  function playExplode(panel){
+    const st = panel.querySelector('.donut-stack');
+    if(!st || reduceMotion) return;
+    requestAnimationFrame(function(){
+      st.classList.add('is-tight');
+      requestAnimationFrame(function(){
+        setTimeout(function(){ st.classList.remove('is-tight'); }, 700);
+      });
+    });
+  }
+  /* Any interrupt snaps straight to the finished chart rather than stranding it tight. */
+  function snapExplode(){ document.querySelectorAll('.donut-stack.is-tight').forEach(s=>s.classList.remove('is-tight')); }
+  document.addEventListener('visibilitychange', function(){ if(document.hidden) snapExplode(); });
+  window.__snapDonut = snapExplode;
+
+  function playPanel(){ const a=panels[index]; panels.forEach(p=>{ if(p!==a){ p.classList.remove('is-live'); snapCounts(p); } }); a.classList.remove('is-live'); void a.offsetWidth; requestAnimationFrame(function(){ a.classList.add('is-live'); playCounts(a,820); playExplode(a); }); }
   document.addEventListener('visibilitychange',function(){ if(document.hidden) snapCounts(panels[index]); });
 
   /* ---------- hover/focus callout (anchored under the data point) ---------- */
@@ -569,8 +611,12 @@ body.is-fullscreen{ padding-top:56px; }
     items.forEach(el=>{
       const d={ n:el.dataset.n, pct:el.dataset.pct, label:el.dataset.label };
       const segPair=el.classList.contains('legend__item') ? panel.querySelector('.donut__seg[data-label="'+CSS.escape(d.label)+'"]') : (el.classList.contains('donut__seg') ? panel.querySelector('.legend__item[data-label="'+CSS.escape(d.label)+'"]') : null);
-      const enter=()=>{ showCallout(el,d); el.classList.add('is-active'); if(segPair) segPair.classList.add('is-active'); };
-      const leave=()=>{ hideCallout(); el.classList.remove('is-active'); if(segPair) segPair.classList.remove('is-active'); };
+      const enter=()=>{ showCallout(el,d); el.classList.add('is-active');
+        if(segPair){ segPair.classList.add('is-active'); segPair.parentElement.classList.add('seg-on');
+          const _st=segPair.closest('.donut-stack'); if(_st) _st.classList.add('has-active'); } };
+      const leave=()=>{ hideCallout(); el.classList.remove('is-active');
+        if(segPair){ segPair.classList.remove('is-active'); segPair.parentElement.classList.remove('seg-on');
+          const _st=segPair.closest('.donut-stack'); if(_st) _st.classList.remove('has-active'); } };
       el.addEventListener('mouseenter',enter); el.addEventListener('focus',enter);
       el.addEventListener('mouseleave',leave); el.addEventListener('blur',leave);
       if(el.getAttribute('role')==='button'){ el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); enter(); } }); }

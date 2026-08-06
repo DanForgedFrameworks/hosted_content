@@ -67,19 +67,23 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 .sg__media figcaption{ position:absolute; left:0; right:0; bottom:0; z-index:3; padding:30px 16px 11px; background:linear-gradient(180deg,rgba(13,22,38,0),rgba(13,22,38,.86)); color:#fff; font-size:clamp(.76rem,1.3vw,.9rem); font-weight:600; line-height:1.35; text-align:center; }
 
 /* ----- lens switcher: segmented control + separate content card ----- */
-.lens{ min-height:0; display:flex; flex-direction:column; }
-.seg{ align-self:center; display:inline-flex; max-width:100%; background:var(--mist); border:1.5px solid var(--line); border-radius:999px; padding:4px; gap:3px; }
+/* The tab row and the container are one centred group, not a stretched panel. */
+.lens{ min-height:0; display:flex; flex-direction:column; justify-content:center; }
+/* Sits ON the container: square bottom corners, overlapping its top edge. */
+.seg{ align-self:center; position:relative; z-index:2; display:inline-flex; max-width:100%; background:#fff; border:2px solid var(--teal); border-bottom-color:#fff; border-radius:14px 14px 0 0; padding:5px 6px 7px; gap:3px; margin-bottom:-2px; box-shadow:0 -2px 10px rgba(34,47,85,.05); }
 .seg__btn{ border:0; background:transparent; border-radius:999px; padding:9px clamp(12px,1.7vw,20px); font:inherit; font-weight:700; font-size:clamp(.76rem,1.35vw,.9rem); color:var(--muted); cursor:pointer; white-space:nowrap; transition:background .16s ease, color .16s ease, box-shadow .16s ease; }
 .seg__btn:hover:not([aria-selected="true"]){ color:var(--navy); }
 .seg__btn:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
 .seg__btn[aria-selected="true"]{ background:var(--teal); color:#fff; box-shadow:0 4px 12px rgba(0,152,190,.28); }
-.card{ flex:1 1 auto; min-height:0; margin-top:clamp(10px,1.6vh,14px); border:1.5px solid var(--line); border-radius:16px; background:linear-gradient(180deg,#fbfdff,#fff); box-shadow:0 3px 12px rgba(34,47,85,.05); padding:clamp(13px,2vw,20px); display:flex; }
-.panel{ flex:1 1 auto; min-width:0; display:none; flex-direction:column; justify-content:center; gap:clamp(9px,1.5vh,15px); }
+/* Height reduced ~25% and no longer stretched; outline more pronounced. */
+.card{ flex:0 1 auto; min-height:0; margin-top:0; border:2px solid var(--teal); border-radius:16px; background:linear-gradient(180deg,#fbfdff,#fff); box-shadow:0 4px 16px rgba(34,47,85,.08); padding:clamp(10px,1.5vw,15px) clamp(13px,2vw,20px); display:flex; }
+/* Content is scaled UP to fill the panel - not spread out across it. */
+.panel{ flex:1 1 auto; min-width:0; display:none; flex-direction:column; justify-content:center; gap:clamp(10px,1.7vh,16px); }
 .panel.is-active{ display:flex; animation:fadeIn .34s ease both; }
 .panel--center{ align-items:center; text-align:center; }
-.panel__lead{ margin:0; font-size:clamp(.86rem,1.5vw,1rem); font-weight:600; color:var(--navy); line-height:1.45; }
+.panel__lead{ margin:0; font-size:clamp(1rem,1.85vw,1.24rem); font-weight:600; color:var(--navy); line-height:1.42; }
 .panel__lead b{ color:var(--teal-strong); }
-.panel__note{ margin:0; font-size:clamp(.76rem,1.3vw,.86rem); color:var(--muted); line-height:1.45; }
+.panel__note{ margin:0; font-size:clamp(.92rem,1.55vw,1.05rem); color:var(--muted); line-height:1.45; }
 /* pick-a-lens prompt (shown until the learner selects a lens) */
 .lensprompt{ flex:1 1 auto; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:11px; text-align:center; color:var(--muted); padding:18px; animation:fadeIn .4s ease both; }
 .lensprompt[hidden]{ display:none; }
@@ -88,34 +92,36 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 .lensprompt p{ margin:0; font-size:clamp(.86rem,1.5vw,1rem); font-weight:600; max-width:28ch; line-height:1.45; }
 
 /* Lens 1 — subgroup consistency chips (centred 3-column grid) */
-.chips{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px 10px; width:100%; max-width:600px; margin:0 auto; }
-.chip{ display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:9px 12px; border-radius:999px; background:var(--green-soft); border:1.5px solid #bfe6d3; color:#1c6b4c; font-size:clamp(.74rem,1.3vw,.88rem); font-weight:700; text-align:center; }
+.chips{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px 13px; width:100%; max-width:700px; margin:0 auto; }
+.chip{ display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 16px; border-radius:999px; background:var(--green-soft); border:1.5px solid #bfe6d3; color:#1c6b4c; font-size:clamp(.9rem,1.6vw,1.06rem); font-weight:700; text-align:center; }
 .chip svg{ width:15px; height:15px; flex:0 0 auto; }
-.consist{ display:inline-flex; align-items:center; gap:9px; padding:9px 16px; border-radius:12px; background:var(--pale); border:2px solid var(--teal); color:var(--teal-strong); font-weight:700; font-size:clamp(.82rem,1.4vw,.96rem); align-self:center; }
+.consist{ display:inline-flex; align-items:center; gap:11px; padding:13px 21px; border-radius:14px; background:var(--pale); border:2px solid var(--teal); color:var(--teal-strong); font-weight:700; font-size:clamp(1rem,1.75vw,1.18rem); align-self:center; }
 .consist svg{ width:20px; height:20px; }
 
 /* Lens 2 — line-of-therapy bars (neutral scale; overall marker on the axis) */
 .lot{ position:relative; display:flex; flex-direction:column; gap:clamp(9px,1.6vh,14px); margin-top:8px; padding-top:2px; }
-.lot__row{ position:relative; z-index:2; display:flex; flex-direction:column; gap:4px; }
+.lot__row{ position:relative; z-index:2; display:flex; flex-direction:column; gap:6px; }
 .lot__top{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; }
-.lot__name{ font-size:.84rem; font-weight:700; color:var(--navy); }
+.lot__name{ font-size:clamp(.98rem,1.75vw,1.16rem); font-weight:700; color:var(--navy); }
 .lot__name span{ font-weight:600; color:var(--faint); font-size:.82em; }
-.lot__val{ font-size:.9rem; font-weight:700; color:var(--teal-strong); font-variant-numeric:tabular-nums; }
+.lot__val{ font-size:clamp(1.06rem,1.9vw,1.28rem); font-weight:700; color:var(--teal-strong); font-variant-numeric:tabular-nums; }
 .lot__ci{ font-size:.78em; font-weight:600; color:var(--faint); white-space:nowrap; }   /* R3-049 */
-.lot__track{ position:relative; height:13px; border-radius:7px; background:var(--mist); box-shadow:inset 0 0 0 1px var(--line); overflow:hidden; }
+.lot__track{ position:relative; height:clamp(17px,2.4vh,22px); border-radius:11px; background:var(--mist); box-shadow:inset 0 0 0 1px var(--line); overflow:hidden; }
 .lot__fill{ position:absolute; left:0; top:0; height:100%; border-radius:7px; }
 .lot__ref{ position:absolute; left:51.8%; top:2px; bottom:26px; width:2px; margin-left:-1px; background:repeating-linear-gradient(180deg,var(--navy) 0 4px,transparent 4px 8px); z-index:3; }
-.lot__axis{ position:relative; display:flex; justify-content:space-between; font-size:.64rem; color:var(--faint); font-weight:600; margin-top:2px; }
-.lot__reflab{ position:absolute; left:51.8%; transform:translateX(-50%); top:-1px; white-space:nowrap; font-size:.62rem; font-weight:700; color:var(--navy); background:#fff; padding:0 5px; }
+.lot__axis{ position:relative; display:flex; justify-content:space-between; font-size:clamp(.76rem,1.3vw,.86rem); color:var(--faint); font-weight:600; margin-top:4px; }
+.lot__reflab{ position:absolute; left:51.8%; transform:translateX(-50%); top:-1px; white-space:nowrap; font-size:clamp(.74rem,1.25vw,.84rem); font-weight:700; color:var(--navy); background:#fff; padding:0 6px; }
 
 /* Lens 3 — Asian snapshot */
 .asian{ display:flex; align-items:center; gap:clamp(14px,2.4vw,26px); flex-wrap:wrap; justify-content:center; }
 .asian__big{ flex:0 0 auto; text-align:center; }
-.asian__val{ font-size:clamp(2.1rem,4.6vw,3rem); font-weight:700; color:var(--teal-strong); line-height:1; }
-.asian__ci{ font-size:.74rem; font-weight:600; color:var(--muted); margin-top:4px; }
-.asian__lab{ font-size:.72rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--faint); margin-bottom:5px; }
+.asian__val{ font-size:clamp(2.5rem,5.4vw,3.6rem); font-weight:700; color:var(--teal-strong); line-height:1; }
+.asian__ci{ font-size:.86rem; font-weight:600; color:var(--muted); margin-top:5px; }
+/* CI under the 1L stat, matching the line-of-therapy rows. */
+.asian__statci{ display:block; font-size:.8em; font-weight:600; color:var(--faint); margin-top:2px; white-space:nowrap; }
+.asian__lab{ font-size:.84rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--faint); margin-bottom:6px; }
 .asian__side{ flex:1 1 200px; min-width:180px; max-width:340px; display:flex; flex-direction:column; gap:9px; }
-.asian__stat{ display:flex; align-items:center; gap:11px; padding:10px 14px; border:1.5px solid var(--line); border-left:4px solid var(--teal); border-radius:11px; background:#fff; text-align:left; }
+.asian__stat{ display:flex; align-items:center; gap:13px; padding:14px 17px; font-size:1.06rem; border:1.5px solid var(--line); border-left:5px solid var(--teal); border-radius:12px; background:#fff; text-align:left; }
 .asian__stat b{ font-size:1.05rem; color:var(--teal-strong); font-weight:700; }
 .asian__stat span{ font-size:.8rem; color:var(--muted); font-weight:600; }
 
@@ -263,7 +269,7 @@ body.is-fullscreen{ padding-top:56px; }
   .hd__rule i{ height:12px; }
   .sg{ gap:clamp(5px,.9vh,9px); padding-top:clamp(7px,1.2vh,11px); padding-bottom:clamp(7px,1.2vh,11px); }
   .navprompt__box{ padding:6px 14px; font-size:.8rem; }
-  .card{ padding:clamp(11px,1.6vw,16px); margin-top:9px; }
+  .card{ padding:clamp(8px,1.2vw,12px) clamp(11px,1.6vw,16px); margin-top:0; }
   .srcpill{ bottom:9px; }
 }
 
@@ -353,7 +359,7 @@ body.is-fullscreen{ padding-top:56px; }
             <div class="lot">
               <span class="lot__ref" aria-hidden="true"></span>
               <div class="lot__row">
-                <div class="lot__top"><span class="lot__name">1L <span>first-line tepotinib</span></span><span class="lot__val">57.9 %</span></div>
+                <div class="lot__top"><span class="lot__name">1L <span>first-line tepotinib</span></span><span class="lot__val">57.9 % <span class="lot__ci">(95% CI 50.0, 65.6)</span></span></div>
                 <div class="lot__track"><span class="lot__fill" style="width:57.9%;background:var(--c2)"></span></div>
               </div>
               <div class="lot__row">
@@ -377,7 +383,7 @@ body.is-fullscreen{ padding-top:56px; }
                 <div class="asian__ci">ORR (95% CI 46.6, 66.2)</div>
               </div>
               <div class="asian__side">
-                <div class="asian__stat"><b>64.0 %</b><span>ORR in first-line (1L) Asian patients</span></div>
+                <div class="asian__stat"><b>64.0 %</b><span>ORR in first-line (1L) Asian patients<span class="asian__statci">95% CI 49.2, 77.1</span></span></div>
                 <div class="asian__stat"><b>&#10003;</b><span>Robust, durable long-term efficacy and a manageable safety profile</span></div>
               </div>
             </div>

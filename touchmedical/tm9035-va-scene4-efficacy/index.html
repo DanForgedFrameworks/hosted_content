@@ -44,7 +44,7 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 .hd__rule{ display:flex; align-items:center; justify-content:center; width:min(76%,840px); margin:clamp(6px,1vh,10px) auto clamp(5px,.8vh,8px); }
 .hd__rule i{ width:3px; height:15px; background:var(--teal); border-radius:2px; flex:0 0 auto; }
 .hd__rule b{ flex:1 1 auto; height:2.5px; background:var(--teal); border-radius:2px; }
-.hd__sub{ margin:0; font-size:clamp(.78rem,1.5vw,.92rem); font-weight:600; color:var(--muted); }
+.hd__sub{ margin:0; font-size:clamp(.92rem,1.7vw,1.08rem); font-weight:600; color:var(--muted); }
 
 /* ---------- body ---------- */
 .eff{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; gap:clamp(8px,1.4vh,14px); padding:clamp(10px,1.8vh,18px) clamp(16px,3vw,30px) clamp(12px,2vh,20px); }
@@ -59,20 +59,33 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 
 /* ----- ORR hero ----- */
 .orr{ flex:1 1 auto; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:clamp(7px,1.3vh,13px); }
-.orr__eyebrow{ font-size:.7rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--faint); }
+.orr__eyebrow{ font-size:clamp(.82rem,1.35vw,.92rem); font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--faint); }
 .orr__eyebrow sup{ color:var(--teal); }
 .ring{
   position:relative; width:clamp(150px,22vh,200px); aspect-ratio:1; border-radius:50%;
-  background:conic-gradient(var(--teal) 0 51.8%, var(--line) 51.8% 100%);
+  /* was a conic-gradient; now an SVG donut so the segments can separate */
   display:grid; place-items:center; border:0; padding:0; cursor:pointer; font:inherit;
   transition:transform .16s ease, box-shadow .18s ease, width .32s cubic-bezier(.16,1,.3,1);
 }
 .ring:hover{ transform:scale(1.02); }
 .ring:focus-visible{ outline:3px solid var(--navy); outline-offset:4px; }
-.ring__hole{ width:70%; height:70%; border-radius:50%; background:#fff; display:grid; place-items:center; box-shadow:inset 0 0 0 1px var(--line); }
-.ring__val{ display:block; font-size:clamp(1.9rem,4vh,2.4rem); font-weight:700; color:var(--teal-strong); line-height:1; white-space:nowrap; }
-.ring__ci{ display:block; font-size:.7rem; font-weight:600; color:var(--muted); margin-top:3px; white-space:nowrap; }
-.orr__cap{ font-size:clamp(.82rem,1.45vw,.95rem); line-height:1.45; color:var(--muted); max-width:36ch; }
+/* SVG and hole share one grid cell so they stack. */
+.ring__svg{ grid-area:1 / 1; width:100%; height:100%; }
+/* Exploded is the RESTING state (contract 6): a frame that never animates still
+   shows the finished donut. .is-tight is added by JS inside a rAF and released. */
+.ring__svg .rseg{ transform:translate(var(--dx,0px),var(--dy,0px));
+  transition:transform .8s cubic-bezier(.34,1.56,.64,1); transition-delay:calc(var(--i,0) * 70ms); }
+.ring.is-tight .rseg{ transform:none; }
+.ring:hover .rseg__c, .ring:focus-visible .rseg__c{ opacity:.22; }
+.ring:hover .rseg:first-child .rseg__c, .ring:focus-visible .rseg:first-child .rseg__c{ opacity:1; stroke-width:6.6; }
+.ring:hover .rseg:first-child, .ring:focus-visible .rseg:first-child{ transition-duration:.22s; transition-delay:0s;
+  transform:translate(calc(var(--dx,0px) * 1.7), calc(var(--dy,0px) * 1.7)); }
+.rseg__c{ transition:opacity .16s ease, stroke-width .16s ease; }
+@media (prefers-reduced-motion: reduce){ .ring__svg .rseg{ transition:none; } .ring.is-tight .rseg{ transform:translate(var(--dx,0px),var(--dy,0px)); } }
+.ring__hole{ grid-area:1 / 1; place-self:center; width:66%; height:66%; border-radius:50%; background:#fff; display:grid; place-items:center; box-shadow:inset 0 0 0 1px var(--line); }
+.ring__val{ display:block; font-size:clamp(2.3rem,4.8vh,2.95rem); font-weight:700; color:var(--teal-strong); line-height:1; white-space:nowrap; }
+.ring__ci{ display:block; font-size:clamp(.82rem,1.35vw,.94rem); font-weight:600; color:var(--muted); margin-top:4px; white-space:nowrap; }
+.orr__cap{ font-size:clamp(.96rem,1.65vw,1.12rem); line-height:1.45; color:var(--muted); max-width:38ch; }
 /* opening the split hides the summary caption so the ring stays FULL-SIZE (doughnut never resizes/wraps) */
 .orr.is-split .orr__cap{ display:none; }
 .orr__cap b{ color:var(--navy); font-weight:700; }
@@ -85,13 +98,13 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 .sub__lab.l2,.sub__val.l2{ color:var(--green); }
 .sub__fill.l1{ background:var(--pink); }
 .sub__fill.l2{ background:var(--green); }
-.orr-subs__note{ margin:3px 0 0; font-size:.66rem; color:var(--faint); text-align:center; line-height:1.4; }
+.orr-subs__note{ margin:4px 0 0; font-size:clamp(.78rem,1.3vw,.88rem); color:var(--faint); text-align:center; line-height:1.4; }
 .orr-subs__src{ display:block; margin-top:1px; }
 
 /* ----- time-to-event panel (right) ----- */
 .tte{ flex:1 1 auto; border:2px solid var(--line); border-radius:16px; background:#fff; padding:clamp(12px,1.8vw,18px); display:flex; flex-direction:column; min-height:0; }
 .tte__head{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
-.tte__title{ font-size:clamp(.9rem,1.6vw,1.05rem); font-weight:700; color:var(--navy); }
+.tte__title{ font-size:clamp(1.06rem,1.85vw,1.26rem); font-weight:700; color:var(--navy); }
 .tte__title span{ font-weight:600; color:var(--muted); font-size:.82em; }
 .tteCTA{ flex:1 1 auto; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; text-align:center; padding:14px; }
 .tteCTA p{ margin:0; font-size:.86rem; color:var(--muted); max-width:32ch; line-height:1.5; }
@@ -113,17 +126,17 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 .tte.is-revealed .bars{ display:flex; }
 .metric{ display:flex; flex-direction:column; gap:5px; }
 .metric__top{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; }
-.metric__name{ font-size:.82rem; font-weight:700; color:var(--navy); }
+.metric__name{ font-size:clamp(.98rem,1.7vw,1.14rem); font-weight:700; color:var(--navy); }
 .metric__name span{ font-weight:600; color:var(--faint); font-size:.82em; }
-.metric__val{ font-size:.86rem; font-weight:700; color:var(--teal-strong); font-variant-numeric:tabular-nums; }
+.metric__val{ font-size:clamp(1.04rem,1.8vw,1.24rem); font-weight:700; color:var(--teal-strong); font-variant-numeric:tabular-nums; }
 .metric__val small{ font-weight:600; color:var(--muted); }
-.track{ position:relative; height:11px; border-radius:6px; background:var(--mist); box-shadow:inset 0 0 0 1px var(--line); overflow:hidden; }
+.track{ position:relative; height:clamp(15px,2.2vh,19px); border-radius:10px; background:var(--mist); box-shadow:inset 0 0 0 1px var(--line); overflow:hidden; }
 .fill{ position:absolute; left:0; top:0; height:100%; border-radius:6px; background:var(--teal); }
 .subs{ display:none; flex-direction:column; gap:6px; margin-top:2px; padding-left:2px; }
 .tte.is-split .subs{ display:flex; }
 .tte.is-split .metric > .track{ opacity:.28; }
 .sub{ display:grid; grid-template-columns:78px 1fr auto; align-items:center; gap:9px; }
-.sub__lab{ font-size:.68rem; font-weight:700; }
+.sub__lab{ font-size:clamp(.8rem,1.3vw,.9rem); font-weight:700; }
 .sub__lab.naive{ color:var(--pink); }
 .sub__lab.treated{ color:var(--green); }
 .sub__track{ position:relative; height:9px; border-radius:5px; background:var(--mist); box-shadow:inset 0 0 0 1px var(--line); overflow:hidden; }
@@ -134,7 +147,10 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 .sub__val.naive{ color:var(--pink); }
 .sub__val.treated{ color:var(--green); }
 .sub__val small{ color:var(--muted); font-weight:600; }
-.tte__foot{ flex:0 0 auto; margin-top:9px; font-size:.68rem; color:var(--faint); line-height:1.4; }
+/* Split control now sits at the foot of the card, reading as navigation
+   rather than a title-bar toggle. */
+.tte__actions{ flex:0 0 auto; display:flex; justify-content:center; margin-top:clamp(8px,1.4vh,14px); }
+.tte__foot{ flex:0 0 auto; margin-top:8px; font-size:clamp(.79rem,1.3vw,.88rem); color:var(--faint); line-height:1.4; }
 
 /* ===== bar "bounce" — transform:scaleX overshoot (never a width animation; widths baked inline, §6-safe) ===== */
 @keyframes fillGrow{ 0%{ transform:scaleX(0); } 72%{ transform:scaleX(1.05); } 100%{ transform:scaleX(1); } }
@@ -278,6 +294,10 @@ body.is-fullscreen{ padding-top:56px; }
   .sub__track{ height:6px; }
   .sub__lab, .sub__val{ font-size:.66rem; }
   .tte__foot{ margin-top:5px; font-size:.62rem; line-height:1.3; }
+  /* <small> takes the UA 'smaller' (~.83em), which dropped the unit text to 8.8px
+     at this height - below the 9px readability floor. Pin it just under the value
+     instead; weight and colour already carry the distinction. */
+  .sub__val small, .metric__val small{ font-size:.92em; }
 }
 
 @media (max-width:760px){
@@ -319,7 +339,7 @@ body.is-fullscreen{ padding-top:56px; }
       <section class="panel" aria-label="Overall response rate">
         <div class="orr">
           <div class="orr__eyebrow">Overall response rate<sup>1</sup></div>
-          <button class="ring" id="ring" type="button" aria-label="Overall response rate 51.8 percent, 95% confidence interval 46.1 to 57.4">
+          <button class="ring" id="ring" type="button" aria-label="Overall response rate 51.8 percent, 95% confidence interval 46.1 to 57.4"><svg class="ring__svg" viewBox="0 0 42 42" aria-hidden="true"><g transform="rotate(-90 21 21)"><g class="rseg" style="--dx:-0.079px;--dy:1.398px;--i:0"><circle class="rseg__c" r="17" cx="21" cy="21" pathLength="100" fill="none" stroke="var(--teal)" stroke-width="5" stroke-dasharray="51.8 48.2" stroke-dashoffset="-0"></circle></g><g class="rseg" style="--dx:0.079px;--dy:-1.398px;--i:1"><circle class="rseg__c" r="17" cx="21" cy="21" pathLength="100" fill="none" stroke="var(--line)" stroke-width="5" stroke-dasharray="48.2 51.8" stroke-dashoffset="-51.8"></circle></g></g></svg>
             <span class="ring__hole">
               <span>
                 <span class="ring__val" id="ringVal">51.8 %</span>
@@ -345,10 +365,6 @@ body.is-fullscreen{ padding-top:56px; }
         <div class="tte" id="tte">
           <div class="tte__head">
             <span class="tte__title">Time-to-event outcomes <span>median (95% CI), months</span></span>
-            <button class="split" id="splitBtn" type="button" disabled aria-pressed="false">
-              <span class="dot" style="background:var(--pink)"></span><span class="dot" style="background:var(--green)"></span>
-              Split by prior treatment
-            </button>
           </div>
 
           <div class="tteCTA" id="tteCTA">
@@ -395,7 +411,13 @@ body.is-fullscreen{ padding-top:56px; }
             </div>
           </div>
 
-          <p class="tte__foot" id="tteFoot">Median months, axis 0&ndash;36. Treatment-naïve n=164 &middot; previously treated n=149. ORR shown overall and by line of therapy.</p>
+          <div class="tte__actions">
+      <button class="split" id="splitBtn" type="button" disabled aria-pressed="false">
+              <span class="dot" style="background:var(--pink)"></span><span class="dot" style="background:var(--green)"></span>
+              Split by prior treatment
+            </button>
+    </div>
+    <p class="tte__foot" id="tteFoot">Median months, axis 0&ndash;36. Treatment-naïve n=164 &middot; previously treated n=149. ORR shown overall and by line of therapy.</p>
         </div>
       </section>
     </div>
@@ -493,6 +515,16 @@ body.is-fullscreen{ padding-top:56px; }
   ring.addEventListener('click',function(){ live.textContent='Overall response rate was 51.8 percent, 95% confidence interval 46.1 to 57.4.'; if(ring.animate) ring.animate([{transform:'scale(1)'},{transform:'scale(1.04)'},{transform:'scale(1)'}],{duration:260}); });
 
   /* ---------- ORR split by line of therapy (mirrors the tte split) ---------- */
+  /* Explode the ORR donut on load, same pattern as slide 12. */
+  (function(){
+    var ring=document.getElementById('ring');
+    if(!ring || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    requestAnimationFrame(function(){
+      ring.classList.add('is-tight');
+      requestAnimationFrame(function(){ setTimeout(function(){ ring.classList.remove('is-tight'); }, 700); });
+    });
+    document.addEventListener('visibilitychange', function(){ if(document.hidden) ring.classList.remove('is-tight'); });
+  })();
   var orrEl=document.querySelector('.orr'), orrSplitBtn=$('orrSplitBtn');
   if(orrSplitBtn){
     orrSplitBtn.addEventListener('click',function(){

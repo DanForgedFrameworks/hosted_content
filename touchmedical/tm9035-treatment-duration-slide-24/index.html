@@ -54,11 +54,26 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 [data-stage="hero"] .median{ flex:1 1 auto; }
 [data-stage="compact"] .median{ flex:0 0 auto; }
 
-.median__hero,.median__strip{ overflow:hidden; transition:max-height .5s cubic-bezier(.4,0,.2,1), opacity .4s ease; }
+/* The outer .median now owns the show/hide motion. The hero used to animate its
+   OWN max-height (.5s) and opacity (.4s) as well, so the inner finished while the
+   container was still expanding and the last part of the move read as a snap.
+   One element animates, one duration - the jolt was two curves fighting. */
+.median__hero,.median__strip{ overflow:hidden; transition:none; }
 .median__hero{ display:flex; justify-content:center; align-items:center; gap:clamp(30px,6.5vw,96px); max-height:470px; opacity:1; overflow:visible; }
 .median__strip{ max-height:0; opacity:0; }
-[data-stage="compact"] .median__hero{ max-height:0; opacity:0; overflow:hidden; }
-[data-stage="compact"] .median__strip{ max-height:200px; opacity:1; }
+/* Owner build 2026-08-06: once any card is revealed the medians AND the range go
+   away entirely - the horseshoes read badly beside expanded cards. Eased rather
+   than switched, so it fades and collapses instead of vanishing in one frame. */
+/* Transitions are directional: the rule on the element governs the change BACK to
+   this state, so the return from Show medians is deliberately gentler and slower
+   than the exit, with the fade trailing the expansion slightly. */
+.median{ overflow:hidden; opacity:1; max-height:60vh;
+  transition:opacity .85s ease-out .22s, max-height 1s cubic-bezier(.22,1,.36,1), margin 1s cubic-bezier(.22,1,.36,1); }
+[data-stage="compact"] .median{ opacity:0; max-height:0; margin-top:0; margin-bottom:0; pointer-events:none;
+  transition:opacity .3s ease, max-height .42s cubic-bezier(.4,0,.2,1), margin .42s cubic-bezier(.4,0,.2,1); }
+@media (prefers-reduced-motion: reduce){ .median{ transition:none; } }
+/* The linear range strip is retired - it never renders in either stage. */
+.median__strip{ display:none !important; }
 
 /* horseshoe gauge */
 .hs{ display:flex; flex-direction:column; align-items:center; gap:clamp(1px,0.5vh,4px); outline:none; cursor:default; min-height:0; max-height:100%; }
@@ -143,6 +158,12 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 
 /* ---------- footer controls (chrome) ---------- */
 .controls{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:clamp(12px,2.4vw,26px); padding:clamp(6px,1.2vh,12px) clamp(12px,3vw,24px); }
+/* Returns the scene to the horseshoe medians. Hidden until they are hidden. */
+.backmed{ display:none; align-items:center; gap:8px; border:2px solid var(--teal); background:#fff; color:var(--teal-strong); border-radius:999px; padding:8px 16px; font:inherit; font-size:clamp(.78rem,1.3vw,.88rem); font-weight:700; cursor:pointer; transition:background .15s ease; }
+.backmed:hover{ background:var(--pale,#d9eff8); }
+.backmed:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+.backmed.is-on{ display:inline-flex; }
+.backmed svg{ width:15px; height:15px; }
 .progress{ font-size:clamp(.78rem,1.45vw,.92rem); font-weight:700; color:var(--teal); white-space:nowrap; font-variant-numeric:tabular-nums; }
 .cite-src{ display:inline-flex; align-items:center; gap:8px; min-height:40px; padding:9px 18px; border:2px solid var(--teal); border-radius:10px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.86rem; cursor:pointer; transition:filter .15s ease, opacity .15s ease; }
 .cite-src:hover:not(:disabled){ filter:brightness(.95); }
@@ -189,9 +210,14 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 @keyframes prep{ 0%,100%{ transform:scale(.6); opacity:.4; } 50%{ transform:scale(1); opacity:1; } }
 
 /* ===== Continue nudge — eased-in end-of-content reminder (fires once all 3 revealed) ===== */
+/* The nudge reserves a 76px lane. Landing it instantly is what made the whole
+   scene jump on the third reveal, so it eases open. Longer + softer landing so
+   the shift reads as settling rather than snapping. */
+.frame{ transition:padding-bottom 1s cubic-bezier(.22,1,.36,1); }   /* matches .median so the lane and the medians land together */
 .frame.nudge-shown{ padding-bottom:76px; }
+@media (prefers-reduced-motion: reduce){ .frame{ transition:none; } }
 .nudge{ position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:38; display:none; align-items:center; gap:10px; max-width:calc(100% - 28px); padding:9px 17px; border-radius:999px; background:rgba(34,47,85,.94); color:#fff; font-size:15px; font-weight:600; line-height:1.25; box-shadow:0 8px 22px rgba(16,26,38,.30); }
-.nudge.is-on{ display:inline-flex; animation:nudgeIn .5s ease both; }
+.nudge.is-on{ display:inline-flex; animation:nudgeIn .8s cubic-bezier(.22,1,.36,1) both; }
 .nudge b{ font-weight:700; }
 .nudge__chev{ flex:0 0 auto; display:inline-grid; place-items:center; }
 .nudge__chev svg{ width:20px; height:20px; transition:transform .3s ease; }
@@ -289,6 +315,10 @@ body.is-fullscreen{ padding-top:56px; }
   </div>
 
   <div class="controls">
+    <button class="backmed" id="backMed" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      Show medians
+    </button>
     <span class="progress" aria-hidden="true"><b id="progNum">0</b> of 3 revealed</span>
     <button class="cite-src" id="citeSrc" type="button" aria-haspopup="dialog" disabled>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
@@ -374,7 +404,7 @@ body.is-fullscreen{ padding-top:56px; }
   const CI_LABEL = '95% CI';
 
   const PILL = '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="17" y="13" width="14" height="27" rx="3.5"/><path d="M17 21h14"/><path d="M19 8h10v5H19z"/><path d="M24 27v7M20.5 30.5h7"/></svg>';
-  const CAL  = '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="12" width="32" height="28" rx="3"/><path d="M8 20h32M18 8v8M30 8v8"/><path d="M15 29l4 4 9-9"/></svg>';
+  const CAL  = '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="12" width="32" height="28" rx="3"/><path d="M8 20h32M18 8v8M30 8v8"/></svg>';
   const CLOCK= '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="26" r="14"/><path d="M24 19v7l5 3M18 6h12"/></svg>';
 
   // Three reveal cards. Counts verbatim; naive (c2) vs previously treated (c1).
@@ -393,6 +423,16 @@ body.is-fullscreen{ padding-top:56px; }
   /* ---------- horseshoe gauges (270deg, open bottom) ---------- */
   const R = 42, C = 2*Math.PI*R, ARC = 0.75*C;           // 270 degrees of the circle
   function ptAt(frac){ const a=(135+frac*270)*Math.PI/180; return [50+R*Math.cos(a), 50+R*Math.sin(a)]; }
+  /* Back to the medians. Revealing another card hides them again, per the brief. */
+  (function(){
+    const b = document.getElementById('backMed');
+    if(b) b.addEventListener('click', function(){
+      document.getElementById('body').dataset.stage = 'hero';
+      this.classList.remove('is-on');
+      const live = document.getElementById('live');
+      if(live) live.textContent = 'Median duration of treatment shown. Reveal a card to hide it again.';
+    });
+  })();
   const heroEl = document.getElementById('medianHero');
   MEDIAN.forEach(m=>{
     const med1=m.med.toFixed(1), min2=m.min.toFixed(2), max2=m.max.toFixed(2);
@@ -517,7 +557,8 @@ body.is-fullscreen{ padding-top:56px; }
     card.setAttribute('aria-label', Q[i].metric+'. '+card.dataset.ariaAns+'.');
     revealed.add(i);
     progNum.textContent=revealed.size;
-    if(body.dataset.stage!=='compact') body.dataset.stage='compact';   // morph hero -> strip on first reveal
+    if(body.dataset.stage!=='compact') body.dataset.stage='compact';
+    { const _b=document.getElementById('backMed'); if(_b) _b.classList.add('is-on'); }   // morph hero -> strip on first reveal
     if(revealed.size===Q.length){
       unlockSource();
       document.querySelector('.frame').classList.add('nudge-shown');

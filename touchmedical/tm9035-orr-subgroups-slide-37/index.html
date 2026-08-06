@@ -43,8 +43,8 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 .banner__title em{ font-style:italic; }
 
 /* navigation prompt — its own callout box (teal-accented; green is reserved for OOI questions) */
-.navprompt{ flex:0 0 auto; display:flex; justify-content:center; padding:clamp(6px,1.2vh,11px) clamp(14px,3vw,30px) 0; }
-.navprompt__box{ display:inline-flex; align-items:center; gap:10px; max-width:1000px; padding:9px 18px; border:2px solid var(--teal); border-radius:14px; background:rgba(0,152,190,.06); color:var(--teal-strong); font-size:clamp(.82rem,1.4vw,1rem); font-weight:600; line-height:1.32; text-align:left; }
+.navprompt{ flex:0 0 auto; display:flex; justify-content:center; padding:clamp(4px,.7vh,7px) clamp(14px,3vw,30px) 0; }
+.navprompt__box{ display:inline-flex; align-items:center; gap:10px; max-width:1000px; padding:6px 16px; border:2px solid var(--teal); border-radius:14px; background:rgba(0,152,190,.06); color:var(--teal-strong); font-size:clamp(.82rem,1.4vw,1rem); font-weight:600; line-height:1.32; text-align:left; }
 .navprompt__ic{ flex:0 0 auto; width:26px; height:26px; display:grid; place-items:center; color:var(--teal); }
 .navprompt__ic svg{ width:100%; height:100%; }
 
@@ -54,7 +54,15 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 .fnote__btn:focus-visible{ outline:2px solid var(--navy); outline-offset:2px; border-radius:3px; }
 .fnote__pop{ position:absolute; left:0; bottom:calc(100% + 7px); width:max-content; max-width:min(280px,68vw); padding:9px 12px; border:2px solid var(--teal); border-radius:10px; background:#fff; box-shadow:0 12px 26px rgba(34,47,85,.22); color:#151515; font-size:clamp(.72rem,1.05vw,.84rem); font-weight:400; line-height:1.4; text-align:left; white-space:normal; opacity:0; visibility:hidden; transform:translateY(-4px); transition:opacity .15s ease, visibility .15s ease, transform .15s ease; z-index:9; }
 .fnote:hover .fnote__pop,.fnote:focus-within .fnote__pop,.fnote.open .fnote__pop{ opacity:1; visibility:visible; transform:translateY(0); }
-[data-view="hub"] .fnote--down .fnote__pop{ top:calc(100% + 7px); bottom:auto; transform:translateY(4px); }
+/* On the hub the cards are only ~116px tall, so a pop-up opening UPWARD from a
+   top-row card lands above the frame and cannot be read. On the hub they all open
+   downward; the card no longer clips, so it simply overlays the row below. */
+[data-view="hub"] .fnote__pop{ top:calc(100% + 7px); bottom:auto; transform:translateY(4px); }
+/* Right-hand column: a 280px pop-up anchored left runs off the frame edge, so it
+   anchors right instead. 3-column grid, so every 3rd card. */
+#cards .hcard:nth-child(3n) .fnote__pop{ left:auto; right:0; }
+[data-view="hub"] .fnote:hover .fnote__pop,[data-view="hub"] .fnote:focus-within .fnote__pop,
+[data-view="hub"] .fnote.open .fnote__pop{ transform:translateY(0); }
 
 /* ---------- stage shell ---------- */
 .stage{ flex:1 1 auto; min-height:0; position:relative; }
@@ -63,22 +71,50 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 [data-view="hub"] #view-hub,[data-view="explorer"] #view-explorer,[data-view="full"] #view-full{ }
 
 /* ---------- HUB ---------- */
-.hero{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:clamp(14px,2.4vw,28px); text-align:left; margin-bottom:clamp(8px,1.6vh,16px); }
-.hero__stat{ flex:0 0 auto; display:flex; flex-direction:column; align-items:center; padding:clamp(8px,1.5vh,14px) clamp(14px,2vw,22px); border:2px solid var(--teal); border-radius:14px; background:var(--mist); }
-.hero__big{ font-size:clamp(1.5rem,3.4vw,2.2rem); font-weight:700; color:var(--teal); line-height:1; font-variant-numeric:tabular-nums; }
+.hero{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:clamp(14px,2.4vw,28px); text-align:left; margin-bottom:clamp(5px,1vh,10px); }
+.hero__stat{ flex:0 0 auto; display:flex; flex-direction:column; align-items:center; padding:clamp(6px,1.1vh,10px) clamp(14px,2vw,22px); border:2px solid var(--teal); border-radius:14px; background:var(--mist); }
+.hero__big{ font-size:clamp(1.3rem,2.7vw,1.75rem); font-weight:700; color:var(--teal); line-height:1; font-variant-numeric:tabular-nums; }
 .hero__cap{ margin-top:3px; font-size:clamp(.7rem,1.25vw,.82rem); font-weight:600; color:var(--muted); white-space:nowrap; }
-.hero__msg{ margin:0; max-width:62ch; font-size:clamp(.84rem,1.5vw,1rem); font-weight:500; line-height:1.4; color:var(--navy); }
+.hero__msg{ margin:0; max-width:70ch; font-size:clamp(.8rem,1.35vw,.92rem); font-weight:500; line-height:1.34; color:var(--navy); }
 
-.cards{ flex:1 1 auto; min-height:0; display:grid; grid-template-columns:repeat(4,1fr); align-content:center; gap:clamp(10px,1.5vw,18px); }
-.hcard{ position:relative; display:flex; flex-direction:column; align-items:stretch; justify-content:center; gap:clamp(9px,1.6vh,14px); border:2px solid var(--line); border-radius:16px; background:#fff; padding:clamp(13px,2.2vh,20px) clamp(13px,1.3vw,18px); font:inherit; color:var(--navy); text-align:left; cursor:pointer; overflow:hidden; transition:border-color .16s ease, box-shadow .16s ease, transform .16s ease; }
+/* 3 columns x 3 rows: 7 subgroups + the full-forest launcher = 8 cards, 1 blank. */
+/* grid-auto-rows:1fr - rows divide the space they HAVE. A fixed minimum here made
+   the grid overflow its container and collide with the hero and the controls. */
+.cards{ flex:1 1 auto; min-height:0; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); grid-auto-rows:1fr; align-content:stretch; gap:clamp(8px,1.1vw,13px); }
+/* min-height is the guard: 3 rows previously squeezed the card to 105px against
+   132px of content and silently clipped the name and the scale labels. */
+.hcard{ position:relative; display:flex; flex-direction:column; align-items:stretch; justify-content:center; gap:clamp(3px,.6vh,6px); min-height:0; border:2px solid var(--line); border-radius:16px; background:#fff; padding:clamp(17px,2.6vh,22px) clamp(13px,1.3vw,18px); font:inherit; color:var(--navy); text-align:left; cursor:pointer; overflow:visible; transition:border-color .16s ease, box-shadow .16s ease, transform .16s ease; }
+/* Footnote pop-ups are absolutely positioned inside the card. With overflow:hidden
+   they were clipped out of sight entirely. The card lifts while focused so the
+   pop-up layers over its neighbours instead of under them. */
+.hcard:focus-within{ z-index:50; }
+.fnote__pop{ z-index:60; }
 .hcard:hover{ border-color:var(--teal); transform:translateY(-3px); box-shadow:0 10px 20px rgba(34,47,85,.12); }
 .hcard:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
 .hcard__top{ display:flex; align-items:center; gap:9px; }
-.hcard__icon{ flex:0 0 auto; width:clamp(23px,2.3vw,29px); height:clamp(23px,2.3vw,29px); color:var(--teal); }
+.hcard__icon{ flex:0 0 auto; width:clamp(21px,2.1vw,26px); height:clamp(21px,2.1vw,26px); color:var(--teal); }
 .hcard__icon svg{ width:100%; height:100%; }
-.hcard__name{ font-size:clamp(.8rem,1.36vw,.96rem); font-weight:700; line-height:1.14; }
-.hcard__strip{ position:relative; flex:0 0 auto; height:clamp(44px,6.6vh,52px); }
-.hcard__track{ position:absolute; left:1px; right:1px; top:50%; height:7px; transform:translateY(-50%); border-radius:7px; background:var(--mist); box-shadow:inset 0 0 0 1px var(--line); }
+.hcard__name{ font-size:clamp(.95rem,1.55vw,1.14rem); font-weight:700; line-height:1.16; }
+.hcard__strip{ position:relative; flex:0 0 auto; height:clamp(23px,3.2vh,28px); }
+/* Short-viewport compaction (contract 0.11 pattern). At 1370x620 the three rows
+   only get 99px each and the card content did not fit - every card overflowed.
+   Compact ONLY that case so the 700 layout keeps its approved size. */
+@media (max-height:660px){
+  #cards .hcard{ padding:12px clamp(11px,1.2vw,15px); gap:2px; }
+  #cards .hcard__icon{ width:17px; height:17px; }
+  /* longest name ("Brain metastases at baseline") wraps to two lines and was the
+     one card still overflowing by 3px at 620 - tighten leading to absorb it. */
+  /* At 620 the long names ("Brain metastases at baseline") wrap to two lines and
+     push the card past its row. One line + ellipsis in the short case only; the
+     700 layout keeps the full name on two lines. */
+  #cards .hcard__name{ font-size:.8rem; line-height:1.06; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #cards .hcard__top{ min-width:0; }
+  #cards .hcard__strip{ height:17px; }
+  #cards .hcard__ends{ font-size:.58rem; margin-top:1px; }
+  .hero{ margin-bottom:4px; }
+  .hero__big{ font-size:1.4rem; }
+}
+.hcard__track{ position:absolute; left:1px; right:1px; top:50%; height:9px; transform:translateY(-50%); border-radius:9px; background:var(--mist); box-shadow:inset 0 0 0 1px var(--line); }
 .hcard__ovl{ position:absolute; top:50%; height:15px; width:2px; transform:translate(-50%,-50%); background:var(--teal); border-radius:2px; opacity:.55; }
 .hmk{ position:absolute; top:0; bottom:0; transform:translateX(-50%); }
 .hmk__dot{ position:absolute; left:0; top:50%; width:10px; height:10px; transform:translate(-50%,-50%); border-radius:50%; background:var(--navy); border:2px solid #fff; box-shadow:0 1px 2px rgba(16,26,38,.32); }
@@ -88,7 +124,7 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 .hmk--l1 .hmk__pill{ transform:translate(-50%,calc(-50% + 15px)); }
 .hmk--l0 .hmk__stem{ top:calc(50% - 10px); height:10px; }
 .hmk--l1 .hmk__stem{ top:50%; height:10px; }
-.hcard__ends{ display:flex; justify-content:space-between; margin-top:3px; font-size:.56rem; font-weight:600; color:var(--faint); letter-spacing:.03em; }
+.hcard__ends{ display:flex; justify-content:space-between; margin-top:4px; font-size:clamp(.66rem,1.05vw,.74rem); font-weight:600; color:var(--faint); letter-spacing:.03em; }
 .hcard__tick{ position:absolute; top:9px; right:9px; width:21px; height:21px; border-radius:50%; background:var(--teal); color:#fff; display:none; align-items:center; justify-content:center; }
 .hcard.is-seen .hcard__tick{ display:flex; }
 .hcard__tick svg{ width:12px; height:12px; }
@@ -132,7 +168,8 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 .fubody{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; justify-content:flex-start; }
 
 /* ---------- forest engine (shared) ---------- */
-.forest{ display:flex; align-items:flex-start; gap:clamp(8px,1.2vw,16px); width:100%; }
+/* A3 (R3-152): axis truncated to 10-75, so the plot no longer needs the full page. */
+.forest{ display:flex; align-items:flex-start; gap:clamp(8px,1.2vw,16px); width:min(100%,1080px); margin-inline:auto; }
 .forest__labels{ flex:0 0 auto; display:grid; grid-auto-rows:var(--rowh); }
 .forest__labels.has-group{ grid-template-columns:auto auto auto; }
 .forest__labels:not(.has-group){ grid-template-columns:auto auto; }
@@ -157,6 +194,8 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 .pdot{ position:absolute; top:50%; transform:translate(-50%,-50%); border-radius:50%; background:var(--navy); border:2px solid #fff; box-shadow:0 1px 3px rgba(16,26,38,.3); }
 .pdot.is-overall{ background:var(--teal); }
 .forest__axis{ position:relative; height:16px; margin-top:3px; }
+/* A3: declares the non-zero baseline at the origin end of the scale. */
+.forest__axis::before{ content:"\2044\2044"; position:absolute; left:-10px; top:-1px; font-size:clamp(.62rem,1.1vw,.72rem); font-weight:700; color:var(--faint); letter-spacing:-1px; }
 .ptick{ position:absolute; top:0; transform:translateX(-50%); font-size:clamp(.62rem,1.1vw,.72rem); font-weight:600; color:var(--faint); font-variant-numeric:tabular-nums; }
 .forest__axtitle{ text-align:center; font-size:clamp(.66rem,1.15vw,.78rem); font-weight:700; color:var(--muted); margin-top:1px; }
 .forest__vals{ flex:0 0 auto; display:grid; grid-auto-rows:var(--rowh); }
@@ -363,7 +402,7 @@ body.is-fullscreen{ padding-top:56px; }
     <span class="cite-card__check" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
     <p class="cite-card__eyebrow">All seven subgroups explored</p>
     <h2 class="cite-card__title" id="citeTitle">Source</h2>
-    <p class="cite-card__body">Data are for the 313 patients with <em>MET</em>ex14 skipping NSCLC in the Phase&nbsp;2 VISION trial. ORR is objective response rate per independent review; 95%&nbsp;CIs are exact (Clopper&ndash;Pearson).
+    <p class="cite-card__body">
       <span class="cite-card__ref">Mazieres J, Paik PK, Garassino MC, et al. Tepotinib treatment in patients with <em>MET</em> exon&nbsp;14-skipping NSCLC: long-term follow-up of the VISION phase&nbsp;2 nonrandomized clinical trial. <em>JAMA Oncol.</em> 2023;9(9):1260&ndash;6.<sup>&nbsp;9</sup></span>
     </p>
     <div class="cite-card__actions">
@@ -443,10 +482,16 @@ body.is-fullscreen{ padding-top:56px; }
     '</span>';
   }
   function markerR(n){ return 4 + 7*Math.sqrt(n/313); }     // px radius, area ~ n
+  // A3 (R3-152): the full forest is drawn on a TRUNCATED 10-75 axis. Data run
+  // 18.6-70.1, so nothing clips; the clamp is a guard for future data only.
+  const FMIN=10, FMAX=75;
+  function fx(v){ return Math.max(0, Math.min(100, (v-FMIN)/(FMAX-FMIN)*100)); }
   function fmt(v){ return v.toFixed(1); }
   // Hub dot-strips are zoomed to a window around the data (all points 35.7-59.3) so the
   // per-subgroup spread is visible; the explorer/full forest keep the true 0-100 axis.
-  const ZMIN=30, ZMAX=65;
+  // Narrowed shared window (was 30-65). Data run 35.7-59.3, so nothing clips and the
+  // spread uses ~87% of each strip instead of ~67%. Still ONE scale for all cards.
+  const ZMIN=34, ZMAX=61;
   function zx(v){ return Math.max(0, Math.min(100, (v-ZMIN)/(ZMAX-ZMIN)*100)); }
   // Assign each level marker to lane 0 (label above) or 1 (label below) so close
   // labels on the zoomed strip never collide.
@@ -493,16 +538,16 @@ body.is-fullscreen{ padding-top:56px; }
     rows.forEach(r=>{
       const pr=document.createElement('div'); pr.className='prow'; pr.tabIndex=0; pr.setAttribute('role','img');
       pr.setAttribute('aria-label',(r.group?r.group+', ':'')+r.lab+': ORR '+fmt(r.orr)+'% (95% CI '+fmt(r.lo)+' to '+fmt(r.hi)+'), n='+r.n);
-      const wh=document.createElement('span'); wh.className='pwhisk'; wh.style.left=r.lo+'%'; wh.style.width=(r.hi-r.lo)+'%';
+      const wh=document.createElement('span'); wh.className='pwhisk'; wh.style.left=fx(r.lo)+'%'; wh.style.width=(fx(r.hi)-fx(r.lo))+'%';
       const dot=document.createElement('span'); dot.className='pdot'+(r.isOverall?' is-overall':''); const rad=markerR(r.n);
-      dot.style.left=r.orr+'%'; dot.style.width=dot.style.height=(2*rad).toFixed(1)+'px';
+      dot.style.left=fx(r.orr)+'%'; dot.style.width=dot.style.height=(2*rad).toFixed(1)+'px';
       pr.appendChild(wh); pr.appendChild(dot); prows.appendChild(pr);
     });
     plot.appendChild(prows); mid.appendChild(plot);
     const axis=document.createElement('div'); axis.className='forest__axis';
-    [0,25,50,75,100].forEach(p=>{ const t=document.createElement('span'); t.className='ptick'; t.style.left=p+'%'; t.textContent=p; axis.appendChild(t); });
+    [10,20,30,40,50,60,70].forEach(p=>{ const t=document.createElement('span'); t.className='ptick'; t.style.left=fx(p)+'%'; t.textContent=p; axis.appendChild(t); });
     mid.appendChild(axis);
-    const axt=document.createElement('div'); axt.className='forest__axtitle'; axt.textContent='ORR, % (95% CI)'; mid.appendChild(axt);
+    const axt=document.createElement('div'); axt.className='forest__axtitle'; axt.textContent='ORR, % (95% CI) \u2014 axis starts at 10 %, not zero'; mid.appendChild(axt);
 
     const vals=document.createElement('div'); vals.className='forest__vals';
     rows.forEach(r=>{ const v=document.createElement('div'); v.className='fval'+(r.isOverall?' is-overall':''); v.innerHTML='<b>'+fmt(r.orr)+'</b>&nbsp;('+fmt(r.lo)+', '+fmt(r.hi)+')'; vals.appendChild(v); });

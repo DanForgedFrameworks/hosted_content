@@ -46,13 +46,13 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 
 /* key-message finding callout (navy text, teal-bordered) */
 .keymsg{ flex:0 0 auto; display:flex; justify-content:center; }
-.keymsg__box{ display:inline-flex; align-items:flex-start; gap:11px; max-width:1240px; padding:8px 22px; border:2px solid var(--teal); border-radius:14px; background:rgba(0,152,190,.06); color:var(--navy); font-size:clamp(.86rem,1.5vw,1.02rem); font-weight:600; line-height:1.3; text-align:left; }
+.keymsg__box{ display:inline-flex; align-items:flex-start; gap:13px; max-width:1280px; padding:11px 26px; border:2px solid var(--teal); border-radius:15px; background:rgba(0,152,190,.06); color:var(--navy); font-size:clamp(1rem,1.75vw,1.18rem); font-weight:600; line-height:1.34; text-align:left; }
 .keymsg__ic{ flex:0 0 auto; width:24px; height:24px; margin-top:1px; display:grid; place-items:center; color:var(--teal); }
 .keymsg__ic svg{ width:100%; height:100%; }
 
 /* shared cohort legend */
 .legend{ flex:0 0 auto; display:flex; flex-wrap:wrap; justify-content:center; gap:clamp(14px,2.4vw,30px); }
-.legend__item{ display:inline-flex; align-items:center; gap:7px; font-size:clamp(.76rem,1.35vw,.94rem); font-weight:600; color:var(--navy); }
+.legend__item{ display:inline-flex; align-items:center; gap:9px; font-size:clamp(.92rem,1.6vw,1.08rem); font-weight:600; color:var(--navy); }
 .legend__sw{ width:14px; height:14px; border-radius:4px; flex:0 0 auto; }
 
 /* ---------- regions: charts <-> table ---------- */
@@ -64,7 +64,7 @@ body.is-table .region--table{ display:flex; }
 /* ---------- charts region ---------- */
 /* tabbed measures — one chart at a time so each gets the full body */
 .tabs{ flex:0 0 auto; display:flex; flex-wrap:wrap; justify-content:center; gap:9px; margin-bottom:clamp(6px,1.2vh,13px); }
-.tab{ display:inline-flex; align-items:center; gap:7px; padding:7px 19px; border:2px solid var(--line); border-radius:999px; background:#fff; color:var(--muted); font:inherit; font-weight:700; font-size:clamp(.8rem,1.4vw,.96rem); cursor:pointer; transition:border-color .15s ease, color .15s ease, background .15s ease; }
+.tab{ display:inline-flex; align-items:center; gap:9px; padding:10px 24px; border:2px solid var(--line); border-radius:999px; background:#fff; color:var(--muted); font:inherit; font-weight:700; font-size:clamp(.95rem,1.65vw,1.12rem); cursor:pointer; transition:border-color .15s ease, color .15s ease, background .15s ease; }
 .tab:hover{ border-color:var(--teal); color:var(--teal-strong); }
 .tab[aria-selected="true"]{ border-color:var(--teal); background:var(--teal); color:#fff; }
 .tab:focus-visible{ outline:3px solid var(--navy); outline-offset:2px; }
@@ -72,7 +72,7 @@ body.is-table .region--table{ display:flex; }
 .chart{ flex:1 1 auto; min-height:0; overflow:hidden; display:none; flex-direction:column; }
 .chart.is-active{ display:flex; animation:chartIn .4s cubic-bezier(.4,0,.2,1) both; }
 @keyframes chartIn{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
-.chart__title{ flex:0 0 auto; margin:0 0 clamp(4px,0.9vh,9px); text-align:center; font-size:clamp(.9rem,1.65vw,1.12rem); font-weight:700; color:var(--navy); }
+.chart__title{ flex:0 0 auto; margin:0 0 clamp(5px,1.1vh,11px); text-align:center; font-size:clamp(1.06rem,1.9vw,1.32rem); font-weight:700; color:var(--navy); }
 .chart__body{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; justify-content:center; gap:clamp(8px,1.7vh,20px); }
 
 /* a labelled group of cohort bars (Mean / Median), or a single ungrouped block */
@@ -80,7 +80,9 @@ body.is-table .region--table{ display:flex; }
 .grp__cap{ font-size:clamp(.76rem,1.3vw,.92rem); font-weight:700; color:var(--muted); margin:0 0 1px; }
 
 /* horizontal house bars (lifted from slide 12 .bars/.bar) */
-.bars{ width:100%; display:flex; flex-direction:column; gap:clamp(5px,1.1vh,12px); }
+/* A4 (R3-167): graph width reduced. Axis still runs from a true zero, so no
+   truncation indicator is needed or added. */
+.bars{ width:min(100%,1200px); margin-inline:auto; display:flex; flex-direction:column; gap:clamp(5px,1.1vh,12px); }
 .bar{ display:block; cursor:pointer; border-radius:9px; }
 .bar:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
 .bar__top{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-bottom:3px; }
@@ -90,7 +92,7 @@ body.is-table .region--table{ display:flex; }
 .bar__fill{ display:block; height:100%; min-width:3px; border-radius:7px; }
 
 /* axis: gridlines + ticks behind the bar block */
-.axis{ position:relative; }
+.axis{ position:relative; width:min(100%,1200px); margin-inline:auto; }
 .axis__grid{ position:absolute; inset:0 0 18px 0; pointer-events:none; z-index:0; }
 .axis__line{ position:absolute; top:0; bottom:0; width:1px; background:var(--line); }
 .axis__ticks{ position:absolute; left:0; right:0; bottom:0; height:16px; pointer-events:none; }
@@ -98,7 +100,8 @@ body.is-table .region--table{ display:flex; }
 .axis__bars{ position:relative; z-index:1; padding-bottom:18px; }
 
 /* ---------- dumbbell: mean vs median on a shared 0-20 axis (median/mean filter) ---------- */
-.dumb{ flex:1 1 auto; min-height:0; overflow:hidden; display:flex; flex-direction:column; --dlabel:clamp(52px,7vw,84px); --dgap:clamp(10px,1.6vw,18px); --dright:clamp(26px,3.4vw,48px); }
+/* Width caps lifted: with the axis truncated the plot should fill the frame. */
+.dumb{ flex:1 1 auto; min-height:0; overflow:hidden; display:flex; flex-direction:column; width:min(100%,1260px); margin-inline:auto; --dlabel:clamp(52px,7vw,84px); --dgap:clamp(10px,1.6vw,18px); --dright:clamp(26px,3.4vw,48px); }
 .dfilter{ flex:0 0 auto; display:flex; justify-content:center; gap:10px; margin-bottom:clamp(6px,1.3vh,13px); }
 .dchip{ display:inline-flex; align-items:center; gap:7px; padding:5px 15px; border:2px solid var(--line); border-radius:999px; background:#fff; color:var(--muted); font:inherit; font-weight:700; font-size:clamp(.74rem,1.25vw,.88rem); cursor:pointer; transition:border-color .15s ease,color .15s ease,opacity .15s ease; }
 .dchip__sw{ width:13px; height:13px; flex:0 0 auto; border-radius:50%; }
@@ -111,22 +114,25 @@ body.is-table .region--table{ display:flex; }
 .dgrid{ position:absolute; left:calc(var(--dlabel) + var(--dgap)); right:var(--dright); top:0; bottom:0; pointer-events:none; z-index:0; }
 .dgl{ position:absolute; top:0; bottom:0; width:1px; background:var(--line); }
 .drow{ position:relative; z-index:1; display:grid; grid-template-columns:var(--dlabel) 1fr; gap:var(--dgap); align-items:center; padding-right:var(--dright); }
-.drow__lab{ text-align:right; line-height:1.12; }
+.drow__lab{ text-align:right; line-height:1.16; font-size:clamp(.95rem,1.6vw,1.1rem); }
 .drow__lab b{ display:block; font-size:clamp(.84rem,1.5vw,1.02rem); font-weight:700; color:var(--navy); }
 .drow__lab span{ font-size:clamp(.64rem,1.1vw,.76rem); color:var(--faint); }
 .dtrack{ position:relative; height:clamp(24px,4.2vh,42px); }
-.dconn{ position:absolute; top:50%; height:4px; transform:translateY(-50%); background:var(--neutral,#c6d3e2); border-radius:4px; z-index:1; }
+.dconn{ position:absolute; top:50%; height:6px; transform:translateY(-50%); background:var(--neutral,#c6d3e2); border-radius:6px; z-index:1; }
 .dpt{ position:absolute; top:50%; transform:translate(-50%,-50%); cursor:pointer; z-index:2; }
 .dpt:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; border-radius:4px; }
 .dpt.is-median{ width:clamp(14px,1.9vw,18px); height:clamp(14px,1.9vw,18px); border-radius:50%; background:var(--teal); box-shadow:0 0 0 2px #fff; }
 .dpt.is-mean{ width:clamp(14px,1.9vw,18px); height:clamp(14px,1.9vw,18px); background:var(--navy); box-shadow:0 0 0 2px #fff; clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%); }
-.dval{ position:absolute; top:50%; font-size:clamp(.7rem,1.2vw,.86rem); font-weight:700; white-space:nowrap; z-index:2; font-variant-numeric:tabular-nums; }
+.dval{ position:absolute; top:50%; font-size:clamp(.88rem,1.5vw,1.06rem); font-weight:700; white-space:nowrap; z-index:2; font-variant-numeric:tabular-nums; }
 .dval--median{ transform:translate(-100%,-50%); margin-left:-11px; color:var(--teal-strong); }
 .dval--mean{ transform:translateY(-50%); margin-left:11px; color:var(--navy); }
 .dpt, .dconn, .dval{ transition:opacity .3s ease; }
 .dumb:not(.show-median) .is-median, .dumb:not(.show-median) .dval--median{ opacity:0; pointer-events:none; }
 .dumb:not(.show-mean) .is-mean, .dumb:not(.show-mean) .dval--mean{ opacity:0; pointer-events:none; }
 .dumb:not(.show-median) .dconn, .dumb:not(.show-mean) .dconn{ opacity:0; }
+/* R3-167: the axis no longer starts at zero, so say so plainly. */
+.dbreak{ position:absolute; left:-13px; top:-1px; font-size:clamp(.68rem,1.15vw,.8rem); font-weight:700; color:var(--faint); letter-spacing:-1px; }
+.daxisnote{ margin:3px 0 0; text-align:center; font-size:clamp(.72rem,1.2vw,.84rem); font-weight:600; color:var(--muted); }
 .daxisrow{ flex:0 0 auto; position:relative; height:15px; margin-left:calc(var(--dlabel) + var(--dgap)); margin-right:var(--dright); margin-top:clamp(4px,0.8vh,8px); }
 .dtick{ position:absolute; transform:translateX(-50%); font-size:clamp(.62rem,1.05vw,.72rem); font-weight:600; color:var(--faint); font-variant-numeric:tabular-nums; }
 .daxislab{ flex:0 0 auto; text-align:center; font-size:clamp(.8rem,1.4vw,.98rem); font-weight:700; color:var(--navy); margin-top:2px; }
@@ -274,39 +280,39 @@ body.is-fullscreen{ padding-top:56px; }
               <button class="dchip dchip--mean" id="chip-mean" type="button" aria-pressed="true"><span class="dchip__sw is-mean" style="background:var(--navy)"></span>Mean</button>
             </div>
             <div class="dumb__plot">
-              <div class="dgrid" aria-hidden="true"><span class="dgl" style="left:0%"></span><span class="dgl" style="left:25%"></span><span class="dgl" style="left:50%"></span><span class="dgl" style="left:75%"></span><span class="dgl" style="left:100%"></span></div>
+              <div class="dgrid" aria-hidden="true"><span class="dgl" style="left:0%"></span><span class="dgl" style="left:33.33%"></span><span class="dgl" style="left:66.67%"></span><span class="dgl" style="left:100%"></span></div>
               <div class="drow">
                 <div class="drow__lab"><b>Overall</b><span>N=197</span></div>
                 <div class="dtrack">
-                  <span class="dconn" style="left:53.5%;width:29.5%"></span>
-                  <span class="dval dval--median" style="left:53.5%">10.7</span>
-                  <span class="dval dval--mean" style="left:83%">16.6</span>
-                  <span class="dpt is-median" style="left:53.5%" role="button" tabindex="0" data-callout="<strong>Median 10.7 (0.7&ndash;83.1) months</strong><span class=&quot;callout__lab&quot;>Overall &middot; N=197</span>" aria-label="Overall: median duration 10.7 months, range 0.7 to 83.1"></span>
-                  <span class="dpt is-mean" style="left:83%" role="button" tabindex="0" data-callout="<strong>Mean 16.6 &plusmn; 16.3 months</strong><span class=&quot;callout__lab&quot;>Overall &middot; N=197</span>" aria-label="Overall: mean duration 16.6 plus or minus 16.3 months"></span>
+                  <span class="dconn" style="left:38%;width:39.33%"></span>
+                  <span class="dval dval--median" style="left:38%">10.7</span>
+                  <span class="dval dval--mean" style="left:77.33%">16.6</span>
+                  <span class="dpt is-median" style="left:38%" role="button" tabindex="0" data-callout="<strong>Median 10.7 (0.7&ndash;83.1) months</strong><span class=&quot;callout__lab&quot;>Overall &middot; N=197</span>" aria-label="Overall: median duration 10.7 months, range 0.7 to 83.1"></span>
+                  <span class="dpt is-mean" style="left:77.33%" role="button" tabindex="0" data-callout="<strong>Mean 16.6 &plusmn; 16.3 months</strong><span class=&quot;callout__lab&quot;>Overall &middot; N=197</span>" aria-label="Overall: mean duration 16.6 plus or minus 16.3 months"></span>
                 </div>
               </div>
               <div class="drow">
                 <div class="drow__lab"><b>1L</b><span>n=108</span></div>
                 <div class="dtrack">
-                  <span class="dconn" style="left:55.5%;width:38.5%"></span>
-                  <span class="dval dval--median" style="left:55.5%">11.1</span>
-                  <span class="dval dval--mean" style="left:94%">18.8</span>
-                  <span class="dpt is-median" style="left:55.5%" role="button" tabindex="0" data-callout="<strong>Median 11.1 (0.7&ndash;71.5) months</strong><span class=&quot;callout__lab&quot;>1L &middot; n=108</span>" aria-label="1L: median duration 11.1 months, range 0.7 to 71.5"></span>
-                  <span class="dpt is-mean" style="left:94%" role="button" tabindex="0" data-callout="<strong>Mean 18.8 &plusmn; 17.2 months</strong><span class=&quot;callout__lab&quot;>1L &middot; n=108</span>" aria-label="1L: mean duration 18.8 plus or minus 17.2 months"></span>
+                  <span class="dconn" style="left:40.67%;width:51.33%"></span>
+                  <span class="dval dval--median" style="left:40.67%">11.1</span>
+                  <span class="dval dval--mean" style="left:92%">18.8</span>
+                  <span class="dpt is-median" style="left:40.67%" role="button" tabindex="0" data-callout="<strong>Median 11.1 (0.7&ndash;71.5) months</strong><span class=&quot;callout__lab&quot;>1L &middot; n=108</span>" aria-label="1L: median duration 11.1 months, range 0.7 to 71.5"></span>
+                  <span class="dpt is-mean" style="left:92%" role="button" tabindex="0" data-callout="<strong>Mean 18.8 &plusmn; 17.2 months</strong><span class=&quot;callout__lab&quot;>1L &middot; n=108</span>" aria-label="1L: mean duration 18.8 plus or minus 17.2 months"></span>
                 </div>
               </div>
               <div class="drow">
                 <div class="drow__lab"><b>2L+</b><span>n=89</span></div>
                 <div class="dtrack">
-                  <span class="dconn" style="left:47%;width:23%"></span>
-                  <span class="dval dval--median" style="left:47%">9.4</span>
-                  <span class="dval dval--mean" style="left:70%">14.0</span>
-                  <span class="dpt is-median" style="left:47%" role="button" tabindex="0" data-callout="<strong>Median 9.4 (0.7&ndash;83.1) months</strong><span class=&quot;callout__lab&quot;>2L+ &middot; n=89</span>" aria-label="2L plus: median duration 9.4 months, range 0.7 to 83.1"></span>
-                  <span class="dpt is-mean" style="left:70%" role="button" tabindex="0" data-callout="<strong>Mean 14.0 &plusmn; 14.8 months</strong><span class=&quot;callout__lab&quot;>2L+ &middot; n=89</span>" aria-label="2L plus: mean duration 14.0 plus or minus 14.8 months"></span>
+                  <span class="dconn" style="left:29.33%;width:30.67%"></span>
+                  <span class="dval dval--median" style="left:29.33%">9.4</span>
+                  <span class="dval dval--mean" style="left:60%">14.0</span>
+                  <span class="dpt is-median" style="left:29.33%" role="button" tabindex="0" data-callout="<strong>Median 9.4 (0.7&ndash;83.1) months</strong><span class=&quot;callout__lab&quot;>2L+ &middot; n=89</span>" aria-label="2L plus: median duration 9.4 months, range 0.7 to 83.1"></span>
+                  <span class="dpt is-mean" style="left:60%" role="button" tabindex="0" data-callout="<strong>Mean 14.0 &plusmn; 14.8 months</strong><span class=&quot;callout__lab&quot;>2L+ &middot; n=89</span>" aria-label="2L plus: mean duration 14.0 plus or minus 14.8 months"></span>
                 </div>
               </div>
             </div>
-            <div class="daxisrow" aria-hidden="true"><span class="dtick" style="left:0%">0</span><span class="dtick" style="left:25%">5</span><span class="dtick" style="left:50%">10</span><span class="dtick" style="left:75%">15</span><span class="dtick" style="left:100%">20</span></div>
+            <div class="daxisrow" aria-hidden="true"><span class="dbreak">⁄⁄</span><span class="dtick" style="left:0%">5</span><span class="dtick" style="left:33.333%">10</span><span class="dtick" style="left:66.667%">15</span><span class="dtick" style="left:100%">20</span></div><p class="daxisnote">Axis starts at 5 months, not zero</p>
           </div>
         </section>
 
