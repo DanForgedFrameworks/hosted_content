@@ -436,9 +436,6 @@ body.is-fullscreen{ padding-top:56px; }
       <div class="source-panel" id="hubSourcePanel" hidden>
         <div class="source-panel__label">Source — same for all three endpoints</div>
         <p class="source-panel__cite" id="citeTxt">Mazieres J, Veillon R, Cortot AB, et al. Tepotinib in patients with <em>MET</em>ex14 skipping NSCLC from the VISION study: &ge;3-year follow-up outcomes. <em>J Thorac Oncol.</em> 2025;20(3 Suppl 1):S59&ndash;S60 (poster 81P).</p>
-        <button class="cite-src" id="citeSrc" type="button" data-url="https://doi.org/10.1016/S1556-0864(25)00276-X" data-ref="Mazieres J, et al. J Thorac Oncol. 2025;20(3 Suppl 1):S59–S60">
-          View source <span aria-hidden="true">&#8599;</span>
-        </button>
       </div>
     </div>
   </section>
@@ -870,7 +867,7 @@ body.is-fullscreen{ padding-top:56px; }
     launchTimer=setTimeout(()=>{ if(iDots) iDots.style.display='none'; iStatus.textContent='Ready to open.'; iOpen.disabled=false; iOpen.focus(); }, reduceMotion?250:1300);
   }
   function closeInter(){ if(launchTimer) clearTimeout(launchTimer); inter.classList.remove('is-open'); inter.hidden=true; if(interTrigger&&interTrigger.focus){ try{ interTrigger.focus(); }catch(e){} } }
-  $('citeSrc').addEventListener('click',function(){ openInter(this.dataset.url,this.dataset.ref,this); });
+
   iOpen.addEventListener('click',()=>{ if(!pendingURL) return; window.open(pendingURL,'_blank','noopener,noreferrer'); iStatus.textContent='Link opened in a new tab. Nothing opened? Copy the link and open it manually.'; });
   iCopy.addEventListener('click',()=>{ if(!pendingURL) return; const ta=document.createElement('textarea'); ta.value=pendingURL; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select(); let ok=false; try{ ok=document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); iStatus.textContent=ok?'Link copied. Paste it into a fresh browser tab.':'Copying is unavailable. Select and copy the visible URL manually.'; });
   iStay.addEventListener('click',closeInter);

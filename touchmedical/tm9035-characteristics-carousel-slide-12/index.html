@@ -359,7 +359,6 @@ body.is-fullscreen{ padding-top:56px; }
       <span class="cite-card__ref">Mazieres J, Paik PK, Garassino MC, et al. Tepotinib treatment in patients with <em>MET</em> exon&nbsp;14-skipping NSCLC: long-term follow-up of the VISION phase&nbsp;2 nonrandomized clinical trial. <em>JAMA Oncol.</em> 2023;9(9):1260–6.<sup>&nbsp;9</sup></span>
     </p>
     <div class="cite-card__actions">
-      <button class="cite-src" id="citeSrc" type="button" data-url="https://doi.org/10.1001/jamaoncol.2023.1962" data-ref="Mazieres J, et al. JAMA Oncol. 2023;9(9):1260–6">View source <span aria-hidden="true">↗</span></button>
       <button class="cite-dismiss" id="citeDismiss" type="button">Close</button>
     </div>
   </div>
@@ -688,7 +687,6 @@ body.is-fullscreen{ padding-top:56px; }
     launchTimer=setTimeout(()=>{ if(iDots) iDots.style.display='none'; iStatus.textContent='Ready to open.'; iOpen.disabled=false; iOpen.focus(); }, reduceMotion?250:1300);
   }
   function closeInter(){ if(launchTimer) clearTimeout(launchTimer); inter.classList.remove('is-open'); inter.hidden=true; if(interTrigger&&interTrigger.focus){ try{ interTrigger.focus(); }catch(e){} } }
-  document.getElementById('citeSrc').addEventListener('click',function(){ openInter(this.dataset.url,this.dataset.ref,this); });
   iOpen.addEventListener('click',()=>{ if(!pendingURL) return; window.open(pendingURL,'_blank','noopener,noreferrer'); iStatus.textContent='Link opened in a new tab. Nothing opened? Copy the link and open it manually.'; });
   iCopy.addEventListener('click',()=>{ if(!pendingURL) return; const ta=document.createElement('textarea'); ta.value=pendingURL; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select(); let ok=false; try{ ok=document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); iStatus.textContent=ok?'Link copied. Paste it into a fresh browser tab.':'Copying is unavailable. Select and copy the visible URL manually.'; });
   iStay.addEventListener('click',closeInter);

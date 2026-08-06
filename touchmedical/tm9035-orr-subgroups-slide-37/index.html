@@ -406,7 +406,6 @@ body.is-fullscreen{ padding-top:56px; }
       <span class="cite-card__ref">Mazieres J, Paik PK, Garassino MC, et al. Tepotinib treatment in patients with <em>MET</em> exon&nbsp;14-skipping NSCLC: long-term follow-up of the VISION phase&nbsp;2 nonrandomized clinical trial. <em>JAMA Oncol.</em> 2023;9(9):1260&ndash;6.<sup>&nbsp;9</sup></span>
     </p>
     <div class="cite-card__actions">
-      <button class="cite-view" id="citeView" type="button" data-url="https://doi.org/10.1001/jamaoncol.2023.1962" data-ref="Mazieres J, et al. JAMA Oncol. 2023;9(9):1260&ndash;6">View source <span aria-hidden="true">&#8599;</span></button>
       <button class="cite-dismiss" id="citeDismiss" type="button">Close</button>
     </div>
   </div>
@@ -665,7 +664,6 @@ body.is-fullscreen{ padding-top:56px; }
   let citeLastFocus=null;
   function openCite(){ if(!sourceUnlocked) return; citeLastFocus=document.activeElement; citeModal.hidden=false; citeModal.classList.add('is-open'); setTimeout(()=>document.getElementById('citeDismiss').focus(),30); }
   function closeCite(){ citeModal.classList.remove('is-open'); citeModal.hidden=true; if(citeLastFocus&&citeLastFocus.focus){ try{ citeLastFocus.focus(); }catch(e){} } }
-  citeSrc.addEventListener('click',openCite);
   document.getElementById('citeDismiss').addEventListener('click',closeCite);
   citeModal.addEventListener('click',e=>{ if(e.target===citeModal) closeCite(); });
 
