@@ -279,68 +279,70 @@
 
       /* ===== PROGRAMME data is injected here by the build step ===== */
       const PROGRAMME = {
-  id: "tlm_commercial",
+  id: "tlm_v3",
   name: "Laboratory Manager",
   docTitle: "Learning Pathway | Laboratory Manager",
-  intro: "Each module connects into a single pathway, ending with summative and live assessment.",
+  intro: "Each module connects into a single pathway, ending with End-Point Assessment.",
   allTitle: "Learning pathway for the Laboratory Manager",
-  allSub: "Each module connects into a single pathway leading to summative and live assessment.",
+  allSub: "Each module connects into a single pathway leading to End-Point Assessment.",
   backdrop: "network",
   structure: "flat",
-  /* Backdrop parallax factor (2026-08-05). The field pans against the camera at this
-     fraction, so by the end of the node path the background has traversed with the
-     journey instead of sitting still. Opt-in: TAB/TAC/TAM omit it and are unchanged. */
   parallax: 0.18,
   /* ============================================================================
-     Commercial (non-apprenticeship) route. Created 2026-08-05, CORRECTED 2026-08-06.
+     LAB MANAGER — CURRENT COURSE, cohorts 6 onwards. Created 2026-08-06.
 
-     WHAT WAS WRONG. The route was briefed as "modules 1, 5 and 6". This file originally
-     took those numbers from tlm.js, which lists seven modules and gave Health & Safety,
-     Scientific Data Management and Digital Transformation. That looked like it disagreed
-     with the titles the work coaches supplied alongside, and a second variant
-     (tlm_commercial_v2) was built to carry the titles instead.
+     The programme gained TWO modules: "Lean Six Sigma" inserted at position 4, and
+     "Higher ITM" added at 8. Inserting at 4 shifts everything below position 3 down by one:
 
-     Both readings were judged against a SUPERSEDED module list. From cohort 6 the Lab
-     Manager course inserts "Lean Six Sigma" at module 4 and adds "Higher ITM" at 8, which
-     shifts everything below position 3 down by one:
+        new #  title                                        old tlm.js #
+        1      Health, Safety & Risk Management             1
+        2      Project & Resource Management                2
+        3      Leadership, People & Team Management         3
+        4      Lean Six Sigma                               (NEW)
+        5      Operational Excellence in Laboratory Envs    4
+        6      Scientific Data Management & Analysis        5
+        7      Digital Transformation & Innovation          6
+        8      Higher ITM                                   (NEW)
+        9      EPA Preparation                              7
 
-        new #  title                                            old tlm.js #
-        1      Health, Safety & Risk Management                 1
-        4      Lean Six Sigma                                   (inserted)
-        5      Operational Excellence in Laboratory Envs        4
-        6      Scientific Data Management & Analysis            5
+     This renumbering is what made the commercial brief ("modules 1, 5 and 6") look wrong
+     against tlm.js. It was never wrong — see the correction note in tlm_commercial.js.
 
-     Against the CURRENT numbering the coaches' numbers and titles agree exactly. They were
-     right throughout; the mismatch was an artefact of checking against the old list.
+     PUBLISHED TO A NEW SLUG (tlm_animation_v3). The live tlm_animation still carries the
+     OLD seven-module list and is now out of date; replacing it is an owner decision, not
+     something to do silently, because it is embedded.
 
-     This file now carries the CORRECT modules - the same three as tlm_commercial_v2 - so the
-     live embed at tlm_animation_commercial is right without any link change. The v2 slug is
-     now a duplicate of this one and can be retired.
+     TITLES: the six pre-existing modules keep their VALIDATED wording from tlm.js, which is
+     longer than the shorthand in the cohort-6 list (e.g. "Health, Safety and Risk Management
+     in Scientific Environments" rather than "Health, Safety & Risk Management"). Validated
+     wording wins; the shorthand is a listing convenience. Flagged, not silently reconciled.
 
-     Titles and meta are VERBATIM from tlm.js. The full current course is in tlm_v3.js.
-     Theme is shared with tlm.js; keep them in step.
+     "Higher ITM" is kept VERBATIM. ITM most likely expands to Industry Technical Module, on
+     the evidence of the asbestos file naming, but that is inference — it has NOT been
+     expanded here. Confirm before it reaches a learner.
      ============================================================================ */
   theme: { bg0: "#04141a", bg1: "#062333", accentA: "45,212,191", accentB: "56,189,248", node: "20,184,166", star: "150,180,196" },
-  /* PACING: a journey, not a dash to an endpoint (owner, 2026-08-05).
-     `travel` is the journey lever — it is the time the camera spends MOVING between nodes,
-     and it is the only phase the learner reads as distance covered. Raised 650 -> 1500 so
-     the gap between modules feels earned rather than skipped; `gap` 120 -> 220 adds a beat
-     of stillness on arrival before the next card commits. Cycle 22.3s -> 25.5s.
-     Do NOT buy journey feel by raising `hold` — that just makes each card outstay its text.
-     hold = reading time. travel = distance. They are different sensations. */
+  /* Nine nodes. travel = distance, hold = reading time. Cycle lands near 50s — long, but
+     under the 60s advisory, and the route genuinely has nine stops. */
   timing: {
     travel: 1500, hold: 2800, fadeOut: 350, gap: 220,
-    camMoveAll: 1200, overviewAll: 5000, overviewFadeOutAll: 500, pause: 600,
+    camMoveAll: 1200, overviewAll: 5200, overviewFadeOutAll: 500, pause: 600,
     activeFadeIn: 500, activeFadeOut: 320, miniFadeIn: 450, miniFadeOut: 340
   },
   modules: [
     { tag:"Module 1", title:"Health, Safety and Risk Management in Scientific Environments", meta:"Identify hazards, assess risks, and apply safe systems of work to protect people, samples, and operations.", icon:"shield" },
-    { tag:"Module 2", title:"Operational Excellence in Laboratory Environments", meta:"Maintain robust operations and consistent ways of working that support reliable outcomes.", icon:"quality" },
-    { tag:"Module 3", title:"Scientific Data Management & Analysis", meta:"Ensure data integrity, analyse results, and communicate findings clearly for decisions and continuous improvement.", icon:"data" },
-    /* AUTHORED COPY - not supplied by the owner, needs a check before this goes live.
-       Written from the brief: "summative and live assessment ... similar but not done by
-       EPAO but a member of Tiro". */
-    { tag:"Assessment", title:"Summative and Live Assessment", meta:"Consolidate your evidence, complete a summative assessment and take part in a live professional discussion, assessed by a Tiro assessor.", icon:"cap" }
+    { tag:"Module 2", title:"Project & Resource Management", meta:"Plan work, allocate resources, manage budgets and timelines, and deliver projects with measurable outcomes.", icon:"plan" },
+    { tag:"Module 3", title:"Leadership, People & Team Management", meta:"Lead teams, support performance, and build a positive culture through clear communication and coaching.", icon:"people" },
+    /* NEW MODULE — title supplied, no description, no VLE content plan, no SME input.
+       The line below is a STATUS statement, not authored subject content: nothing about
+       what the module teaches has been invented. Replace it once the module is developed. */
+    { tag:"Module 4", title:"Lean Six Sigma", meta:"Module in development. Detail to be confirmed and added to this pathway.", icon:"quality" },
+    { tag:"Module 5", title:"Operational Excellence in Laboratory Environments", meta:"Maintain robust operations and consistent ways of working that support reliable outcomes.", icon:"quality" },
+    { tag:"Module 6", title:"Scientific Data Management & Analysis", meta:"Ensure data integrity, analyse results, and communicate findings clearly for decisions and continuous improvement.", icon:"data" },
+    { tag:"Module 7", title:"Digital Transformation & Innovation in Lab Management", meta:"Adopt digital tools, improve workflows, and drive innovation to modernise laboratory operations.", icon:"digital" },
+    /* NEW MODULE — as module 4. Title verbatim; ITM deliberately not expanded. */
+    { tag:"Module 8", title:"Higher ITM", meta:"Module in development. Detail to be confirmed and added to this pathway.", icon:"digital" },
+    { tag:"EPA", title:"End-Point-Assessment (EPA) Preparation", meta:"Consolidate evidence, practise professional discussion, and prepare confidently for end-point assessment.", icon:"cap" }
   ]
 };
 

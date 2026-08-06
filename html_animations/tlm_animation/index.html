@@ -15,6 +15,12 @@
       --accentB: 56, 189, 248;
       --node:    147, 56, 248;
 
+      /* Ambient wash tints. Overridden at runtime: theme.ambient if set, else the three
+         accents (which reproduces the pre-2026-08-06 behaviour exactly). */
+      --ambientA: 232, 54, 240;
+      --ambientB: 56, 189, 248;
+      --ambientC: 147, 56, 248;
+
       --text: #e5e7eb;
       --muted: #cbd5e1;
 
@@ -38,9 +44,13 @@
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(1200px 800px at 20% 10%, rgba(var(--accentA),0.10), transparent 60%),
-        radial-gradient(1100px 700px at 80% 20%, rgba(var(--accentB),0.08), transparent 62%),
-        radial-gradient(900px 650px at 60% 90%, rgba(var(--node),0.12), transparent 55%),
+        /* AMBIENT WASHES. These default to the three accents, which is right for most
+           palettes. Where the accent is strongly hued, two of the three washes carry the
+           same hue and the mid-ground takes on a cast (lime -> olive, measured on the
+           asbestos routes). `theme.ambient` overrides all three with one neutral. */
+        radial-gradient(1200px 800px at 20% 10%, rgba(var(--ambientA),0.10), transparent 60%),
+        radial-gradient(1100px 700px at 80% 20%, rgba(var(--ambientB),0.08), transparent 62%),
+        radial-gradient(900px 650px at 60% 90%, rgba(var(--ambientC),0.12), transparent 55%),
         linear-gradient(180deg, var(--bg0), var(--bg1));
     }
 
@@ -324,6 +334,11 @@
       rs.setProperty('--bg0', TH.bg0); rs.setProperty('--bg1', TH.bg1);
       rs.setProperty('--accentA', TH.accentA); rs.setProperty('--accentB', TH.accentB);
       rs.setProperty('--node', TH.node);
+      /* One neutral for all three ambient washes when the palette needs the ground kept
+         cool; otherwise each wash keeps its own accent, exactly as before. */
+      rs.setProperty('--ambientA', TH.ambient || TH.accentA);
+      rs.setProperty('--ambientB', TH.ambient || TH.accentB);
+      rs.setProperty('--ambientC', TH.ambient || TH.node);
       const C = { a: TH.accentA, b: TH.accentB, n: TH.node, s: TH.star || '229,231,235' };
 
       /* Per-programme fade overrides. Absent -> the :root defaults stand. */
@@ -475,7 +490,7 @@
       function easeInOutCubic(t){ return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2; }
 
       /* ===== Backdrops ===== */
-      let cells=[], molecules=[], lattice=[], sparks=[], stars=[], bgNodes=[];
+      let cells=[], molecules=[], lattice=[], sparks=[], stars=[], bgNodes=[], fibres=[];
       const formulas = ["H₂O","CO₂","C₆H₆","CH₄","NH₃","O₂","N₂","NaCl"];
       /* Backdrop parallax, opt-in per programme (2026-08-05).
          0 = the previous behaviour: drawBackdrop() ran BEFORE applyCamera(), so the field
@@ -490,7 +505,7 @@
       let BG_PAD = 0;
 
       function initBackdrop(){
-        cells=[]; molecules=[]; lattice=[]; sparks=[]; stars=[]; bgNodes=[];
+        cells=[]; molecules=[]; lattice=[]; sparks=[]; stars=[]; bgNodes=[]; fibres=[];
         BG_PAD = BG_PARALLAX > 0 ? Math.max(w,h)*BG_PAD_FRAC : 0;
         const bd = PROGRAMME.backdrop;
         if(bd==='bio'){
@@ -514,6 +529,23 @@
           for(let i=0;i<ns;i++) stars.push({ x:Math.random()*bw-BG_PAD, y:Math.random()*bh-BG_PAD, r:Math.random()*1.2+0.2, a:Math.random()*0.55+0.15, vx:(Math.random()*2-1)*0.06, vy:(Math.random()*2-1)*0.06 });
           const nn = Math.round(clamp(Math.round((w*h)/65000), 14, 22) * areaScale);
           for(let i=0;i<nn;i++) bgNodes.push({ x:Math.random()*bw-BG_PAD, y:Math.random()*bh-BG_PAD, vx:(Math.random()*2-1)*0.11, vy:(Math.random()*2-1)*0.11 });
+        } else if(bd==='fibre'){
+          /* Asbestos: drifting fibre bundles tumbling slowly, over a haze of dust motes.
+             Same padded-field + area-scaled-count contract as `network`, so parallax works
+             and per-pixel density holds at any viewport. Colour comes from theme.star
+             (the particle-tint token) — no literals. */
+          const bw = w + BG_PAD*2, bh = h + BG_PAD*2;
+          const areaScale = (w > 0 && h > 0) ? (bw*bh)/(w*h) : 1;
+          const nf = Math.round(clamp(Math.round((w*h)/28000), 16, 40) * areaScale);
+          for(let i=0;i<nf;i++) fibres.push({
+            x:Math.random()*bw-BG_PAD, y:Math.random()*bh-BG_PAD,
+            len:Math.random()*80+45, bow:(Math.random()*2-1)*0.42,
+            rot:Math.random()*Math.PI*2, vrot:(Math.random()*2-1)*0.0015,
+            vx:(Math.random()*2-1)*0.07, vy:(Math.random()*2-1)*0.05,
+            a:Math.random()*0.26+0.09, wgt:Math.random()*1.1+0.55
+          });
+          const nd = Math.round(clamp(Math.round((w*h)/15000), 55, 140) * areaScale);
+          for(let i=0;i<nd;i++) stars.push({ x:Math.random()*bw-BG_PAD, y:Math.random()*bh-BG_PAD, r:Math.random()*1.0+0.2, a:Math.random()*0.32+0.08, vx:(Math.random()*2-1)*0.05, vy:(Math.random()*2-1)*0.04 });
         }
       }
       function drawBackdrop(nowT){
@@ -528,6 +560,7 @@
         else if(bd==='chem') drawChem(nowT, moving);
         else if(bd==='materials') drawMaterials(nowT, moving);
         else if(bd==='network') drawNetwork(moving);
+        else if(bd==='fibre') drawFibre(moving);
         if(BG_PARALLAX > 0) ctx.restore();
       }
       function drawBio(nowT, moving){
@@ -591,6 +624,30 @@
           if(s.life<=0||s.y>h||s.x<0||s.x>w){ s.x=Math.random()*w; s.y=Math.random()*h*0.5; s.vx=(Math.random()-0.5)*4; s.vy=Math.random()*3+1; s.life=1.0; }
           ctx.fillStyle=`rgba(255,255,200,${s.life})`; ctx.beginPath(); ctx.arc(s.x,s.y,1.5,0,Math.PI*2); ctx.fill();
           ctx.beginPath(); ctx.moveTo(s.x,s.y); ctx.lineTo(s.x-s.vx*3,s.y-s.vy*3); ctx.strokeStyle=`rgba(${C.a},${s.life*0.5})`; ctx.lineWidth=1; ctx.stroke();
+        }
+      }
+      function drawFibre(moving){
+        /* Wrap at the PADDED bounds, exactly as drawNetwork does. */
+        const L=-BG_PAD-140, R=w+BG_PAD+140, T=-BG_PAD-140, B=h+BG_PAD+140;
+        /* dust haze first, so fibres read in front of it */
+        for(const s of stars){
+          if(moving){ s.x+=s.vx; s.y+=s.vy; }
+          if(s.x<L)s.x=R; if(s.x>R)s.x=L; if(s.y<T)s.y=B; if(s.y>B)s.y=T;
+          ctx.fillStyle=`rgba(${C.s},${s.a*0.7})`; ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill();
+        }
+        ctx.lineCap="round";
+        for(const f of fibres){
+          if(moving){ f.x+=f.vx; f.y+=f.vy; f.rot+=f.vrot; }
+          if(f.x<L)f.x=R; if(f.x>R)f.x=L; if(f.y<T)f.y=B; if(f.y>B)f.y=T;
+          const hl=f.len*0.5, bow=f.len*f.bow*0.35;
+          ctx.save(); ctx.translate(f.x,f.y); ctx.rotate(f.rot);
+          /* a single softly-bowed strand */
+          ctx.beginPath(); ctx.moveTo(-hl,0); ctx.quadraticCurveTo(0,bow,hl,0);
+          ctx.strokeStyle=`rgba(${C.s},${f.a})`; ctx.lineWidth=f.wgt; ctx.stroke();
+          /* a shorter splayed strand alongside — asbestos separates into bundles */
+          ctx.beginPath(); ctx.moveTo(-hl*0.62,f.wgt*1.6); ctx.quadraticCurveTo(0,bow*0.55,hl*0.72,f.wgt*0.6);
+          ctx.strokeStyle=`rgba(${C.b},${f.a*0.55})`; ctx.lineWidth=f.wgt*0.7; ctx.stroke();
+          ctx.restore();
         }
       }
       function drawNetwork(moving){
@@ -730,6 +787,38 @@
       }
 
       /* ===== Cards ===== */
+      /* ===== Chrome-safe area =====
+         The controls are position:fixed with z-index above the card, and the card used to be
+         clamped only to the VIEWPORT edges — so on a phone it slid straight underneath them
+         and buried its own text. Reported from an iPhone 2026-08-06.
+
+         Measure what the fixed chrome actually occupies and return it as insets. A control
+         group that spans most of the width (the mobile bottom bar, the motion pill) eats
+         VERTICAL space; a narrow one at the side (the desktop left rail) eats HORIZONTAL
+         space. Measuring rather than hardcoding means this keeps working when the media
+         queries move things around. */
+      function chromeInsets(){
+        const pad = 12;
+        let top = 0, bottom = 0, left = 0, right = 0;
+        for(const sel of ['.controls-right', '.controls-left']){
+          const el = document.querySelector(sel);
+          if(!el) continue;
+          const r = el.getBoundingClientRect();
+          if(r.width <= 0 || r.height <= 0) continue;
+          if(r.width > w * 0.45){                       /* a bar: constrains vertically */
+            if(r.top + r.height/2 < h/2) top    = Math.max(top,    r.bottom + pad);
+            else                         bottom = Math.max(bottom, h - r.top + pad);
+          } else {                                      /* a rail: constrains horizontally */
+            if(r.left + r.width/2 < w/2) left  = Math.max(left,  r.right + pad);
+            else                         right = Math.max(right, w - r.left + pad);
+          }
+        }
+        return { top, bottom, left, right };
+      }
+      /* Clamp that degrades sanely: when the safe band is smaller than the card, centre it in
+         the band rather than letting the range invert and throw the card off-screen. */
+      function clampRange(v, lo, hi){ return lo > hi ? (lo + hi) / 2 : Math.min(Math.max(v, lo), hi); }
+
       function showActiveCard(i, screenPt){
         activeIcon.innerHTML = svg(modules[i].icon);
         activeTitle.textContent = modules[i].title;
@@ -738,10 +827,18 @@
         let dy;
         if(isFlat){ dy = (i%2===0) ? -170 : 170; }
         else { dy = (levelOfIndex(i)%2===0) ? -180 : 180; }
+        /* Cap the card to the space the chrome leaves BEFORE measuring it, or a tall card
+           reports a height it was never allowed to occupy and the clamp works off fiction.
+           overflow-y:auto is the last resort for a viewport too short for the text. */
+        const ins = chromeInsets();
+        const bandH = Math.max(120, h - ins.top - ins.bottom - 20);
+        activeCard.style.maxHeight = bandH + 'px';
+        activeCard.style.overflowY = 'auto';
+
         const halfW = (activeCard.offsetWidth || 560)/2 + 14;
         const halfH = (activeCard.offsetHeight || 220)/2 + 14;
-        const left = clamp(screenPt.x, halfW, w - halfW);
-        const top  = clamp(screenPt.y + dy, halfH, h - halfH);
+        const left = clampRange(screenPt.x,      halfW + ins.left, w - halfW - ins.right);
+        const top  = clampRange(screenPt.y + dy, halfH + ins.top,  h - halfH - ins.bottom);
         activeCard.style.left = left + 'px'; activeCard.style.top = top + 'px';
         activeCard.classList.remove('fadeOut'); activeCard.classList.add('show');
       }
