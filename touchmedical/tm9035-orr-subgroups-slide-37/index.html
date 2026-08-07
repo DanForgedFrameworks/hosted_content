@@ -403,7 +403,7 @@ body.is-fullscreen{ padding-top:56px; }
     <p class="cite-card__eyebrow">All seven subgroups explored</p>
     <h2 class="cite-card__title" id="citeTitle">Source</h2>
     <p class="cite-card__body">
-      <span class="cite-card__ref">Mazieres J, Paik PK, Garassino MC, et al. Tepotinib treatment in patients with <em>MET</em> exon&nbsp;14-skipping NSCLC: long-term follow-up of the VISION phase&nbsp;2 nonrandomized clinical trial. <em>JAMA Oncol.</em> 2023;9(9):1260&ndash;6.<sup>&nbsp;9</sup></span>
+      <span class="cite-card__ref">Griesinger F, Ferrara R, Felip E, Smit EF, Veillon R, Le X, et al. 1996P Long-term outcomes with tepotinib for clinically relevant subgroups of patients (pts) with <em>MET</em> exon&nbsp;14 (<em>MET</em>ex14) skipping NSCLC in the VISION study: A &ge;3-year follow-up. <em>Ann Oncol.</em> 2025;36:S1061&ndash;S1062.<sup>&nbsp;16</sup></span>
     </p>
     <div class="cite-card__actions">
       <button class="cite-dismiss" id="citeDismiss" type="button">Close</button>
@@ -664,6 +664,7 @@ body.is-fullscreen{ padding-top:56px; }
   let citeLastFocus=null;
   function openCite(){ if(!sourceUnlocked) return; citeLastFocus=document.activeElement; citeModal.hidden=false; citeModal.classList.add('is-open'); setTimeout(()=>document.getElementById('citeDismiss').focus(),30); }
   function closeCite(){ citeModal.classList.remove('is-open'); citeModal.hidden=true; if(citeLastFocus&&citeLastFocus.focus){ try{ citeLastFocus.focus(); }catch(e){} } }
+  citeSrc.addEventListener('click',openCite);
   document.getElementById('citeDismiss').addEventListener('click',closeCite);
   citeModal.addEventListener('click',e=>{ if(e.target===citeModal) closeCite(); });
 
