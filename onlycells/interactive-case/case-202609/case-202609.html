@@ -1340,9 +1340,14 @@ function renderStation(st){
         figureHTML((CASE.markedFields&&CASE.markedFields[0])||0,{annotate:false, annoKey:"film", magOff:true, sme:true, only:CASE.markedFields})+
         '<div class="oc-smelist" id="ocSmeList"></div>'+
       '</div>'+
-      '<div class="oc-tools" style="justify-content:center; margin-top:18px">'+
-        '<button class="oc-btn oc-btn--ghost" id="ocBackToResults">‹ Return to earlier stations to review your results</button>'+
-      '</div>'+
+      /* The results, brought FORWARD rather than left behind a back-button. Sending someone back
+         to Station 1 to re-read numbers they've already committed on gave them a locked page and
+         no new information — the value is seeing the same numbers with the flags finally on.
+         Collapsed by default so the reveal doesn't turn into another wall of results; the
+         learner opens what they want to check. (Daniel, 2026-08-10.) */
+      '<h3>The results, now flagged</h3>'+
+      '<p class="oc-narrate">The same numbers you were given at the start, with our reading of them shown. Nothing here is new — only the flags are.</p>'+
+      revealedResultsHTML()+
       '<h3>Your CPD record</h3>'+
       '<p class="oc-narrate">Your name appears on your certificate and record. It stays in this browser and is never sent anywhere.</p>'+
       '<div class="oc-fieldrow">'+
@@ -1370,7 +1375,7 @@ function renderStation(st){
       anno.addEventListener("click",()=>{ on=!on; toggleHotspots(node,on);
         anno.textContent=on?"Hide the marked cells":"Show the marked cells";
         anno.className="oc-btn "+(on?"oc-btn--ghost":"oc-btn--primary"); resize(); });
-      const back=$("#ocBackToResults",node); if(back) back.addEventListener("click",()=> gotoStep(0));
+      wireRevealedResults(node);
       $("#ocName",node).addEventListener("input",(e)=>{ state.learner.name=e.target.value; saveState(); });
       $("#ocReg",node).addEventListener("input",(e)=>{ state.learner.reg=e.target.value; saveState(); });
       $("#ocPdf",node).addEventListener("click",()=> printOut("record"));
@@ -1385,6 +1390,22 @@ function renderStation(st){
 /* Collapsible result group. Open by default *before* submission so nothing needed for the
    "flag the abnormal results" task is hidden behind a click — the exercise is interpretation,
    not hunting. Folds shut once the attempt is committed, to keep the reveal readable. */
+/* Station 1's result set replayed on the final station with the flags on. Every group is a
+   collapsible, including the FBC — on Station 1 the headline numbers are open because reading
+   them is the task; here the task is done, so nothing needs to be open until asked for.
+   Distinct element ids (…Rv) because Station 1's may still exist in the ghost during a wipe,
+   and buildStats() would otherwise fill the wrong one. */
+const REVEAL_GROUPS=[
+  ["ocFbcRv",     "Full blood count",      "platelets · haemoglobin · red cells · WBC", "fbc"],
+  ["ocDiffRv",    "White cell differential","neutrophils · lymphocytes · monocytes",     "wbcDiff"],
+  ["ocIndicesRv", "Red cell indices",      "HCT · MCV · MCH · MCHC",                    "rbcIndices"],
+  ["ocCoagRv",    "Coagulation screen",    "PT · APTT · fibrinogen",                    "coag"],
+  ["ocBioRv",     "Biochemistry",          "renal · liver · bone profile",              "biochem"]
+];
+function revealedResultsHTML(){ return REVEAL_GROUPS.map(g=> foldHTML(g[0],g[1],g[2])).join(""); }
+function wireRevealedResults(node){
+  REVEAL_GROUPS.forEach(g=> buildStats($("#"+g[0],node), CASE[g[3]], false, true)); }
+
 function foldHTML(id,label,hint){
   /* Collapsed by default (Daniel, 2026-08-04). The headline four carry the story; the detail is
      there when wanted. The flagging tick-list names its values in full, so nothing needed for
