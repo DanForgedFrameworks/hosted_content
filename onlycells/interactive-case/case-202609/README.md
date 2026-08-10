@@ -247,20 +247,37 @@ value carries a `[GAP]` comment naming what still needs Anas.
 Carried from the intake and the review rounds; all authored against sensible defaults so the
 build wasn't blocked. Owner in **bold**.
 
-- [ ] **Anas** — clinical sign-off on everything authored
-- [ ] **Anas** — **biochemistry discrepancy**: the source lab values differ from the published
-      page on 4 of 5 results (bilirubin, ALT, calcium, phosphate). The page values are in the
-      build and flagged in-code; **not** changed on the strength of a file we shouldn't be using.
-      Build log §4.
-- [ ] **Anas** — per-marker notes for the 20 ring markers (currently per-field, authored by us)
-- [ ] **Anas** — reference ranges (authored standard adult ranges, not supplied by the lab)
-- [ ] **Anas** — polychromasia: included as an unscored neutral option pending confirmation
-- [ ] **Anas** — attempt policy, CPD time, audience/level, accreditation route
-- [ ] **Anas** — magnifier preference (hexagon lens vs frame-and-panel)
-- [ ] **Anas** — detractor features and distractor diagnoses (authored)
+Settled by Anas on 2026-08-10: biochemistry (lab record), reference ranges (generic),
+polychromasia and reactive lymphocytes (both count, as supporting findings), magnifier (leave the
+choice to the user — it already was), timing and audience, and his name staying on the
+certificate alongside Daniel's. See the build log §4h.
+
+Settled 2026-08-10 (evening): station 2 shows only the three marked fields, renumbered I/II/III;
+marker type is carried by shape (circle = spherocyte, diamond = fragment); the landing credits
+Forged Frameworks and links both organisations' LinkedIn; audio cues exist, off by default; a
+feedback prompt is stubbed pending his MS Forms link.
+
+Still open:
+
+- [ ] **Daniel** — save `202609_3_v2.png` to `assets/highlighted/`. Anas has re-marked image 3
+      in red/blue, and it carries ~18 marks against the 9 in the build: field III needs a fresh
+      extraction, not a relabel. Only blocker on the marked films.
+- [ ] **Anas** — his MS Forms feedback link (`certificate.feedbackUrl`, currently empty, which
+      renders nothing at all)
+- [ ] **Anas** — the WBC detractor wording. He queried it; it is a deliberate red herring, but
+      it reads oddly against a normal reference range. Left exactly as he last saw it.
+- [ ] **Anas** — confirm that ticking a feature once is enough (it is — the tick list scores per
+      feature, not per cell). Raised because he didn't mark every abnormal cell.
+- [ ] **Anas** — accreditation route (currently "self-certified CPD")
+- [ ] **Anas** — clinical sign-off on everything still authored rather than supplied
+- [ ] **Anas** — attempt policy (one attempt, or allow retries)
 - [ ] **Anas** — hi-res originals; display copies upscaled in the interim
 - [ ] **Anas** — stain / magnification, not stated
+- [ ] **Anas / Daniel** — whether the marker types should be distinguished by literal colour
+      rather than ring style. Style was chosen to stay inside the navy-and-teal brand and to
+      survive colour-blindness; a second hue is a brand decision, not a build one.
 - [ ] **Daniel** — remove the prototype badge
+- [ ] **Daniel** — decide on the git history rewrite for the old accession numbers (build log §4i)
 - [ ] **Both** — consent and right to publish re-affirmed for a **certificated** activity, which
       is a different bar from a social post
 

@@ -208,18 +208,28 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
   background:var(--oc-teal); color:#fff; font-size:10px; font-weight:700; line-height:1;
   padding:2px 5px; border-radius:8px; white-space:nowrap; box-shadow:0 1px 4px rgba(0,0,0,.5); }
 .oc-sme.on .n{ background:#fff; color:var(--oc-navy-deep); }
-/* Cell type is carried by ring STYLE, not colour alone — solid for fragments, dashed for
-   spherocytes. Brand is navy + teal only, so a second hue isn't available; and a shape
-   difference survives colour-blindness and a poor phone screen, which a second hue wouldn't.
-   The list beside the film names the type in words regardless. */
-.oc-sme.k-spher{ border-style:dashed; border-width:3px; }
+/* Cell type is carried by marker SHAPE, per Anas 2026-08-10: a circle for spherocytes because
+   they are round, and an angular marker for fragments because they are not. The shape now
+   mirrors the morphology, which teaches on its own. Brand is navy + teal only, so a second hue
+   was never available anyway — and shape survives colour-blindness and a poor phone screen.
+   The list beside the film still names the type in words, so nothing depends on shape alone.
+
+   The fragment marker is a square rotated 45°. Rotating the ELEMENT would rotate its number
+   with it, so the rotation sits on a ::before that carries the border, leaving the label
+   upright. `mixed` keeps a dotted circle: it means "Anas hasn't told us which", and it should
+   not look like a confident call either way. */
+.oc-sme.k-frag{ border-color:transparent; }
+.oc-sme.k-frag::before{ content:""; position:absolute; inset:0;
+  border:2.5px solid var(--oc-teal-bright); transform:rotate(45deg);
+  box-shadow:0 0 0 1.5px rgba(0,0,0,.45), inset 0 0 0 1.5px rgba(0,0,0,.35); }
+.oc-sme.k-frag:hover::before, .oc-sme.k-frag.on::before{ border-color:#fff; }
 .oc-sme.k-mixed{ border-style:dotted; border-width:3px; }
-.oc-smeitem.k-spher{ border-left-style:dashed; }
 .oc-smeitem.k-mixed{ border-left-style:dotted; }
 .oc-smekey{ display:flex; flex-wrap:wrap; gap:12px; font-size:11px; color:var(--oc-text-muted); margin-bottom:2px; }
 .oc-smekey span{ display:inline-flex; align-items:center; gap:6px; }
-.oc-smekey i{ width:16px; height:16px; border-radius:50%; border:2.5px solid var(--oc-teal-bright); }
-.oc-smekey i.k-spher{ border-style:dashed; } .oc-smekey i.k-mixed{ border-style:dotted; }
+.oc-smekey i{ width:15px; height:15px; border-radius:50%; border:2.5px solid var(--oc-teal-bright); flex:0 0 auto; }
+.oc-smekey i.k-frag{ border-radius:0; transform:rotate(45deg); }
+.oc-smekey i.k-mixed{ border-style:dotted; }
 
 /* description list beside the film */
 .oc-smewrap{ display:grid; grid-template-columns:1fr; gap:14px; align-items:start; }
@@ -374,6 +384,10 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
 .oc-landing__meta span{ font-size:12px; color:var(--oc-text-muted); border:1px solid rgba(255,255,255,.18); border-radius:999px; padding:5px 13px; }
 .oc-landing__attr{ font-size:12px; color:var(--oc-text-muted); margin-top:18px; }
 .oc-landing__attr a{ color:var(--oc-teal-bright); text-decoration:none; } .oc-landing__attr a:hover{ text-decoration:underline; }
+/* Build credit carries the same weight as the Only Cells line — Daniel's call, 2026-08-10.
+   Agreement §5 makes attribution the only consideration he takes for the work, so it shouldn't
+   be whispered. */
+.oc-landing__attr .sub{ display:inline-block; margin-top:4px; }
 .oc-launch{ position:absolute; inset:0; z-index:68; pointer-events:none; overflow:hidden; background:linear-gradient(0deg,#2E9E8F 0%,#2E9E8F 70%,rgba(46,158,143,.55) 100%); transform:translateY(100%); }
 .oc-launch.run{ animation:oc-launch-up 960ms var(--oc-ease-std) forwards; }
 /* two-beat rise — a brief tick partway up before the sweep completes, then the usual hold + departure */
@@ -394,6 +408,10 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
 .oc-tools{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
 .oc-donecard{ text-align:center; padding:10px 0 4px; }
 .oc-note{ font-size:12px; color:var(--oc-text-muted); border-left:2px solid var(--oc-warn); padding-left:10px; margin-top:12px; text-align:left; }
+/* Without this, links inside a note fall back to the browser's default blue, which is close to
+   unreadable on the dark surface and off-brand besides. */
+.oc-note a{ color:var(--oc-teal-bright); text-decoration:underline; text-underline-offset:2px; }
+.oc-note a:hover{ color:#fff; }
 
 /* "How this works" — a floating pill, bottom-right, over the page rather than docked in the
    flow (so it never inflates the auto-resize iframe height). Shown expanded on arrival at
@@ -415,13 +433,15 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
 .oc-helpchip .q{ display:inline-grid; place-items:center; flex:0 0 auto; width:22px; height:22px; border-radius:50%; border:2px solid var(--oc-teal-bright); font-size:12px; }
 .oc-helpchip[hidden]{ display:none; }
 .oc-helpchip:hover{ transform:scale(1.05); } .oc-helpchip:active{ transform:scale(.94); }
-/* Phone: drop the label so it's a bare "?" disc. 44px is the minimum comfortable touch target,
-   and it stops the pill spanning half the width of the screen over the film. */
+/* A bare "?" disc at EVERY width, not just on a phone. Anas asked twice for the behaviour to be
+   the same on desktop and mobile, and he's right — one rule is easier to describe, easier to
+   learn, and there's no reason the affordance should differ. 44px is the minimum comfortable
+   touch target. The label stays in the DOM for screen readers. */
+.oc-helpchip{ width:44px; height:44px; padding:0; gap:0; justify-content:center; border-radius:50%; }
+.oc-helpchip .lbl{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+.oc-helpchip .q{ width:auto; height:auto; border:0; font-size:20px; font-weight:700; }
+/* keep the expanded panel from swallowing a small screen */
 @media (max-width:640px){
-  .oc-helpchip{ width:44px; height:44px; padding:0; gap:0; justify-content:center; border-radius:50%; }
-  .oc-helpchip .lbl{ display:none; }
-  .oc-helpchip .q{ width:auto; height:auto; border:0; font-size:20px; font-weight:700; }
-  /* and keep the expanded panel from swallowing a small screen */
   .oc-help{ right:10px; bottom:10px; left:10px; width:auto; }
   .oc-help__body{ max-height:38vh; }
 }
@@ -488,6 +508,7 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
     <div class="oc-topright">
       <span class="oc-cpdbadge"><span class="dot"></span>Recorded CPD activity</span>
       <button class="oc-bgbtn" id="ocBgToggle" aria-pressed="true">✦ Background: On</button>
+      <button class="oc-bgbtn" id="ocSoundToggle" aria-pressed="false">♪ Sound: Off</button>
     </div>
   </div>
 
@@ -500,7 +521,8 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
     <div class="oc-landing__meta" id="ocLandMeta"></div>
     <div style="margin-top:18px"><button class="oc-btn oc-btn--primary" id="ocBegin">Begin CPD case</button></div>
     <div style="margin-top:14px"><button class="oc-bgbtn" id="ocBgToggleIntro" aria-pressed="true">✦ Background: On</button></div>
-    <div class="oc-landing__attr">An <strong>Only Cells</strong> resource · <a href="https://onlycells.co.uk/" target="_blank" rel="noopener">onlycells.co.uk</a></div>
+    <div class="oc-landing__attr">An <strong>Only Cells</strong> resource · <a href="https://onlycells.co.uk/" target="_blank" rel="noopener">onlycells.co.uk</a> · <a href="https://www.linkedin.com/company/onlycellsltd/" target="_blank" rel="noopener">LinkedIn</a><br>
+      <span class="sub">Created in conjunction with <a href="https://danforgedframeworks.github.io/Portfolio/" target="_blank" rel="noopener">Forged Frameworks</a> · <a href="https://www.linkedin.com/company/forged-frameworks/" target="_blank" rel="noopener">LinkedIn</a></span></div>
   </div>
 
   <div class="oc-stage">
@@ -656,14 +678,15 @@ const CASE = {
     /* display = webp (fast first paint); hires = the source PNG the loupe pulls from.
        Swap `hires` for Anas's full-resolution originals when they land — no other change needed. */
     stills:[
-      { src:"film-01-1024x768.webp", hires:"film-01-hires.webp" },
+      /* Anas 2026-08-10: station 2 now shows only the fields he has marked, so the film the
+         learner examines is the same film they get feedback on. Renumbered I/II/III.
+         The other five fields are kept in the repo and listed below — restoring them is
+         uncommenting these and shifting `image:`/`markedFields` back. */
       { src:"film-02-1024x768.webp", hires:"film-02-hires.webp" },
-      { src:"film-03-1024x768.webp", hires:"film-03-hires.webp" },
-      { src:"film-04-1024x768.webp", hires:"film-04-hires.webp" },
-      { src:"film-05-1024x768.webp", hires:"film-05-hires.webp" },
       { src:"film-06-1024x768.webp", hires:"film-06-hires.webp" },
-      { src:"film-07-1024x768.webp", hires:"film-07-hires.webp" },
       { src:"film-08-1024x768.webp", hires:"film-08-hires.webp" }
+      /* withdrawn from the learner-facing set, files retained:
+         film-01, film-03, film-04, film-05, film-07 (…-1024x768.webp + …-hires.webp) */
     ],
     videos:[]                          // no videos this case (stills only)
   },
@@ -696,29 +719,29 @@ const CASE = {
      `kind` drives the ring styling: solid teal = fragment, dashed = spherocyte, so the two are
      told apart by shape as well as tone rather than by colour alone. */
   hotspots:[
-    { image:1, x:74.6, y:25.1, r:3.91, label:"2-1", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
-    { image:1, x:55.5, y:27.8, r:4.88, label:"2-2", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
-    { image:1, x:48.3, y:42.2, r:4.30, label:"2-3", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
-    { image:1, x:51.3, y:56.4, r:3.32, label:"2-4", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
-    { image:1, x:79.6, y:95.6, r:3.86, label:"2-5", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
-    { image:5, x:30.3, y:13.1, r:3.52, label:"6-1", kind:"spher", title:"Microspherocyte", note:"Small, dense and round with no central pallor — a by-product of the same mechanical damage." },
-    { image:5, x:34.3, y:22.5, r:2.49, label:"6-2", kind:"spher", title:"Microspherocyte", note:"Small, dense and round with no central pallor — a by-product of the same mechanical damage." },
-    { image:5, x:21.8, y:34.2, r:3.17, label:"6-3", kind:"spher", title:"Microspherocyte", note:"Small, dense and round with no central pallor — a by-product of the same mechanical damage." },
-    { image:5, x:43.6, y:35.8, r:3.32, label:"6-4", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
-    { image:5, x:91.1, y:81.4, r:3.37, label:"6-5", kind:"spher", title:"Microspherocyte", note:"Small, dense and round with no central pallor — a by-product of the same mechanical damage." },
-    { image:5, x:90.0, y:88.8, r:2.93, label:"6-6", kind:"spher", title:"Microspherocyte", note:"Small, dense and round with no central pallor — a by-product of the same mechanical damage." },
-    { image:7, x:28.0, y:13.4, r:4.54, label:"8-1", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
-    { image:7, x:21.7, y:23.0, r:4.10, label:"8-2", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
-    { image:7, x:77.4, y:32.6, r:3.71, label:"8-3", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
-    { image:7, x:28.3, y:38.2, r:4.69, label:"8-4", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
-    { image:7, x:61.4, y:43.5, r:4.05, label:"8-5", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
-    { image:7, x:18.7, y:51.4, r:2.93, label:"8-6", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
-    { image:7, x:52.5, y:54.1, r:3.47, label:"8-7", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
-    { image:7, x:89.6, y:68.0, r:2.25, label:"8-8", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
-    { image:7, x:84.1, y:91.0, r:4.69, label:"8-9", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." }
+    { image:0, x:74.6, y:25.1, r:3.91, label:"2-1", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
+    { image:0, x:55.5, y:27.8, r:4.88, label:"2-2", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
+    { image:0, x:48.3, y:42.2, r:4.30, label:"2-3", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
+    { image:0, x:51.3, y:56.4, r:3.32, label:"2-4", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
+    { image:0, x:79.6, y:95.6, r:3.86, label:"2-5", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
+    { image:1, x:30.3, y:13.1, r:3.52, label:"6-1", kind:"spher", title:"Microspherocyte", note:"Small, dense and round with no central pallor — a by-product of the same mechanical damage." },
+    { image:1, x:34.3, y:22.5, r:2.49, label:"6-2", kind:"spher", title:"Microspherocyte", note:"Small, dense and round with no central pallor — a by-product of the same mechanical damage." },
+    { image:1, x:21.8, y:34.2, r:3.17, label:"6-3", kind:"spher", title:"Microspherocyte", note:"Small, dense and round with no central pallor — a by-product of the same mechanical damage." },
+    { image:1, x:43.6, y:35.8, r:3.32, label:"6-4", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
+    { image:1, x:91.1, y:81.4, r:3.37, label:"6-5", kind:"spher", title:"Microspherocyte", note:"Small, dense and round with no central pallor — a by-product of the same mechanical damage." },
+    { image:1, x:90.0, y:88.8, r:2.93, label:"6-6", kind:"spher", title:"Microspherocyte", note:"Small, dense and round with no central pallor — a by-product of the same mechanical damage." },
+    { image:2, x:28.0, y:13.4, r:4.54, label:"8-1", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
+    { image:2, x:21.7, y:23.0, r:4.10, label:"8-2", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
+    { image:2, x:77.4, y:32.6, r:3.71, label:"8-3", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
+    { image:2, x:28.3, y:38.2, r:4.69, label:"8-4", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
+    { image:2, x:61.4, y:43.5, r:4.05, label:"8-5", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
+    { image:2, x:18.7, y:51.4, r:2.93, label:"8-6", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
+    { image:2, x:52.5, y:54.1, r:3.47, label:"8-7", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
+    { image:2, x:89.6, y:68.0, r:2.25, label:"8-8", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
+    { image:2, x:84.1, y:91.0, r:4.69, label:"8-9", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." }
   ],
   /* Which fields carry marks, for the "show published annotations" prompt. */
-  markedFields:[1,5,7],
+  markedFields:[0,1,2],
 
   /* ---- Part A(i): which results are abnormal / significant? (Screen 1) ---- */
   resultItems:[
@@ -729,6 +752,10 @@ const CASE = {
     { id:"r-alt",   text:"ALT 185 U/L — markedly raised",                 correct:true, weight:1 },
     { id:"r-caphos",text:"Calcium 2.08 and phosphate 0.73 mmol/L — both low", correct:true, weight:1,
       insight:"Worth noticing — but check the adjusted value before you act on it. Albumin-adjusted calcium here is 2.24 mmol/L, which is within range, so the low uncorrected calcium is largely an artefact of the correction. The phosphate is genuinely low. Reading the uncorrected number alone would have you treating a calcium that doesn't need treating." },
+    /* [QUERY OUT 2026-08-10] Anas asked whether this was an intentional red herring — it is, it's
+       a detractor. He's right that the wording sits oddly against a normal reference range, but
+       the fix is his to choose, not ours to impose: left exactly as he last saw it until he
+       answers. Do not reword without his say-so. */
     { id:"r-wbc",   text:"WBC 5.46 ×10⁹/L — leucocytosis",                correct:false, penalty:2 },
     { id:"r-neut",  text:"Neutropenia",                                    correct:false, penalty:2 },
     { id:"r-mcv",   text:"Macrocytosis — raised MCV",                      correct:false, penalty:2 }
@@ -739,7 +766,11 @@ const CASE = {
      (2026-08-04), each with the clinical consequence of calling it — in his words. The
      consequence is the teaching; it is shown instead of simply marking the tick wrong. */
   filmItems:[
-    { id:"f-frag",   text:"Red-cell fragmentation — schistocytes (‘helmet’ cells)", correct:true, weight:4 },
+    /* Anas 2026-08-10: features should be named, not explained — the explanation is what the
+       learner is supposed to supply. Note f-spher KEEPS its qualifier: stripped to "Spherocytes"
+       it becomes indistinguishable from the correct "Occasional microspherocytes", and the
+       learner would be marked wrong for something they cannot tell apart. */
+    { id:"f-frag",   text:"Red-cell fragmentation",                                 correct:true, weight:4 },
     { id:"f-fewplt", text:"Markedly reduced platelets on the film",                 correct:true, weight:4 },
     { id:"f-micro",  text:"Occasional microspherocytes",                            correct:true, weight:2 },
     /* Both confirmed by Anas 2026-08-10 as correct SUPPORTING findings — his wording, lightly
@@ -748,7 +779,7 @@ const CASE = {
       insight:"A supporting finding, and it fits. Polychromasia is indicative of MAHA and confirms ongoing intravascular haemolysis — the marrow responding to acute red-cell destruction by releasing young, immature red cells into the circulation." },
     { id:"f-react",  text:"Reactive lymphocytes and monocytes",                     correct:true, weight:1,
       insight:"Easy to dismiss as incidental, but it points straight at the trigger. HUS here follows a gastroenteritis prodrome — often bloody diarrhoea — caused by E. coli toxins, and the reactive lymphocytes and monocytes are the patient's active immune response to that gastrointestinal infection." },
-    { id:"f-clump",  text:"Platelet clumps — EDTA artefact",                        correct:false, penalty:2,
+    { id:"f-clump",  text:"Platelet clumps",                                        correct:false, penalty:2,
       consequence:"EDTA-induced pseudothrombocytopenia. Calling artefact here would have you dismiss a genuinely severe platelet count as a lab error — missing a haematological emergency." },
     { id:"f-nrbc",   text:"Nucleated red cells",                                    correct:false, penalty:2,
       consequence:"A leucoerythroblastic or marrow-stress picture — suggesting marrow infiltration, myelofibrosis or extramedullary haemopoiesis rather than microvascular fragmentation." },
@@ -823,7 +854,7 @@ const CASE = {
   /* Morphology report skeleton — intake §7. [GAP] confirm mandatory vs optional fields with Anas. */
   report:[
     ["RBC","Red-cell fragmentation with schistocytes; occasional microspherocytes."],
-    ["WBC","Normal count; no abnormal cells."],
+    ["WBC","Normal count. Some reactive lymphocytes and monocytes present."],   // Anas 2026-08-10
     ["Platelets","Markedly reduced."],
     ["Other","Features of a microangiopathic haemolytic anaemia (MAHA)."],
     ["Conclusion","Appearances consistent with MAHA; with AKI, recent GI illness, a normal coagulation screen and a normal ADAMTS13, consistent with STEC-HUS."],
@@ -885,6 +916,15 @@ const CASE = {
         x:0.852, y:0.860, w:0.090, h:0.070, ul:{ x:0.8728, w:0.0664, y:0.9215 } }
     ],
     signatory:"",                     // signatures are in the artwork
+    /* PLACEHOLDER — Anas is sending an MS Forms link (2026-08-10). Leave `url` empty and nothing
+       renders at all: no modal, no button, no dead link. Drop the URL in and it goes live with
+       no other change.
+       Deliberately NOT gated on the certificate. Withholding a CPD record until someone fills a
+       form is coercive, and it contaminates the very thing the record evidences — participation,
+       not compliance. It fires once, after the certificate is downloaded, and can be dismissed. */
+    feedbackUrl:"",
+    feedbackTitle:"How did you find this format?",
+    feedbackBody:"This is a new format for Morphology Monthly, and Only Cells would like to know whether it worked for you. It takes a couple of minutes and it's entirely optional — your certificate is already downloaded and nothing here depends on it.",
     outcomes:[                        // [GAP] drafted in intake §8 — confirm wording
       "Recognise a microangiopathic blood-film picture — red-cell fragmentation and schistocytes.",
       "Build a differential for thrombocytopenia with red-cell fragmentation.",
@@ -930,7 +970,7 @@ let state=loadState();
 function freshState(){ return { ver:STORE_VER, step:0, maxStep:0,
   reflections:{}, confidence:{}, ticks:{}, annotations:{ film:emptyAnno() },
   learner:{ name:"", reg:"" },
-  magStyle:null, hexZoom:2, bgAnim:true, helpMin:false,
+  magStyle:null, hexZoom:2, bgAnim:true, helpMin:false, soundOn:false,
   haemolysisRevealed:false, adamtsRevealed:false,
   assess:{ committed:false, choice:null, correct:null, order:null, at:null, score:null, parts:null } }; }
 function loadState(){ try{ const s=JSON.parse(localStorage.getItem(STORE_KEY)); if(s&&s.ver===STORE_VER) return s; }catch(e){} return freshState(); }
@@ -1122,12 +1162,51 @@ const HELP=["Work through the <strong>stations</strong> left to right using <str
    nothing to obstruct and the learner hasn't started — and drops to a reopenable "?" for the
    working stations. On a narrow viewport that "?" is a bare circle (see the media query); on a
    large screen it keeps its label, where he confirmed it isn't a problem. */
+/* The landing deliberately does NOT consult state.helpMin. That flag is persisted, and
+   startCase() sets it true on leaving the intro — so for anyone who has run the case before
+   (i.e. every returning visitor) the intro would show the collapsed chip instead of the panel,
+   which is precisely the screen the panel exists for. Reported by Anas 2026-08-10; missed in
+   testing because a cleared state always looks right. The landing uses a session-only flag, so
+   it opens fresh on every arrival and can still be dismissed for that visit. */
+/* ===== optional audio cues =====
+   Tones are synthesised in-page rather than shipped as files, which keeps the no-dependencies
+   rule (spec §2) and adds nothing to the download.
+
+   OFF BY DEFAULT, and that is a deliberate accessibility position rather than caution. Sound is
+   a genuine second channel for some learners — which is why it exists — but unsolicited audio
+   is actively harmful for others: it startles, it competes with a screen reader, and this widget
+   is embedded in someone else's page on someone's work machine. So it is opt-in, it never
+   carries information that isn't already on screen, and it follows prefers-reduced-motion as a
+   proxy for "this person wants less". Two events only: a results release, and the commit. */
+let audioCtx=null;
+const soundOn=()=> !!state.soundOn;
+function tone(freq,dur,delay){
+  if(!soundOn()||reduceMotion) return;
+  try{
+    audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==="suspended") audioCtx.resume();
+    const t0=audioCtx.currentTime+(delay||0);
+    const osc=audioCtx.createOscillator(), g=audioCtx.createGain();
+    osc.type="sine"; osc.frequency.setValueAtTime(freq,t0);
+    /* short ramps at both ends — a square-edged gain change clicks audibly */
+    g.gain.setValueAtTime(0,t0);
+    g.gain.linearRampToValueAtTime(0.07,t0+0.015);
+    g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+    osc.connect(g); g.connect(audioCtx.destination); osc.start(t0); osc.stop(t0+dur+0.02);
+  }catch(e){ /* no audio device, blocked autoplay, ancient browser — silence is a fine fallback */ }
+}
+const cueRelease=()=>{ tone(587.33,0.16,0); tone(880,0.22,0.13); };   // D5 → A5, opening
+const cueCommit =()=>{ tone(440,0.14,0); tone(659.25,0.26,0.12); };   // A4 → E5, settling
+
+let helpDismissedOnLanding=false;
+const onLanding=()=> root.classList.contains("is-landing");
 function renderHelp(){ const body=$("#ocHelpBody"), panel=$("#ocHelp"), chip=$("#ocHelpChip");
   body.innerHTML='<ul>'+HELP.map(t=>'<li>'+t+'</li>').join("")+'</ul>';
-  const min = !!state.helpMin;   // startCase() sets this on leaving the intro
+  const min = onLanding() ? helpDismissedOnLanding : !!state.helpMin;
   panel.hidden=min; chip.hidden=!min; }
-$("#ocHelpMin").addEventListener("click",()=>{ state.helpMin=true; saveState(); renderHelp(); });
-$("#ocHelpChip").addEventListener("click",()=>{ state.helpMin=false; saveState(); renderHelp(); });
+function setHelpMin(v){ if(onLanding()) helpDismissedOnLanding=v; else { state.helpMin=v; saveState(); } renderHelp(); }
+$("#ocHelpMin").addEventListener("click",()=> setHelpMin(true));
+$("#ocHelpChip").addEventListener("click",()=> setHelpMin(false));
 /* Auto-collapse the help pill the moment the learner actually starts working the case —
    ticking a box, typing a note, or moving to the next station. It only needs to explain
    the nav once; after that it should get out of the way, reachable again via the chip. */
@@ -1273,7 +1352,13 @@ function renderStation(st){
       '<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocPdf">Download CPD record (PDF)</button>'+
         '<button class="oc-btn oc-btn--primary" id="ocCert">Download certificate (PDF)</button>'+
         '<button class="oc-btn oc-btn--ghost" id="ocTxt">CPD record (plain text backup)</button></div>'+
-      '<div class="oc-note">Your certificate downloads as a PDF, signed by Anas Nasir and Dan Boyland. The plain-text record is a backup if the PDF will not open.</div>'
+      /* Names link to LinkedIn — Anas asked for his, Daniel's added alongside (2026-08-10).
+         The certificate PDF itself is unchanged: it already links both organisations, and a
+         second link to the same people there would be noise. */
+      '<div class="oc-note">Your certificate downloads as a PDF, signed by '+
+        '<a href="https://www.linkedin.com/in/anasanasir/" target="_blank" rel="noopener">Anas Nasir</a> and '+
+        '<a href="https://www.linkedin.com/in/daniel-boyland-577b6476/" target="_blank" rel="noopener">Dan Boyland</a>. '+
+        'The plain-text record is a backup if the PDF will not open.</div>'
       :
       '<div class="oc-lockbar"><span class="k">Not yet submitted</span> Go back to Station 4, release the ADAMTS13 result and commit a diagnosis to generate your CPD record.</div>'+
       '<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocGoBack">Back to Station 4</button></div>');
@@ -1627,8 +1712,8 @@ function computeScore(choiceIdx){
   return { parts, points:Object.keys(W).reduce((o,k)=>(o[k]=+(parts[k]*W[k]).toFixed(1),o),{}), total:Math.round(total) }; }
 
 /* ===== commit ===== */
-function revealHaemolysis(){ state.haemolysisRevealed=true; saveState(); runScan(()=> render()); }
-function revealAdamts(){ state.adamtsRevealed=true; saveState(); runScan(()=> render()); }
+function revealHaemolysis(){ state.haemolysisRevealed=true; saveState(); cueRelease(); runScan(()=> render()); }
+function revealAdamts(){ state.adamtsRevealed=true; saveState(); cueRelease(); runScan(()=> render()); }
 function shuffledOrder(){ if(state.assess.order) return state.assess.order; const idx=CASE.diagnosis.options.map((_,i)=>i);
   for(let i=idx.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [idx[i],idx[j]]=[idx[j],idx[i]]; } state.assess.order=idx; saveState(); return idx; }
 function wireCommit(node){ const optWrap=$("#ocOptions",node), order=shuffledOrder(), submit=$("#ocSubmit",node), fb=$("#ocFeedback",node);
@@ -1867,6 +1952,18 @@ function jpegPdf(jpeg, wpx, hpx, links){
   return new Blob([out],{type:"application/pdf"});
 }
 
+/* Fires once, after the certificate is in their hands. Session-scoped rather than persisted:
+   asking again on a later visit would be nagging, but a reload shouldn't silently suppress it
+   for someone who never actually saw it. Opens in a new tab on the user's own click. */
+let feedbackAsked=false;
+function maybeAskFeedback(){
+  const C=CASE.certificate;
+  if(!C.feedbackUrl || feedbackAsked) return;      // no link configured → nothing happens at all
+  feedbackAsked=true;
+  setTimeout(()=> openModal(C.feedbackTitle, C.feedbackBody, "Give feedback", "No thanks",
+    ()=> window.open(C.feedbackUrl,"_blank","noopener")), 900);
+}
+
 /* Downloads as a PDF, not an image — a certificate should arrive as a document. */
 function downloadCertificate(){
   const go=()=> renderCertificate(cv=>{
@@ -1877,6 +1974,7 @@ function downloadCertificate(){
     const a=document.createElement("a"); a.href=url; a.download=CASE.id+"_certificate.pdf";
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(()=> URL.revokeObjectURL(url),1500);
+    maybeAskFeedback();
   });
   if(document.fonts&&document.fonts.ready) document.fonts.ready.then(go).catch(go); else go();
 }
@@ -2067,6 +2165,11 @@ const bg=(function(){ const cv=$("#ocBg"); const ctx=cv.getContext("2d"); let w=
 })();
 function setBg(on){ state.bgAnim=on; saveState(); ["#ocBgToggle","#ocBgToggleIntro"].forEach(sel=>{ const b=$(sel);
   if(b){ b.setAttribute("aria-pressed",on); b.textContent="✦ Background: "+(on?"On":"Off"); } }); on?bg.start():bg.stop(); }
+function syncSoundBtn(){ const b=$("#ocSoundToggle"); if(!b) return;
+  const on=!!state.soundOn; b.setAttribute("aria-pressed",on); b.textContent="♪ Sound: "+(on?"On":"Off"); }
+function setSound(on){ state.soundOn=on; saveState(); syncSoundBtn();
+  if(on) cueCommit(); }   // play one immediately so they hear what they just enabled
+$("#ocSoundToggle").addEventListener("click",()=> setSound(!state.soundOn));
 $("#ocBgToggle").addEventListener("click",()=> setBg(state.bgAnim===false));
 $("#ocBgToggleIntro").addEventListener("click",()=> setBg(state.bgAnim===false));
 
@@ -2074,7 +2177,7 @@ $("#ocBgToggleIntro").addEventListener("click",()=> setBg(state.bgAnim===false))
 /* renderHelp() runs here as well as from render(): render() only fires once the learner has
    left the landing, so without this the intro — the one screen Anas wants it open on — would
    never paint the panel at all. */
-root.classList.add("is-landing"); setBg(state.bgAnim!==false); renderHelp(); resize();
+root.classList.add("is-landing"); setBg(state.bgAnim!==false); syncSoundBtn(); renderHelp(); resize();
 })();
 </script>
 </body>
