@@ -208,6 +208,18 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
   background:var(--oc-teal); color:#fff; font-size:10px; font-weight:700; line-height:1;
   padding:2px 5px; border-radius:8px; white-space:nowrap; box-shadow:0 1px 4px rgba(0,0,0,.5); }
 .oc-sme.on .n{ background:#fff; color:var(--oc-navy-deep); }
+/* Cell type is carried by ring STYLE, not colour alone — solid for fragments, dashed for
+   spherocytes. Brand is navy + teal only, so a second hue isn't available; and a shape
+   difference survives colour-blindness and a poor phone screen, which a second hue wouldn't.
+   The list beside the film names the type in words regardless. */
+.oc-sme.k-spher{ border-style:dashed; border-width:3px; }
+.oc-sme.k-mixed{ border-style:dotted; border-width:3px; }
+.oc-smeitem.k-spher{ border-left-style:dashed; }
+.oc-smeitem.k-mixed{ border-left-style:dotted; }
+.oc-smekey{ display:flex; flex-wrap:wrap; gap:12px; font-size:11px; color:var(--oc-text-muted); margin-bottom:2px; }
+.oc-smekey span{ display:inline-flex; align-items:center; gap:6px; }
+.oc-smekey i{ width:16px; height:16px; border-radius:50%; border:2.5px solid var(--oc-teal-bright); }
+.oc-smekey i.k-spher{ border-style:dashed; } .oc-smekey i.k-mixed{ border-style:dotted; }
 
 /* description list beside the film */
 .oc-smewrap{ display:grid; grid-template-columns:1fr; gap:14px; align-items:start; }
@@ -403,6 +415,16 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
 .oc-helpchip .q{ display:inline-grid; place-items:center; flex:0 0 auto; width:22px; height:22px; border-radius:50%; border:2px solid var(--oc-teal-bright); font-size:12px; }
 .oc-helpchip[hidden]{ display:none; }
 .oc-helpchip:hover{ transform:scale(1.05); } .oc-helpchip:active{ transform:scale(.94); }
+/* Phone: drop the label so it's a bare "?" disc. 44px is the minimum comfortable touch target,
+   and it stops the pill spanning half the width of the screen over the film. */
+@media (max-width:640px){
+  .oc-helpchip{ width:44px; height:44px; padding:0; gap:0; justify-content:center; border-radius:50%; }
+  .oc-helpchip .lbl{ display:none; }
+  .oc-helpchip .q{ width:auto; height:auto; border:0; font-size:20px; font-weight:700; }
+  /* and keep the expanded panel from swallowing a small screen */
+  .oc-help{ right:10px; bottom:10px; left:10px; width:auto; }
+  .oc-help__body{ max-height:38vh; }
+}
 
 @media (prefers-reduced-motion: reduce){
   .oc-case *{ animation:none !important; transition:none !important; }
@@ -503,7 +525,7 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
   </div>
 
   <div class="oc-wipe" id="ocWipe" aria-hidden="true"></div>
-  <button class="oc-helpchip" id="ocHelpChip" title="How this works" aria-label="How this works" hidden><span class="q" aria-hidden="true">?</span>How this works</button>
+  <button class="oc-helpchip" id="ocHelpChip" title="How this works" aria-label="How this works" hidden><span class="q" aria-hidden="true">?</span><span class="lbl">How this works</span></button>
 
   <div class="oc-launch" id="ocLaunch" aria-hidden="true"><div class="oc-launch__glyphs" id="ocLaunchGlyphs"></div></div>
 
@@ -544,9 +566,10 @@ const CASE = {
   answerTitle:"Haemolytic Uraemic Syndrome (HUS)",
   credit:"",                          // blank by default — see the note by ocLandCredit below
   contributor:"",                     // e.g. "Case shared by …" when someone contributes one
-  meta:[
-    "MGG, ×100 oil"                    /* CPD time and audience omitted until confirmed —
-                                          placeholders aren't learner-facing content */
+  meta:[                               /* Anas 2026-08-10 */
+    "MGG, ×100 oil",
+    "15–30 minutes",
+    "Students and trainees · laboratory and clinical"
   ],
   history:"35-year-old male presented with fatigue and pallor, easy bruising, reduced urine output and mild abdominal pain following a recent gastrointestinal illness.",
   filmTrigger:"Due to the severely low PLT results a blood film was made.",
@@ -557,7 +580,7 @@ const CASE = {
      ranges only, so the learner decides what's significant (§2.5). See buildStats().
      Platelets: lab record gives impedance 19 with optical 22. Both shown deliberately — in a
      thrombocytopenia this severe the two methods disagreeing is itself informative.
-     [GAP] reference ranges are still ours, not the reporting lab's. */
+     Reference ranges: Anas confirmed generic adult ranges are fine (2026-08-10). */
   /* Four headline numbers a learner reads first. The optical platelet count rides on the
      platelet card as a sub-value rather than competing as a card of its own. */
   fbc:[
@@ -579,15 +602,18 @@ const CASE = {
     { key:"mchc", label:"MCHC",        value:353,  unit:"g/L",    flag:"normal",   flagText:"normal",   ref:"320–360" }
   ],
   biochem:[
-    /* ⚠️ DISPUTED — these four came from the public Only Cells page. The lab record reads
-       bilirubin 35, ALT 185, calcium 2.08 (albumin-adjusted 2.24, in range) and phosphate 0.73.
-       Creatinine matches. Left as published pending Anas's confirmation (asked 2026-08-04);
-       see build log §4c. Do not change without his answer. */
+    /* RESOLVED 2026-08-10 — Anas confirmed the lab record over the published page. He explained
+       the discrepancy: he doesn't always have access to every result, some are from alternate
+       samples, and the first sample was haemolysed so the real values came off a later one.
+       The albumin-adjusted calcium rides on the calcium card the same way the optical platelet
+       count rides on the platelet card: 2.08 uncorrected is low, 2.24 adjusted is in range. Both
+       shown, because spotting that is the teaching point Anas liked. */
     { key:"creat",label:"Creatinine",  value:257,  unit:"µmol/L", flag:"high", flagText:"▲ raised", ref:"59–104" },
-    { key:"bili", label:"Bilirubin",   value:49,   unit:"µmol/L", flag:"high", flagText:"▲ raised", ref:"< 20" },
-    { key:"alt",  label:"ALT",         value:77,   unit:"U/L",    flag:"high", flagText:"▲ raised", ref:"10–50" },
-    { key:"ca",   label:"Calcium",     value:1.84, unit:"mmol/L", flag:"low",  flagText:"▼ low",    ref:"2.20–2.60" },
-    { key:"phos", label:"Phosphate",   value:0.4,  unit:"mmol/L", flag:"low",  flagText:"▼ low",    ref:"0.80–1.50" }
+    { key:"bili", label:"Bilirubin",   value:35,   unit:"µmol/L", flag:"high", flagText:"▲ raised", ref:"< 20" },
+    { key:"alt",  label:"ALT",         value:185,  unit:"U/L",    flag:"high", flagText:"▲▲ markedly raised", ref:"10–50" },
+    { key:"ca",   label:"Calcium",     value:2.08, unit:"mmol/L", flag:"low",  flagText:"▼ low uncorrected", ref:"2.20–2.60",
+      sub:{ label:"Albumin-adjusted", value:2.24, unit:"mmol/L" } },
+    { key:"phos", label:"Phosphate",   value:0.73, unit:"mmol/L", flag:"low",  flagText:"▼ low",    ref:"0.80–1.50" }
   ],
   /* Anas: upfront, because a normal screen is what separates DIC from a localised microangiopathy. */
   coag:[
@@ -653,29 +679,43 @@ const CASE = {
      tools/extract_highlights.py — the ring sits where his circle sat, at his size.
      Drawn as an outline, never a filled pin: a solid marker hides the very cell it
      points at, which is useless for morphology.
-     `title`/`note` are per-FIELD descriptions taken from what Anas said he highlighted
-     plus the reported film comment. [GAP] his per-mark wording still to come. */
+
+     PER-MARK IDENTITIES — Anas, 2026-08-10:
+       his image 1 (field II)   "all fragments"                                        → 5 marks, all frag
+       his image 2 (field VI)   "all spherocytes (2 bottom right, 3 top left) with 1 fragment"
+       his image 3 (field VIII) "a mixture of fragments and spherocytes"               → [GAP] see below
+
+     Field VI is resolved by geometry and his own count: 6-5/6-6 sit bottom-right (his "2"),
+     6-1/6-2/6-3 sit top-left (his "3"), which leaves 6-4 alone in the centre as the single
+     fragment. 5 + 1 = his 6 marks, so the mapping is forced, not guessed.
+
+     [GAP] Field VIII stays combined — "a mixture" across 9 marks cannot be split without
+     guessing which is which, and guessing morphology is exactly what this asset must not do.
+     Anas has offered to colour-code that image; asked 2026-08-10.
+
+     `kind` drives the ring styling: solid teal = fragment, dashed = spherocyte, so the two are
+     told apart by shape as well as tone rather than by colour alone. */
   hotspots:[
-    { image:1, x:74.6, y:25.1, r:3.91, label:"2-1", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor \u2014 mechanically damaged passing through fibrin strands." },
-    { image:1, x:55.5, y:27.8, r:4.88, label:"2-2", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor \u2014 mechanically damaged passing through fibrin strands." },
-    { image:1, x:48.3, y:42.2, r:4.30, label:"2-3", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor \u2014 mechanically damaged passing through fibrin strands." },
-    { image:1, x:51.3, y:56.4, r:3.32, label:"2-4", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor \u2014 mechanically damaged passing through fibrin strands." },
-    { image:1, x:79.6, y:95.6, r:3.86, label:"2-5", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor \u2014 mechanically damaged passing through fibrin strands." },
-    { image:5, x:30.3, y:13.1, r:3.52, label:"6-1", title:"Microspherocyte", note:"Small, dense and round with no central pallor \u2014 a by-product of the same mechanical damage." },
-    { image:5, x:34.3, y:22.5, r:2.49, label:"6-2", title:"Microspherocyte", note:"Small, dense and round with no central pallor \u2014 a by-product of the same mechanical damage." },
-    { image:5, x:21.8, y:34.2, r:3.17, label:"6-3", title:"Microspherocyte", note:"Small, dense and round with no central pallor \u2014 a by-product of the same mechanical damage." },
-    { image:5, x:43.6, y:35.8, r:3.32, label:"6-4", title:"Microspherocyte", note:"Small, dense and round with no central pallor \u2014 a by-product of the same mechanical damage." },
-    { image:5, x:91.1, y:81.4, r:3.37, label:"6-5", title:"Microspherocyte", note:"Small, dense and round with no central pallor \u2014 a by-product of the same mechanical damage." },
-    { image:5, x:90.0, y:88.8, r:2.93, label:"6-6", title:"Microspherocyte", note:"Small, dense and round with no central pallor \u2014 a by-product of the same mechanical damage." },
-    { image:7, x:28.0, y:13.4, r:4.54, label:"8-1", title:"Fragment / microspherocyte", note:"Fragmented and small dense cells together \u2014 the mixed picture of an active microangiopathy." },
-    { image:7, x:21.7, y:23.0, r:4.10, label:"8-2", title:"Fragment / microspherocyte", note:"Fragmented and small dense cells together \u2014 the mixed picture of an active microangiopathy." },
-    { image:7, x:77.4, y:32.6, r:3.71, label:"8-3", title:"Fragment / microspherocyte", note:"Fragmented and small dense cells together \u2014 the mixed picture of an active microangiopathy." },
-    { image:7, x:28.3, y:38.2, r:4.69, label:"8-4", title:"Fragment / microspherocyte", note:"Fragmented and small dense cells together \u2014 the mixed picture of an active microangiopathy." },
-    { image:7, x:61.4, y:43.5, r:4.05, label:"8-5", title:"Fragment / microspherocyte", note:"Fragmented and small dense cells together \u2014 the mixed picture of an active microangiopathy." },
-    { image:7, x:18.7, y:51.4, r:2.93, label:"8-6", title:"Fragment / microspherocyte", note:"Fragmented and small dense cells together \u2014 the mixed picture of an active microangiopathy." },
-    { image:7, x:52.5, y:54.1, r:3.47, label:"8-7", title:"Fragment / microspherocyte", note:"Fragmented and small dense cells together \u2014 the mixed picture of an active microangiopathy." },
-    { image:7, x:89.6, y:68.0, r:2.25, label:"8-8", title:"Fragment / microspherocyte", note:"Fragmented and small dense cells together \u2014 the mixed picture of an active microangiopathy." },
-    { image:7, x:84.1, y:91.0, r:4.69, label:"8-9", title:"Fragment / microspherocyte", note:"Fragmented and small dense cells together \u2014 the mixed picture of an active microangiopathy." },
+    { image:1, x:74.6, y:25.1, r:3.91, label:"2-1", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
+    { image:1, x:55.5, y:27.8, r:4.88, label:"2-2", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
+    { image:1, x:48.3, y:42.2, r:4.30, label:"2-3", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
+    { image:1, x:51.3, y:56.4, r:3.32, label:"2-4", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
+    { image:1, x:79.6, y:95.6, r:3.86, label:"2-5", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
+    { image:5, x:30.3, y:13.1, r:3.52, label:"6-1", kind:"spher", title:"Microspherocyte", note:"Small, dense and round with no central pallor — a by-product of the same mechanical damage." },
+    { image:5, x:34.3, y:22.5, r:2.49, label:"6-2", kind:"spher", title:"Microspherocyte", note:"Small, dense and round with no central pallor — a by-product of the same mechanical damage." },
+    { image:5, x:21.8, y:34.2, r:3.17, label:"6-3", kind:"spher", title:"Microspherocyte", note:"Small, dense and round with no central pallor — a by-product of the same mechanical damage." },
+    { image:5, x:43.6, y:35.8, r:3.32, label:"6-4", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
+    { image:5, x:91.1, y:81.4, r:3.37, label:"6-5", kind:"spher", title:"Microspherocyte", note:"Small, dense and round with no central pallor — a by-product of the same mechanical damage." },
+    { image:5, x:90.0, y:88.8, r:2.93, label:"6-6", kind:"spher", title:"Microspherocyte", note:"Small, dense and round with no central pallor — a by-product of the same mechanical damage." },
+    { image:7, x:28.0, y:13.4, r:4.54, label:"8-1", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
+    { image:7, x:21.7, y:23.0, r:4.10, label:"8-2", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
+    { image:7, x:77.4, y:32.6, r:3.71, label:"8-3", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
+    { image:7, x:28.3, y:38.2, r:4.69, label:"8-4", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
+    { image:7, x:61.4, y:43.5, r:4.05, label:"8-5", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
+    { image:7, x:18.7, y:51.4, r:2.93, label:"8-6", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
+    { image:7, x:52.5, y:54.1, r:3.47, label:"8-7", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
+    { image:7, x:89.6, y:68.0, r:2.25, label:"8-8", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
+    { image:7, x:84.1, y:91.0, r:4.69, label:"8-9", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." }
   ],
   /* Which fields carry marks, for the "show published annotations" prompt. */
   markedFields:[1,5,7],
@@ -685,9 +725,10 @@ const CASE = {
     { id:"r-plt",   text:"Platelets 19 ×10⁹/L (optical 22) — severe thrombocytopenia", correct:true, weight:3 },
     { id:"r-creat", text:"Creatinine 257 µmol/L — acute kidney injury",   correct:true, weight:3 },
     { id:"r-hb",    text:"Haemoglobin 113 g/L — anaemia",                 correct:true, weight:2 },
-    { id:"r-bili",  text:"Bilirubin 49 µmol/L — raised (haemolysis)",     correct:true, weight:2 },
-    { id:"r-alt",   text:"ALT 77 U/L — mildly raised",                    correct:true, weight:1 },
-    { id:"r-caphos",text:"Calcium 1.84 and phosphate 0.4 mmol/L — both low", correct:true, weight:1 },
+    { id:"r-bili",  text:"Bilirubin 35 µmol/L — raised (haemolysis)",     correct:true, weight:2 },
+    { id:"r-alt",   text:"ALT 185 U/L — markedly raised",                 correct:true, weight:1 },
+    { id:"r-caphos",text:"Calcium 2.08 and phosphate 0.73 mmol/L — both low", correct:true, weight:1,
+      insight:"Worth noticing — but check the adjusted value before you act on it. Albumin-adjusted calcium here is 2.24 mmol/L, which is within range, so the low uncorrected calcium is largely an artefact of the correction. The phosphate is genuinely low. Reading the uncorrected number alone would have you treating a calcium that doesn't need treating." },
     { id:"r-wbc",   text:"WBC 5.46 ×10⁹/L — leucocytosis",                correct:false, penalty:2 },
     { id:"r-neut",  text:"Neutropenia",                                    correct:false, penalty:2 },
     { id:"r-mcv",   text:"Macrocytosis — raised MCV",                      correct:false, penalty:2 }
@@ -701,7 +742,12 @@ const CASE = {
     { id:"f-frag",   text:"Red-cell fragmentation — schistocytes (‘helmet’ cells)", correct:true, weight:4 },
     { id:"f-fewplt", text:"Markedly reduced platelets on the film",                 correct:true, weight:4 },
     { id:"f-micro",  text:"Occasional microspherocytes",                            correct:true, weight:2 },
-    { id:"f-poly",   text:"Polychromasia",                                          neutral:true },   // [GAP] Anas hasn't confirmed — scores 0 either way
+    /* Both confirmed by Anas 2026-08-10 as correct SUPPORTING findings — his wording, lightly
+       edited for the learner. Weighted 1 so the primary features still carry the exercise. */
+    { id:"f-poly",   text:"Polychromasia",                                          correct:true, weight:1,
+      insight:"A supporting finding, and it fits. Polychromasia is indicative of MAHA and confirms ongoing intravascular haemolysis — the marrow responding to acute red-cell destruction by releasing young, immature red cells into the circulation." },
+    { id:"f-react",  text:"Reactive lymphocytes and monocytes",                     correct:true, weight:1,
+      insight:"Easy to dismiss as incidental, but it points straight at the trigger. HUS here follows a gastroenteritis prodrome — often bloody diarrhoea — caused by E. coli toxins, and the reactive lymphocytes and monocytes are the patient's active immune response to that gastrointestinal infection." },
     { id:"f-clump",  text:"Platelet clumps — EDTA artefact",                        correct:false, penalty:2,
       consequence:"EDTA-induced pseudothrombocytopenia. Calling artefact here would have you dismiss a genuinely severe platelet count as a lab error — missing a haematological emergency." },
     { id:"f-nrbc",   text:"Nucleated red cells",                                    correct:false, penalty:2,
@@ -816,8 +862,18 @@ const CASE = {
     slideRatio:"16:9",                // the artwork's own aspect
     title:"Certificate of completion",
     body:"",                          // wording is in the artwork
-    cpdMinutes:null,                  // [GAP] intake §8
+    cpdMinutes:"15–30 minutes",       // Anas 2026-08-10: ~15 min, up to 30 if done in detail
     accreditation:"Self-certified CPD",   // [GAP] accreditation route still to confirm
+    /* Anas asked for the two organisations to be clickable in the PDF (2026-08-10) — the point
+       being that a certificate travels, so whoever reads it can find both of us. These become
+       real PDF link annotations over the artwork's own signature block; `x`/`y`/`w`/`h` are
+       fractions of the page, measured against the artwork.
+       Each rectangle covers the whole signature block — the person's name AND the organisation
+       under it — because that's the target people actually aim at. Measured off the artwork. */
+    links:[
+      { label:"Forged Frameworks", url:"https://danforgedframeworks.github.io/Portfolio/", x:0.697, y:0.860, w:0.134, h:0.062 },
+      { label:"Only Cells",        url:"https://onlycells.co.uk",                          x:0.852, y:0.860, w:0.090, h:0.062 }
+    ],
     signatory:"",                     // signatures are in the artwork
     outcomes:[                        // [GAP] drafted in intake §8 — confirm wording
       "Recognise a microangiopathic blood-film picture — red-cell fragmentation and schistocytes.",
@@ -1051,10 +1107,15 @@ const HELP=["Work through the <strong>stations</strong> left to right using <str
   "Results are released in two stages once you have — the <strong>haemolysis screen</strong>, then <strong>ADAMTS13</strong> and the trigger. Each release <strong>locks</strong> what came before it.",
   "The final diagnosis is a <strong>one-shot, recorded</strong> submission. It can’t be changed or reset afterwards.",
   "You finish with <strong>feedback</strong> on what you spotted, a downloadable <strong>CPD record</strong> and a <strong>certificate of completion</strong>."];
+/* Anas 2026-08-10, from testing on his phone: the labelled pill sits over the content on a small
+   screen and gets in the way. So it now explains itself in FULL on the intro — where there is
+   nothing to obstruct and the learner hasn't started — and drops to a reopenable "?" for the
+   working stations. On a narrow viewport that "?" is a bare circle (see the media query); on a
+   large screen it keeps its label, where he confirmed it isn't a problem. */
 function renderHelp(){ const body=$("#ocHelpBody"), panel=$("#ocHelp"), chip=$("#ocHelpChip");
-  if(root.classList.contains("is-landing")){ panel.hidden=true; chip.hidden=true; return; }
   body.innerHTML='<ul>'+HELP.map(t=>'<li>'+t+'</li>').join("")+'</ul>';
-  const min=!!state.helpMin; panel.hidden=min; chip.hidden=!min; }
+  const min = !!state.helpMin;   // startCase() sets this on leaving the intro
+  panel.hidden=min; chip.hidden=!min; }
 $("#ocHelpMin").addEventListener("click",()=>{ state.helpMin=true; saveState(); renderHelp(); });
 $("#ocHelpChip").addEventListener("click",()=>{ state.helpMin=false; saveState(); renderHelp(); });
 /* Auto-collapse the help pill the moment the learner actually starts working the case —
@@ -1267,7 +1328,12 @@ function markTicks(node,key,items){ if(!committed()) return; const chosen=state.
     /* The consequence is the teaching — show it on anything they actually called, rather than
        leaving a red cross to speak for itself (Anas's wording, answers doc §3.5). */
     if(picked && it.consequence)
-      el.insertAdjacentHTML("afterend",'<div class="oc-consequence">'+escapeHtml(it.consequence)+'</div>'); }); }
+      el.insertAdjacentHTML("afterend",'<div class="oc-consequence">'+escapeHtml(it.consequence)+'</div>');
+    /* `insight` is the mirror of `consequence` for things that ARE worth calling: it shows on a
+       correct item whether or not they picked it, so the teaching lands for the learner who
+       missed it as well as the one who got it. */
+    else if((it.correct||it.neutral) && it.insight)
+      el.insertAdjacentHTML("afterend",'<div class="oc-consequence">'+escapeHtml(it.insight)+'</div>'); }); }
 
 function updateDiffHint(node){ const hint=$("#ocDiffHint",node); if(!hint) return;
   const chosen=state.ticks["differentials"]||{}; hint.hidden=Object.keys(chosen).some(k=>chosen[k]); }
@@ -1482,14 +1548,21 @@ function applySmeHotspots(figure,listHost){
   const idx=+(figure.dataset.idx||0);
   const marks=CASE.hotspots.filter(h=>h.image===idx);
   if(listHost){
-    listHost.innerHTML = marks.length
+    /* Key only lists the types actually present in THIS field, so a field of one type doesn't
+       show a legend for something that isn't there. */
+    const kinds=[...new Set(marks.map(m=>m.kind).filter(Boolean))];
+    const KEY={frag:"Fragment",spher:"Spherocyte",mixed:"Fragment or spherocyte"};
+    listHost.innerHTML = (marks.length
       ? '<div class="oc-smelist__h">Field '+roman(idx)+' — '+marks.length+' marked</div>'
-      : '<div class="oc-smelist__h">Field '+roman(idx)+' — not marked</div>';
+      : '<div class="oc-smelist__h">Field '+roman(idx)+' — not marked</div>')
+      + (kinds.length>1
+      ? '<div class="oc-smekey">'+kinds.map(k=>'<span><i class="k-'+k+'"></i>'+escapeHtml(KEY[k]||k)+'</span>').join("")+'</div>'
+      : '');
   }
   marks.forEach((h,i)=>{
     const size=(h.r||2.6)*2;
     const ring=document.createElement("button");
-    ring.className="oc-sme"; ring.type="button";
+    ring.className="oc-sme"+(h.kind?" k-"+h.kind:""); ring.type="button";
     ring.style.left=h.x+"%"; ring.style.top=h.y+"%";
     ring.style.width=size+"%"; ring.style.aspectRatio="1";
     ring.setAttribute("aria-label",(h.title||"Marked cell")+" — "+(h.note||""));
@@ -1497,7 +1570,7 @@ function applySmeHotspots(figure,listHost){
     figure.appendChild(ring);
     if(!listHost) return;
     const item=document.createElement("div");
-    item.className="oc-smeitem";
+    item.className="oc-smeitem"+(h.kind?" k-"+h.kind:"");
     item.innerHTML='<span class="num">'+(i+1)+'</span><div><div class="t">'+escapeHtml(h.title||"Marked cell")+'</div>'+
       (h.note?'<div class="d">'+escapeHtml(h.note)+'</div>':'')+'</div>';
     listHost.appendChild(item);
@@ -1736,7 +1809,10 @@ function renderCertificate(cb){
    a PDF wrapping one JPEG is simple enough to emit by hand: catalog, pages, page, an image
    XObject with /DCTDecode (the JPEG bytes go in untouched) and a content stream. Page is the
    artwork's own aspect at A4-landscape width, so nothing is cropped or letterboxed. */
-function jpegPdf(jpeg, wpx, hpx){
+/* `links` are clickable regions over the artwork, given as fractions of the page from the TOP
+   left. PDF's own origin is the BOTTOM left, hence the y flip below. */
+function jpegPdf(jpeg, wpx, hpx, links){
+  links = links||[];
   const pw=842, ph=Math.round(842*hpx/wpx);
   const enc=(str)=>{ const a=new Uint8Array(str.length);
     for(let i=0;i<str.length;i++) a[i]=str.charCodeAt(i)&0xff; return a; };
@@ -1747,7 +1823,8 @@ function jpegPdf(jpeg, wpx, hpx){
   obj(1,"<< /Type /Catalog /Pages 2 0 R >>");
   obj(2,"<< /Type /Pages /Kids [3 0 R] /Count 1 >>");
   obj(3,"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 "+pw+" "+ph+"] "+
-        "/Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>");
+        "/Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R"+
+        (links.length?" /Annots ["+links.map((l,i)=>(6+i)+" 0 R").join(" ")+"]":"")+" >>");
   offs[4]=len;
   push("4 0 obj\n<< /Type /XObject /Subtype /Image /Width "+wpx+" /Height "+hpx+
        " /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length "+jpeg.length+" >>\nstream\n");
@@ -1755,11 +1832,19 @@ function jpegPdf(jpeg, wpx, hpx){
   push("\nendstream\nendobj\n");
   const content="q "+pw+" 0 0 "+ph+" 0 0 cm /Im0 Do Q";
   obj(5,"<< /Length "+content.length+" >>\nstream\n"+content+"\nendstream");
-  const xref=len;
-  let x="xref\n0 6\n0000000000 65535 f \n";
-  for(let i=1;i<=5;i++){ let o=String(offs[i]); while(o.length<10) o="0"+o; x+=o+" 00000 n \n"; }
+  /* Link annotations. /Border [0 0 0] keeps the ugly default box off; /F 4 sets the Print flag,
+     without which some readers drop the link when the certificate is printed to PDF again. */
+  const esc=(s)=> String(s).replace(/([\\()])/g,"\\$1");
+  links.forEach((l,i)=>{
+    const x0=l.x*pw, x1=(l.x+l.w)*pw, y1=(1-l.y)*ph, y0=(1-l.y-l.h)*ph;
+    obj(6+i,"<< /Type /Annot /Subtype /Link /Rect ["+x0.toFixed(2)+" "+y0.toFixed(2)+" "+
+      x1.toFixed(2)+" "+y1.toFixed(2)+"] /Border [0 0 0] /F 4 "+
+      "/A << /Type /Action /S /URI /URI ("+esc(l.url)+") >> >>"); });
+  const n=5+links.length, xref=len;
+  let x="xref\n0 "+(n+1)+"\n0000000000 65535 f \n";
+  for(let i=1;i<=n;i++){ let o=String(offs[i]); while(o.length<10) o="0"+o; x+=o+" 00000 n \n"; }
   push(x);
-  push("trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n"+xref+"\n%%EOF\n");
+  push("trailer\n<< /Size "+(n+1)+" /Root 1 0 R >>\nstartxref\n"+xref+"\n%%EOF\n");
   const out=new Uint8Array(len); let o=0; parts.forEach(b=>{ out.set(b,o); o+=b.length; });
   return new Blob([out],{type:"application/pdf"});
 }
@@ -1770,7 +1855,7 @@ function downloadCertificate(){
     const b64=cv.toDataURL("image/jpeg",0.92).split(",")[1], bin=atob(b64);
     const bytes=new Uint8Array(bin.length);
     for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
-    const url=URL.createObjectURL(jpegPdf(bytes,cv.width,cv.height));
+    const url=URL.createObjectURL(jpegPdf(bytes,cv.width,cv.height,CASE.certificate.links));
     const a=document.createElement("a"); a.href=url; a.download=CASE.id+"_certificate.pdf";
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(()=> URL.revokeObjectURL(url),1500);
@@ -1885,8 +1970,12 @@ $("#ocModalOk").addEventListener("click",()=>{ const fn=modalOk; closeModal(); i
 document.addEventListener("keydown",(e)=>{ if(e.key==="Escape"&&modal.classList.contains("show")) closeModal(); });
 
 /* ===== landing → teal cleanse → interactive ===== */
-function runLaunch(){ if(reduceMotion){ root.classList.remove("is-landing"); render(); resize(); return; }
-  launchEl.classList.add("run"); setTimeout(()=>{ root.classList.remove("is-landing"); render(); },520); setTimeout(()=>{ launchEl.classList.remove("run"); resize(); },990); }
+/* Starting the case collapses the help panel to its chip. Doing it here rather than inferring
+   it in renderHelp() keeps the meaning explicit — "the intro has been read" — and avoids
+   overloading helpMin, which freshState() already initialises to false. */
+function startCase(){ state.helpMin=true; saveState(); root.classList.remove("is-landing"); render(); }
+function runLaunch(){ if(reduceMotion){ startCase(); resize(); return; }
+  launchEl.classList.add("run"); setTimeout(startCase,520); setTimeout(()=>{ launchEl.classList.remove("run"); resize(); },990); }
 $("#ocBegin").addEventListener("click", runLaunch);
 (function buildGlyphs(){ const g=$("#ocLaunchGlyphs"); if(!g) return;
   const I={ cell:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3.4" fill="currentColor" opacity=".5"/></svg>',
@@ -1964,7 +2053,10 @@ $("#ocBgToggle").addEventListener("click",()=> setBg(state.bgAnim===false));
 $("#ocBgToggleIntro").addEventListener("click",()=> setBg(state.bgAnim===false));
 
 /* ===== boot ===== */
-root.classList.add("is-landing"); setBg(state.bgAnim!==false); resize();
+/* renderHelp() runs here as well as from render(): render() only fires once the learner has
+   left the landing, so without this the intro — the one screen Anas wants it open on — would
+   never paint the panel at all. */
+root.classList.add("is-landing"); setBg(state.bgAnim!==false); renderHelp(); resize();
 })();
 </script>
 </body>
