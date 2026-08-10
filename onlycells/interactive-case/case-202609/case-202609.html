@@ -572,7 +572,7 @@ const CASE = {
     "Students and trainees · laboratory and clinical"
   ],
   history:"35-year-old male presented with fatigue and pallor, easy bruising, reduced urine output and mild abdominal pain following a recent gastrointestinal illness.",
-  filmTrigger:"Due to the severely low PLT results a blood film was made.",
+  filmTrigger:"Due to the PLT results a blood film was made.",
 
   /* ---- TIER 0 · shown upfront ----------------------------------------------------------
      Anas placed the full FBC and the coagulation screen upfront (answers doc §2.2, 2026-08-04).
@@ -866,13 +866,23 @@ const CASE = {
     accreditation:"Self-certified CPD",   // [GAP] accreditation route still to confirm
     /* Anas asked for the two organisations to be clickable in the PDF (2026-08-10) — the point
        being that a certificate travels, so whoever reads it can find both of us. These become
-       real PDF link annotations over the artwork's own signature block; `x`/`y`/`w`/`h` are
-       fractions of the page, measured against the artwork.
-       Each rectangle covers the whole signature block — the person's name AND the organisation
-       under it — because that's the target people actually aim at. Measured off the artwork. */
+       real PDF link annotations over the artwork's own signature block.
+
+       x/y/w/h is the CLICKABLE rectangle, as fractions of the page from the top left. It covers
+       the whole signature block — the person's name and the organisation under it — because
+       that's the target people actually aim at.
+
+       ul is the UNDERLINE painted onto the canvas, so the link is visibly a link: without it the
+       PDF is clickable but gives the reader no reason to try. It tracks the organisation line
+       only, sits just below the descenders, and stays inside the clickable rectangle.
+
+       Both were measured off the artwork by locating the text bands, not by eye — a first
+       attempt at the rectangles sat a whole line too high. */
     links:[
-      { label:"Forged Frameworks", url:"https://danforgedframeworks.github.io/Portfolio/", x:0.697, y:0.860, w:0.134, h:0.062 },
-      { label:"Only Cells",        url:"https://onlycells.co.uk",                          x:0.852, y:0.860, w:0.090, h:0.062 }
+      { label:"Forged Frameworks", url:"https://danforgedframeworks.github.io/Portfolio/",
+        x:0.697, y:0.860, w:0.134, h:0.070, ul:{ x:0.6995, w:0.1291, y:0.9215 } },
+      { label:"Only Cells",        url:"https://onlycells.co.uk",
+        x:0.852, y:0.860, w:0.090, h:0.070, ul:{ x:0.8728, w:0.0664, y:0.9215 } }
     ],
     signatory:"",                     // signatures are in the artwork
     outcomes:[                        // [GAP] drafted in intake §8 — confirm wording
@@ -1794,7 +1804,15 @@ function renderCertificate(cb){
     ctx.fillStyle=MUTED; ctx.font='26px Inter, "Segoe UI", sans-serif';
     ctx.fillText(certMetaLine(), W/2, H*0.775);
   }
-  const done=()=>{ paintText(); cb(cv); };
+  /* Underline the two organisation names so the PDF's link annotations are visibly links.
+     Teal rather than the artwork's navy: it reads as a link without competing with the
+     signatures, and it's the brand's own accent. */
+  function paintLinks(){ const L=(C.links||[]).filter(l=>l.ul);
+    if(!L.length) return;
+    ctx.strokeStyle="#2E9E8F"; ctx.lineWidth=Math.max(3, Math.round(H*0.0035)); ctx.lineCap="round";
+    L.forEach(l=>{ const y=l.ul.y*H;
+      ctx.beginPath(); ctx.moveTo(l.ul.x*W, y); ctx.lineTo((l.ul.x+l.ul.w)*W, y); ctx.stroke(); }); }
+  const done=()=>{ paintText(); paintLinks(); cb(cv); };
   /* "successfully participating" only when the diagnosis actually matched; otherwise the
      participation wording. Two slides from Anas's deck. */
   const art = state.assess.correct ? C.backgroundPass : C.backgroundPart;
