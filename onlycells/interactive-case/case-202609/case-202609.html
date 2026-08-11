@@ -617,8 +617,10 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
    VERBATIM from the Only Cells pages (onlycells.co.uk/mm250818/ and /mm250818-hus/)
    via interactive-case/case-mm250818/case-mm250818_intake.md.
 
-   [GAP] = flagged open item in the intake — authored here so the build isn't
-   blocked; must be confirmed with Anas / the SME before this goes live.
+   [GAP] marked open items authored so the build wasn't blocked. ALL CLOSED 2026-08-11 —
+   signed off by Daniel Boyland, who worked as a morphologist in haematology and is the SME
+   for this purpose. Anas remains the content owner and may still revise anything here; what
+   changed is that nothing is now shipping unreviewed.
    ========================================================================== */
 const CASE = {
   id:"202609",                         /* year + month, per Anas 2026-08-04. His email typed
@@ -804,11 +806,11 @@ const CASE = {
     { id:"r-alt",   text:"ALT 185 U/L — markedly raised",                 correct:true, weight:1 },
     { id:"r-caphos",text:"Calcium 2.08 and phosphate 0.73 mmol/L — both low", correct:true, weight:1,
       insight:"Worth noticing — but check the adjusted value before you act on it. Albumin-adjusted calcium here is 2.24 mmol/L, which is within range, so the low uncorrected calcium is largely an artefact of the correction. The phosphate is genuinely low. Reading the uncorrected number alone would have you treating a calcium that doesn't need treating." },
-    /* [QUERY OUT 2026-08-10] Anas asked whether this was an intentional red herring — it is, it's
-       a detractor. He's right that the wording sits oddly against a normal reference range, but
-       the fix is his to choose, not ours to impose: left exactly as he last saw it until he
-       answers. Do not reword without his say-so. */
-    { id:"r-wbc",   text:"WBC 5.46 ×10⁹/L — leucocytosis",                correct:false, penalty:2 },
+    /* RESOLVED 2026-08-11 (Daniel). Confirmed as a deliberate detractor and the wording stays —
+       the mismatch between the label and the range IS the trap. What was missing was the
+       teaching: picking it scored an over-call with nothing said. Now it explains itself. */
+    { id:"r-wbc",   text:"WBC 5.46 ×10⁹/L — leucocytosis",                correct:false, penalty:2,
+      consequence:"Read the number against its range: 5.46 ×10⁹/L sits inside 4.0–11.0, so there is no leucocytosis here — the label is the trap. Calling one would steer you towards infection or a myeloproliferative process and away from the microangiopathy the film is actually showing." },
     { id:"r-neut",  text:"Neutropenia",                                    correct:false, penalty:2 },
     { id:"r-mcv",   text:"Macrocytosis — raised MCV",                      correct:false, penalty:2 }
   ],
@@ -888,10 +890,11 @@ const CASE = {
       "ITP — explains the {{fbc|platelets}} but not the fragmentation, the haemolysis or the {{bio|acute kidney injury}}.",
       "EDTA pseudothrombocytopenia — excluded by {{film|the film}} itself: genuinely low, no clumps.",
       "Hereditary spherocytosis — spherocytes are only a minor secondary feature here; HS is an intrinsic membrane defect that does not cause schistocytic fragmentation or acute renal failure.",
-      /* [AUTHORED — confirm with Anas/SME] The three below were drafted to close the gap Daniel
-         flagged: every distractor a learner can choose should have a stated reason for exclusion,
-         otherwise the feedback is silent on exactly the answers they got wrong. Wording is ours,
-         not Anas's. */
+      /* Drafted here to close the gap Daniel flagged: every distractor a learner can choose
+         should have a stated reason for exclusion, or the feedback is silent on exactly the
+         answers they got wrong.
+         APPROVED 2026-08-11 by Daniel Boyland — morphologist, haematology — as clinically
+         correct. Anas is still free to revise as content owner. */
       "Warm autoimmune haemolytic anaemia — excluded by the negative DAT: immune haemolysis is Coombs-positive. Warm AIHA also produces spherocytes without schistocytic fragmentation, and does not explain the thrombocytopenia or the acute kidney injury.",
       "Megaloblastic anaemia (B12/folate) — excluded by a {{indices|normal MCV}} with no hypersegmented neutrophils on {{film|the film}}. The raised LDH here is intravascular haemolysis, not the ineffective erythropoiesis of a megaloblastic process.",
       "Acute leukaemia — excluded by a {{fbc|normal white cell count}} with no blasts on {{film|the film}}. The cytopenias here are consumptive, driven by microvascular thrombosis, rather than the result of marrow replacement."
@@ -910,7 +913,7 @@ const CASE = {
     ]
   },
 
-  /* Morphology report skeleton — intake §7. [GAP] confirm mandatory vs optional fields with Anas. */
+  /* Morphology report skeleton — intake §7. Field set confirmed 2026-08-11 (Daniel). */
   report:[
     ["RBC","Red-cell fragmentation with schistocytes; occasional microspherocytes."],
     ["WBC","Normal count. Some reactive lymphocytes and monocytes present."],   // Anas 2026-08-10
@@ -931,7 +934,10 @@ const CASE = {
      Only Cells isn't currently accredited to make.
      mode:"scored" re-enables the percentage, the pass mark and an Achieved/Not-achieved
      outcome — the machinery below is intact, it's a one-word flip.
-     [GAP] confirm the final position (and, if scored, the weights/pass mark) with Anas. */
+     SETTLED 2026-08-11 (Daniel): formative, and NO PASS MARK — the case is binary per item
+     (identified / missed / over-called) and that is the whole feedback model. `passMark` and
+     `weights` below are inert under formative mode. They are kept rather than deleted so the
+     option survives, but treat them as a future decision, not an open question. */
   scoring:{
     mode:"formative",
     passMark:70,                      // only used when mode === "scored"
@@ -953,7 +959,7 @@ const CASE = {
     title:"Certificate of completion",
     body:"",                          // wording is in the artwork
     cpdMinutes:"15–30 minutes",       // Anas 2026-08-10: ~15 min, up to 30 if done in detail
-    accreditation:"Self-certified CPD",   // [GAP] accreditation route still to confirm
+    accreditation:"Self-certified CPD",   // confirmed 2026-08-11 (Daniel) — this is the route
     /* Anas asked for the two organisations to be clickable in the PDF (2026-08-10) — the point
        being that a certificate travels, so whoever reads it can find both of us. These become
        real PDF link annotations over the artwork's own signature block.
@@ -984,14 +990,18 @@ const CASE = {
     feedbackUrl:"",
     feedbackTitle:"How did you find this format?",
     feedbackBody:"This is a new format for Morphology Monthly, and Only Cells would like to know whether it worked for you. It takes a couple of minutes and it's entirely optional — your certificate is already downloaded and nothing here depends on it.",
-    outcomes:[                        // [GAP] drafted in intake §8 — confirm wording
+    outcomes:[                        // wording confirmed 2026-08-11 (Daniel)
       "Recognise a microangiopathic blood-film picture — red-cell fragmentation and schistocytes.",
       "Build a differential for thrombocytopenia with red-cell fragmentation.",
       "Use ADAMTS13 activity to distinguish HUS from TTP."
     ]
   },
 
-  references:[]                        // [GAP] intake §9 — none supplied
+  /* Deliberately empty (2026-08-11, Daniel). This is an experiential clinical case, not a
+     reading-based module — the learning is in working the film, so a reading list would be
+     decoration. Optional further-reading signposting has been raised with Anas as a separate
+     idea, possibly hosted on the Only Cells site; if it lands it goes here. */
+  references:[]
 };
 
 /* ===== stations — Anas's 2-screen CPD design (intake §6) ===== */
@@ -1858,7 +1868,7 @@ function toggleHotspots(node,on){ const figure=node.querySelector(".oc-figure");
   const wrap=node.querySelector(".oc-smewrap"); if(wrap) wrap.classList.toggle("showlist",on);
   resize(); }
 
-/* ===== scoring (spec §4.4 · weights + pass mark AUTHORED — [GAP] confirm with Anas) ===== */
+/* ===== scoring (formative; no pass mark — settled 2026-08-11, see CASE.scoring) ===== */
 const scored=()=> CASE.scoring.mode==="scored";
 /* Qualitative tally used by formative mode — "3 of 4 identified, 1 over-call" says far more
    to a learner than a percentage does, and makes no attainment claim. */
