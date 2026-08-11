@@ -218,7 +218,10 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
    with it, so the rotation sits on a ::before that carries the border, leaving the label
    upright. `mixed` keeps a dotted circle: it means "Anas hasn't told us which", and it should
    not look like a confident call either way. */
-.oc-sme.k-frag{ border-color:transparent; }
+/* box-shadow must go too, not just the border. The base .oc-sme shadow follows border-radius:50%,
+   so leaving it draws a faint CIRCLE under every diamond — Anas saw both shapes stacked. The
+   ::before carries its own shadow, so nothing is lost. */
+.oc-sme.k-frag{ border-color:transparent; box-shadow:none; }
 .oc-sme.k-frag::before{ content:""; position:absolute; inset:0;
   border:2.5px solid var(--oc-teal-bright); transform:rotate(45deg);
   box-shadow:0 0 0 1.5px rgba(0,0,0,.45), inset 0 0 0 1.5px rgba(0,0,0,.35); }
@@ -413,6 +416,23 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
 .oc-note a{ color:var(--oc-teal-bright); text-decoration:underline; text-underline-offset:2px; }
 .oc-note a:hover{ color:#fff; }
 
+/* Cross-references from the model answer down to the results it cites. A <button>, not an <a>:
+   it performs an action rather than navigating, and an href would break when embedded. Styled
+   as a link so it still reads as one. */
+.oc-xref{ background:none; border:0; padding:0; font:inherit; color:var(--oc-teal-bright);
+  text-decoration:underline; text-underline-offset:2px; cursor:pointer; }
+.oc-xref:hover{ color:#fff; }
+/* Brief highlight on arrival — landing mid-page with no acknowledgement leaves you hunting for
+   what moved. */
+.oc-xref-hit{ animation:oc-xrefflash 2s ease-out; border-radius:8px; }
+@keyframes oc-xrefflash{ 0%,55%{ box-shadow:0 0 0 3px var(--oc-teal-bright); } 100%{ box-shadow:0 0 0 3px transparent; } }
+@media (prefers-reduced-motion:reduce){ .oc-xref-hit{ animation:none; box-shadow:0 0 0 3px var(--oc-teal-bright); } }
+.oc-xrefback{ position:fixed; left:16px; bottom:16px; z-index:56; border-radius:999px;
+  border:2px solid var(--oc-teal-bright); background:var(--oc-navy-deep); color:var(--oc-teal-bright);
+  font-size:13px; font-weight:700; cursor:pointer; padding:10px 16px; box-shadow:0 8px 22px rgba(0,0,0,.5); }
+.oc-xrefback[hidden]{ display:none; }
+.oc-xrefback:hover{ color:#fff; border-color:#fff; }
+
 /* "How this works" — a floating pill, bottom-right, over the page rather than docked in the
    flow (so it never inflates the auto-resize iframe height). Shown expanded on arrival at
    Station 1; auto-collapses to the reopen chip the moment the learner actually starts working
@@ -532,10 +552,6 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
       <div class="oc-screentag" id="ocScreenTag"></div>
     </div>
     <div class="oc-contentwrap"><div id="ocContent" aria-live="polite"></div></div>
-    <div class="oc-help" id="ocHelp" hidden>
-      <div class="oc-help__head"><span>How this works</span><button class="oc-help__min" id="ocHelpMin">Minimise ✕</button></div>
-      <div class="oc-help__body" id="ocHelpBody"></div>
-    </div>
     <div class="oc-nav">
       <button class="oc-btn oc-btn--ghost" id="ocBack">‹ Back</button>
       <div class="oc-navright">
@@ -547,6 +563,15 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
   </div>
 
   <div class="oc-wipe" id="ocWipe" aria-hidden="true"></div>
+  <!-- The help panel and its chip BOTH sit outside .oc-stage. The stage is display:none on the
+       landing, so a panel nested inside it can never render there no matter what its own hidden
+       attribute says — which is exactly the bug Anas reported: the DOM looked right and the
+       screen was empty. Keep these two siblings; do not move the panel back into the stage. -->
+  <div class="oc-help" id="ocHelp" hidden>
+    <div class="oc-help__head"><span>How this works</span><button class="oc-help__min" id="ocHelpMin">Minimise ✕</button></div>
+    <div class="oc-help__body" id="ocHelpBody"></div>
+  </div>
+  <button class="oc-xrefback" id="ocXrefBack" hidden>‹ Back to the model answer</button>
   <button class="oc-helpchip" id="ocHelpChip" title="How this works" aria-label="How this works" hidden><span class="q" aria-hidden="true">?</span><span class="lbl">How this works</span></button>
 
   <div class="oc-launch" id="ocLaunch" aria-hidden="true"><div class="oc-launch__glyphs" id="ocLaunchGlyphs"></div></div>
@@ -669,8 +694,8 @@ const CASE = {
   adamts13:{ label:"ADAMTS13 activity", value:64.7, unit:"IU/dL", ref:"60–146 · severe deficiency < 10 IU/dL",
     verdict:"Within normal range — TTP excluded",
     note:"A severely reduced ADAMTS13 (typically < 10 IU/dL) is what defines TTP. A normal result takes TTP off the table and, with the AKI and the preceding GI illness, points to HUS." },
-  stec:{ label:"Stool culture / PCR",
-    lines:["PCR: positive for stx1 / stx2 genes","Culture: E. coli O157:H7 isolated"],
+  stec:{ label:"Stool culture/PCR",
+    lines:["PCR: positive for stx1/stx2 genes","Culture: E. coli O157:H7 isolated"],
     verdict:"Shiga toxin-producing E. coli — the trigger",
     note:"Confirms STEC-HUS (typical HUS). The preceding gastrointestinal illness was the source; Shiga toxin drives the endothelial injury that produces the microangiopathy." },
 
@@ -788,7 +813,7 @@ const CASE = {
     { id:"f-spher",  text:"Spherocytes as the dominant abnormality",                correct:false, penalty:2,
       consequence:"Immune or intrinsic haemolytic anaemia — warm AIHA or hereditary spherocytosis — overlooking the microvascular fibrin shear that produces schistocytes." },
     { id:"f-hyper",  text:"Hypersegmented neutrophils",                             correct:false, penalty:2,
-      consequence:"Megaloblastic anaemia (B12 / folate). Sends you down a metabolic pathway, mistaking the raised LDH for ineffective erythropoiesis rather than mechanical intravascular haemolysis." }
+      consequence:"Megaloblastic anaemia (B12/folate). Sends you down a metabolic pathway, mistaking the raised LDH for ineffective erythropoiesis rather than mechanical intravascular haemolysis." }
   ],
 
   /* ---- Part B: differential (Screen 2, before the haemolysis screen) ----
@@ -807,7 +832,7 @@ const CASE = {
       consequence:"An intrinsic membrane defect. It does not cause schistocytic fragmentation or acute renal failure." },
     { id:"d-aiha", text:"Warm autoimmune haemolytic anaemia",           correct:false, penalty:1,
       consequence:"Immune-mediated haemolysis — which the negative DAT excludes." },
-    { id:"d-meg",  text:"Megaloblastic anaemia (B12 / folate)",         correct:false, penalty:1,
+    { id:"d-meg",  text:"Megaloblastic anaemia (B12/folate)",         correct:false, penalty:1,
       consequence:"Does not explain the fragmentation, the thrombocytopenia or the AKI." },
     { id:"d-leuk", text:"Acute leukaemia",                              correct:false, penalty:1,
       consequence:"No blasts on the film and a normal white count — this is not a marrow process." }
@@ -824,18 +849,25 @@ const CASE = {
       "Hereditary spherocytosis",
       "EDTA-induced pseudothrombocytopenia (artefact)"
     ],
-    explanation:"Microangiopathic haemolytic anaemia (fragments / schistocytes) + severe thrombocytopenia + acute kidney injury (raised creatinine) + a recent gastrointestinal illness, with a NORMAL ADAMTS13 → haemolytic uraemic syndrome, not TTP."
+    explanation:"Microangiopathic haemolytic anaemia (fragments/schistocytes) + severe thrombocytopenia + acute kidney injury (raised creatinine) + a recent gastrointestinal illness, with a NORMAL ADAMTS13 → haemolytic uraemic syndrome, not TTP."
   },
 
   /* Model answers shown against the learner's free text in the record (formative, unscored).
      Rule-out lines are Anas's own wording where he rewrote them (2026-08-04). */
   model:{
     ruleout:[
-      "TTP — the key differential. Ruled out by a normal ADAMTS13 (severe deficiency, usually < 10 IU/dL, defines TTP).",
-      "DIC — unlikely without active coagulation factor consumption; a normal PT, APTT and fibrinogen screen cleanly separates DIC from localised microvascular thrombosis.",
-      "ITP — explains the platelets but not the fragmentation, the haemolysis or the AKI.",
+      "TTP — the key differential. Ruled out by a {{adamts|normal ADAMTS13}} (severe deficiency, usually < 10 IU/dL, defines TTP).",
+      "DIC — unlikely without active coagulation factor consumption; a {{coag|normal PT, APTT and fibrinogen screen}} cleanly separates DIC from localised microvascular thrombosis.",
+      "ITP — explains the {{fbc|platelets}} but not the fragmentation, the haemolysis or the {{bio|acute kidney injury}}.",
       "EDTA pseudothrombocytopenia — excluded by the film itself: genuinely low, no clumps.",
-      "Hereditary spherocytosis — spherocytes are only a minor secondary feature here; HS is an intrinsic membrane defect that does not cause schistocytic fragmentation or acute renal failure."
+      "Hereditary spherocytosis — spherocytes are only a minor secondary feature here; HS is an intrinsic membrane defect that does not cause schistocytic fragmentation or acute renal failure.",
+      /* [AUTHORED — confirm with Anas/SME] The three below were drafted to close the gap Daniel
+         flagged: every distractor a learner can choose should have a stated reason for exclusion,
+         otherwise the feedback is silent on exactly the answers they got wrong. Wording is ours,
+         not Anas's. */
+      "Warm autoimmune haemolytic anaemia — excluded by the {{haem|negative DAT}}: immune haemolysis is Coombs-positive. Warm AIHA also produces spherocytes without schistocytic fragmentation, and does not explain the thrombocytopenia or the acute kidney injury.",
+      "Megaloblastic anaemia (B12/folate) — excluded by a {{indices|normal MCV}} with no hypersegmented neutrophils on the film. The raised LDH here is intravascular haemolysis, not the ineffective erythropoiesis of a megaloblastic process.",
+      "Acute leukaemia — excluded by a {{fbc|normal white cell count}} with no blasts on the film. The cytopenias here are consumptive, driven by microvascular thrombosis, rather than the result of marrow replacement."
     ],
     filmObs:[
       "Red-cell fragmentation with schistocytes — the hallmark of a microangiopathic process",
@@ -1268,7 +1300,8 @@ function renderStation(st){
       (committed()?
         '<h3>The model rule-out</h3>'+
         '<div class="oc-callout"><div class="h">How each one is excluded</div><ul>'+
-          CASE.model.ruleout.map(r=>'<li>'+escapeHtml(r)+'</li>').join("")+'</ul></div>'
+          /* Station 3 has no results to jump to, so tokens are flattened to plain label text. */
+          CASE.model.ruleout.map(r=>'<li>'+escapeHtml(r.replace(/\{\{\w+\|([^}]+)\}\}/g,"$1"))+'</li>').join("")+'</ul></div>'
         :'<div class="oc-note">Once you continue and release the haemolysis screen, these answers lock.</div>'));
     node._after=()=>{ markTicks(node,"differentials",CASE.differentials); updateDiffHint(node); };
 
@@ -1327,12 +1360,12 @@ function renderStation(st){
         'Every station is open again and now shows how your responses compare — what you identified, what you missed, and where an over-call would have led. Use the numbered stations at the top to look back through them.</div>'+
       '<h3>The published answer</h3>'+
       '<div class="oc-callout pop"><div class="h">Diagnosis</div><strong style="font-size:20px">'+escapeHtml(CASE.diagnosis.answer)+'</strong><p style="margin-top:6px">'+escapeHtml(CASE.diagnosis.explanation)+'</p></div>'+
-      '<h3>ADAMTS13 — the discriminator</h3>'+adamtsVerdictHTML()+
+      '<h3 id="ocAdamtsBlock">ADAMTS13 — the discriminator</h3>'+adamtsVerdictHTML()+
       '<h3>The trigger</h3>'+stecHTML(true)+
       '<div class="oc-callout lilac"><div class="h">Teaching point</div>'+escapeHtml(CASE.teachingPoint)+'</div>'+
       '<h3>What you would rule out, and how</h3>'+
-      '<div class="oc-callout"><div class="h">Model answer</div><ul>'+CASE.model.ruleout.map(r=>'<li>'+escapeHtml(r)+'</li>').join("")+'</ul></div>'+
-      '<h3>Morphology report</h3>'+reportHTML()+
+      '<div class="oc-callout" id="ocRuleoutBlock"><div class="h">Model answer</div><ul>'+CASE.model.ruleout.map(r=>'<li>'+ruleoutText(r)+'</li>').join("")+'</ul></div>'+
+      '<h3 id="ocHaemBlock">Morphology report</h3>'+reportHTML()+
       '<h3>The film, marked by Only Cells</h3>'+
       '<p class="oc-narrate">These are the '+(CASE.markedFields||[]).length+' fields Anas marked. Each ring circles the cell without covering it — hover a ring or an entry in the list to link the two.</p>'+
       '<div style="margin:10px 0"><button class="oc-btn oc-btn--primary" id="ocAnno">Show the marked cells</button></div>'+
@@ -1376,6 +1409,7 @@ function renderStation(st){
         anno.textContent=on?"Hide the marked cells":"Show the marked cells";
         anno.className="oc-btn "+(on?"oc-btn--ghost":"oc-btn--primary"); resize(); });
       wireRevealedResults(node);
+      wireXrefs(node);
       $("#ocName",node).addEventListener("input",(e)=>{ state.learner.name=e.target.value; saveState(); });
       $("#ocReg",node).addEventListener("input",(e)=>{ state.learner.reg=e.target.value; saveState(); });
       $("#ocPdf",node).addEventListener("click",()=> printOut("record"));
@@ -1403,6 +1437,47 @@ const REVEAL_GROUPS=[
   ["ocBioRv",     "Biochemistry",          "renal · liver · bone profile",              "biochem"]
 ];
 function revealedResultsHTML(){ return REVEAL_GROUPS.map(g=> foldHTML(g[0],g[1],g[2])).join(""); }
+
+/* ===== cross-references from the model answer to the results it cites =====
+   The model text carries {{target|label}} tokens. `escapeHtml` runs FIRST and the tokens are
+   expanded after, so nothing in the clinical wording can inject markup.
+   Targets are element ids on the final station; `ruleoutText()` is the only place that knows
+   the mapping, so adding a new one is a single line. */
+const XREF={ fbc:"ocFbcRv", diff:"ocDiffRv", indices:"ocIndicesRv", coag:"ocCoagRv",
+             bio:"ocBioRv", haem:"ocHaemBlock", adamts:"ocAdamtsBlock" };
+function ruleoutText(str){
+  return escapeHtml(str).replace(/\{\{(\w+)\|([^}]+)\}\}/g,(m,k,label)=>
+    XREF[k] ? '<button type="button" class="oc-xref" data-x="'+XREF[k]+'">'+label+'</button>' : label); }
+
+/* Scroll an arbitrary element into view. Standalone we can do it ourselves; EMBEDDED the parent
+   owns the scrollbar because the iframe is sized to full content height, so an ordinary anchor
+   jump does nothing for a real learner. Same postMessage route the station changes use. */
+function scrollToEl(el){
+  if(!el) return;
+  const top=Math.max(0, el.getBoundingClientRect().top - root.getBoundingClientRect().top - 16);
+  if(window.parent && window.parent!==window){
+    window.parent.postMessage({ type:"oc-scroll", id:CASE.id, top:top }, "*");
+  } else {
+    const y=Math.max(0, el.getBoundingClientRect().top + window.scrollY - 16);
+    try{ window.scrollTo({ top:y, behavior: reduceMotion?"auto":"smooth" }); }catch(e){ window.scrollTo(0,y); }
+  } }
+
+/* One shared return pill rather than one per link — a learner can only be in one place at a
+   time, and a stack of "back" buttons is worse than none. */
+function wireXrefs(node){
+  const pill=$("#ocXrefBack");
+  node.querySelectorAll(".oc-xref").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const target=node.querySelector("#"+btn.dataset.x); if(!target) return;
+      const fold=target.closest("details"); if(fold) fold.open=true;   // open it, or they land on a closed row
+      target.classList.add("oc-xref-hit");
+      setTimeout(()=> target.classList.remove("oc-xref-hit"), 2000);
+      scrollToEl(fold||target);
+      if(pill){ pill.hidden=false; pill.dataset.to="ocRuleoutBlock"; }
+    }); });
+  if(pill && !pill.dataset.wired){ pill.dataset.wired="1";
+    pill.addEventListener("click",()=>{
+      scrollToEl(document.getElementById(pill.dataset.to||"ocRuleoutBlock")); pill.hidden=true; }); } }
 function wireRevealedResults(node){
   REVEAL_GROUPS.forEach(g=> buildStats($("#"+g[0],node), CASE[g[3]], false, true)); }
 
@@ -1437,7 +1512,10 @@ function markTicks(node,key,items){ if(!committed()) return; const chosen=state.
     let cls="", mk="";
     if(it.neutral){ if(picked){ cls=""; mk="not counted"; } }
     else if(it.correct && picked){ cls="marked-correct"; mk="correct"; }
-    else if(it.correct && !picked){ cls="marked-missed"; mk="missed"; }
+    /* On the differential list a correct-but-unticked item isn't a failure, it's a candidate
+       they didn't consider — "missed" reads as a rebuke for thinking too narrowly. Anas,
+       2026-08-10. Elsewhere (results, film features) "missed" is accurate and stays. */
+    else if(it.correct && !picked){ cls="marked-missed"; mk = (key==="differentials") ? "possible cause" : "missed"; }
     else if(!it.correct && picked){ cls="marked-wrong"; mk="over-call"; }
     if(cls) el.classList.add(cls);
     if(mk) el.insertAdjacentHTML("beforeend",'<span class="mk">'+mk+'</span>');
@@ -1545,7 +1623,7 @@ function figureHTML(idx,opts){ opts=opts||{};
     return '<button data-i="'+i+'" aria-pressed="'+(i===idx)+'" aria-label="Field '+roman(i)+(n?(", "+n+" of your markers"):"")+(isMarked?", marked by Only Cells":"")+'">'+
       '<span class="rn">'+roman(i)+'</span><img src="'+imgUrl(s.src)+'" alt="" loading="lazy" onerror="this.style.opacity=.3">'+
       (n?'<span class="mkd">'+n+'</span>':'')+(isMarked?'<span class="smek">★</span>':'')+'</button>'; }).join("");
-  const annoBtn=opts.annotate?'<button class="oc-annobtn" id="ocAnnoBtn" aria-pressed="false">✎ Add / adjust markers</button>':'';
+  const annoBtn=opts.annotate?'<button class="oc-annobtn" id="ocAnnoBtn" aria-pressed="false">✎ Add/adjust markers</button>':'';
   const controls='<span class="oc-seg" id="ocMagSeg"><button data-m="hex">Hexagon</button><button data-m="frame">Frame + panel</button></span>'+
     '<span class="oc-zoomctl">zoom <button id="ocZoomDown" title="Zoom out" aria-label="Zoom out">−</button><span id="ocZoomVal">3.0×</span><button id="ocZoomUp" title="Zoom in" aria-label="Zoom in">+</button></span>'+
     '<span class="oc-hint">scroll · + / − · keyboard</span>'+annoBtn;
@@ -1618,7 +1696,7 @@ function wireFigure(node,idx,annoKey,opts){ opts=opts||{}; const readOnly=opts.r
 
   const annoBtn=$("#ocAnnoBtn",node), banner=$("#ocMarkBanner",node);
   if(annoBtn) annoBtn.addEventListener("click",()=>{ annotateMode=!annotateMode; annoBtn.setAttribute("aria-pressed",annotateMode);
-    annoBtn.textContent=annotateMode?"✓ Done with markers":"✎ Add / adjust markers"; figure.classList.toggle("annotate-on",annotateMode);
+    annoBtn.textContent=annotateMode?"✓ Done with markers":"✎ Add/adjust markers"; figure.classList.toggle("annotate-on",annotateMode);
     if(banner) banner.hidden=!annotateMode; if(annotateMode) updateLoupe(null); applyStyle(); });
   figure.addEventListener("pointerdown",(e)=>{ if(!annotateMode||readOnly) return;
     const pinEl=e.target.closest(".oc-pin.user"); if(pinEl){ dragPin=+pinEl.dataset.i; figure.setPointerCapture(e.pointerId); e.preventDefault(); return; }
@@ -1828,7 +1906,7 @@ function buildRecordDOM(){ const p=$("#oc-print"); p.innerHTML=""; const wrap=do
     ["Differential considered", ticksText("differentials",CASE.differentials)||"(none selected)", "HUS; TTP; DIC; ITP"],
     ["Did the haemolysis screen change your differential"+(state.confidence["haemolysis"]?" · "+CONF[state.confidence["haemolysis"]-1]:""),
       state.reflections["haemNote"]||"(none)", CASE.haemolysis.summary],
-    ["What would you rule out, and how"+(state.confidence["ruleout"]?" · "+CONF[state.confidence["ruleout"]-1]:""), state.reflections["ruleout"]||"(none)", CASE.model.ruleout.join(" ")]
+    ["What would you rule out, and how"+(state.confidence["ruleout"]?" · "+CONF[state.confidence["ruleout"]-1]:""), state.reflections["ruleout"]||"(none)", CASE.model.ruleout.map(r=>r.replace(/\{\{\w+\|([^}]+)\}\}/g,"$1")).join(" ")]
   ];
   wrap.insertAdjacentHTML("beforeend",'<h2>Your responses</h2>');
   secs.forEach(([q,you,exp])=> wrap.insertAdjacentHTML("beforeend",
@@ -2052,7 +2130,7 @@ function summaryText(){ const L=[], LB=CASE.scoring.labels;
   if(state.reflections["further"]) L.push("Further observations: "+state.reflections["further"]);
   L.push("CORRECT ANSWER: "+CASE.diagnosis.answer);
   L.push("Explanation: "+CASE.diagnosis.explanation);
-  L.push(""); L.push("MODEL RULE-OUT REASONING:"); CASE.model.ruleout.forEach(r=> L.push("  - "+r));
+  L.push(""); L.push("MODEL RULE-OUT REASONING:"); CASE.model.ruleout.forEach(r=> L.push("  - "+r.replace(/\{\{\w+\|([^}]+)\}\}/g,"$1")));
   L.push(""); L.push("TEACHING POINT: "+CASE.teachingPoint);
   L.push(""); L.push("MORPHOLOGY REPORT"); CASE.report.forEach(([k,v])=> L.push("  "+k+": "+v));
   L.push(""); L.push("ADAMTS13: "+CASE.adamts13.value+" "+CASE.adamts13.unit+" — "+CASE.adamts13.verdict);
