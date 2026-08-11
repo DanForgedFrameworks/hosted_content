@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Only Cells 202609 — sound audition</title>
+<!-- WORKING TOOL, NOT A LEARNER ASSET.
+     Exists so the cue palette can be chosen by ear rather than from a written description.
+     The synthesis code below is a copy of the engine in case-202609.html: if you change one,
+     change the other, or you will be auditioning something the case does not play.
+     Remove this file before go-live. -->
+<style>
+  :root{ --navy:#16234D; --deep:#0E1730; --teal:#2E9E8F; --bright:#34C6B0;
+         --surface:#1b2540; --surface2:#243051; --text:#e8ecf5; --muted:#9aa6c0; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; padding:28px 20px 60px; background:var(--deep); color:var(--text);
+        font:15px/1.55 "Segoe UI", system-ui, sans-serif; }
+  .wrap{ max-width:760px; margin:0 auto; }
+  h1{ font-size:22px; margin:0 0 4px; }
+  .sub{ color:var(--muted); font-size:13px; margin:0 0 22px; }
+  .bar{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:24px;
+        padding:14px; background:var(--surface); border:1px solid var(--teal); border-radius:12px; }
+  .bar label{ font-size:13px; color:var(--muted); }
+  input[type=range]{ accent-color:var(--teal); }
+  h2{ font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);
+      margin:26px 0 10px; font-weight:600; }
+  .tier{ font-size:12px; color:var(--muted); font-weight:400; text-transform:none; letter-spacing:0; }
+  .row{ display:flex; align-items:center; gap:14px; padding:11px 14px; margin-bottom:8px;
+        background:var(--surface); border:1px solid rgba(255,255,255,.10); border-radius:10px; }
+  .row .meta{ flex:1 1 auto; min-width:0; }
+  .row .n{ font-weight:600; }
+  .row .d{ font-size:12.5px; color:var(--muted); margin-top:2px; }
+  button.play{ flex:0 0 auto; width:46px; height:46px; border-radius:50%; cursor:pointer;
+        border:2px solid var(--bright); background:var(--navy); color:var(--bright); font-size:16px; }
+  button.play:hover{ background:var(--teal); color:#fff; }
+  button.play:active{ transform:scale(.94); }
+  .seq{ margin-top:26px; padding:16px; background:var(--surface2); border-radius:12px; }
+  .seq button{ padding:11px 18px; border-radius:999px; cursor:pointer; font-weight:700;
+        border:2px solid var(--bright); background:var(--navy); color:var(--bright); }
+  .note{ font-size:12.5px; color:var(--muted); margin-top:10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Morphology Monthly 202609 — sound audition</h1>
+  <p class="sub">Every cue the case can play. Same synthesis as the live build, so what you hear
+  here is what a learner hears. Try it on the device you expect people to use — phone speakers
+  lose the low notes almost entirely.</p>
+
+  <div class="bar">
+    <label for="vol">Master volume</label>
+    <input id="vol" type="range" min="0" max="200" value="100">
+    <span id="volv" style="color:var(--bright);font-weight:700">100%</span>
+    <span style="color:var(--muted);font-size:12px">— the case ships at 100%</span>
+  </div>
+
+  <h2>Tier 1 <span class="tier">· selection and toggles — deliberately almost subliminal</span></h2>
+  <div id="t1"></div>
+
+  <h2>Tier 2 <span class="tier">· progression, and the modal that interrupts it</span></h2>
+  <div id="t2"></div>
+
+  <h2>Tier 3 <span class="tier">· the two moments that actually matter</span></h2>
+  <div id="t3"></div>
+
+  <div class="seq">
+    <button id="runSeq">▶ Play a realistic run</button>
+    <div class="note">Ticking four results, moving on, being nudged, releasing the haemolysis
+    screen, then submitting. This is the sequence to judge — individual cues always sound fine
+    in isolation; what matters is whether they crowd each other in use.</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  /* ==== engine: mirrors case-202609.html ==== */
+  var ctxA=null, master=1;
+  function tone(freq,dur,delay,gain){
+    try{
+      ctxA = ctxA || new (window.AudioContext||window.webkitAudioContext)();
+      if(ctxA.state==="suspended") ctxA.resume();
+      var t0=ctxA.currentTime+(delay||0);
+      var osc=ctxA.createOscillator(), g=ctxA.createGain();
+      osc.type="sine"; osc.frequency.setValueAtTime(freq,t0);
+      var peak=(gain==null?0.07:gain)*master, atk=Math.min(0.015,dur*0.30);
+      g.gain.setValueAtTime(0,t0);
+      g.gain.linearRampToValueAtTime(peak,t0+atk);
+      g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+      osc.connect(g); g.connect(ctxA.destination); osc.start(t0); osc.stop(t0+dur+0.02);
+    }catch(e){}
+  }
+  var T1=0.022, T2=0.045, T3=0.070;
+  var N={ a4:440, cs5:554.37, d5:587.33, e5:659.25, fs5:739.99, a5:880, cs6:1108.73 };
+
+  var CUES=[
+    ["t1","Tick a result or feature","Rising note. Fires on every checkbox you turn ON.",
+      function(){ tone(N.fs5,0.045,0,T1); }],
+    ["t1","Untick","Lower note, same length. Turning a checkbox OFF.",
+      function(){ tone(N.cs5,0.045,0,T1); }],
+    ["t1","Background on","The ✦ Background toggle, switching on.",
+      function(){ tone(N.e5,0.05,0,T1); }],
+    ["t1","Background off","Same toggle, switching off.",
+      function(){ tone(N.a4,0.05,0,T1); }],
+    ["t2","Next station","Rising pair. Forward movement.",
+      function(){ tone(N.d5,0.10,0,T2); tone(N.a5,0.14,0.085,T2); }],
+    ["t2","Back a station","The same pair inverted. Falling = going back.",
+      function(){ tone(N.a5,0.10,0,T2); tone(N.d5,0.14,0.085,T2); }],
+    ["t2","Confirmation modal","Falls deliberately — a modal is a hold, not progress, and should not sound like it.",
+      function(){ tone(N.fs5,0.10,0,T2); tone(N.cs5,0.16,0.09,T2); }],
+    ["t3","Results released","Opening out. Haemolysis screen, and ADAMTS13 + STEC.",
+      function(){ tone(N.d5,0.16,0,T3); tone(N.a5,0.22,0.13,T3); }],
+    ["t3","Diagnosis submitted","Three notes, settling. The one irreversible action in the case.",
+      function(){ tone(N.a4,0.14,0,T3); tone(N.e5,0.16,0.12,T3); tone(N.cs6,0.30,0.24,T3); }]
+  ];
+
+  CUES.forEach(function(c){
+    var row=document.createElement("div"); row.className="row";
+    var b=document.createElement("button"); b.className="play"; b.textContent="▶";
+    b.setAttribute("aria-label","Play: "+c[1]);
+    b.addEventListener("click",c[3]);
+    var m=document.createElement("div"); m.className="meta";
+    m.innerHTML='<div class="n"></div><div class="d"></div>';
+    m.querySelector(".n").textContent=c[1];
+    m.querySelector(".d").textContent=c[2];
+    row.appendChild(b); row.appendChild(m);
+    document.getElementById(c[0]).appendChild(row);
+  });
+
+  var vol=document.getElementById("vol"), volv=document.getElementById("volv");
+  vol.addEventListener("input",function(){ master=vol.value/100; volv.textContent=vol.value+"%"; });
+
+  document.getElementById("runSeq").addEventListener("click",function(){
+    var at=0, plan=[
+      [0.0,  function(){ tone(N.fs5,0.045,0,T1); }],
+      [0.45, function(){ tone(N.fs5,0.045,0,T1); }],
+      [0.80, function(){ tone(N.fs5,0.045,0,T1); }],
+      [1.10, function(){ tone(N.cs5,0.045,0,T1); }],
+      [1.50, function(){ tone(N.fs5,0.045,0,T1); }],
+      [2.20, function(){ tone(N.fs5,0.10,0,T2); tone(N.cs5,0.16,0.09,T2); }],
+      [3.10, function(){ tone(N.d5,0.10,0,T2);  tone(N.a5,0.14,0.085,T2); }],
+      [4.30, function(){ tone(N.d5,0.16,0,T3);  tone(N.a5,0.22,0.13,T3); }],
+      [5.90, function(){ tone(N.a4,0.14,0,T3); tone(N.e5,0.16,0.12,T3); tone(N.cs6,0.30,0.24,T3); }]
+    ];
+    plan.forEach(function(p){ setTimeout(p[1], p[0]*1000); });
+  });
+})();
+</script>
+</body>
+</html>
