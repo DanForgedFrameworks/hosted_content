@@ -433,21 +433,24 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
 .oc-xrefback[hidden]{ display:none; }
 .oc-xrefback:hover{ color:#fff; border-color:#fff; }
 
-/* Feedback card. The motion is deliberately small: a slow lift and a soft glow, enough to draw
-   the eye at the end of a long page without behaving like an advert. It sits still for anyone
-   who has asked for reduced motion. */
+/* Feedback card. The PANEL is still — a whole block drifting up and down pulls the eye off the
+   text it is trying to get read. Only the button moves: a small lift with a soft ring breathing
+   out of it, which reads as "press me" rather than "look at this advert".
+   Disabled state doesn't animate: nothing should invite a press it can't accept. */
 .oc-fbask{ margin-top:26px; padding:20px; border-radius:var(--oc-radius); text-align:center;
   border:1px solid var(--oc-teal); background:linear-gradient(180deg, rgba(46,158,143,.14), rgba(46,158,143,.05));
-  animation:oc-levitate 4.5s ease-in-out infinite; }
+  box-shadow:0 6px 18px rgba(0,0,0,.28); }
 .oc-fbask__t{ font-weight:700; color:var(--oc-teal-bright); font-size:16px; margin-bottom:6px; }
 .oc-fbask__b{ color:var(--oc-text-muted); font-size:13px; line-height:1.55; max-width:60ch; margin:0 auto 14px; }
 .oc-fbask__pending{ font-size:12px; color:var(--oc-text-muted); font-style:italic; opacity:.8; margin-top:10px; }
 .oc-fbask .oc-btn[disabled]{ opacity:.55; cursor:not-allowed; }
 .oc-fbask.is-pending{ border-style:dashed; }
-@keyframes oc-levitate{
-  0%,100%{ transform:translateY(0);     box-shadow:0 6px 18px rgba(0,0,0,.28), 0 0 0 0 rgba(52,198,176,.30); }
-  50%    { transform:translateY(-5px);  box-shadow:0 14px 30px rgba(0,0,0,.34), 0 0 0 7px rgba(52,198,176,0); } }
-@media (prefers-reduced-motion:reduce){ .oc-fbask{ animation:none; box-shadow:0 6px 18px rgba(0,0,0,.28); } }
+.oc-fbask .oc-btn:not([disabled]){ animation:oc-fbpulse 3.6s ease-in-out infinite; }
+.oc-fbask .oc-btn:not([disabled]):hover{ animation:none; }   /* hover takes over; two at once jitters */
+@keyframes oc-fbpulse{
+  0%,100%{ transform:translateY(0);    box-shadow:0 3px 10px rgba(0,0,0,.30), 0 0 0 0   rgba(52,198,176,.45); }
+  50%    { transform:translateY(-3px); box-shadow:0 8px 18px rgba(0,0,0,.34), 0 0 0 9px rgba(52,198,176,0); } }
+@media (prefers-reduced-motion:reduce){ .oc-fbask .oc-btn{ animation:none; } }
 
 /* "How this works" — a floating pill, bottom-right, over the page rather than docked in the
    flow (so it never inflates the auto-resize iframe height). Shown expanded on arrival at
@@ -994,7 +997,7 @@ const CASE = {
        Leaving it would send someone asked for feedback to an unrelated site. */
     feedbackUrl:"https://danforgedframeworks.github.io/Portfolio/",
     feedbackTitle:"How did you find this format?",
-    feedbackBody:"This is a new format for Morphology Monthly, and Only Cells would like to know whether it worked for you. It takes a couple of minutes and it's entirely optional — your certificate is already downloaded and nothing here depends on it.",
+    feedbackBody:"This is a new format for Morphology Monthly, and Only Cells would like to know whether it worked for you. It takes a couple of minutes and it is entirely optional. Your certificate is already downloaded and nothing here depends on it.",
     outcomes:[                        // wording confirmed 2026-08-11 (Daniel)
       "Recognise a microangiopathic blood-film picture — red-cell fragmentation and schistocytes.",
       "Build a differential for thrombocytopenia with red-cell fragmentation.",
@@ -1230,9 +1233,9 @@ function renderCore(){
 function render(){ renderCore(); const n=content.firstChild; if(n&&n._after) n._after(); renderHelp(); }
 
 const HELP=["Work through the <strong>stations</strong> left to right using <strong>Next</strong>. Everything you type is saved in this browser as you go.",
-  "Examine each film with the <strong>magnifier</strong> (scroll, +/− or keyboard to zoom) and drop your own numbered <strong>markers</strong> — they become part of your record.",
+  "Examine each film with the <strong>magnifier</strong> (scroll, +/− or keyboard to zoom) and drop your own numbered <strong>markers</strong>, which become part of your record.",
   "Flag the abnormal results, identify the film features, then commit a <strong>differential</strong>.",
-  "Results are released in two stages once you have — the <strong>haemolysis screen</strong>, then <strong>ADAMTS13</strong> and the trigger. Each release <strong>locks</strong> what came before it.",
+  "Results are released in two stages once you have committed: the <strong>haemolysis screen</strong>, then <strong>ADAMTS13</strong> and the trigger. Each release <strong>locks</strong> what came before it.",
   "The final diagnosis is a <strong>one-shot, recorded</strong> submission. It can’t be changed or reset afterwards.",
   "You finish with <strong>feedback</strong> on what you spotted, a downloadable <strong>CPD record</strong> and a <strong>certificate of completion</strong>."];
 /* Anas 2026-08-10, from testing on his phone: the labelled pill sits over the content on a small
@@ -1351,9 +1354,9 @@ function renderStation(st){
       '</div>'+
       foldHTML("ocCoag","Coagulation screen","PT · APTT · fibrinogen")+
       foldHTML("ocBio","Biochemistry","renal · liver · bone profile")+
-      (showFlags()?'':'<div class="oc-note">Reference ranges are given, but nothing is flagged for you — deciding what matters is the exercise.</div>')+
+      (showFlags()?'':'<div class="oc-note">Reference ranges are given, but nothing is flagged for you. Deciding what matters is the exercise.</div>')+
       '<h3>Flag the abnormal results</h3>'+
-      '<p class="oc-narrate">Tick every result you would call abnormal or significant. Be deliberate — over-calling is recorded too.</p>'+
+      '<p class="oc-narrate">Tick every result you would call abnormal or significant. Be deliberate: over-calling is recorded too.</p>'+
       tickBlock("results",CASE.resultItems,"two")+
       noteBox("resultNote","Comment on the blood count and biochemistry in your own words.","What is the overall picture these numbers describe?"));
     node._after=()=>{
@@ -1369,7 +1372,7 @@ function renderStation(st){
       '<p class="oc-narrate">Eight fields from the film. Work across the thumbnails, use the magnifier, then <strong>drop your own markers</strong> on anything you would report.</p>'+
       figureHTML(0,{annotate:!lockedBefore(), annoKey:"film"})+
       '<h3>Identify the features</h3>'+
-      '<p class="oc-narrate">Tick the morphological features you can actually see. Again — be deliberate; where a call would send you clinically is part of the feedback.</p>'+
+      '<p class="oc-narrate">Tick the morphological features you can actually see. Again, be deliberate. Where a call would send you clinically is part of the feedback.</p>'+
       tickBlock("features",CASE.filmItems,"two")+
       noteBox("filmNote","Describe the film in your own words.","Red cells, white cells, platelets — what stands out?"));
     node._after=()=>{ wireFigure(node,0,"film",{ readOnly:lockedBefore() }); markTicks(node,"features",CASE.filmItems); };
@@ -1378,7 +1381,7 @@ function renderStation(st){
     node=stationShell(st, lockBar()+
       priorRecapHTML()+
       '<h3 style="margin-top:6px">Your differential</h3>'+
-      '<p class="oc-narrate">Based on the presentation, the numbers and the film — and <strong>before</strong> any further tests — which diagnoses are on your list?</p>'+
+      '<p class="oc-narrate">Based on the presentation, the numbers and the film, and <strong>before</strong> any further tests, which diagnoses are on your list?</p>'+
       tickBlock("differentials",CASE.differentials,"two")+
       '<div class="oc-softhint" id="ocDiffHint" hidden>Nothing selected — nothing will be recorded for this section.</div>'+
       noteBox("ruleout","What would you rule out, and how?","Name each differential you want off the list and the test or feature that removes it. Unmarked — you’ll see the model answer at the end.")+
@@ -1419,12 +1422,12 @@ function renderStation(st){
   } else if(st.id==="adamts"){
     const revealed=state.adamtsRevealed;
     node=stationShell(st, (lockedTier1()&&!committed()?'<div class="oc-lockbar"><span class="k">Locked</span> The haemolysis screen has been released, so your differential can no longer be changed.</div>':'')+
-      '<p class="oc-narrate">You know this is a mechanical, non-immune haemolysis. Two final results separate the causes — and name the trigger.</p>'+
+      '<p class="oc-narrate">You know this is a mechanical, non-immune haemolysis. Two final results separate the causes, and name the trigger.</p>'+
       (revealed?'':'<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocRevealAd">Release the final results</button></div>')+
       /* Same rule as tier 1 — nothing withheld reaches the DOM before release. */
       '<div class="oc-reveal-panel'+(revealed?' show':'')+'" id="ocAdPanel">'+(revealed?
         adamtsHTML()+stecHTML()+
-        '<h3>Your diagnosis</h3><p class="oc-narrate">Weigh these against everything you\'ve seen, then select the single most likely diagnosis. This is a one-shot, recorded CPD submission — it cannot be changed or reset.</p>'+
+        '<h3>Your diagnosis</h3><p class="oc-narrate">Weigh these against everything you\'ve seen, then select the single most likely diagnosis. This is a one-shot, recorded CPD submission. It cannot be changed or reset.</p>'+
         '<div class="oc-options" id="ocOptions"></div>'+
         noteBox("further","Any further observations? (optional)","Anything else supporting your diagnosis — recorded with your submission.")+
         confBlock("diagnosis")+
@@ -1453,7 +1456,7 @@ function renderStation(st){
       '<div class="oc-callout" id="ocRuleoutBlock"><div class="h">Model answer</div><ul>'+CASE.model.ruleout.map(r=>'<li>'+ruleoutText(r)+'</li>').join("")+'</ul></div>'+
       '<h3>Morphology report</h3>'+reportHTML()+
       '<h3 id="ocFilmBlock">The film, marked by Only Cells</h3>'+
-      '<p class="oc-narrate">These are the '+(CASE.markedFields||[]).length+' fields Anas marked. Each ring circles the cell without covering it — hover a ring or an entry in the list to link the two.</p>'+
+      '<p class="oc-narrate">These are the '+(CASE.markedFields||[]).length+' fields Anas marked. Each ring circles the cell without covering it. Hover a ring or an entry in the list to link the two.</p>'+
       '<div style="margin:10px 0"><button class="oc-btn oc-btn--primary" id="ocAnno">Show the marked cells</button></div>'+
       '<div class="oc-smewrap">'+
         figureHTML((CASE.markedFields&&CASE.markedFields[0])||0,{annotate:false, annoKey:"film", magOff:true, sme:true, only:CASE.markedFields})+
@@ -1465,7 +1468,7 @@ function renderStation(st){
          Collapsed by default so the reveal doesn't turn into another wall of results; the
          learner opens what they want to check. (Daniel, 2026-08-10.) */
       '<h3>The results, now flagged</h3>'+
-      '<p class="oc-narrate">The same numbers you were given at the start, with our reading of them shown. Nothing here is new — only the flags are.</p>'+
+      '<p class="oc-narrate">The same numbers you were given at the start, with our reading of them shown. Nothing here is new; only the flags are.</p>'+
       revealedResultsHTML()+
       '<h3>Your CPD record</h3>'+
       '<p class="oc-narrate">Your name appears on your certificate and record. It stays in this browser and is never sent anywhere.</p>'+
@@ -1725,7 +1728,7 @@ function figureHTML(idx,opts){ opts=opts||{};
     '<span class="oc-zoomctl">zoom <button id="ocZoomDown" title="Zoom out" aria-label="Zoom out">−</button><span id="ocZoomVal">3.0×</span><button id="ocZoomUp" title="Zoom in" aria-label="Zoom in">+</button></span>'+
     '<span class="oc-hint">scroll · + / − · keyboard</span>'+annoBtn;
   const tools=opts.magOff?'<button class="oc-annobtn" id="ocEnableZoom">🔍 Enable zoom to review the film</button><span class="oc-magcontrols" id="ocMagControls" hidden>'+controls+'</span>':'<span class="oc-magcontrols">'+controls+'</span>';
-  return '<div class="oc-media"><div class="oc-framewrap"><div class="oc-figure focuspull" data-idx="'+idx+'" data-annokey="'+(opts.annoKey||"")+'" tabindex="0" aria-label="Blood film field — scroll or +/- to zoom">'+
+  return '<div class="oc-media"><div class="oc-framewrap"><div class="oc-figure focuspull" data-idx="'+idx+'" data-annokey="'+(opts.annoKey||"")+'" tabindex="0" aria-label="Blood film field. Scroll or +/- to zoom">'+
     '<img src="'+imgUrl(still.src)+'" alt="Blood film field '+roman(idx)+'" onerror="this.outerHTML=\'<div class=&quot;oc-imgfallback&quot;>Image preview unavailable here.<br>(Live file: '+still.src+')</div>\'"><div class="oc-loupe"></div><div class="oc-frame"></div></div><div class="oc-zoompanel"></div></div>'+
     '<div class="oc-figcap" id="ocFigCap">Field '+roman(idx)+(opts.only&&opts.only.length?'':' of '+roman(CASE.media.stills.length-1))+'</div>'+
     (opts.annotate?'<div class="oc-markbanner" id="ocMarkBanner" hidden>Marker mode is on — <strong>tap the film</strong> to drop a marker, or <strong>drag</strong> one to move it. Remove with × below. Markers are saved per field and labelled '+roman(idx)+'-1, '+roman(idx)+'-2…</div>':'')+
@@ -1965,7 +1968,7 @@ function buildResult(host){ if(!host) return; const L=CASE.scoring.labels, ok=st
       ['results','features','differentials'].map(k=>
         '<div class="oc-brow"><span>'+L[k]+'</span><span class="pts">'+tallyText(t[k])+'</span></div>').join("")+
     '</div>'+
-    '<div class="oc-note">This activity is recorded as completed, not graded. The feedback above is to support your reflection — your certificate records participation.</div>'; }
+    '<div class="oc-note">This activity is recorded as completed, not graded. The feedback above is to support your reflection; your certificate records participation.</div>'; }
 
 /* ===== export (spec §11.6 — Blob download / window.print on a user gesture; never window.open) ===== */
 function ticksText(key,items){ const chosen=state.ticks[key]||{}; const p=items.filter(n=>chosen[n.id]); return p.length?p.map(n=>n.text).join("; "):""; }
@@ -2186,7 +2189,7 @@ function feedbackCardHTML(){
        button is coming tells you nothing about whether the button will sit right. Daniel
        reported he "couldn't see the feedback element", and he was correct: there wasn't one. */
     '<button class="oc-btn oc-btn--primary" id="ocFeedbackGo"'+(live?'':' disabled')+'>Give feedback</button>'+
-    (live?'':'<div class="oc-fbask__pending">Link not yet configured — this button activates as soon as the form URL is added</div>')+
+    (live?'':'<div class="oc-fbask__pending">Link not yet configured. This button activates as soon as the form URL is added</div>')+
     '</div>'; }
 function wireFeedback(node){
   const b=$("#ocFeedbackGo",node);
