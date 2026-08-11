@@ -436,18 +436,18 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
 /* Feedback card. The motion is deliberately small: a slow lift and a soft glow, enough to draw
    the eye at the end of a long page without behaving like an advert. It sits still for anyone
    who has asked for reduced motion. */
-.oc-feedback{ margin-top:26px; padding:20px; border-radius:var(--oc-radius); text-align:center;
+.oc-fbask{ margin-top:26px; padding:20px; border-radius:var(--oc-radius); text-align:center;
   border:1px solid var(--oc-teal); background:linear-gradient(180deg, rgba(46,158,143,.14), rgba(46,158,143,.05));
   animation:oc-levitate 4.5s ease-in-out infinite; }
-.oc-feedback__t{ font-weight:700; color:var(--oc-teal-bright); font-size:16px; margin-bottom:6px; }
-.oc-feedback__b{ color:var(--oc-text-muted); font-size:13px; line-height:1.55; max-width:60ch; margin:0 auto 14px; }
-.oc-feedback__pending{ font-size:12px; color:var(--oc-text-muted); font-style:italic; opacity:.8; margin-top:10px; }
-.oc-feedback .oc-btn[disabled]{ opacity:.55; cursor:not-allowed; }
-.oc-feedback.is-pending{ border-style:dashed; }
+.oc-fbask__t{ font-weight:700; color:var(--oc-teal-bright); font-size:16px; margin-bottom:6px; }
+.oc-fbask__b{ color:var(--oc-text-muted); font-size:13px; line-height:1.55; max-width:60ch; margin:0 auto 14px; }
+.oc-fbask__pending{ font-size:12px; color:var(--oc-text-muted); font-style:italic; opacity:.8; margin-top:10px; }
+.oc-fbask .oc-btn[disabled]{ opacity:.55; cursor:not-allowed; }
+.oc-fbask.is-pending{ border-style:dashed; }
 @keyframes oc-levitate{
   0%,100%{ transform:translateY(0);     box-shadow:0 6px 18px rgba(0,0,0,.28), 0 0 0 0 rgba(52,198,176,.30); }
   50%    { transform:translateY(-5px);  box-shadow:0 14px 30px rgba(0,0,0,.34), 0 0 0 7px rgba(52,198,176,0); } }
-@media (prefers-reduced-motion:reduce){ .oc-feedback{ animation:none; box-shadow:0 6px 18px rgba(0,0,0,.28); } }
+@media (prefers-reduced-motion:reduce){ .oc-fbask{ animation:none; box-shadow:0 6px 18px rgba(0,0,0,.28); } }
 
 /* "How this works" — a floating pill, bottom-right, over the page rather than docked in the
    flow (so it never inflates the auto-resize iframe height). Shown expanded on arrival at
@@ -1485,10 +1485,13 @@ function renderStation(st){
         'The plain-text record is a backup if the PDF will not open.</div>'+
       feedbackCardHTML()
       :
-      '<div class="oc-lockbar"><span class="k">Not yet submitted</span> Go back to Station 4, release the ADAMTS13 result and commit a diagnosis to generate your CPD record.</div>'+
-      '<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocGoBack">Back to Station 4</button></div>');
+      '<div class="oc-lockbar"><span class="k">Not yet submitted</span> Go back to Station 5, release the ADAMTS13 result and commit a diagnosis to generate your CPD record.</div>'+
+      '<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocGoBack">Back to Station 5</button></div>');
     node._after=()=>{
-      const gb=$("#ocGoBack",node); if(gb){ gb.addEventListener("click",()=> gotoStep(3)); return; }
+      /* index 4 = "ADAMTS13 & the trigger", which is where the diagnosis is committed. This
+         pointed at index 3 (the haemolysis screen) — left over from the five-station layout,
+         so anyone who followed it landed a station short of what they were sent for. */
+      const gb=$("#ocGoBack",node); if(gb){ gb.addEventListener("click",()=> gotoStep(4)); return; }
       buildResult($("#ocResultBox",node));
       wireFigure(node,(CASE.markedFields&&CASE.markedFields[0])||0,"film",{ readOnly:true, magOff:true, only:CASE.markedFields });
       const anno=$("#ocAnno",node); let on=false;
@@ -2171,15 +2174,19 @@ function jpegPdf(jpeg, wpx, hpx, links){
    for review so the placement can be judged, and it must not reach learners that way. */
 function feedbackCardHTML(){
   const C=CASE.certificate, live=!!C.feedbackUrl;
-  return '<div class="oc-feedback'+(live?' is-live':' is-pending')+'" id="ocFeedback">'+
-    '<div class="oc-feedback__t">'+escapeHtml(C.feedbackTitle)+'</div>'+
-    '<div class="oc-feedback__b">'+escapeHtml(C.feedbackBody)+'</div>'+
+  /* Class and id are BOTH deliberately unique. The prototype engine already owns `.oc-feedback`
+     AND `#ocFeedback` for its per-answer result box — that rule is `display:none` until `.show`
+     is added, and getElementById was returning the prototype's element, not this one. The card
+     was invisible from the moment it was built and every check I ran inspected the wrong node. */
+  return '<div class="oc-fbask'+(live?' is-live':' is-pending')+'" id="ocFbAsk">'+
+    '<div class="oc-fbask__t">'+escapeHtml(C.feedbackTitle)+'</div>'+
+    '<div class="oc-fbask__b">'+escapeHtml(C.feedbackBody)+'</div>'+
     /* The pending state shows the REAL button, disabled, rather than a line of italic text.
        Reviewing placement, size and motion needs something to look at — a paragraph saying a
        button is coming tells you nothing about whether the button will sit right. Daniel
        reported he "couldn't see the feedback element", and he was correct: there wasn't one. */
     '<button class="oc-btn oc-btn--primary" id="ocFeedbackGo"'+(live?'':' disabled')+'>Give feedback</button>'+
-    (live?'':'<div class="oc-feedback__pending">Link not yet configured — this button activates as soon as the form URL is added</div>')+
+    (live?'':'<div class="oc-fbask__pending">Link not yet configured — this button activates as soon as the form URL is added</div>')+
     '</div>'; }
 function wireFeedback(node){
   const b=$("#ocFeedbackGo",node);
@@ -2305,7 +2312,7 @@ btnNext.addEventListener("click",()=> go(1)); btnBack.addEventListener("click",(
 
 /* Reset — guarded, and locked once the attempt is submitted (spec §11.6). */
 btnReset.addEventListener("click",()=>{
-  if(committed()){ openModal("Locked","Your CPD diagnosis has been submitted and recorded, so this attempt can't be reset. Download your record and certificate from Station 5.",null,"Close"); return; }
+  if(committed()){ openModal("Locked","Your CPD diagnosis has been submitted and recorded, so this attempt can't be reset. Download your record and certificate from Station 6.",null,"Close"); return; }
   openModal("Reset this case?","This will clear everything you've entered — flagged results, film features, markers, differential and notes — and return you to Station 1. This can't be undone.","Reset this case","Cancel",
     ()=>{ runWipe(()=>{ const bg=state.bgAnim, hm=state.helpMin, learner=state.learner; state=freshState(); state.bgAnim=bg; state.helpMin=hm; state.learner=learner; saveState(); render(); }); }); });
 
