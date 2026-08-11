@@ -137,8 +137,8 @@
       </section>
       <div class="answers" role="group" aria-describedby="selection-status">
         <button class="answer" type="button" data-correct="false">&lt;1 %</button>
-        <button class="answer" type="button" data-correct="true">2-4 %</button>
-        <button class="answer" type="button" data-correct="false">5-10 %</button>
+        <button class="answer" type="button" data-correct="true">2–4 %</button>
+        <button class="answer" type="button" data-correct="false">5–10 %</button>
         <button class="answer" type="button" data-correct="false">15 %</button>
       </div>
     </section>
@@ -204,11 +204,11 @@
         button.classList.add('is-selected', correct ? 'is-correct' : 'is-incorrect');
         if (correct) {
           feedbackTitle.textContent = 'Correct';
-          feedbackCopy.innerHTML = '2-4 % patients with NSCLC have <em>MET</em>ex14 skipping, which sensitizes tumors to targeted therapy with a MET TKI and is an independent prognostic factor of poor survival.' + citationMarkup();
+          feedbackCopy.innerHTML = '2–4 % of patients with NSCLC have <em>MET</em>ex14 skipping, which sensitizes tumors to targeted therapy with a MET TKI and is an independent prognostic factor of poor survival.' + citationMarkup();
           status.textContent = 'Correct. The completion feedback is now available.';
         } else {
           feedbackTitle.textContent = 'Not quite';
-          feedbackCopy.innerHTML = 'The correct answer is <strong>2-4 %</strong>. 2-4 % patients with NSCLC have <em>MET</em>ex14 skipping, which sensitizes tumors to targeted therapy with a MET TKI and is an independent prognostic factor of poor survival.' + citationMarkup();
+          feedbackCopy.innerHTML = 'The correct answer is <strong>2–4 %</strong> — this is the proportion of patients with NSCLC who have <em>MET</em>ex14 skipping, which sensitizes tumors to targeted therapy with a MET TKI and is an independent prognostic factor of poor survival.' + citationMarkup();
           status.textContent = 'Not quite. The completion feedback identifies the correct answer.';
         }
         completion.classList.add('visible');
@@ -218,7 +218,7 @@
       }
 
       function citationMarkup() {
-        return `<span class="citation-control"><button class="citation-trigger" type="button" aria-expanded="false" aria-controls="citation-panel">References</button><span class="citation-panel" id="citation-panel" role="region" aria-label="References"><h2>References</h2><ol class="citation-list"><li>Paik PK, Drilon A, Fan PD, Yu H, Rekhtman N, Ginsberg MS, et al. Response to MET inhibitors in patients with stage IV lung adenocarcinomas harboring <em>MET</em> mutations causing exon 14 skipping. <em>Cancer Discov.</em> 2015;5(8):842&ndash;9.</li><li>Reungwetwattana T, Liang Y, Zhu V, Ou SI. The race to target <em>MET</em> exon 14 skipping alterations in NSCLC. <em>Lung Cancer</em>. 2017;103:27&ndash;37.</li><li>Rosell R, Karachaliou N. Large-scale screening for somatic mutations in lung cancer. <em>Lancet</em>. 2016;387(10026):1354&ndash;6.</li><li>Salgia R, Sattler M, Scheele J, Stroh C, Felip E. The promise of selective MET inhibitors in NSCLC with <em>MET</em> exon 14 skipping. <em>Cancer Treat Rev.</em> 2020;87:102022.</li></ol></span></span>`;
+        return `<span class="citation-control"><button class="citation-trigger" type="button" aria-expanded="false" aria-controls="citation-panel">References</button><span class="citation-panel" id="citation-panel" role="region" aria-label="References 3 to 5"><h2>References</h2><ol class="citation-list" start="3"><li>Awad MM, Oxnard GR, Jackman DR, Savukoski DO, Hall D, Shivdasani P, et al. <em>MET</em> Exon 14 Mutations in Non&ndash;Small-Cell Lung Cancer Are Associated With Advanced Age and Stage-Dependent <em>MET</em> Genomic Amplification and c-Met Overexpression. <em>J Clin Oncol.</em> 2016;34(7):721&ndash;730.</li><li>Remon J, Hendriks LEL, Mountzios G, Garc&iacute;a-Campelo R, Saw SPL, et al. <em>MET</em> alterations in NSCLC-Current Perspectives and Future Challenges. <em>J Thorac Oncol.</em> 2023;18(4):419&ndash;435.</li><li>Tong JH, Yeung SF, Chan AW, Chung LY, Chau SL, Lung RW, et al. <em>MET</em> Amplification and Exon 14 Splice Site Mutation Define Unique Molecular Subgroups of Non-Small Cell Lung Carcinoma with Poor Prognosis. <em>Clin Cancer Res.</em> 2016;22(12):3048&ndash;3056.</li></ol></span></span>`;
       }
 
       feedback.addEventListener('click', event => {

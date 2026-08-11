@@ -118,7 +118,8 @@ body.is-table .region--table{ display:flex; }
 .drow__lab b{ display:block; font-size:clamp(.84rem,1.5vw,1.02rem); font-weight:700; color:var(--navy); }
 .drow__lab span{ font-size:clamp(.64rem,1.1vw,.76rem); color:var(--faint); }
 .dtrack{ position:relative; height:clamp(24px,4.2vh,42px); }
-.dconn{ position:absolute; top:50%; height:6px; transform:translateY(-50%); background:var(--neutral,#c6d3e2); border-radius:6px; z-index:1; }
+/* The median-to-mean connector was removed on R3-168: the reviewer asked for the
+     range and SD to be shown INSTEAD of the grey line, and both are now on the scene. */
 .dpt{ position:absolute; top:50%; transform:translate(-50%,-50%); cursor:pointer; z-index:2; }
 .dpt:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; border-radius:4px; }
 .dpt.is-median{ width:clamp(14px,1.9vw,18px); height:clamp(14px,1.9vw,18px); border-radius:50%; background:var(--teal); box-shadow:0 0 0 2px #fff; }
@@ -126,10 +127,10 @@ body.is-table .region--table{ display:flex; }
 .dval{ position:absolute; top:50%; font-size:clamp(.88rem,1.5vw,1.06rem); font-weight:700; white-space:nowrap; z-index:2; font-variant-numeric:tabular-nums; }
 .dval--median{ transform:translate(-100%,-50%); margin-left:-11px; color:var(--teal-strong); }
 .dval--mean{ transform:translateY(-50%); margin-left:11px; color:var(--navy); }
-.dpt, .dconn, .dval{ transition:opacity .3s ease; }
+.dpt, .dval{ transition:opacity .3s ease; }
 .dumb:not(.show-median) .is-median, .dumb:not(.show-median) .dval--median{ opacity:0; pointer-events:none; }
 .dumb:not(.show-mean) .is-mean, .dumb:not(.show-mean) .dval--mean{ opacity:0; pointer-events:none; }
-.dumb:not(.show-median) .dconn, .dumb:not(.show-mean) .dconn{ opacity:0; }
+
 /* R3-167: the axis no longer starts at zero, so say so plainly. */
 .dbreak{ position:absolute; left:-13px; top:-1px; font-size:clamp(.68rem,1.15vw,.8rem); font-weight:700; color:var(--faint); letter-spacing:-1px; }
 .daxisnote{ margin:3px 0 0; text-align:center; font-size:clamp(.72rem,1.2vw,.84rem); font-weight:600; color:var(--muted); }
@@ -284,7 +285,6 @@ body.is-fullscreen{ padding-top:56px; }
               <div class="drow">
                 <div class="drow__lab"><b>Overall</b><span>N=197</span></div>
                 <div class="dtrack">
-                  <span class="dconn" style="left:38%;width:39.33%"></span>
                   <span class="dval dval--median" style="left:38%">10.7</span>
                   <span class="dval dval--mean" style="left:77.33%">16.6</span>
                   <span class="dpt is-median" style="left:38%" role="button" tabindex="0" data-callout="<strong>Median 10.7 (0.7&ndash;83.1) months</strong><span class=&quot;callout__lab&quot;>Overall &middot; N=197</span>" aria-label="Overall: median duration 10.7 months, range 0.7 to 83.1"></span>
@@ -294,7 +294,6 @@ body.is-fullscreen{ padding-top:56px; }
               <div class="drow">
                 <div class="drow__lab"><b>1L</b><span>n=108</span></div>
                 <div class="dtrack">
-                  <span class="dconn" style="left:40.67%;width:51.33%"></span>
                   <span class="dval dval--median" style="left:40.67%">11.1</span>
                   <span class="dval dval--mean" style="left:92%">18.8</span>
                   <span class="dpt is-median" style="left:40.67%" role="button" tabindex="0" data-callout="<strong>Median 11.1 (0.7&ndash;71.5) months</strong><span class=&quot;callout__lab&quot;>1L &middot; n=108</span>" aria-label="1L: median duration 11.1 months, range 0.7 to 71.5"></span>
@@ -304,7 +303,6 @@ body.is-fullscreen{ padding-top:56px; }
               <div class="drow">
                 <div class="drow__lab"><b>2L+</b><span>n=89</span></div>
                 <div class="dtrack">
-                  <span class="dconn" style="left:29.33%;width:30.67%"></span>
                   <span class="dval dval--median" style="left:29.33%">9.4</span>
                   <span class="dval dval--mean" style="left:60%">14.0</span>
                   <span class="dpt is-median" style="left:29.33%" role="button" tabindex="0" data-callout="<strong>Median 9.4 (0.7&ndash;83.1) months</strong><span class=&quot;callout__lab&quot;>2L+ &middot; n=89</span>" aria-label="2L plus: median duration 9.4 months, range 0.7 to 83.1"></span>
