@@ -441,7 +441,8 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
   animation:oc-levitate 4.5s ease-in-out infinite; }
 .oc-feedback__t{ font-weight:700; color:var(--oc-teal-bright); font-size:16px; margin-bottom:6px; }
 .oc-feedback__b{ color:var(--oc-text-muted); font-size:13px; line-height:1.55; max-width:60ch; margin:0 auto 14px; }
-.oc-feedback__pending{ font-size:12px; color:var(--oc-text-muted); font-style:italic; opacity:.8; }
+.oc-feedback__pending{ font-size:12px; color:var(--oc-text-muted); font-style:italic; opacity:.8; margin-top:10px; }
+.oc-feedback .oc-btn[disabled]{ opacity:.55; cursor:not-allowed; }
 .oc-feedback.is-pending{ border-style:dashed; }
 @keyframes oc-levitate{
   0%,100%{ transform:translateY(0);     box-shadow:0 6px 18px rgba(0,0,0,.28), 0 0 0 0 rgba(52,198,176,.30); }
@@ -2169,13 +2170,17 @@ function feedbackCardHTML(){
   return '<div class="oc-feedback'+(live?' is-live':' is-pending')+'" id="ocFeedback">'+
     '<div class="oc-feedback__t">'+escapeHtml(C.feedbackTitle)+'</div>'+
     '<div class="oc-feedback__b">'+escapeHtml(C.feedbackBody)+'</div>'+
-    (live
-      ? '<button class="oc-btn oc-btn--primary" id="ocFeedbackGo">Give feedback</button>'
-      : '<div class="oc-feedback__pending">Feedback form to follow — link not yet configured</div>')+
+    /* The pending state shows the REAL button, disabled, rather than a line of italic text.
+       Reviewing placement, size and motion needs something to look at — a paragraph saying a
+       button is coming tells you nothing about whether the button will sit right. Daniel
+       reported he "couldn't see the feedback element", and he was correct: there wasn't one. */
+    '<button class="oc-btn oc-btn--primary" id="ocFeedbackGo"'+(live?'':' disabled')+'>Give feedback</button>'+
+    (live?'':'<div class="oc-feedback__pending">Link not yet configured — this button activates as soon as the form URL is added</div>')+
     '</div>'; }
 function wireFeedback(node){
   const b=$("#ocFeedbackGo",node);
-  if(b) b.addEventListener("click",()=> window.open(CASE.certificate.feedbackUrl,"_blank","noopener")); }
+  if(b && CASE.certificate.feedbackUrl)
+    b.addEventListener("click",()=> window.open(CASE.certificate.feedbackUrl,"_blank","noopener")); }
 
 /* Downloads as a PDF, not an image — a certificate should arrive as a document. */
 function downloadCertificate(){
