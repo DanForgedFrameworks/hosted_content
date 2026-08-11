@@ -1153,6 +1153,10 @@ function gotoStep(i,opts){
         "Continue anyway","Stay here",()=> gotoStep(i,{skipCheck:true}));
       return; } }
   const dir=i>state.step?1:-1;
+  /* Cued here rather than on the Next button so Back, the stepper and any programmatic move all
+     sound the same — and so a move that gets intercepted by the nudge modal stays silent until
+     the learner actually commits to going. The modal has already sounded its own cue. */
+  (dir>0?cueNext:cueBack)();
   transitioning=true;
   state.step=i; state.maxStep=Math.max(state.maxStep,i); saveState(); autoHideHelp();
   scrollToStationTop();
@@ -1227,23 +1231,63 @@ const HELP=["Work through the <strong>stations</strong> left to right using <str
    proxy for "this person wants less". Two events only: a results release, and the commit. */
 let audioCtx=null;
 const soundOn=()=> !!state.soundOn;
-function tone(freq,dur,delay){
-  if(!soundOn()||reduceMotion) return;
+/* Audio is NO LONGER gated on prefers-reduced-motion (Daniel, 2026-08-10). Someone who turned
+   sound on has explicitly asked for sound, and silently overriding that on the strength of a
+   motion setting is us second-guessing them — people set reduced-motion for vestibular reasons
+   that have nothing to do with hearing. The sound toggle governs sound; motion governs motion.
+   The safety net is the DEFAULT: sound starts off for everyone, so nobody is ever surprised by
+   it. See soundDefault(). */
+function tone(freq,dur,delay,gain){
+  if(!soundOn()) return;
   try{
     audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
     if(audioCtx.state==="suspended") audioCtx.resume();
     const t0=audioCtx.currentTime+(delay||0);
     const osc=audioCtx.createOscillator(), g=audioCtx.createGain();
     osc.type="sine"; osc.frequency.setValueAtTime(freq,t0);
-    /* short ramps at both ends — a square-edged gain change clicks audibly */
+    /* Short ramps at both ends — a square-edged gain change clicks audibly. The attack scales
+       with duration, because a 15ms attack on a 45ms tick is a third of the sound and turns a
+       soft blip into a thud. */
+    const peak=(gain==null?0.07:gain), atk=Math.min(0.015, dur*0.30);
     g.gain.setValueAtTime(0,t0);
-    g.gain.linearRampToValueAtTime(0.07,t0+0.015);
+    g.gain.linearRampToValueAtTime(peak,t0+atk);
     g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
     osc.connect(g); g.connect(audioCtx.destination); osc.start(t0); osc.stop(t0+dur+0.02);
   }catch(e){ /* no audio device, blocked autoplay, ancient browser — silence is a fine fallback */ }
 }
-const cueRelease=()=>{ tone(587.33,0.16,0); tone(880,0.22,0.13); };   // D5 → A5, opening
-const cueCommit =()=>{ tone(440,0.14,0); tone(659.25,0.26,0.12); };   // A4 → E5, settling
+/* ===== the cue palette =====
+   Two rules, agreed with Daniel 2026-08-10, and everything follows from them.
+
+   1. PITCH CARRIES DIRECTION. Rising = forward, opening, on. Falling = undo, back, off. Nobody
+      has to be taught this and it still works when you aren't consciously listening.
+   2. LOUDNESS CARRIES IMPORTANCE. Three tiers. A learner ticking nine boxes on Station 1 should
+      hear a faint texture, not nine announcements — if a tick is as loud as a commit, the commit
+      stops meaning anything.
+
+   Tier 1 · 0.022 gain, ~40ms, single note  — ticks and toggles
+   Tier 2 · 0.045 gain, ~150ms, two notes   — moving between stations, a decision being asked for
+   Tier 3 · 0.070 gain, ~260ms, two notes   — results released, diagnosis committed
+
+   Notes are from an A-major-ish set so consecutive cues don't clash if they overlap. */
+const T1=0.022, T2=0.045, T3=0.070;
+const N={ a4:440, cs5:554.37, d5:587.33, e5:659.25, fs5:739.99, a5:880, cs6:1108.73 };
+
+/* Tier 1 — selection. Deliberately almost subliminal. */
+const cueTick   =()=>{ tone(N.fs5,0.045,0,T1); };                        // up-ish, on
+const cueUntick =()=>{ tone(N.cs5,0.045,0,T1); };                        // lower, off
+const cueBgOn   =()=>{ tone(N.e5,0.05,0,T1); };
+const cueBgOff  =()=>{ tone(N.a4,0.05,0,T1); };
+
+/* Tier 2 — progression, and the modal that interrupts it. The modal FALLS: it is a hold, not a
+   step forward, and it should not sound like progress. */
+const cueNext   =()=>{ tone(N.d5,0.10,0,T2);  tone(N.a5,0.14,0.085,T2); };
+const cueBack   =()=>{ tone(N.a5,0.10,0,T2);  tone(N.d5,0.14,0.085,T2); };
+const cueModal  =()=>{ tone(N.fs5,0.10,0,T2); tone(N.cs5,0.16,0.09,T2); };
+
+/* Tier 3 — the two moments that actually matter. */
+const cueRelease=()=>{ tone(N.d5,0.16,0,T3);  tone(N.a5,0.22,0.13,T3); };            // opening out
+const cueSubmit =()=>{ tone(N.a4,0.14,0,T3);  tone(N.e5,0.16,0.12,T3); tone(N.cs6,0.30,0.24,T3); }; // settling, conclusive
+const cueCommit = cueSubmit;   // kept: setSound() previews with it
 
 let helpDismissedOnLanding=false;
 const onLanding=()=> root.classList.contains("is-landing");
@@ -1850,6 +1894,7 @@ function wireCommit(node){ const optWrap=$("#ocOptions",node), order=shuffledOrd
   if(submit) submit.addEventListener("click",()=>{ if(pick==null) return;
     openModal("Submit your diagnosis?","Once submitted your answer is recorded and cannot be changed or reset. Is there anything you want to add first?","Submit","Return to the case",()=> commitDiagnosis(pick)); }); }
 function commitDiagnosis(oi){ const res=computeScore(oi);
+  cueSubmit();
   state.assess.committed=true; state.assess.choice=oi; state.assess.correct=(CASE.diagnosis.options[oi]===CASE.diagnosis.answer);
   state.assess.at=new Date().toISOString(); state.assess.score=res.total; state.assess.parts=res.points;
   state.maxStep=Math.max(state.maxStep,state.step+1); saveState(); runScan(()=> render()); }
@@ -2215,6 +2260,7 @@ function runWipe(done){ if(reduceMotion){ done&&done(); return; } wipe.classList
 content.addEventListener("input",(e)=>{ const block=e.target.closest(".oc-reflect");
   if(block&&e.target.tagName==="TEXTAREA"&&block.dataset.key){ state.reflections[block.dataset.key]=e.target.value; saveState(); autoHideHelp(); } });
 content.addEventListener("change",(e)=>{ const tick=e.target.closest(".oc-tick");
+  if(tick) (e.target.checked?cueTick:cueUntick)();
   if(tick&&e.target.type==="checkbox"){ const wrap=tick.closest(".oc-ticks"); const key=wrap.dataset.tickkey, id=tick.dataset.id;
     state.ticks[key]=state.ticks[key]||{}; state.ticks[key][id]=e.target.checked; tick.setAttribute("aria-checked",e.target.checked); saveState();
     if(key==="differentials") updateDiffHint(content); autoHideHelp(); } });
@@ -2239,6 +2285,7 @@ function openModal(title,body,okLabel,cancelLabel,onOk){
      order wrong here fails SILENTLY and blocks the commit path entirely, so normalise
      rather than trust the call site. */
   if(typeof cancelLabel==="function" && typeof onOk!=="function"){ const t=cancelLabel; cancelLabel=onOk; onOk=t; }
+  cueModal();
   $("#ocModalTitle").textContent=title; $("#ocModalBody").textContent=body;
   const ok=$("#ocModalOk"), cancel=$("#ocModalCancel"); modalOk=onOk||null; cancel.textContent=cancelLabel||"Cancel";
   if(okLabel){ ok.style.display=""; ok.textContent=okLabel; } else ok.style.display="none";
@@ -2326,7 +2373,7 @@ const bg=(function(){ const cv=$("#ocBg"); const ctx=cv.getContext("2d"); let w=
   document.addEventListener("visibilitychange",()=>{ document.hidden?stop():(state.bgAnim!==false&&start()); });
   return { start, stop };
 })();
-function setBg(on){ state.bgAnim=on; saveState(); ["#ocBgToggle","#ocBgToggleIntro"].forEach(sel=>{ const b=$(sel);
+function setBg(on,quiet){ state.bgAnim=on; saveState(); if(!quiet) (on?cueBgOn:cueBgOff)(); ["#ocBgToggle","#ocBgToggleIntro"].forEach(sel=>{ const b=$(sel);
   if(b){ b.setAttribute("aria-pressed",on); b.textContent="✦ Background: "+(on?"On":"Off"); } }); on?bg.start():bg.stop(); }
 function syncSoundBtn(){ const b=$("#ocSoundToggle"); if(!b) return;
   const on=!!state.soundOn; b.setAttribute("aria-pressed",on); b.textContent="♪ Sound: "+(on?"On":"Off"); }
@@ -2340,7 +2387,7 @@ $("#ocBgToggleIntro").addEventListener("click",()=> setBg(state.bgAnim===false))
 /* renderHelp() runs here as well as from render(): render() only fires once the learner has
    left the landing, so without this the intro — the one screen Anas wants it open on — would
    never paint the panel at all. */
-root.classList.add("is-landing"); setBg(state.bgAnim!==false); syncSoundBtn(); renderHelp(); resize();
+root.classList.add("is-landing"); setBg(state.bgAnim!==false,true); syncSoundBtn(); renderHelp(); resize();
 })();
 </script>
 </body>
