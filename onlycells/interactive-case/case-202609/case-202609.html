@@ -752,9 +752,12 @@ const CASE = {
      6-1/6-2/6-3 sit top-left (his "3"), which leaves 6-4 alone in the centre as the single
      fragment. 5 + 1 = his 6 marks, so the mapping is forced, not guessed.
 
-     [GAP] Field VIII stays combined — "a mixture" across 9 marks cannot be split without
-     guessing which is which, and guessing morphology is exactly what this asset must not do.
-     Anas has offered to colour-code that image; asked 2026-08-10.
+     Field III RESOLVED 2026-08-10 from Anas's re-marked 202609_3_v2.png (red = fragments,
+     blue = spherocytes). It is a RE-MARK, not a recolour: 18 marks where v1 had 9, so the old
+     coordinates were replaced wholesale rather than relabelled. Extracted by colour rather than
+     by diffing against the original, and solid stained nuclei were rejected by ink/area ratio —
+     a pen ring is hollow (0.23–0.43), a nucleus is solid (0.70, 0.93). Two white cells were
+     caught and excluded that way. tools/out/v2_overlay.png is the visual check.
 
      `kind` drives the ring styling: solid teal = fragment, dashed = spherocyte, so the two are
      told apart by shape as well as tone rather than by colour alone. */
@@ -770,15 +773,24 @@ const CASE = {
     { image:1, x:43.6, y:35.8, r:3.32, label:"6-4", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
     { image:1, x:91.1, y:81.4, r:3.37, label:"6-5", kind:"spher", title:"Microspherocyte", note:"Small, dense and round with no central pallor — a by-product of the same mechanical damage." },
     { image:1, x:90.0, y:88.8, r:2.93, label:"6-6", kind:"spher", title:"Microspherocyte", note:"Small, dense and round with no central pallor — a by-product of the same mechanical damage." },
-    { image:2, x:28.0, y:13.4, r:4.54, label:"8-1", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
-    { image:2, x:21.7, y:23.0, r:4.10, label:"8-2", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
-    { image:2, x:77.4, y:32.6, r:3.71, label:"8-3", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
-    { image:2, x:28.3, y:38.2, r:4.69, label:"8-4", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
-    { image:2, x:61.4, y:43.5, r:4.05, label:"8-5", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
-    { image:2, x:18.7, y:51.4, r:2.93, label:"8-6", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
-    { image:2, x:52.5, y:54.1, r:3.47, label:"8-7", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
-    { image:2, x:89.6, y:68.0, r:2.25, label:"8-8", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." },
-    { image:2, x:84.1, y:91.0, r:4.69, label:"8-9", kind:"mixed", title:"Fragment or microspherocyte", note:"One of the mixed population in this field. Anas confirmed this field carries both fragments and spherocytes; which each ring is has been asked of him and is not guessed here." }
+    { image:2, x:92.0, y:11.9, r:2.43, label:"3-1", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
+    { image:2, x:30.2, y:13.5, r:2.43, label:"3-2", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
+    { image:2, x:25.5, y:13.8, r:2.80, label:"3-3", kind:"spher", title:"Microspherocyte", note:"Small, dense and round with no central pallor — a by-product of the same mechanical damage." },
+    { image:2, x:67.2, y:18.9, r:3.96, label:"3-4", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
+    { image:2, x:35.2, y:23.5, r:2.44, label:"3-5", kind:"spher", title:"Microspherocyte", note:"Small, dense and round with no central pallor — a by-product of the same mechanical damage." },
+    { image:2, x:22.0, y:24.1, r:3.18, label:"3-6", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
+    { image:2, x:78.8, y:33.0, r:2.04, label:"3-7", kind:"spher", title:"Microspherocyte", note:"Small, dense and round with no central pallor — a by-product of the same mechanical damage." },
+    { image:2, x:29.3, y:38.9, r:3.05, label:"3-8", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
+    { image:2, x:62.3, y:43.4, r:2.75, label:"3-9", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
+    { image:2, x:18.4, y:51.0, r:2.30, label:"3-10", kind:"spher", title:"Microspherocyte", note:"Small, dense and round with no central pallor — a by-product of the same mechanical damage." },
+    { image:2, x:83.4, y:51.1, r:2.79, label:"3-11", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
+    { image:2, x:53.8, y:54.3, r:2.28, label:"3-12", kind:"spher", title:"Microspherocyte", note:"Small, dense and round with no central pallor — a by-product of the same mechanical damage." },
+    { image:2, x:89.6, y:67.5, r:2.02, label:"3-13", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
+    { image:2, x:95.6, y:67.5, r:3.27, label:"3-14", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
+    { image:2, x:82.8, y:75.1, r:2.67, label:"3-15", kind:"spher", title:"Microspherocyte", note:"Small, dense and round with no central pallor — a by-product of the same mechanical damage." },
+    { image:2, x:84.0, y:93.2, r:3.60, label:"3-16", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
+    { image:2, x:30.3, y:94.5, r:2.59, label:"3-17", kind:"spher", title:"Microspherocyte", note:"Small, dense and round with no central pallor — a by-product of the same mechanical damage." },
+    { image:2, x:76.8, y:95.1, r:2.69, label:"3-18", kind:"frag", title:"Red-cell fragment (schistocyte)", note:"Angular, sheared cell with no central pallor — mechanically damaged passing through fibrin strands." },
   ],
   /* Which fields carry marks, for the "show published annotations" prompt. */
   markedFields:[0,1,2],
