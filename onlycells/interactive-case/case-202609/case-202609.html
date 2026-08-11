@@ -433,6 +433,21 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
 .oc-xrefback[hidden]{ display:none; }
 .oc-xrefback:hover{ color:#fff; border-color:#fff; }
 
+/* Feedback card. The motion is deliberately small: a slow lift and a soft glow, enough to draw
+   the eye at the end of a long page without behaving like an advert. It sits still for anyone
+   who has asked for reduced motion. */
+.oc-feedback{ margin-top:26px; padding:20px; border-radius:var(--oc-radius); text-align:center;
+  border:1px solid var(--oc-teal); background:linear-gradient(180deg, rgba(46,158,143,.14), rgba(46,158,143,.05));
+  animation:oc-levitate 4.5s ease-in-out infinite; }
+.oc-feedback__t{ font-weight:700; color:var(--oc-teal-bright); font-size:16px; margin-bottom:6px; }
+.oc-feedback__b{ color:var(--oc-text-muted); font-size:13px; line-height:1.55; max-width:60ch; margin:0 auto 14px; }
+.oc-feedback__pending{ font-size:12px; color:var(--oc-text-muted); font-style:italic; opacity:.8; }
+.oc-feedback.is-pending{ border-style:dashed; }
+@keyframes oc-levitate{
+  0%,100%{ transform:translateY(0);     box-shadow:0 6px 18px rgba(0,0,0,.28), 0 0 0 0 rgba(52,198,176,.30); }
+  50%    { transform:translateY(-5px);  box-shadow:0 14px 30px rgba(0,0,0,.34), 0 0 0 7px rgba(52,198,176,0); } }
+@media (prefers-reduced-motion:reduce){ .oc-feedback{ animation:none; box-shadow:0 6px 18px rgba(0,0,0,.28); } }
+
 /* "How this works" — a floating pill, bottom-right, over the page rather than docked in the
    flow (so it never inflates the auto-resize iframe height). Shown expanded on arrival at
    Station 1; auto-collapses to the reopen chip the moment the learner actually starts working
@@ -859,15 +874,15 @@ const CASE = {
       "TTP — the key differential. Ruled out by a {{adamts|normal ADAMTS13}} (severe deficiency, usually < 10 IU/dL, defines TTP).",
       "DIC — unlikely without active coagulation factor consumption; a {{coag|normal PT, APTT and fibrinogen screen}} cleanly separates DIC from localised microvascular thrombosis.",
       "ITP — explains the {{fbc|platelets}} but not the fragmentation, the haemolysis or the {{bio|acute kidney injury}}.",
-      "EDTA pseudothrombocytopenia — excluded by the film itself: genuinely low, no clumps.",
+      "EDTA pseudothrombocytopenia — excluded by {{film|the film}} itself: genuinely low, no clumps.",
       "Hereditary spherocytosis — spherocytes are only a minor secondary feature here; HS is an intrinsic membrane defect that does not cause schistocytic fragmentation or acute renal failure.",
       /* [AUTHORED — confirm with Anas/SME] The three below were drafted to close the gap Daniel
          flagged: every distractor a learner can choose should have a stated reason for exclusion,
          otherwise the feedback is silent on exactly the answers they got wrong. Wording is ours,
          not Anas's. */
-      "Warm autoimmune haemolytic anaemia — excluded by the {{haem|negative DAT}}: immune haemolysis is Coombs-positive. Warm AIHA also produces spherocytes without schistocytic fragmentation, and does not explain the thrombocytopenia or the acute kidney injury.",
-      "Megaloblastic anaemia (B12/folate) — excluded by a {{indices|normal MCV}} with no hypersegmented neutrophils on the film. The raised LDH here is intravascular haemolysis, not the ineffective erythropoiesis of a megaloblastic process.",
-      "Acute leukaemia — excluded by a {{fbc|normal white cell count}} with no blasts on the film. The cytopenias here are consumptive, driven by microvascular thrombosis, rather than the result of marrow replacement."
+      "Warm autoimmune haemolytic anaemia — excluded by the negative DAT: immune haemolysis is Coombs-positive. Warm AIHA also produces spherocytes without schistocytic fragmentation, and does not explain the thrombocytopenia or the acute kidney injury.",
+      "Megaloblastic anaemia (B12/folate) — excluded by a {{indices|normal MCV}} with no hypersegmented neutrophils on {{film|the film}}. The raised LDH here is intravascular haemolysis, not the ineffective erythropoiesis of a megaloblastic process.",
+      "Acute leukaemia — excluded by a {{fbc|normal white cell count}} with no blasts on {{film|the film}}. The cytopenias here are consumptive, driven by microvascular thrombosis, rather than the result of marrow replacement."
     ],
     filmObs:[
       "Red-cell fragmentation with schistocytes — the hallmark of a microangiopathic process",
@@ -1365,8 +1380,8 @@ function renderStation(st){
       '<div class="oc-callout lilac"><div class="h">Teaching point</div>'+escapeHtml(CASE.teachingPoint)+'</div>'+
       '<h3>What you would rule out, and how</h3>'+
       '<div class="oc-callout" id="ocRuleoutBlock"><div class="h">Model answer</div><ul>'+CASE.model.ruleout.map(r=>'<li>'+ruleoutText(r)+'</li>').join("")+'</ul></div>'+
-      '<h3 id="ocHaemBlock">Morphology report</h3>'+reportHTML()+
-      '<h3>The film, marked by Only Cells</h3>'+
+      '<h3>Morphology report</h3>'+reportHTML()+
+      '<h3 id="ocFilmBlock">The film, marked by Only Cells</h3>'+
       '<p class="oc-narrate">These are the '+(CASE.markedFields||[]).length+' fields Anas marked. Each ring circles the cell without covering it — hover a ring or an entry in the list to link the two.</p>'+
       '<div style="margin:10px 0"><button class="oc-btn oc-btn--primary" id="ocAnno">Show the marked cells</button></div>'+
       '<div class="oc-smewrap">'+
@@ -1394,9 +1409,10 @@ function renderStation(st){
          The certificate PDF itself is unchanged: it already links both organisations, and a
          second link to the same people there would be noise. */
       '<div class="oc-note">Your certificate downloads as a PDF, signed by '+
-        '<a href="https://www.linkedin.com/in/anasanasir/" target="_blank" rel="noopener">Anas Nasir</a> and '+
-        '<a href="https://www.linkedin.com/in/daniel-boyland-577b6476/" target="_blank" rel="noopener">Dan Boyland</a>. '+
-        'The plain-text record is a backup if the PDF will not open.</div>'
+        '<a href="https://www.linkedin.com/in/anasanasir/" target="_blank" rel="noopener">Anas Nasir (Only Cells)</a> and '+
+        '<a href="https://www.linkedin.com/in/daniel-boyland-577b6476/" target="_blank" rel="noopener">Dan Boyland (Forged Frameworks)</a>. '+
+        'The plain-text record is a backup if the PDF will not open.</div>'+
+      feedbackCardHTML()
       :
       '<div class="oc-lockbar"><span class="k">Not yet submitted</span> Go back to Station 4, release the ADAMTS13 result and commit a diagnosis to generate your CPD record.</div>'+
       '<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocGoBack">Back to Station 4</button></div>');
@@ -1410,6 +1426,7 @@ function renderStation(st){
         anno.className="oc-btn "+(on?"oc-btn--ghost":"oc-btn--primary"); resize(); });
       wireRevealedResults(node);
       wireXrefs(node);
+      wireFeedback(node);
       $("#ocName",node).addEventListener("input",(e)=>{ state.learner.name=e.target.value; saveState(); });
       $("#ocReg",node).addEventListener("input",(e)=>{ state.learner.reg=e.target.value; saveState(); });
       $("#ocPdf",node).addEventListener("click",()=> printOut("record"));
@@ -1444,7 +1461,7 @@ function revealedResultsHTML(){ return REVEAL_GROUPS.map(g=> foldHTML(g[0],g[1],
    Targets are element ids on the final station; `ruleoutText()` is the only place that knows
    the mapping, so adding a new one is a single line. */
 const XREF={ fbc:"ocFbcRv", diff:"ocDiffRv", indices:"ocIndicesRv", coag:"ocCoagRv",
-             bio:"ocBioRv", haem:"ocHaemBlock", adamts:"ocAdamtsBlock" };
+             bio:"ocBioRv", adamts:"ocAdamtsBlock", film:"ocFilmBlock" };
 function ruleoutText(str){
   return escapeHtml(str).replace(/\{\{(\w+)\|([^}]+)\}\}/g,(m,k,label)=>
     XREF[k] ? '<button type="button" class="oc-xref" data-x="'+XREF[k]+'">'+label+'</button>' : label); }
@@ -1470,6 +1487,12 @@ function wireXrefs(node){
     btn.addEventListener("click",()=>{
       const target=node.querySelector("#"+btn.dataset.x); if(!target) return;
       const fold=target.closest("details"); if(fold) fold.open=true;   // open it, or they land on a closed row
+      /* A reference to "the film" should land them on the film with the marks ALREADY showing —
+         scrolling them to a clean film and leaving them to find the button is a dead end. */
+      if(btn.dataset.x==="ocFilmBlock"){
+        const anno=$("#ocAnno",node);
+        if(anno && /^Show/.test(anno.textContent)) anno.click();
+      }
       target.classList.add("oc-xref-hit");
       setTimeout(()=> target.classList.remove("oc-xref-hit"), 2000);
       scrollToEl(fold||target);
@@ -1993,9 +2016,25 @@ function renderCertificate(cb){
      signatures, and it's the brand's own accent. */
   function paintLinks(){ const L=(C.links||[]).filter(l=>l.ul);
     if(!L.length) return;
-    ctx.strokeStyle="#2E9E8F"; ctx.lineWidth=Math.max(3, Math.round(H*0.0035)); ctx.lineCap="round";
-    L.forEach(l=>{ const y=l.ul.y*H;
-      ctx.beginPath(); ctx.moveTo(l.ul.x*W, y); ctx.lineTo((l.ul.x+l.ul.w)*W, y); ctx.stroke(); }); }
+    const teal="#2E9E8F", lw=Math.max(3, Math.round(H*0.0035));
+    L.forEach(l=>{
+      const y=l.ul.y*H, x0=l.ul.x*W, x1=(l.ul.x+l.ul.w)*W;
+      ctx.strokeStyle=teal; ctx.lineWidth=lw; ctx.lineCap="round";
+      ctx.beginPath(); ctx.moveTo(x0,y); ctx.lineTo(x1,y); ctx.stroke();
+      /* A small external-link glyph after the underline, so it reads as a link on paper too —
+         an underline alone is just an underline once the PDF is printed. Drawn rather than
+         typed: an arrow character's coverage varies by font and would silently fall back to a
+         box on a machine without it. */
+      const s=H*0.020, gx=x1+H*0.010, gy=y-s-H*0.004;
+      ctx.strokeStyle=teal; ctx.lineWidth=Math.max(2, lw*0.72); ctx.lineJoin="round"; ctx.lineCap="round";
+      /* box, open at the top-right corner */
+      ctx.beginPath();
+      ctx.moveTo(gx+s*0.60, gy); ctx.lineTo(gx, gy); ctx.lineTo(gx, gy+s); ctx.lineTo(gx+s, gy+s); ctx.lineTo(gx+s, gy+s*0.40);
+      ctx.stroke();
+      /* arrow out of it */
+      ctx.beginPath(); ctx.moveTo(gx+s*0.45, gy+s*0.55); ctx.lineTo(gx+s*1.05, gy-s*0.05); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(gx+s*0.62, gy-s*0.05); ctx.lineTo(gx+s*1.05, gy-s*0.05); ctx.lineTo(gx+s*1.05, gy+s*0.38); ctx.stroke();
+    }); }
   const done=()=>{ paintText(); paintLinks(); cb(cv); };
   /* "successfully participating" only when the diagnosis actually matched; otherwise the
      participation wording. Two slides from Anas's deck. */
@@ -2051,17 +2090,25 @@ function jpegPdf(jpeg, wpx, hpx, links){
   return new Blob([out],{type:"application/pdf"});
 }
 
-/* Fires once, after the certificate is in their hands. Session-scoped rather than persisted:
-   asking again on a later visit would be nagging, but a reload shouldn't silently suppress it
-   for someone who never actually saw it. Opens in a new tab on the user's own click. */
-let feedbackAsked=false;
-function maybeAskFeedback(){
-  const C=CASE.certificate;
-  if(!C.feedbackUrl || feedbackAsked) return;      // no link configured → nothing happens at all
-  feedbackAsked=true;
-  setTimeout(()=> openModal(C.feedbackTitle, C.feedbackBody, "Give feedback", "No thanks",
-    ()=> window.open(C.feedbackUrl,"_blank","noopener")), 900);
-}
+/* The feedback ask sits at the very END of the final station — after the record and the
+   certificate — rather than interrupting as a modal (Anas, 2026-08-10). By then they have what
+   they came for, so the ask costs them nothing and doesn't read as a toll.
+   It is never gated on the certificate: withholding a CPD record until someone fills a form is
+   coercive and contaminates what the record evidences.
+   With no URL configured it still renders, in a plainly unfinished state — that is deliberate
+   for review so the placement can be judged, and it must not reach learners that way. */
+function feedbackCardHTML(){
+  const C=CASE.certificate, live=!!C.feedbackUrl;
+  return '<div class="oc-feedback'+(live?' is-live':' is-pending')+'" id="ocFeedback">'+
+    '<div class="oc-feedback__t">'+escapeHtml(C.feedbackTitle)+'</div>'+
+    '<div class="oc-feedback__b">'+escapeHtml(C.feedbackBody)+'</div>'+
+    (live
+      ? '<button class="oc-btn oc-btn--primary" id="ocFeedbackGo">Give feedback</button>'
+      : '<div class="oc-feedback__pending">Feedback form to follow — link not yet configured</div>')+
+    '</div>'; }
+function wireFeedback(node){
+  const b=$("#ocFeedbackGo",node);
+  if(b) b.addEventListener("click",()=> window.open(CASE.certificate.feedbackUrl,"_blank","noopener")); }
 
 /* Downloads as a PDF, not an image — a certificate should arrive as a document. */
 function downloadCertificate(){
@@ -2073,7 +2120,6 @@ function downloadCertificate(){
     const a=document.createElement("a"); a.href=url; a.download=CASE.id+"_certificate.pdf";
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(()=> URL.revokeObjectURL(url),1500);
-    maybeAskFeedback();
   });
   if(document.fonts&&document.fonts.ready) document.fonts.ready.then(go).catch(go); else go();
 }
@@ -2098,9 +2144,27 @@ function setPageStyle(kind){ let el=document.getElementById("ocPageStyle");
   el.textContent = (kind==="cert")
     ? "@page{ size:A4 landscape; margin:0; }"
     : "@page{ size:A4 portrait; margin:14mm; }"; }
+/* Wait for every image in a container to finish loading (or fail) before continuing. Chrome
+   snapshots the page synchronously when window.print() is called, so an <img> created moments
+   earlier prints as an empty box — which is exactly what happened: whichever field the learner
+   had been viewing was warm in the cache and printed, the rest came out blank. The certificate
+   path already waited for its artwork; the record never did.
+   The timeout is the point, not a nicety — a single unreachable image must not cost the learner
+   their whole record. */
+function whenImagesReady(host,cb,timeoutMs){
+  const imgs=[...host.querySelectorAll("img")];
+  const pending=imgs.filter(i=> !(i.complete && i.naturalWidth>0));
+  if(!pending.length) return cb();
+  let left=pending.length, done=false;
+  const finish=()=>{ if(done) return; done=true; cb(); };
+  pending.forEach(i=>{ const tick=()=>{ if(--left<=0) finish(); };
+    i.addEventListener("load",tick,{once:true}); i.addEventListener("error",tick,{once:true}); });
+  setTimeout(finish, timeoutMs||4000);
+}
 function printOut(kind){ setPageStyle(kind);
   if(kind==="cert"){ buildCertDOM(()=> window.print()); return; }   /* async: image must exist first */
-  buildRecordDOM(); window.print(); }
+  buildRecordDOM();
+  whenImagesReady($("#oc-print"), ()=> window.print()); }
 
 function summaryText(){ const L=[], LB=CASE.scoring.labels;
   /* confidence was captured but never written to the text export — only the PDF */
