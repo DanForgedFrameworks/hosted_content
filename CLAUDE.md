@@ -11,6 +11,8 @@
   - `touchmedical/` — /touchmedical-html, /abstract-deck (TM) (Touch Medical / TM9035 assets)
   - `onlycells/` — OnlyCells (working copy in `…\OnlyCells\`)
   - `tiro/` — Tiro-hosted assets · published manually by DanForgedFrameworks (no skill)
+  - `forged-frameworks/` — Forged Frameworks' own behind-the-scenes / production pieces, chat-built (no skill).
+    Content *about* a client build lives here, not in that client's tenant — the client tenants serve live embeds.
   - `Power of Focus/`, `Review360/` — published manually by DanForgedFrameworks (no skill)
 - **Load-bearing — ALL tenant paths are LOCKED:** live iframes point at
   `https://danforgedframeworks.github.io/hosted_content/<tenant>/…`. **Never rename or move a tenant folder**
