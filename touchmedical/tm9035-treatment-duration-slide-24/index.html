@@ -304,7 +304,7 @@ body.is-fullscreen{ padding-top:56px; }
     <section class="median" aria-label="Median duration of treatment">
       <div class="median__hero" id="medianHero"></div>
       <div class="median__strip" id="medianStrip" aria-hidden="true">
-        <p class="median__stripcap">Median duration of treatment &middot; marker = median, bar spans the 95% CI (months)</p>
+        <p class="median__stripcap">Median duration of treatment &middot; marker = median, bar spans the range (months)</p>
         <div id="medianRows"></div>
       </div>
     </section>
@@ -397,10 +397,12 @@ body.is-fullscreen{ padding-top:56px; }
     { key:'naive', lab:'Treatment-naïve',     med:8.1, min:0.03, max:71.52, c:'var(--c2)' },
     { key:'prev',  lab:'Previously treated',  med:7.0, min:0.03, max:83.12, c:'var(--c1)' }
   ];
-  // Label for the two extreme values on each gauge. NOTE: slide 34's verbatim source calls
-  // 0.03–83.12 the observed RANGE (min–max); shown here as "95% CI" per owner/SME instruction
-  // (2026-07-06). To revert, set to 'Range' AND change the strip caption "95% CI" back to "range".
-  const CI_LABEL = '95% CI';
+  // Label for the two extreme values on each gauge. These are the observed RANGE (min–max),
+  // NOT a confidence interval — slide 34's verbatim source says so, and finding F-02 (AL,
+  // closed 2026-07-30) ruled the same. That ruling supersedes the earlier owner/SME instruction
+  // of 2026-07-06 which had displayed them as "95% CI". Numbers are unchanged; label only.
+  // This constant also feeds the gauge aria-label below, so both stay in step.
+  const CI_LABEL = 'Range';
 
   const PILL = '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="17" y="13" width="14" height="27" rx="3.5"/><path d="M17 21h14"/><path d="M19 8h10v5H19z"/><path d="M24 27v7M20.5 30.5h7"/></svg>';
   const CAL  = '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="12" width="32" height="28" rx="3"/><path d="M8 20h32M18 8v8M30 8v8"/></svg>';
