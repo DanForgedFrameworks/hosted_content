@@ -985,17 +985,12 @@ const CASE = {
         x:0.852, y:0.860, w:0.090, h:0.070, ul:{ x:0.8728, w:0.0664, y:0.9215 } }
     ],
     signatory:"",                     // signatures are in the artwork
-    /* PLACEHOLDER — Anas is sending an MS Forms link (2026-08-10). Leave `url` empty and nothing
-       renders at all: no modal, no button, no dead link. Drop the URL in and it goes live with
-       no other change.
-       Deliberately NOT gated on the certificate. Withholding a CPD record until someone fills a
-       form is coercive, and it contaminates the very thing the record evidences — participation,
-       not compliance. It fires once, after the certificate is downloaded, and can be dismissed. */
-    /* ⚠️ PLACEHOLDER — Daniel's portfolio, set 2026-08-11 ONLY so the active state can be seen
-       rendering. This is NOT the feedback form. It MUST be replaced with Anas's MS Forms URL, or
-       emptied back to "" so the button reverts to disabled, before this reaches a learner.
-       Leaving it would send someone asked for feedback to an unrelated site. */
-    feedbackUrl:"https://danforgedframeworks.github.io/Portfolio/",
+    /* Anas's MS Forms link, supplied 2026-08-11. Opens in a new tab on the learner's own click,
+       so it never navigates them away from an unsaved CPD record.
+       Deliberately NOT gated on the certificate: withholding a CPD record until someone fills a
+       form is coercive and contaminates the very thing the record evidences. Anas agreed
+       (2026-08-11) that the certificate downloads independently. */
+    feedbackUrl:"https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=-c1hoxZ_FUukJofpZxKmBb7dGLwQaiFNpIaQ7MqXttFUMVBFSFpaRjI2T1A2UDJHR0U3QjJVWlFaVy4u",
     feedbackTitle:"How did you find this format?",
     feedbackBody:"This is a new format for Morphology Monthly, and Only Cells would like to know whether it worked for you. It takes a couple of minutes and it is entirely optional. Your certificate is already downloaded and nothing here depends on it.",
     outcomes:[                        // wording confirmed 2026-08-11 (Daniel)
@@ -1017,8 +1012,8 @@ const STATIONS=[
   { id:"presentation", title:"Presentation & bloods", screen:"Screen 1 — presentation & film", scaffold:"Review · flag the abnormal results" },
   { id:"film",         title:"The blood film",        screen:"Screen 1 — presentation & film", scaffold:"Identify features · annotate" },
   { id:"reasoning",    title:"Differential & rule-out",screen:"Screen 2 — reasoning",           scaffold:"Commit your differential" },
-  { id:"haemolysis",   title:"Haemolysis screen",     screen:"Screen 2 — reasoning",           scaffold:"Results released · reconsider" },
-  { id:"adamts",       title:"ADAMTS13 & the trigger",screen:"Screen 2 — the discriminator",   scaffold:"New results · one-shot commit" },
+  { id:"haemolysis",   title:"Haemolysis screen",     blind:"Further results",  screen:"Screen 2 — reasoning",           scaffold:"Results released · reconsider" },
+  { id:"adamts",       title:"ADAMTS13 & the trigger",blind:"Final results",    screen:"Screen 2 — reasoning",           scaffold:"New results · one-shot commit" },
   { id:"result",       title:"Result & CPD record",   screen:"Reveal & record",                scaffold:"Feedback · reveal · certificate" }
 ];
 
@@ -1201,12 +1196,24 @@ function renderCore(){
   const list=STATIONS;
   state.step=clamp(state.step,0,list.length-1); state.maxStep=Math.max(state.maxStep||0,state.step);
   stepsEl.innerHTML="";
+  /* Withheld stations show a NEUTRAL title until their results are released. Naming them up
+     front — "Haemolysis screen", "ADAMTS13 & the trigger" — handed the learner the answer from
+     Station 1: anyone who knows what ADAMTS13 is has been given the TTP/HUS discriminator before
+     they've looked at the film. The real title appears once the tier is unlocked, so the stepper
+     is still useful for navigating back afterwards. (Anas spotted the same leak in the help
+     text, 2026-08-11; this was the larger version of it.) */
+  const shown=(st,i)=>{
+    if(!st.blind) return st.title;
+    if(st.id==="haemolysis" && state.haemolysisRevealed) return st.title;
+    if(st.id==="adamts"     && state.adamtsRevealed)     return st.title;
+    return st.blind; };
   list.forEach((st,i)=>{ const locked=i>state.maxStep;
     const b=document.createElement("button"); b.className="oc-step"+(i<state.step?" done":"")+(locked?" locked":"");
     if(i===state.step) b.setAttribute("aria-current","true");
     if(locked) b.setAttribute("aria-disabled","true");
-    b.title = locked ? "Not yet — work through the stations in order" : "Go to "+st.title;
-    b.innerHTML='<span class="n">'+(i+1)+'</span>'+st.title;
+    const label=shown(st,i);
+    b.title = locked ? "Not yet — work through the stations in order" : "Go to "+label;
+    b.innerHTML='<span class="n">'+(i+1)+'</span>'+escapeHtml(label);
     b.addEventListener("click",()=>{
       if(!locked){ gotoStep(i); return; }
       /* locked: say why rather than doing nothing silently */
@@ -1235,7 +1242,7 @@ function render(){ renderCore(); const n=content.firstChild; if(n&&n._after) n._
 const HELP=["Work through the <strong>stations</strong> left to right using <strong>Next</strong>. Everything you type is saved in this browser as you go.",
   "Examine each film with the <strong>magnifier</strong> (scroll, +/− or keyboard to zoom) and drop your own numbered <strong>markers</strong>, which become part of your record.",
   "Flag the abnormal results, identify the film features, then commit a <strong>differential</strong>.",
-  "Results are released in two stages once you have committed: the <strong>haemolysis screen</strong>, then <strong>ADAMTS13</strong> and the trigger. Each release <strong>locks</strong> what came before it.",
+  "Further results are released in stages, each one only after you have committed to your reasoning so far. Every release <strong>locks</strong> what came before it.",
   "The final diagnosis is a <strong>one-shot, recorded</strong> submission. It can’t be changed or reset afterwards.",
   "You finish with <strong>feedback</strong> on what you spotted, a downloadable <strong>CPD record</strong> and a <strong>certificate of completion</strong>."];
 /* Anas 2026-08-10, from testing on his phone: the labelled pill sits over the content on a small
