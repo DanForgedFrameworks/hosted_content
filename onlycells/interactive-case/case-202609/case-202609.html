@@ -631,6 +631,10 @@ const CASE = {
                                         "2020609" but the highlighted films he supplied are named
                                         202609_1..3, so 202609 is the intended form. The old
                                         202609 was the legacy Morphology Monday reference. */
+  /* Only Cells' index of all Morphology Monthly cases. Anas is building that page (2026-08-11).
+     Leave empty and no link renders anywhere; set it once and it appears on the closing screen
+     and the landing screen together. Never ship a dead link to a page that doesn't exist. */
+  indexUrl:"",
   answerTitle:"Haemolytic Uraemic Syndrome (HUS)",
   credit:"",                          // blank by default — see the note by ocLandCredit below
   contributor:"",                     // e.g. "Case shared by …" when someone contributes one
@@ -1014,7 +1018,12 @@ const STATIONS=[
   { id:"reasoning",    title:"Differential & rule-out",screen:"Screen 2 — reasoning",           scaffold:"Commit your differential" },
   { id:"haemolysis",   title:"Haemolysis screen",     blind:"Further results",  screen:"Screen 2 — reasoning",           scaffold:"Results released · reconsider" },
   { id:"adamts",       title:"ADAMTS13 & the trigger",blind:"Final results",    screen:"Screen 2 — reasoning",           scaffold:"New results · one-shot commit" },
-  { id:"result",       title:"Result & CPD record",   screen:"Reveal & record",                scaffold:"Feedback · reveal · certificate" }
+  { id:"result",       title:"Result & feedback",     screen:"Reveal",                         scaffold:"Feedback · reveal · marked films" },
+  /* Anas 2026-08-11: the record, certificate and feedback move off the reveal onto a screen of
+     their own. The reveal was carrying everything and nobody reads to the bottom of a page that
+     long. Whoever wants the certificate will navigate forward for it, which is a better filter
+     than a collapsible. */
+  { id:"record",       title:"Your CPD record",       screen:"Record",                         scaffold:"Thank you · record · certificate" }
 ];
 
 const $ = (s,r=document)=> r.querySelector(s);
@@ -1477,6 +1486,30 @@ function renderStation(st){
       '<h3>The results, now flagged</h3>'+
       '<p class="oc-narrate">The same numbers you were given at the start, with our reading of them shown. Nothing here is new; only the flags are.</p>'+
       revealedResultsHTML()+
+      ''
+      :
+      '<div class="oc-lockbar"><span class="k">Not yet submitted</span> Go back to Station 5, release the ADAMTS13 result and commit a diagnosis to generate your CPD record.</div>'+
+      '<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocGoBack">Back to Station 5</button></div>');
+    node._after=()=>{
+      /* index 4 = "ADAMTS13 & the trigger", which is where the diagnosis is committed. This
+         pointed at index 3 (the haemolysis screen) — left over from the five-station layout,
+         so anyone who followed it landed a station short of what they were sent for. */
+      const gb=$("#ocGoBack",node); if(gb){ gb.addEventListener("click",()=> gotoStep(4)); return; }
+      buildResult($("#ocResultBox",node));
+      wireFigure(node,(CASE.markedFields&&CASE.markedFields[0])||0,"film",{ readOnly:true, magOff:true, only:CASE.markedFields });
+      const anno=$("#ocAnno",node); let on=false;
+      anno.addEventListener("click",()=>{ on=!on; toggleHotspots(node,on);
+        anno.textContent=on?"Hide the marked cells":"Show the marked cells";
+        anno.className="oc-btn "+(on?"oc-btn--ghost":"oc-btn--primary"); resize(); });
+      wireRevealedResults(node);
+      wireXrefs(node);
+    };
+
+  } else if(st.id==="record"){
+    node=stationShell(st, committed()?
+      '<div class="oc-callout pop"><div class="h">Thank you for taking part</div>'+
+        'That is the case complete. Your record and certificate are below, and both stay in this browser until you download them.</div>'+
+      indexLinkHTML()+
       '<h3>Your CPD record</h3>'+
       '<p class="oc-narrate">Your name appears on your certificate and record. It stays in this browser and is never sent anywhere.</p>'+
       '<div class="oc-fieldrow">'+
@@ -1495,21 +1528,10 @@ function renderStation(st){
         'The plain-text record is a backup if the PDF will not open.</div>'+
       feedbackCardHTML()
       :
-      '<div class="oc-lockbar"><span class="k">Not yet submitted</span> Go back to Station 5, release the ADAMTS13 result and commit a diagnosis to generate your CPD record.</div>'+
-      '<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocGoBack">Back to Station 5</button></div>');
+      '<div class="oc-lockbar"><span class="k">Not yet submitted</span> Commit a diagnosis on the previous station and your record and certificate appear here.</div>'+
+      '<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocGoBack2">Back to the diagnosis</button></div>');
     node._after=()=>{
-      /* index 4 = "ADAMTS13 & the trigger", which is where the diagnosis is committed. This
-         pointed at index 3 (the haemolysis screen) — left over from the five-station layout,
-         so anyone who followed it landed a station short of what they were sent for. */
-      const gb=$("#ocGoBack",node); if(gb){ gb.addEventListener("click",()=> gotoStep(4)); return; }
-      buildResult($("#ocResultBox",node));
-      wireFigure(node,(CASE.markedFields&&CASE.markedFields[0])||0,"film",{ readOnly:true, magOff:true, only:CASE.markedFields });
-      const anno=$("#ocAnno",node); let on=false;
-      anno.addEventListener("click",()=>{ on=!on; toggleHotspots(node,on);
-        anno.textContent=on?"Hide the marked cells":"Show the marked cells";
-        anno.className="oc-btn "+(on?"oc-btn--ghost":"oc-btn--primary"); resize(); });
-      wireRevealedResults(node);
-      wireXrefs(node);
+      const gb=$("#ocGoBack2",node); if(gb){ gb.addEventListener("click",()=> gotoStep(4)); return; }
       wireFeedback(node);
       $("#ocName",node).addEventListener("input",(e)=>{ state.learner.name=e.target.value; saveState(); });
       $("#ocReg",node).addEventListener("input",(e)=>{ state.learner.reg=e.target.value; saveState(); });
@@ -1520,6 +1542,15 @@ function renderStation(st){
   }
   return node;
 }
+
+/* Link back to the Only Cells index of all Morphology Monthly cases. Anas is building that page;
+   until `CASE.indexUrl` is set this renders NOTHING rather than a dead link. Adding the URL is
+   the only change needed, and it appears here and on the landing screen together. */
+function indexLinkHTML(){
+  if(!CASE.indexUrl) return "";
+  return '<p class="oc-narrate" style="text-align:center">'+
+    '<a class="oc-indexlink" href="'+escapeHtml(CASE.indexUrl)+'" target="_blank" rel="noopener">'+
+    'See all Morphology Monthly cases</a></p>'; }
 
 /* ===== components ===== */
 /* Collapsible result group. Open by default *before* submission so nothing needed for the
