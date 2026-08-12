@@ -203,8 +203,10 @@ body{
 
 <script>
 /* ============================================================
-   CONTENT — the 19-item ABSTRACT reference list. Edit here only.
-   Numbers 1–19 are fixed (master order); categories regroup them.
+   CONTENT — the 20-item ABSTRACT reference list. Edit here only.
+   Numbers 1–20 are fixed: they follow ORDER OF FIRST APPEARANCE and must match the
+   reference list. Categories regroup them and need not be contiguous — do not renumber
+   to make a category sit together.
    ============================================================ */
 const CAT1 = "MET biology & the METex14 driver";
 const CAT2 = "Approvals, guidelines & pivotal VISION";
@@ -279,14 +281,27 @@ const REFERENCES = [
     if(!refs.length) return '<div class="tmh-empty">No matching references found.</div>';
     return '<div class="tmh-reflist cols-'+cols+'">'+refs.map(refHTML).join('')+'</div>';
   }
+  /* Categories are NOT guaranteed contiguous: the list is numbered by order of first
+     appearance, so a category can be split (biology is 1–4, 7, 8). first–last would then
+     claim numbers the group does not own. Print the actual runs instead — 3 or more
+     consecutive collapse to a dash, pairs and singletons are listed out. Contiguous
+     groups render exactly as before. */
+  function refRange(ns){
+    const s=[...ns].sort((a,b)=>a-b), out=[]; let i=0;
+    while(i<s.length){
+      let j=i; while(j+1<s.length && s[j+1]===s[j]+1) j++;
+      out.push(j-i>=2 ? s[i]+'–'+s[j] : s.slice(i,j+1).join(', '));
+      i=j+1;
+    }
+    return out.join(', ');
+  }
   function catCardHTML(cat){
     const refs = REFERENCES.filter(r=>r.cat===cat);
-    const first=refs[0].n, last=refs[refs.length-1].n;
     return '<div class="tmh-cat" tabindex="0" role="button" data-cat="'+esc(cat)+'" style="--theme:'+THEME[cat]+'">'+
       '<div class="tmh-cat__icon">'+ICON[cat]+'</div>'+
       '<h2 class="tmh-cat__title">'+esc(cat)+'</h2>'+
       '<div class="tmh-cat__meta"><span class="tmh-cat__count">'+refs.length+' reference'+(refs.length>1?'s':'')+'</span>'+
-      '<span class="tmh-cat__range">Refs '+first+'–'+last+'</span></div></div>';
+      '<span class="tmh-cat__range">Refs '+refRange(refs.map(r=>r.n))+'</span></div></div>';
   }
 
   function renderCrumbs(){
