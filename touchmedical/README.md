@@ -1,7 +1,18 @@
 # touchmedical — TM9035 / VISION live assets
 
-**This folder is the source of truth for TM9035 HTML assets.** Git history here is the version
-control. Codex holds dated *release snapshots*, not the working copy — see rule 3.
+**This folder is the live Pages mirror — not the edit source.** Asset code is edited in
+`HTML Edits\Touch Medical\production\<slug>-<date>-vN\`. Three trees, all current, each with
+one job:
+
+| Tree | Role |
+|---|---|
+| `HTML Edits\Touch Medical\production\` | **Edit here.** The canonical working copy |
+| `Codex\html\production\2026\TM9035\` | Dated frozen release snapshots, for records |
+| `hosted_content\touchmedical\` (here) | What GitHub Pages serves. Deploy target |
+
+**Compare them with line endings normalised** — `production` stores CRLF, this repo stores LF,
+so a raw md5 reports false drift. Strip `\r` before hashing. Folder names understate the
+version too: a `…-v1` folder can hold v2 content, so compare `index.html` by hash, never by name.
 
 Project home (specs, review rounds, sign-offs): `touchMedical\TM 9035\03-html\`
 Build skill: `touchmedical-html` · Deploy: `references/deploy-runbook.md` in that skill.
@@ -29,9 +40,12 @@ Build skill: `touchmedical-html` · Deploy: `references/deploy-runbook.md` in th
    point at the URL, and a rename breaks them silently. Record the new number in `scene_deck`
    and leave the slug alone. If a slug must change, the old one stays as a redirect stub
    forever (there are six).
-3. **Edit here, snapshot to Codex at sign-off.** Day-to-day fixes happen in this repo; git is
-   the history. Codex gets a dated frozen snapshot (`<slug>-YYYY-MM-DD-vN`) when a build is
-   signed off, taken by `snapshot-to-codex.ps1` — not by hand, and never as a working copy.
+3. **Edit in `Touch Medical\production\`, deploy here, snapshot to Codex at sign-off.** This
+   repo receives finished builds; it is not where you work. Codex gets a dated frozen snapshot
+   (`<slug>-YYYY-MM-DD-vN`) at sign-off via `snapshot-to-codex.ps1`. That script copies from
+   *this* folder, which is correct only because the deployed copy is verified equal to
+   production before it lands — if you ever deploy without that check, snapshot from
+   `production\` instead.
 4. **Reference assets skip Codex** by rule (`vision-references*`) — they are cross-slide
    library material, not per-slide builds.
 5. **Bump `?v=N` on every redeploy**, typo fixes included.
@@ -54,3 +68,8 @@ because nothing was checking.
   snapshotted to Codex and verified byte-identical. `tm9035-asian-efficacy-knowledge-check-slide-66`
   and `vision-abstract-references-hub` were live but unregistered. `tm9035-prototype-chapter-1`
   removed — an empty local husk, never tracked by git, so never served.
+- **2026-08-13** — Corrected the source-of-truth claim above. The 29 July audit compared only
+  Codex and this repo, found Codex stale, and wrongly concluded this folder was canonical. It
+  never checked `Touch Medical\production\`, which is the real edit source and was current all
+  along: all 19 assets verified byte-identical to live once line endings were normalised.
+  Codex was stale *by design* — it holds releases, not the working copy.
