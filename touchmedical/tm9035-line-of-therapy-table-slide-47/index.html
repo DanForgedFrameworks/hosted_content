@@ -34,7 +34,11 @@
 html,body{ height:100%; margin:0; }
 body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--font); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; display:flex; align-items:center; justify-content:center; }
 
-.frame{ width:100%; height:auto; max-height:min(680px,100vh); display:flex; flex-direction:column; overflow:hidden; background:#fff; }
+/* 2026-08-19: cap raised 680 -> 700. With the expandable row open the content
+   needs 695px, so at a 864-tall viewport the old 680 cap forced .body to scroll
+   (and a scrolling pane renders soft under the platform's scale). 100vh still
+   clamps it, so the frame can never exceed the embed box. */
+.frame{ width:100%; height:auto; max-height:min(700px,100vh); display:flex; flex-direction:column; overflow:hidden; background:#fff; }
 
 .banner{ flex:0 0 auto; text-align:center; padding:clamp(6px,1.1vh,11px) clamp(16px,3vw,40px) clamp(5px,0.9vh,8px); background:#fff; box-shadow:0 4px 11px rgba(34,47,85,0.07); }
 .banner__title{ margin:0; font-size:clamp(30px,3.4vw,48px); color:var(--navy); font-weight:700; line-height:1.1; letter-spacing:-0.012em; text-shadow:var(--title-shadow-slim); }

@@ -94,6 +94,14 @@ body{
 /* ---------- reference items (grouped list + numbered list + search) ---------- */
 .tmh-reflist{ column-gap:26px; }
 .tmh-reflist.cols-3{ column-count:3; }
+/* 2026-08-19: the flat all-references list is the tallest state in this asset and
+   the only one that overflowed into a scrolling pane. A scrolling pane is promoted
+   to its own compositing layer, and inside the platform the embed sits under a
+   fractional scale, so that layer is rasterised then resampled and its text goes
+   soft while the non-scrolling grouped view stays crisp (owner-confirmed).
+   A fourth column at desktop widths shortens the list with no change to type size,
+   line height or wording. */
+@media (min-width:1200px){ .tmh-reflist.cols-3{ column-count:4; } }
 .tmh-reflist.cols-2{ column-count:2; }
 .tmh-reflist.cols-1{ column-count:1; }
 .tmh-ref{
@@ -188,7 +196,7 @@ body{
   <div class="tmh-inter__panel" role="document">
     <h2 class="tmh-inter__title" id="tmhInterTitle">You are leaving this activity</h2>
     <p class="tmh-inter__p" id="tmhInterReason"></p>
-    <p class="tmh-inter__p"><strong>Source:</strong> <span id="tmhInterDest"></span><br><strong>Publisher:</strong> <span id="tmhInterOrg"></span></p>
+    <p class="tmh-inter__p"><strong>Source:</strong> <span id="tmhInterDest"></span><br><strong>Publisher:</strong> <span id="tmhInterOrg"></span><br><strong>Document type:</strong> <span id="tmhInterType"></span></p>
     <p class="tmh-inter__domain" id="tmhInterDomain"></p>
     <p class="tmh-inter__p">The source opens in a new tab. Check the address is expected before continuing.</p>
     <div class="tmh-inter__url" id="tmhInterUrl"></div>
@@ -213,26 +221,26 @@ const CAT2 = "Approvals, guidelines & pivotal VISION";
 const CAT3 = "VISION ≥3-year posters";
 
 const REFERENCES = [
-  { n:1,  cat:CAT1, type:"Journal article", cite:"Drilon A, et al. J Thorac Oncol. 2017;12(1):15–26.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2016.10.014" },
-  { n:2,  cat:CAT1, type:"Journal article", cite:"Remon J, et al. J Thorac Oncol. 2023;18(4):419–435.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2022.10.015" },
-  { n:3,  cat:CAT1, type:"Journal article", cite:"Awad MM, et al. J Clin Oncol. 2016;34(7):721–730.", journal:"J Clin Oncol.", url:"https://doi.org/10.1200/JCO.2015.63.4600" },
-  { n:4,  cat:CAT1, type:"Journal article", cite:"Tong JH, et al. Clin Cancer Res. 2016;22(12):3048–3056.", journal:"Clin Cancer Res.", url:"https://doi.org/10.1158/1078-0432.CCR-15-2061" },
-  { n:5,  cat:CAT2, type:"Journal article", cite:"Hendriks L, Kerr K, Menis J, Mok T, Nestle U, Passaro A, et al. Oncogene-addicted metastatic non-small-cell lung cancer: ESMO Clinical Practice Guideline for diagnosis, treatment and follow-up. Ann Oncol. 2023;34(4):339–57.", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2022.12.009" },
-  { n:6,  cat:CAT2, type:"Journal article", cite:"Lee S, Menis J, Kim T, Kim H, Zhou C, Kurniawati S, et al. Pan-Asian adapted ESMO Clinical Practice Guidelines for the diagnosis, treatment and follow-up of patients with oncogene-addicted metastatic non-small-cell lung cancer. ESMO Open. 2024;9(12):103996.", journal:"ESMO Open.", url:"https://doi.org/10.1016/j.esmoop.2024.103996" },
-  { n:7,  cat:CAT1, type:"Journal article", cite:"Russo A, et al. J Thorac Oncol. 2026;21(8):103695.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2026.103695" },
-  { n:8,  cat:CAT1, type:"Journal article", cite:"Aggarwal C, et al. JCO Precis Oncol. 2023;7:e2300191.", journal:"JCO Precis Oncol.", url:"https://doi.org/10.1200/PO.23.00191" },
+  { n:1,  cat:CAT1, type:"Journal article", cite:"Drilon A, Cappuzzo F, Ou SI, Camidge DR. Targeting MET in Lung Cancer: Will Expectations Finally Be MET? J Thorac Oncol. 2017;12(1):15–26.", short:"Drilon A, et al. J Thorac Oncol. 2017;12(1):15–26.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2016.10.014" },
+  { n:2,  cat:CAT1, type:"Journal article", cite:"Remon J, Hendriks LEL, Mountzios G, García-Campelo R, Saw SPL, et al. MET alterations in NSCLC-Current Perspectives and Future Challenges. J Thorac Oncol. 2023;18(4):419–435.", short:"Remon J, et al. J Thorac Oncol. 2023;18(4):419–435.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2022.10.015" },
+  { n:3,  cat:CAT1, type:"Journal article", cite:"Awad MM, Oxnard GR, Jackman DR, Savukoski DO, Hall D, Shivdasani P, et al. MET Exon 14 Mutations in Non–Small-Cell Lung Cancer Are Associated With Advanced Age and Stage-Dependent MET Genomic Amplification and c-Met Overexpression. J Clin Oncol. 2016;34(7):721–730.", short:"Awad MM, et al. J Clin Oncol. 2016;34(7):721–730.", journal:"J Clin Oncol.", url:"https://doi.org/10.1200/JCO.2015.63.4600" },
+  { n:4,  cat:CAT1, type:"Journal article", cite:"Tong JH, Yeung SF, Chan AW, Chung LY, Chau SL, Lung RW, et al. MET Amplification and Exon 14 Splice Site Mutation Define Unique Molecular Subgroups of Non-Small Cell Lung Carcinoma with Poor Prognosis. Clin Cancer Res. 2016;22(12):3048–3056.", short:"Tong JH, et al. Clin Cancer Res. 2016;22(12):3048–3056.", journal:"Clin Cancer Res.", url:"https://doi.org/10.1158/1078-0432.CCR-15-2061" },
+  { n:5,  cat:CAT2, type:"Journal article", cite:"Hendriks L, Kerr K, Menis J, Mok T, Nestle U, Passaro A, et al. Oncogene-addicted metastatic non-small-cell lung cancer: ESMO Clinical Practice Guideline for diagnosis, treatment and follow-up. Ann Oncol. 2023;34(4):339–57.", short:"Hendriks L, et al. Ann Oncol. 2023;34(4):339–57.", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2022.12.009" },
+  { n:6,  cat:CAT2, type:"Journal article", cite:"Lee S, Menis J, Kim T, Kim H, Zhou C, Kurniawati S, et al. Pan-Asian adapted ESMO Clinical Practice Guidelines for the diagnosis, treatment and follow-up of patients with oncogene-addicted metastatic non-small-cell lung cancer. ESMO Open. 2024;9(12):103996.", short:"Lee S, et al. ESMO Open. 2024;9(12):103996.", journal:"ESMO Open.", url:"https://doi.org/10.1016/j.esmoop.2024.103996" },
+  { n:7,  cat:CAT1, type:"Journal article", cite:"Russo A, Javey M, Huang RSP, Yaung SJ, Kaplan B, Hiemenz MC, et al. Molecular Profiling Across 80,000 Patients With Lung Cancer. J Thorac Oncol. 2026;21(8):103695.", short:"Russo A, et al. J Thorac Oncol. 2026;21(8):103695.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2026.103695" },
+  { n:8,  cat:CAT1, type:"Journal article", cite:"Aggarwal C, Marmarelis ME, Hwang WT, Scholes DG, McWilliams TL, Singh AP, et al. Association Between Availability of Molecular Genotyping Results and Overall Survival in Patients With Advanced Nonsquamous Non-Small-Cell Lung Cancer. JCO Precis Oncol. 2023;7:e2300191.", short:"Aggarwal C, et al. JCO Precis Oncol. 2023;7:e2300191.", journal:"JCO Precis Oncol.", url:"https://doi.org/10.1200/PO.23.00191" },
   { n:9,  cat:CAT2, type:"Prescribing information", cite:"US FDA. TEPMETKO (tepotinib) Prescribing Information. 2024.", avail:"emdserono.com/…/tepmetko-pi.pdf", accessed:"June 2026", url:"https://www.emdserono.com/us-en/pi/tepmetko-pi.pdf" },
   { n:10, cat:CAT2, type:"News release", cite:"TEPMETKO (tepotinib) Approved in Japan for Advanced NSCLC with METex14 Skipping Alterations.", avail:"merckgroup.com/…/tepotinib-25-03-2020.html", accessed:"June 2026", url:"https://www.merckgroup.com/en/news/tepotinib-25-03-2020.html" },
   { n:11, cat:CAT2, type:"SmPC", cite:"European Medicines Agency. TEPMETKO (tepotinib) Summary of Product Characteristics. 2026.", avail:"ema.europa.eu/…/tepmetko-epar-product-information_en.pdf", accessed:"June 2026", url:"https://www.ema.europa.eu/en/documents/product-information/tepmetko-epar-product-information_en.pdf" },
   { n:12, cat:CAT2, type:"Prescribing information", cite:"US FDA. Tabrecta (capmatinib) Prescribing Information. 2024.", avail:"novartis.com/…/tabrecta.pdf", accessed:"June 2026", url:"https://www.novartis.com/us-en/sites/novartis_us/files/tabrecta.pdf" },
   { n:13, cat:CAT2, type:"SmPC", cite:"European Medicines Agency. Tabrecta (capmatinib) Summary of Product Characteristics. 2025.", avail:"ema.europa.eu/…/tabrecta-epar-product-information_en.pdf", accessed:"June 2026", url:"https://www.ema.europa.eu/en/documents/product-information/tabrecta-epar-product-information_en.pdf" },
   { n:14, cat:CAT2, type:"Clinical guideline", cite:"ESMO Oncogene-Addicted Metastatic Non-Small-Cell Lung Cancer Living Guideline, v1.3 – February 2026.", avail:"esmo.org/guidelines/living-guidelines/…", accessed:"June 2026", url:"https://www.esmo.org/guidelines/living-guidelines/esmo-living-guideline-oncogene-addicted-metastatic-non-small-cell-lung-cancer/management-of-advanced-and-metastatic-disease/ret-fusion-ntrk-her2-activating-mutations-her2-overexpression-met-ex14-skipping-mutation-c-met-or-kras-g12c-mutation/ret-ntrk-her2-exon-20-egfr-ex20ins" },
-  { n:15, cat:CAT2, type:"Journal article", cite:"Mazieres J, et al. JAMA Oncol. 2023;9(9):1260–1266.", journal:"JAMA Oncol.", url:"https://doi.org/10.1001/jamaoncol.2023.1962" },
-  { n:16, cat:CAT3, type:"Conference abstract", cite:"Mazieres J, et al. 81P. J Thorac Oncol. 2025;20(3, Suppl 1):S59–S60.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/S1556-0864(25)00276-X" },
-  { n:17, cat:CAT3, type:"Conference abstract", cite:"Felip E, et al. P3.12.40. J Thorac Oncol. 2025;20(10, Suppl 1):S483–S484.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2025.09.902" },
-  { n:18, cat:CAT3, type:"Conference abstract", cite:"Griesinger F, et al. 1996P. Ann Oncol. 2025;36(Suppl):S1061–S1062.", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2025.08.2620" },
-  { n:19, cat:CAT3, type:"Conference abstract", cite:"Viteri S, et al. 1995P. Ann Oncol. 2025;36(Suppl):S1060–S1061.", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2025.08.2619" },
-  { n:20, cat:CAT3, type:"Conference abstract", cite:"Yang J, et al. 992P. Ann Oncol. 2025;36(Suppl):S2062–S2063.", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2025.10.703" },
+  { n:15, cat:CAT2, type:"Journal article", cite:"Mazieres J, Paik PK, Garassino MC, Le X, Sakai H, Veillon R, et al. Tepotinib Treatment in Patients With MET Exon 14-Skipping Non-Small Cell Lung Cancer: Long-term Follow-up of the VISION Phase 2 Nonrandomized Clinical Trial. JAMA Oncol. 2023;9(9):1260–1266.", short:"Mazieres J, et al. JAMA Oncol. 2023;9(9):1260–1266.", journal:"JAMA Oncol.", url:"https://doi.org/10.1001/jamaoncol.2023.1962" },
+  { n:16, cat:CAT3, type:"Conference abstract", cite:"Mazieres J, Veillon R, Cortot AB, Ferrara R, Felip E, Garassino MC, Le X, et al. Tepotinib in patients with METex14 skipping NSCLC from the VISION study: ≥3-year follow-up outcomes. J Thorac Oncol. 2025;20(3 Suppl 1):S59–S60. (81P)", short:"Mazieres J, et al. 81P. J Thorac Oncol. 2025;20(3, Suppl 1):S59–S60.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/S1556-0864(25)00276-X" },
+  { n:17, cat:CAT3, type:"Conference abstract", cite:"Felip E, Ferrara R, Veillon R, Le X, Smit EF, Mazieres J, et al. Safety and Patient-Reported Outcomes With Tepotinib in Patients With METex14 Skipping NSCLC: ≥3-Years Follow-Up of VISION. J Thorac Oncol. 2025;20(10 Suppl 1):S483–S484. (P3.12.40)", short:"Felip E, et al. P3.12.40. J Thorac Oncol. 2025;20(10, Suppl 1):S483–S484.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2025.09.902" },
+  { n:18, cat:CAT3, type:"Conference abstract", cite:"Griesinger F, Ferrara R, Felip E, Smit EF, Veillon R, Le X, et al. Long-term outcomes with tepotinib for clinically relevant subgroups of patients with METex14 skipping NSCLC in the VISION study: A ≥3-year follow-up. Ann Oncol. 2025;36:S1061–S1062. (1996P)", short:"Griesinger F, et al. 1996P. Ann Oncol. 2025;36(Suppl):S1061–S1062.", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2025.08.2620" },
+  { n:19, cat:CAT3, type:"Conference abstract", cite:"Viteri S, Felip E, Smit E, Veillon R, Le X, Raskin J, et al. Treatment sequencing of tepotinib in patients with METex14 skipping NSCLC: Outcomes from ≥3 years follow-up of the VISION study. Ann Oncol. 2025;36:S1060–S1061. (1995P)", short:"Viteri S, et al. 1995P. Ann Oncol. 2025;36(Suppl):S1060–S1061.", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2025.08.2619" },
+  { n:20, cat:CAT3, type:"Conference abstract", cite:"Yang J, Morise M, Ahn M, Kato T, Zhao J, Chen YM, et al. Long-term outcomes in Asian patients with MET exon 14 skipping NSCLC receiving tepotinib in the VISION study: ≥3-year follow-up data. Ann Oncol. 2025;36:S2062–S2063. (992P)", short:"Yang J, et al. 992P. Ann Oncol. 2025;36(Suppl):S2062–S2063.", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2025.10.703" },
 ];
 
 /* ============================================================
@@ -258,7 +266,15 @@ const REFERENCES = [
 
   function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
   // Italicise the journal token inside the (already-escaped) citation, per house style.
-  function citeHTML(r){ let s=esc(r.cite); if(r.journal){ const j=esc(r.journal); s=s.replace(j,'<em>'+j+'</em>'); } return s; }
+  function citeHTML(r,useShort){
+    /* useShort renders the abridged list form; every other caller - the
+       Open source dialog, Print/Save PDF, Copy all - keeps the full citation. */
+    if(useShort && r.short){
+      let t=esc(r.short);
+      if(r.journal){ const jj=esc(r.journal); t=t.replace(jj,'<em>'+jj+'</em>'); }
+      return t;
+    }
+ let s=esc(r.cite); if(r.journal){ const j=esc(r.journal); s=s.replace(j,'<em>'+j+'</em>'); } return s; }
 
   let viewMode = 'grouped';   // 'grouped' | 'numbered'
   let inCat = null;
@@ -269,10 +285,10 @@ const REFERENCES = [
 
   /* ---------- render helpers ---------- */
   function refHTML(r){
-    return '<button class="tmh-ref" type="button" style="--theme:'+THEME[r.cat]+'" data-url="'+esc(r.url)+'" data-cite="'+esc(r.cite)+'" data-accessed="'+esc(r.accessed||'')+'">'+
+    return '<button class="tmh-ref" type="button" style="--theme:'+THEME[r.cat]+'" data-url="'+esc(r.url)+'" data-cite="'+esc(r.cite)+'" data-accessed="'+esc(r.accessed||'')+'" data-type="'+esc(r.type)+'">'+
       '<span class="tmh-ref__n">'+r.n+'</span>'+
       '<span class="tmh-ref__body">'+
-        '<span class="tmh-ref__cite">'+citeHTML(r)+'</span>'+
+        '<span class="tmh-ref__cite">'+citeHTML(r,true)+'</span>'+
         '<span class="tmh-ref__foot"><span class="tmh-ref__type">'+esc(r.type)+'</span>'+
         '<span class="tmh-ref__open">Open source '+OPEN_ICON+'</span></span>'+
       '</span></button>';
@@ -318,7 +334,7 @@ const REFERENCES = [
     renderCrumbs();
     const term = search.value.toLowerCase().trim();
     if(term){
-      const hits = REFERENCES.filter(r => (r.cite+' '+r.cat+' '+r.type+' '+r.url).toLowerCase().includes(term));
+      const hits = REFERENCES.filter(r => (r.cite+' '+(r.short||'')+' '+r.cat+' '+r.type+' '+r.url).toLowerCase().includes(term));
       body.innerHTML = listHTML(hits, 3);
       return;
     }
@@ -339,7 +355,7 @@ const REFERENCES = [
     const cat = e.target.closest('.tmh-cat');
     if(cat){ inCat = cat.getAttribute('data-cat'); render(); return; }
     const ref = e.target.closest('.tmh-ref');
-    if(ref){ openInter(ref.getAttribute('data-url'), ref.getAttribute('data-cite'), ref.getAttribute('data-accessed'), ref); }
+    if(ref){ openInter(ref.getAttribute('data-url'), ref.getAttribute('data-cite'), ref.getAttribute('data-accessed'), ref, ref.getAttribute('data-type')); }
   });
   body.addEventListener('keydown', e=>{
     const cat = e.target.closest('.tmh-cat');
@@ -379,7 +395,8 @@ const REFERENCES = [
 
   /* ---------- D16/D22 interstitial ---------- */
   const iDest=document.getElementById('tmhInterDest'), iOrg=document.getElementById('tmhInterOrg'),
-        iDomain=document.getElementById('tmhInterDomain'), iUrl=document.getElementById('tmhInterUrl'),
+        iDomain=document.getElementById('tmhInterDomain'),
+        iType=document.getElementById('tmhInterType'), iUrl=document.getElementById('tmhInterUrl'),
         iReason=document.getElementById('tmhInterReason'), iStatus=document.getElementById('tmhInterStatus'),
         iDots=inter.querySelector('.tmh-prep'), iOpen=document.getElementById('tmhInterOpen'),
         iCopy=document.getElementById('tmhInterCopy'), iStay=document.getElementById('tmhInterStay');
@@ -391,10 +408,11 @@ const REFERENCES = [
       'www.ema.europa.eu':'European Medicines Agency','www.esmo.org':'European Society for Medical Oncology','www.merckgroup.com':'Merck KGaA' };
     return map[h] || h;
   }
-  function openInter(url, cite, accessed, trigger){
+  function openInter(url, cite, accessed, trigger, type){
     pendingURL=url; interTrigger=trigger;
     let host=url; try{ host=new URL(url).hostname; }catch(e){}
     iDest.textContent = cite + (accessed ? '  ·  Accessed ' + accessed : '');
+    if(iType) iType.textContent = type || '';
     iOrg.textContent=orgFromHost(host); iDomain.textContent=host; iUrl.textContent=url;
     iReason.textContent='This link opens an external source in a new tab.';
     if(iDots) iDots.style.display=''; iStatus.textContent='Preparing the link…'; iOpen.disabled=true;
