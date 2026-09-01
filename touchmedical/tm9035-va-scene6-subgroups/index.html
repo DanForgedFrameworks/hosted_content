@@ -609,10 +609,13 @@ body.is-fullscreen{ padding-top:56px; }
 <script>
 /* Release the entrance compositing layers - see .entrance-done in the stylesheet.
    entrances are delayed to 2.5-3.1s, so the sweep waits until after they land.
-   .sg__media and .sg__hero are DELIBERATELY EXCLUDED: heroTitle ends at opacity:0
-   (it fades in, then out), so forcing it visible would pin the hero title on screen */
+   .sg__hero is DELIBERATELY EXCLUDED, .sg__media is NOT. heroTitle ends at opacity:0
+   - it fades in, then out - so forcing it visible would pin the hero title on screen.
+   heroMedia ENDS AT OPACITY 1: the hero image stays on screen holding its figcaption,
+   so it is a real visible pinned layer and must be released. Excluding it was an error
+   on the first pass, caught by the noPinnedLayers gate check on 2026-09-01. */
 (function(){
-  var SEL = '.hd, .navprompt, .lens, .lensprompt, .sg__media figcaption';
+  var SEL = '.hd, .navprompt, .lens, .lensprompt, .sg__media, .sg__media figcaption';
   var DELAY = 4200;
   function sweep(){
     var els = document.querySelectorAll(SEL);
