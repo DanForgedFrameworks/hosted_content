@@ -67,6 +67,9 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
 .oc-step:not(.locked):active{ transform:translateY(0) scale(.96); filter:brightness(.94); }
 .oc-step:focus-visible{ outline:none; box-shadow:0 0 0 3px rgba(52,198,176,.5); }
 .oc-step.locked{ cursor:not-allowed; opacity:.5; }
+/* Unreached stations carry a number and NOTHING else (Anas, 2026-09-01). Square the padding so
+   a bare numeral reads as a deliberate token rather than a chip with its label knocked off. */
+.oc-step.numonly{ gap:0; padding:6px; }
 .oc-step.locked .n{ background:rgba(255,255,255,.12); }
 .oc-step.locked:hover{ border-color:var(--oc-warn); }
 .oc-step.nudge{ animation:oc-nudge 320ms var(--oc-ease-std); }
@@ -153,6 +156,40 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
 .oc-tick.marked-correct .mk{ color:var(--oc-correct); } .oc-tick.marked-missed .mk{ color:var(--oc-teal-bright); } .oc-tick.marked-wrong .mk{ color:var(--oc-incorrect); }
 .oc-tick input:disabled{ cursor:default; }
 .oc-softhint{ font-size:12px; color:var(--oc-warn); margin-top:-6px; }
+
+/* ---- action zone ----------------------------------------------------------------------
+   Every station has two halves that were previously indistinguishable to the eye: what the
+   learner is GIVEN, and what they are asked to DO with it. The boundary was carried by an h3
+   and nothing else, so on a long results screen the exercise read as more reading. Daniel,
+   2026-09-01.
+   One component, used on Stations 1-5, so the shape is learned once and then recognised.
+   Teal edge because in this brand teal is the live/active colour, and the tag names the moment
+   rather than the content ("Start here", "Your turn") so it can carry no clue about what is
+   inside — Stations 4 and 5 sit behind withheld tiers. */
+.oc-act{ margin:22px 0 0; padding:16px; text-align:left;
+  background:rgba(46,158,143,.05); border:1px solid rgba(46,158,143,.28);
+  border-left:3px solid var(--oc-teal); border-radius:var(--oc-radius-sm); }
+.oc-act > *:last-child{ margin-bottom:0; }
+.oc-act > h3:first-of-type{ margin-top:2px; }
+.oc-act__tag{ display:inline-block; margin-bottom:10px; padding:3px 10px; border-radius:999px;
+  background:rgba(46,158,143,.18); color:var(--oc-teal-bright);
+  font-size:11px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; }
+.oc-act__lead{ margin:0 0 12px; font-size:13px; line-height:1.55; color:var(--oc-text-muted); }
+
+/* Section break on the reveal.
+   The first attempt was a 1px gradient running transparent -> 18% white -> transparent, which
+   reached its full value only at the dead centre of the line and faded to nothing across most
+   of its length. It was in the DOM at the right width and it could not be seen. The width check
+   passed and the divider was not there, which is the same class of mistake as measuring
+   `display` and calling it visible.
+   Now: the fade is confined to the outer 12% at each end, the middle holds a constant value,
+   and there is a second hairline of light beneath it so the break reads as a deliberate edge
+   rather than a rendering artefact at 1px. */
+.oc-div{ height:0; margin:30px 0 24px; border:0; border-top:1px solid transparent;
+  border-image:linear-gradient(90deg,
+    rgba(255,255,255,0) 0%, rgba(255,255,255,.34) 12%,
+    rgba(255,255,255,.34) 88%, rgba(255,255,255,0) 100%) 1;
+  box-shadow:0 1px 0 rgba(0,0,0,.45); }
 /* where a call would have sent you — shown under the tick after submission */
 .oc-consequence{ grid-column:1/-1; font-size:13px; line-height:1.55; color:var(--oc-text-muted);
   background:rgba(232,184,75,.08); border-left:3px solid var(--oc-warn); border-radius:0 6px 6px 0;
@@ -328,6 +365,17 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
 .oc-outcome{ font-size:13px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; border-radius:999px; padding:6px 14px; }
 .oc-outcome.ok{ background:rgba(52,198,176,.2); color:var(--oc-correct); border:1px solid var(--oc-correct); }
 .oc-outcome.no{ background:rgba(224,115,107,.2); color:var(--oc-incorrect); border:1px solid var(--oc-incorrect); }
+/* The two results that settle the case, sitting INSIDE the published answer rather than each
+   owning a section of its own (Anas, 2026-09-01). Deliberately smaller than the hero cards they
+   replace: at this point the learner is being shown why, not being handed a result. */
+.oc-evidence{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:10px; margin:14px 0 0; }
+.oc-ev{ background:var(--oc-surface-2); border:1px solid rgba(255,255,255,.1); border-radius:12px; padding:12px 14px; }
+.oc-ev .lab{ font-size:11px; letter-spacing:.07em; text-transform:uppercase; color:var(--oc-text-muted); }
+.oc-ev .val{ font-family:var(--oc-font-head); font-size:22px; font-weight:700; margin-top:3px; }
+.oc-ev .val.sm{ font-size:15px; font-weight:600; line-height:1.35; }
+.oc-ev .val .u{ font-size:13px; font-weight:600; color:var(--oc-text-muted); }
+.oc-ev .ref{ font-size:12px; color:var(--oc-text-muted); margin-top:2px; }
+.oc-ev .verdict{ margin-top:8px; font-size:13px; font-weight:600; color:var(--oc-teal-bright); }
 .oc-breakdown{ display:grid; gap:8px; margin:16px 0; }
 .oc-brow{ display:grid; grid-template-columns:1fr auto; gap:6px 12px; align-items:center; background:var(--oc-surface-2); border:1px solid rgba(255,255,255,.1); border-radius:10px; padding:11px 14px; font-size:14px; }
 .oc-brow .pts{ font-family:var(--oc-font-head); font-weight:700; white-space:nowrap; }
@@ -460,6 +508,14 @@ body{ min-height:100vh; background:radial-gradient(1200px 700px at 50% -8%, #1c2
   background:var(--oc-navy-deep); border:1px solid var(--oc-teal); border-radius:var(--oc-radius); overflow:hidden;
   box-shadow:0 12px 32px rgba(0,0,0,.5); }
 .oc-help[hidden]{ display:none; }
+/* Rolls up out of the chip on open and back down into it on minimise (Daniel, 2026-09-01).
+   Origin is the bottom-right corner, which is where the chip sits, so the panel appears to
+   grow out of the control that summoned it rather than fading in over the page. */
+.oc-help{ transform-origin:100% 100%;
+  transition:opacity var(--oc-dur-state) var(--oc-ease-out), transform var(--oc-dur-state) var(--oc-ease-out); }
+.oc-help.out{ opacity:0; transform:translateY(14px) scale(.94); }
+@media (prefers-reduced-motion: reduce){
+  .oc-help{ transition:none; } .oc-help.out{ opacity:1; transform:none; } }
 .oc-help__head{ display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 14px; background:rgba(46,158,143,.18); }
 .oc-help__head span{ font-weight:700; color:var(--oc-teal-bright); font-size:13px; letter-spacing:.04em; }
 .oc-help__min{ border:1px solid rgba(255,255,255,.25); background:transparent; color:var(--oc-text); border-radius:999px; padding:4px 12px; cursor:pointer; font-size:12px; transition:transform var(--oc-dur-micro), background var(--oc-dur-state); }
@@ -886,7 +942,14 @@ const CASE = {
       "Hereditary spherocytosis",
       "EDTA-induced pseudothrombocytopenia (artefact)"
     ],
-    explanation:"Microangiopathic haemolytic anaemia (fragments/schistocytes) + severe thrombocytopenia + acute kidney injury (raised creatinine) + a recent gastrointestinal illness, with a NORMAL ADAMTS13 → haemolytic uraemic syndrome, not TTP."
+    explanation:"Microangiopathic haemolytic anaemia (fragments/schistocytes) + severe thrombocytopenia + acute kidney injury (raised creatinine) + a recent gastrointestinal illness, with a NORMAL ADAMTS13 → haemolytic uraemic syndrome, not TTP.",
+
+    /* The discriminator and the trigger, written as one piece of reasoning rather than two.
+       Anas, 2026-09-01: they were separate H3 sections with a hero card each, so three headings
+       said one thing. Every clinical assertion here is carried over unchanged from
+       `adamts13.note` and `stec.note`, which he approved; only the joins are new, and it now
+       ends by pointing back at the film, which sits above it on the reveal. */
+    rationale:"A severely reduced ADAMTS13, typically under 10 IU/dL, is what defines TTP; a normal result takes TTP off the table and, with the acute kidney injury and the preceding gastrointestinal illness, points to HUS. The stool result then names the cause: Shiga toxin-producing E. coli, confirming STEC-HUS. The gastroenteritis was the source, and Shiga toxin drives the endothelial injury that produces the microangiopathy visible on the film."
   },
 
   /* Model answers shown against the learner's free text in the record (formative, unscored).
@@ -1197,6 +1260,29 @@ function gotoStep(i,opts){
   runStationWipe(dir, ()=> render(), ()=> focusStationHeading());
 }
 
+/* The name a station is allowed to show, and it is not one rule but three, because two
+   different things are being withheld — the content, and the fact that the content exists.
+
+     unreached             -> NO title. A number only.
+     reached, not released -> the neutral placeholder.
+     released              -> the real title, so the stepper still works for navigating back.
+
+   Anas asked for the first of those on 2026-09-01 and he was right: the placeholders
+   ("Further results", "Final results") still announced that two more tiers of results were
+   coming, and the existence of a tier is itself a hint. A bare numeral leaks only the station
+   count, which a learner can see by looking.
+
+   Shared by the stepper and by `stationShell`, and that sharing is the point. The h2 was still
+   printing the real title on arrival: "ADAMTS13 & the trigger" sat above the un-pressed release
+   button, naming the TTP/HUS discriminator before the learner had asked for it. Third surface
+   this same leak has been found on, after the help text and the stepper (§4n), so the gate now
+   lives in ONE function and every surface calls it. */
+function stationTitle(st){
+  if(!st.blind) return st.title;
+  if(st.id==="haemolysis" && state.haemolysisRevealed) return st.title;
+  if(st.id==="adamts"     && state.adamtsRevealed)     return st.title;
+  return st.blind; }
+
 /* ===== render ===== */
 function renderCore(){
   /* clear a ghost stranded by an interrupted transition — but never the live one, since the
@@ -1205,24 +1291,24 @@ function renderCore(){
   const list=STATIONS;
   state.step=clamp(state.step,0,list.length-1); state.maxStep=Math.max(state.maxStep||0,state.step);
   stepsEl.innerHTML="";
-  /* Withheld stations show a NEUTRAL title until their results are released. Naming them up
-     front — "Haemolysis screen", "ADAMTS13 & the trigger" — handed the learner the answer from
-     Station 1: anyone who knows what ADAMTS13 is has been given the TTP/HUS discriminator before
-     they've looked at the film. The real title appears once the tier is unlocked, so the stepper
-     is still useful for navigating back afterwards. (Anas spotted the same leak in the help
-     text, 2026-08-11; this was the larger version of it.) */
-  const shown=(st,i)=>{
-    if(!st.blind) return st.title;
-    if(st.id==="haemolysis" && state.haemolysisRevealed) return st.title;
-    if(st.id==="adamts"     && state.adamtsRevealed)     return st.title;
-    return st.blind; };
-  list.forEach((st,i)=>{ const locked=i>state.maxStep;
-    const b=document.createElement("button"); b.className="oc-step"+(i<state.step?" done":"")+(locked?" locked":"");
+  /* Title rule lives in stationTitle(); see the note there. Locked stations get no label at
+     all — not a placeholder, nothing. */
+  /* Once the attempt is committed NOTHING is locked. The reveal screen tells the learner in so
+     many words that "every station is open again", and Anas's design for the reveal depends on
+     them going back to see what they answered, but a learner who went back to Station 1 first
+     then found Station 7 still barred, because maxStep had not reached it. The copy was right
+     and the stepper was wrong. There is also nothing left to protect: the submission is
+     one-shot and locked. */
+  list.forEach((st,i)=>{ const locked=!committed() && i>state.maxStep;
+    const b=document.createElement("button"); b.className="oc-step"+(i<state.step?" done":"")+(locked?" locked numonly":"");
     if(i===state.step) b.setAttribute("aria-current","true");
     if(locked) b.setAttribute("aria-disabled","true");
-    const label=shown(st,i);
+    const label=locked?"":stationTitle(st);
     b.title = locked ? "Not yet — work through the stations in order" : "Go to "+label;
-    b.innerHTML='<span class="n">'+(i+1)+'</span>'+escapeHtml(label);
+    /* A numeral on its own is meaningless to a screen reader, so the accessible name carries
+       what the sighted learner gets from position and greying. It must not carry the title. */
+    b.setAttribute("aria-label", locked ? "Station "+(i+1)+", not yet open" : "Station "+(i+1)+", "+label);
+    b.innerHTML='<span class="n">'+(i+1)+'</span>'+(label?escapeHtml(label):'');
     b.addEventListener("click",()=>{
       if(!locked){ gotoStep(i); return; }
       /* locked: say why rather than doing nothing silently */
@@ -1337,10 +1423,44 @@ const cueCommit = cueSubmit;   // kept: setSound() previews with it
 
 let helpDismissedOnLanding=false;
 const onLanding=()=> root.classList.contains("is-landing");
-function renderHelp(){ const body=$("#ocHelpBody"), panel=$("#ocHelp"), chip=$("#ocHelpChip");
+function renderHelp(){ const body=$("#ocHelpBody");
   body.innerHTML='<ul>'+HELP.map(t=>'<li>'+t+'</li>').join("")+'</ul>';
   const min = onLanding() ? helpDismissedOnLanding : !!state.helpMin;
-  panel.hidden=min; chip.hidden=!min; }
+  setHelpVisible(!min); }
+
+/* The panel rolls out of the chip and back down into it (Daniel, 2026-09-01).
+   `hidden` is display:none, which no transition can animate across, so the two have to be
+   sequenced by hand: unhide, let a frame pass, THEN drop the .out class. Same rAF-plus-timeout
+   belt and braces as the station entrance, and for the same reason — rAF is suspended in a
+   background tab or an offscreen iframe, and without the timeout the panel would sit at
+   opacity 0 forever, which is precisely the "present but not painted" failure this build has
+   already shipped twice. */
+let helpPaintT=null, helpSettleT=null;
+function setHelpVisible(show){
+  const panel=$("#ocHelp"), chip=$("#ocHelpChip");
+  clearTimeout(helpPaintT); clearTimeout(helpSettleT);
+  if(reduceMotion){ panel.classList.remove("out"); panel.style.transition=""; panel.hidden=!show; chip.hidden=show; return; }
+  if(show){
+    chip.hidden=true;
+    if(panel.hidden){ panel.hidden=false; panel.classList.add("out"); }
+    const paint=()=> panel.classList.remove("out");
+    requestAnimationFrame(()=> requestAnimationFrame(paint));
+    helpPaintT=setTimeout(paint,90);
+    /* Settle guard, and it is not decoration. A transition started while the tab is throttled
+       (background tab, or an iframe scrolled out of view, which is how this thing is actually
+       embedded) can sit frozen at its START value, and the start value here is invisible. The
+       class comes off, every check reports healthy, and the learner sees nothing. Measured that
+       exact state during QA. So: past the animation window, if it still is not painted, drop the
+       transition for one frame and snap it. Third instance of "present but not painted" in this
+       build; the first two shipped. */
+    helpSettleT=setTimeout(()=>{ paint();
+      if(parseFloat(getComputedStyle(panel).opacity)<0.99){
+        panel.style.transition="none"; void panel.offsetHeight; panel.style.transition=""; } }, 420);
+  } else {
+    if(panel.hidden){ chip.hidden=false; return; }
+    panel.classList.add("out");
+    helpSettleT=setTimeout(()=>{ panel.hidden=true; panel.classList.remove("out"); chip.hidden=false; }, 320);
+  } }
 function setHelpMin(v){ if(onLanding()) helpDismissedOnLanding=v; else { state.helpMin=v; saveState(); } renderHelp(); }
 $("#ocHelpMin").addEventListener("click",()=> setHelpMin(true));
 $("#ocHelpChip").addEventListener("click",()=> setHelpMin(false));
@@ -1350,7 +1470,7 @@ $("#ocHelpChip").addEventListener("click",()=> setHelpMin(false));
 function autoHideHelp(){ if(state.helpMin) return; state.helpMin=true; saveState(); renderHelp(); }
 
 function stationShell(st,inner){ const w=document.createElement("div");
-  w.innerHTML='<div class="oc-station"><span class="oc-scaffold">'+st.scaffold+'</span><div class="oc-eyebrow">Station '+(state.step+1)+' of '+STATIONS.length+'</div><h2>'+st.title+'</h2>'+inner+'</div>'; return w; }
+  w.innerHTML='<div class="oc-station"><span class="oc-scaffold">'+st.scaffold+'</span><div class="oc-eyebrow">Station '+(state.step+1)+' of '+STATIONS.length+'</div><h2>'+escapeHtml(stationTitle(st))+'</h2>'+inner+'</div>'; return w; }
 function lockBar(){ if(committed()) return '<div class="oc-lockbar"><span class="k">Submitted</span> This attempt has been recorded as CPD evidence — your answers are locked.</div>';
   /* name the tier that actually locked it — saying "ADAMTS13" at Station 4 was simply wrong */
   if(lockedBefore()) return '<div class="oc-lockbar"><span class="k">Locked</span> The haemolysis screen has been released, so the results, film features and differential you committed before it can no longer be changed.</div>'; return ''; }
@@ -1370,11 +1490,12 @@ function renderStation(st){
       '</div>'+
       foldHTML("ocCoag","Coagulation screen","PT · APTT · fibrinogen")+
       foldHTML("ocBio","Biochemistry","renal · liver · bone profile")+
-      (showFlags()?'':'<div class="oc-note">Reference ranges are given, but nothing is flagged for you. Deciding what matters is the exercise.</div>')+
-      '<h3>Flag the abnormal results</h3>'+
-      '<p class="oc-narrate">Tick every result you would call abnormal or significant. Be deliberate: over-calling is recorded too.</p>'+
-      tickBlock("results",CASE.resultItems,"two")+
-      noteBox("resultNote","Comment on the blood count and biochemistry in your own words.","What is the overall picture these numbers describe?"));
+      actZone("Start here",
+        (showFlags()?'':'<p class="oc-act__lead">Reference ranges are given, but nothing is flagged for you. Deciding what matters is the exercise.</p>')+
+        '<h3>Flag the abnormal results</h3>'+
+        '<p class="oc-narrate">Tick every result you would call abnormal or significant. Be deliberate: over-calling is recorded too.</p>'+
+        tickBlock("results",CASE.resultItems,"two")+
+        noteBox("resultNote","Comment on the blood count and biochemistry in your own words.","What is the overall picture these numbers describe?")));
     node._after=()=>{
       buildStats($("#ocFbc",node),CASE.fbc,true);
       buildStats($("#ocDiff",node),CASE.wbcDiff,true);
@@ -1387,35 +1508,46 @@ function renderStation(st){
     node=stationShell(st, lockBar()+
       '<p class="oc-narrate">Eight fields from the film. Work across the thumbnails, use the magnifier, then <strong>drop your own markers</strong> on anything you would report.</p>'+
       figureHTML(0,{annotate:!lockedBefore(), annoKey:"film"})+
-      '<h3>Identify the features</h3>'+
-      '<p class="oc-narrate">Tick the morphological features you can actually see. Again, be deliberate. Where a call would send you clinically is part of the feedback.</p>'+
-      tickBlock("features",CASE.filmItems,"two")+
-      noteBox("filmNote","Describe the film in your own words.","Red cells, white cells, platelets — what stands out?"));
+      actZone("Your turn",
+        '<h3>Identify the features</h3>'+
+        '<p class="oc-narrate">Tick the morphological features you can actually see. Again, be deliberate. Where a call would send you clinically is part of the feedback.</p>'+
+        tickBlock("features",CASE.filmItems,"two")+
+        noteBox("filmNote","Describe the film in your own words.","Red cells, white cells, platelets — what stands out?")));
     node._after=()=>{ wireFigure(node,0,"film",{ readOnly:lockedBefore() }); markTicks(node,"features",CASE.filmItems); };
 
   } else if(st.id==="reasoning"){
     node=stationShell(st, lockBar()+
       priorRecapHTML()+
-      '<h3 style="margin-top:6px">Your differential</h3>'+
-      '<p class="oc-narrate">Based on the presentation, the numbers and the film, and <strong>before</strong> any further tests, which diagnoses are on your list?</p>'+
-      tickBlock("differentials",CASE.differentials,"two")+
-      '<div class="oc-softhint" id="ocDiffHint" hidden>Nothing selected — nothing will be recorded for this section.</div>'+
-      noteBox("ruleout","What would you rule out, and how?","Name each differential you want off the list and the test or feature that removes it. Unmarked — you’ll see the model answer at the end.")+
-      confBlock("ruleout")+
+      actZone("Your turn",
+        '<h3>Your differential</h3>'+
+        '<p class="oc-narrate">Based on the presentation, the numbers and the film, and <strong>before</strong> any further tests, which diagnoses are on your list?</p>'+
+        tickBlock("differentials",CASE.differentials,"two")+
+        '<div class="oc-softhint" id="ocDiffHint" hidden>Nothing selected — nothing will be recorded for this section.</div>'+
+        noteBox("ruleout","What would you rule out, and how?","Name each differential you want off the list and the test or feature that removes it. Unmarked — you’ll see the model answer at the end.")+
+        confBlock("ruleout")+
+        /* Named the haemolysis screen, from a station the learner reaches BEFORE it is
+           released. Same leak as the stepper and the headings, in the copy this time. The
+           warning does its job without naming what is coming. (Daniel, 2026-09-01.) */
+        (committed()?'':'<div class="oc-note">Once you continue and release the next set of results, these answers lock.</div>'))+
       (committed()?
+        '<hr class="oc-div">'+
         '<h3>The model rule-out</h3>'+
         '<div class="oc-callout"><div class="h">How each one is excluded</div><ul>'+
           /* Station 3 has no results to jump to, so tokens are flattened to plain label text. */
           CASE.model.ruleout.map(r=>'<li>'+escapeHtml(r.replace(/\{\{\w+\|([^}]+)\}\}/g,"$1"))+'</li>').join("")+'</ul></div>'
-        :'<div class="oc-note">Once you continue and release the haemolysis screen, these answers lock.</div>'));
+        :''));
     node._after=()=>{ markTicks(node,"differentials",CASE.differentials); updateDiffHint(node); };
 
   } else if(st.id==="haemolysis"){
     const H=CASE.haemolysis, revealed=state.haemolysisRevealed;
     node=stationShell(st, lockBar()+
       '<p class="oc-narrate">'+escapeHtml(H.intro)+'</p>'+
-      (revealed?'':'<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocRevealHaem">Release the haemolysis screen</button></div>'+
-        '<div class="oc-note">Releasing these locks Stations 1–3. Make sure you are happy with your differential first.</div>')+
+      /* The button named the haemolysis screen while the station's own heading was blinded to
+         hide exactly that. Neutralised to match, so the whole surface tells one story.
+         (Daniel, 2026-09-01.) */
+      (revealed?'':actZone("Start here",
+        '<p class="oc-act__lead">Releasing these locks Stations 1–3. Make sure you are happy with your differential first.</p>'+
+        '<div class="oc-tools" style="margin:0"><button class="oc-btn oc-btn--primary" id="ocRevealHaem">Release the further results</button></div>'))+
       /* Withheld content is NOT rendered into the DOM until released — a hidden panel still
          exposes the answer in the page source and to a screen reader. */
       '<div class="oc-reveal-panel'+(revealed?' show':'')+'" id="ocHaemPanel">'+(revealed?
@@ -1424,12 +1556,13 @@ function renderStation(st){
         '<div class="oc-recap"><div class="oc-recap__h">Why each of these was held back</div>'+
           H.results.map(r=>'<details class="oc-acc"><summary>'+escapeHtml(r.label)+'</summary><div class="oc-acc__b">'+escapeHtml(r.note)+'</div></details>').join("")+
         '</div>'+
-        noteBox("haemNote","Does this change your differential?","You committed a list before these came back. Which of them does this narrow, and which does it remove?")+
-        confBlock("haemolysis")
+        actZone("Your turn",
+          noteBox("haemNote","Does this change your differential?","You committed a list before these came back. Which of them does this narrow, and which does it remove?")+
+          confBlock("haemolysis"))
       :'')+'</div>');
     node._after=()=>{
       const rv=$("#ocRevealHaem",node);
-      if(rv) rv.addEventListener("click",()=> openModal("Release the haemolysis screen?",
+      if(rv) rv.addEventListener("click",()=> openModal("Release the further results?",
         "This locks your earlier answers — the results you flagged, the film features you identified and your differential. You'll still have the final diagnosis to make.",
         "Release the results","Not yet",()=> revealHaemolysis()));
       if(revealed) buildStats($("#ocHaem",node),H.results,true,true);
@@ -1439,16 +1572,19 @@ function renderStation(st){
     const revealed=state.adamtsRevealed;
     node=stationShell(st, (lockedTier1()&&!committed()?'<div class="oc-lockbar"><span class="k">Locked</span> The haemolysis screen has been released, so your differential can no longer be changed.</div>':'')+
       '<p class="oc-narrate">You know this is a mechanical, non-immune haemolysis. Two final results separate the causes, and name the trigger.</p>'+
-      (revealed?'':'<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocRevealAd">Release the final results</button></div>')+
+      (revealed?'':actZone("Start here",
+        '<p class="oc-act__lead">These are the last results in the case. Releasing them opens the diagnosis, which is a single recorded submission.</p>'+
+        '<div class="oc-tools" style="margin:0"><button class="oc-btn oc-btn--primary" id="ocRevealAd">Release the final results</button></div>'))+
       /* Same rule as tier 1 — nothing withheld reaches the DOM before release. */
       '<div class="oc-reveal-panel'+(revealed?' show':'')+'" id="ocAdPanel">'+(revealed?
         adamtsHTML()+stecHTML()+
-        '<h3>Your diagnosis</h3><p class="oc-narrate">Weigh these against everything you\'ve seen, then select the single most likely diagnosis. This is a one-shot, recorded CPD submission. It cannot be changed or reset.</p>'+
-        '<div class="oc-options" id="ocOptions"></div>'+
-        noteBox("further","Any further observations? (optional)","Anything else supporting your diagnosis — recorded with your submission.")+
-        confBlock("diagnosis")+
-        (committed()?'':'<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocSubmit" disabled>Submit diagnosis</button></div>')+
-        '<div class="oc-feedback" id="ocFeedback"></div>'
+        actZone("Your decision",
+          '<h3>Your diagnosis</h3><p class="oc-narrate">Weigh these against everything you\'ve seen, then select the single most likely diagnosis. This is a one-shot, recorded CPD submission. It cannot be changed or reset.</p>'+
+          '<div class="oc-options" id="ocOptions"></div>'+
+          noteBox("further","Any further observations? (optional)","Anything else supporting your diagnosis — recorded with your submission.")+
+          confBlock("diagnosis")+
+          (committed()?'':'<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocSubmit" disabled>Submit diagnosis</button></div>')+
+          '<div class="oc-feedback" id="ocFeedback"></div>')
       :'')+'</div>');
     node._after=()=>{
       const rv=$("#ocRevealAd",node);
@@ -1463,14 +1599,13 @@ function renderStation(st){
       '<div id="ocResultBox"></div>'+
       '<div class="oc-callout lilac"><div class="h">Your answers are now marked up</div>'+
         'Every station is open again and now shows how your responses compare — what you identified, what you missed, and where an over-call would have led. Use the numbered stations at the top to look back through them.</div>'+
-      '<h3>The published answer</h3>'+
-      '<div class="oc-callout pop"><div class="h">Diagnosis</div><strong style="font-size:20px">'+escapeHtml(CASE.diagnosis.answer)+'</strong><p style="margin-top:6px">'+escapeHtml(CASE.diagnosis.explanation)+'</p></div>'+
-      '<h3 id="ocAdamtsBlock">ADAMTS13 — the discriminator</h3>'+adamtsVerdictHTML()+
-      '<h3>The trigger</h3>'+stecHTML(true)+
-      '<div class="oc-callout lilac"><div class="h">Teaching point</div>'+escapeHtml(CASE.teachingPoint)+'</div>'+
-      '<h3>What you would rule out, and how</h3>'+
-      '<div class="oc-callout" id="ocRuleoutBlock"><div class="h">Model answer</div><ul>'+CASE.model.ruleout.map(r=>'<li>'+ruleoutText(r)+'</li>').join("")+'</ul></div>'+
-      '<h3>Morphology report</h3>'+reportHTML()+
+      /* ORDER, and it is the whole point of this screen (Anas, 2026-09-01).
+         The morphology comes FIRST, then the answer it supports. This is a morphology case: the
+         film is the evidence and the diagnosis is the conclusion, so leading with the conclusion
+         and arriving at the cells four headings later inverted the reasoning the case exists to
+         teach. He offered the alternative of compressing the morphology into a sentence or two
+         inside the model answer; that would have buried the 29 cells he identified himself,
+         which are the most worked-on thing in the build. Promoted rather than demoted. */
       '<h3 id="ocFilmBlock">The film, marked by Only Cells</h3>'+
       '<p class="oc-narrate">These are the '+(CASE.markedFields||[]).length+' fields Anas marked. Each ring circles the cell without covering it. Hover a ring or an entry in the list to link the two.</p>'+
       '<div style="margin:10px 0"><button class="oc-btn oc-btn--primary" id="ocAnno">Show the marked cells</button></div>'+
@@ -1478,6 +1613,15 @@ function renderStation(st){
         figureHTML((CASE.markedFields&&CASE.markedFields[0])||0,{annotate:false, annoKey:"film", magOff:true, sme:true, only:CASE.markedFields})+
         '<div class="oc-smelist" id="ocSmeList"></div>'+
       '</div>'+
+      '<h3>Morphology report</h3>'+reportHTML()+
+      '<hr class="oc-div">'+
+      '<h3>The published answer</h3>'+
+      '<div class="oc-callout pop"><div class="h">Diagnosis</div><strong style="font-size:20px">'+escapeHtml(CASE.diagnosis.answer)+'</strong><p style="margin-top:6px">'+escapeHtml(CASE.diagnosis.explanation)+'</p></div>'+
+      answerEvidenceHTML()+
+      '<hr class="oc-div">'+
+      '<div class="oc-callout lilac"><div class="h">Teaching point</div>'+escapeHtml(CASE.teachingPoint)+'</div>'+
+      '<h3>What you would rule out, and how</h3>'+
+      '<div class="oc-callout" id="ocRuleoutBlock"><div class="h">Model answer</div><ul>'+CASE.model.ruleout.map(r=>'<li>'+ruleoutText(r)+'</li>').join("")+'</ul></div>'+
       /* The results, brought FORWARD rather than left behind a back-button. Sending someone back
          to Station 1 to re-read numbers they've already committed on gave them a locked page and
          no new information — the value is seeing the same numbers with the flags finally on.
@@ -1516,6 +1660,18 @@ function renderStation(st){
         '<div class="oc-field"><label for="ocName">Your name (as it should appear on the certificate)</label><input id="ocName" type="text" autocomplete="name" value="'+escapeHtml(state.learner.name||"")+'" placeholder="e.g. A. Nasir"></div>'+
         '<div class="oc-field"><label for="ocReg">Registration number (optional)</label><input id="ocReg" type="text" value="'+escapeHtml(state.learner.reg||"")+'" placeholder="e.g. HCPC BS000000"></div>'+
       '</div>'+
+      /* "What will you do differently?"
+         Anas asked (2026-09-01) whether this meant the learner reflecting on their own case or
+         on the platform, and objected — rightly — that his feedback form is for Only Cells and
+         not for the user. It is the former, which is exactly why it belongs HERE rather than in
+         the form. This is the sentence that turns a completed activity into loggable CPD
+         evidence: a regulator wants reflection on impact on practice, not attendance. It is the
+         learner's, it stays in their browser, and Only Cells never sees it.
+         Placed ABOVE the download buttons on purpose — it prints into the record, so asking for
+         it after the record has been downloaded would collect it too late to be of any use. */
+      '<div class="oc-reflect" data-key="practice"><label for="ocTaPractice">What will you do differently? (optional)</label>'+
+        '<span class="sub">A line or two on what this case changes about how you would approach the next film like it. Saved in this browser and printed into your CPD record. It is not sent to Only Cells.</span>'+
+        '<textarea id="ocTaPractice" placeholder="Type here… (saved automatically)">'+escapeHtml(state.reflections["practice"]||"")+'</textarea></div>'+
       '<div class="oc-tools"><button class="oc-btn oc-btn--primary" id="ocPdf">Download CPD record (PDF)</button>'+
         '<button class="oc-btn oc-btn--primary" id="ocCert">Download certificate (PDF)</button>'+
         '<button class="oc-btn oc-btn--ghost" id="ocTxt">CPD record (plain text backup)</button></div>'+
@@ -1535,6 +1691,7 @@ function renderStation(st){
       wireFeedback(node);
       $("#ocName",node).addEventListener("input",(e)=>{ state.learner.name=e.target.value; saveState(); });
       $("#ocReg",node).addEventListener("input",(e)=>{ state.learner.reg=e.target.value; saveState(); });
+      $("#ocTaPractice",node).addEventListener("input",(e)=>{ state.reflections["practice"]=e.target.value; saveState(); });
       $("#ocPdf",node).addEventListener("click",()=> printOut("record"));
       $("#ocCert",node).addEventListener("click",()=> downloadCertificate());
       $("#ocTxt",node).addEventListener("click",()=> download(CASE.id+"_CPD-record.txt", summaryText()));
@@ -1639,6 +1796,12 @@ function inputLocked(key){
   return lockedBefore(); }
 function confChips(key){ const c=state.confidence[key]||null; const dis=inputLocked(key);
   return [1,2,3].map(n=>'<button data-c="'+n+'" aria-pressed="'+(c===n)+'"'+(dis?' disabled':'')+'>'+CONF[n-1]+'</button>').join(""); }
+/* Wraps the part of a station the learner ACTS in. `label` names the moment, never the
+   content — see the CSS note. */
+function actZone(label,inner){
+  return '<section class="oc-act" aria-label="'+escapeHtml(label)+'">'+
+    '<div class="oc-act__tag">'+escapeHtml(label)+'</div>'+inner+'</section>'; }
+
 function noteBox(key,label,sub){ const dis=inputLocked(key);
   return '<div class="oc-reflect" data-key="'+key+'"><label for="ocTa-'+key+'">'+label+'</label>'+(sub?'<span class="sub">'+sub+'</span>':'')+
     '<textarea id="ocTa-'+key+'"'+(dis?' disabled':'')+' placeholder="Type here… (saved automatically)">'+escapeHtml(state.reflections[key]||"")+'</textarea></div>'; }
@@ -1730,19 +1893,33 @@ function adamtsHTML(){ const a=CASE.adamts13;
   return '<div class="oc-adamts"><div class="lab">'+escapeHtml(a.label)+'</div>'+
     '<div class="val" id="ocAdVal">'+(reduceMotion?a.value:0)+'</div><div class="unit">'+escapeHtml(a.unit)+'</div>'+
     '<div class="ref">'+escapeHtml(a.ref)+'</div></div>'; }
-/* Stool result — released with ADAMTS13 (tier 2). Raw at Station 5, interpreted at the reveal. */
-function stecHTML(withVerdict){ const s=CASE.stec;
+/* Stool result — released with ADAMTS13 (tier 2). Station 5 only: raw, no verdict. The reveal's
+   interpreted version now lives in answerEvidenceHTML(). */
+function stecHTML(){ const s=CASE.stec;
   return '<div class="oc-adamts" style="margin-top:14px"><div class="lab">'+escapeHtml(s.label)+'</div>'+
     s.lines.map(l=>'<div style="font-family:var(--oc-font-head);font-size:clamp(15px,2.4vw,19px);font-weight:600;margin-top:4px">'+escapeHtml(l)+'</div>').join("")+
-    (withVerdict?'<div class="verdict">'+escapeHtml(s.verdict)+'</div>'+
-      '<p class="oc-narrate" style="margin:12px auto 0; text-align:left; max-width:62ch">'+escapeHtml(s.note)+'</p>':'')+
     '</div>'; }
-/* Station 6 (reveal only) — the same card, now with the verdict and the explanation. */
-function adamtsVerdictHTML(){ const a=CASE.adamts13;
-  return '<div class="oc-adamts"><div class="lab">'+escapeHtml(a.label)+'</div>'+
-    '<div class="val">'+a.value+'</div><div class="unit">'+escapeHtml(a.unit)+'</div>'+
-    '<div class="ref">'+escapeHtml(a.ref)+'</div><div class="verdict">'+escapeHtml(a.verdict)+'</div>'+
-    '<p class="oc-narrate" style="margin:12px auto 0; text-align:left; max-width:62ch">'+escapeHtml(a.note)+'</p></div>'; }
+
+/* Station 6 — the discriminator and the trigger as EVIDENCE INSIDE the published answer, which
+   is what Anas asked for on 2026-09-01: two hero cards under two headings made three headings
+   say one thing. Two compact tiles and one continuous paragraph instead.
+
+   `#ocAdamtsBlock` is deliberately preserved, moved onto the ADAMTS13 tile. It is a
+   cross-reference target — the TTP rule-out line carries {{adamts|normal ADAMTS13}} and scrolls
+   here — and dissolving the old heading without re-hanging the id would have broken that jump
+   silently, which is this build's recurring failure mode: the element lookup returns nothing,
+   the handler returns early, and the link simply does nothing while every check still passes. */
+function answerEvidenceHTML(){ const a=CASE.adamts13, s=CASE.stec;
+  return '<div class="oc-evidence">'+
+    '<div class="oc-ev" id="ocAdamtsBlock"><div class="lab">'+escapeHtml(a.label)+'</div>'+
+      '<div class="val">'+a.value+' <span class="u">'+escapeHtml(a.unit)+'</span></div>'+
+      '<div class="ref">'+escapeHtml(a.ref)+'</div>'+
+      '<div class="verdict">'+escapeHtml(a.verdict)+'</div></div>'+
+    '<div class="oc-ev"><div class="lab">'+escapeHtml(s.label)+'</div>'+
+      s.lines.map(l=>'<div class="val sm">'+escapeHtml(l)+'</div>').join("")+
+      '<div class="verdict">'+escapeHtml(s.verdict)+'</div></div>'+
+    '</div>'+
+    '<p class="oc-narrate" style="text-align:left; max-width:70ch; margin:12px 0 0">'+escapeHtml(CASE.diagnosis.rationale)+'</p>'; }
 
 function reportHTML(){ return '<div class="oc-recap">'+CASE.report.map(([k,v])=>
   '<details class="oc-acc"><summary>'+escapeHtml(k)+'</summary><div class="oc-acc__b">'+escapeHtml(v)+'</div></details>').join("")+
@@ -1996,17 +2173,19 @@ function buildResult(host){ if(!host) return; const L=CASE.scoring.labels, ok=st
     const fillBars=()=> host.querySelectorAll(".bar i").forEach(b=> b.style.width=b.dataset.w+"%");
     requestAnimationFrame(fillBars); setTimeout(fillBars,80); return; }
 
-  /* formative (default) — feedback, no grade */
-  const t=sectionTallies();
+  /* formative (default) — feedback, no grade.
+     The per-section tally rows that used to sit here are GONE from the screen (Anas,
+     2026-09-01). They were a summary of marking that already exists, in more detail, on the
+     stations themselves: markTicks() reopens Stations 1-3 after submission and marks every tick
+     identified / missed / over-called, with the clinical consequence of each call written
+     underneath it. Three counts on the reveal added no teaching and cost a screenful.
+     The tallies are NOT gone from the CPD record — buildRecordDOM() still prints them, because
+     that is the CPD evidence and it is read in a different place for a different reason. */
   host.innerHTML='<div class="oc-feedback show '+(ok?"ok":"no")+'">'+
     '<div class="oc-scorerow"><span class="oc-outcome '+(ok?"ok":"no")+'">'+(ok?"Diagnosis correct":"Diagnosis not matched")+'</span></div>'+
     '<p style="margin-top:10px">Your diagnosis: <strong>'+yours+'</strong></p>'+
     '<p>Published diagnosis: <strong>'+escapeHtml(CASE.diagnosis.answer)+'</strong></p></div>'+
-    '<div class="oc-breakdown">'+
-      ['results','features','differentials'].map(k=>
-        '<div class="oc-brow"><span>'+L[k]+'</span><span class="pts">'+tallyText(t[k])+'</span></div>').join("")+
-    '</div>'+
-    '<div class="oc-note">This activity is recorded as completed, not graded. The feedback above is to support your reflection; your certificate records participation.</div>'; }
+    '<div class="oc-note">This activity is recorded as completed, not graded. A full summary of what you identified, missed and over-called is in your CPD record.</div>'; }
 
 /* ===== export (spec §11.6 — Blob download / window.print on a user gesture; never window.open) ===== */
 function ticksText(key,items){ const chosen=state.ticks[key]||{}; const p=items.filter(n=>chosen[n.id]); return p.length?p.map(n=>n.text).join("; "):""; }
@@ -2069,6 +2248,15 @@ function buildRecordDOM(){ const p=$("#oc-print"); p.innerHTML=""; const wrap=do
       : '<div class="you" style="color:#888">No confidence ratings were recorded.</div>')+
     '</div>');
 
+  /* The learner's own reflection. Printed whether or not they wrote one: a record that simply
+     omits the section reads as though it was never asked, and an empty prompt on the page is a
+     visible invitation to write one before they file it. */
+  wrap.insertAdjacentHTML("beforeend",'<h2>What you will do differently</h2><div class="qa">'+
+    (state.reflections["practice"]
+      ? '<div class="you">'+escapeHtml(state.reflections["practice"])+'</div>'
+      : '<div class="you" style="color:#888">Not recorded. Reflection on how an activity changes your practice is what most CPD schemes ask for — worth adding in your own portfolio.</div>')+
+    '</div>');
+
   const gallery=document.createElement("div"); gallery.innerHTML='<h2>The film &amp; your markers</h2>'; const row=document.createElement("div"); row.className="imgrow";
   const imgs=state.annotations.film||emptyAnno();
   CASE.media.stills.forEach((s,ii)=>{ const figp=document.createElement("div"); figp.className="figpin";
@@ -2086,7 +2274,8 @@ function buildRecordDOM(){ const p=$("#oc-print"); p.innerHTML=""; const wrap=do
     '<div class="you"><strong>Your answer:</strong> '+escapeHtml(state.assess.choice!=null?CASE.diagnosis.options[state.assess.choice]:"—")+
     (state.confidence["diagnosis"]?' <span style="color:#555">('+CONF[state.confidence["diagnosis"]-1]+')</span>':'')+'</div>'+
     (state.reflections["further"]?'<div class="you"><strong>Further observations:</strong> '+escapeHtml(state.reflections["further"])+'</div>':'')+
-    '<div class="exp"><strong>Correct answer:</strong> '+escapeHtml(CASE.diagnosis.answer)+'<br>'+escapeHtml(CASE.diagnosis.explanation)+'</div></div>'+
+    '<div class="exp"><strong>Correct answer:</strong> '+escapeHtml(CASE.diagnosis.answer)+'<br>'+escapeHtml(CASE.diagnosis.explanation)+
+      (CASE.diagnosis.rationale?'<br><br>'+escapeHtml(CASE.diagnosis.rationale):'')+'</div></div>'+
     '<div class="qa"><div class="q">Teaching point</div><div class="exp">'+escapeHtml(CASE.teachingPoint)+'</div></div>'+
     '<h2>Morphology report</h2><table>'+CASE.report.map(([k,v])=>'<tr><th style="width:26%">'+escapeHtml(k)+'</th><td>'+escapeHtml(v)+'</td></tr>').join("")+'</table>'+
     '<h2>Learning outcomes covered</h2><div class="qa"><ul style="margin:0; padding-left:18px">'+
@@ -2314,6 +2503,7 @@ function summaryText(){ const L=[], LB=CASE.scoring.labels;
   L.push("• Differential considered: "+(ticksText("differentials",CASE.differentials)||"(none)"));
   L.push("• Rule-out reasoning: "+(state.reflections["ruleout"]||"(none)")+conf("ruleout"));
   L.push("• After the haemolysis screen: "+(state.reflections["haemNote"]||"(none)")+conf("haemolysis"));
+  if(state.reflections["practice"]) { L.push(""); L.push("WHAT YOU WILL DO DIFFERENTLY: "+state.reflections["practice"]); }
   L.push(""); L.push("DIAGNOSIS SUBMITTED: "+(state.assess.choice!=null?CASE.diagnosis.options[state.assess.choice]:"—")+conf("diagnosis"));
   if(state.reflections["further"]) L.push("Further observations: "+state.reflections["further"]);
   L.push("CORRECT ANSWER: "+CASE.diagnosis.answer);
