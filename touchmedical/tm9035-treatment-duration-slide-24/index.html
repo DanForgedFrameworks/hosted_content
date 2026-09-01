@@ -123,12 +123,28 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 [data-stage="hero"] .cards{ flex:0 0 auto; }
 [data-stage="compact"] .cards{ flex:1 1 auto; }
 
-.qcard{ position:relative; border:0; background:transparent; padding:0; font:inherit; color:inherit; cursor:pointer; perspective:1300px; }
+.qcard{ position:relative; border:0; background:transparent; padding:0; font:inherit; color:inherit; cursor:pointer; }
 .qcard:focus-visible{ outline:3px solid var(--navy); outline-offset:4px; border-radius:18px; }
 .qcard[aria-expanded="true"]{ cursor:default; }
-.qcard__inner{ position:relative; display:grid; transition:transform .55s cubic-bezier(.4,0,.2,1); transform-style:preserve-3d; }
+.qcard__inner{ position:relative; display:grid; transition:transform .55s cubic-bezier(.4,0,.2,1); }
 .qcard[aria-expanded="true"] .qcard__inner{ transform:rotateY(180deg); }
-.qcard__face{ grid-area:1 / 1; -webkit-backface-visibility:hidden; backface-visibility:hidden; display:flex; flex-direction:column; border:2px solid var(--line); border-radius:16px; background:#fff; transition:border-color .18s ease, box-shadow .18s ease; }
+
+/* 3D ONLY FOR THE 0.55s OF THE FLIP ITSELF.
+   perspective + preserve-3d + backface-visibility form a permanent 3D rendering context:
+   every face is rasterised to its own texture for the life of the page, and inside a
+   fractionally-sized embed those textures are resampled, which reads as soft text.
+   This flip is ONE-WAY - cards reveal and stay revealed - so gating 3D on "in play" alone
+   would leave every revealed card composited for good. Once the flip has settled we drop
+   to a FLAT swap instead: the back face un-rotated and the front hidden. Pixel-identical,
+   no 3D context, no layer. Matches the slide-61 fix (2026-09-01). */
+.qcard.is-3d{ perspective:1300px; }
+.qcard.is-3d .qcard__inner{ transform-style:preserve-3d; }
+.qcard.is-3d .qcard__face{ -webkit-backface-visibility:hidden; backface-visibility:hidden; }
+.qcard:not(.is-3d):not(.is-settled) .qcard__back{ visibility:hidden; }
+.qcard.is-settled .qcard__inner{ transform:none; }
+.qcard.is-settled .qcard__front{ visibility:hidden; }
+.qcard.is-settled .qcard__back{ transform:none; visibility:visible; }
+.qcard__face{ grid-area:1 / 1; display:flex; flex-direction:column; border:2px solid var(--line); border-radius:16px; background:#fff; transition:border-color .18s ease, box-shadow .18s ease; }
 
 /* front face */
 .qcard__front{ align-items:center; justify-content:center; text-align:center; gap:clamp(10px,1.8vh,16px); padding:clamp(16px,2.6vh,26px) clamp(14px,1.6vw,22px); }
@@ -555,6 +571,11 @@ body.is-fullscreen{ padding-top:56px; }
     const i=+card.dataset.index;
     if(card.getAttribute('aria-expanded')==='true') return;
     card.setAttribute('aria-expanded','true');
+    card.classList.add('is-3d');                         /* 3D on, for the flip only */
+    setTimeout(function(){                               /* then settle to a flat swap */
+      card.classList.add('is-settled');
+      card.classList.remove('is-3d');
+    }, 700);
     card.setAttribute('aria-label', Q[i].metric+'. '+card.dataset.ariaAns+'.');
     revealed.add(i);
     progNum.textContent=revealed.size;

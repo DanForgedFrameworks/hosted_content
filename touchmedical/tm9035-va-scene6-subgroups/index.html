@@ -288,6 +288,17 @@ body.is-fullscreen{ padding-top:56px; }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
 }
+
+/* A finished animation is not a released layer. fill-mode:both keeps the animation
+   APPLIED for the life of the page, so the block keeps its own compositing layer; at
+   Visme's fractional embed width (1370.58349609375) that layer is rasterised once and
+   composited at a sub-pixel offset, which reads as a uniformly soft panel. Owner-confirmed
+   on va-scene4 (2026-09-01) and fixed there the same way.
+   Released on a TIMER, never on animationend: animationend does not fire when rAF is
+   throttled, and a backgrounded embed is exactly that case. Also strictly SAFER than
+   fill-mode alone - if the animation never runs, this is what makes the content visible
+   rather than leaving it at opacity 0. Content is never gated behind animation (§6). */
+.entrance-done{ animation:none !important; opacity:1 !important; }
 </style>
 </head>
 <body>
@@ -592,6 +603,24 @@ body.is-fullscreen{ padding-top:56px; }
   if (isMobile) { document.body.classList.add('is-mobile'); }
   if (inIframe && isMobile && !fullscreen) { document.body.classList.add('is-embedded-mobile'); }
   if (fullscreen) { document.body.classList.add('is-fullscreen'); }
+}());
+</script>
+
+<script>
+/* Release the entrance compositing layers - see .entrance-done in the stylesheet.
+   entrances are delayed to 2.5-3.1s, so the sweep waits until after they land.
+   .sg__media and .sg__hero are DELIBERATELY EXCLUDED: heroTitle ends at opacity:0
+   (it fades in, then out), so forcing it visible would pin the hero title on screen */
+(function(){
+  var SEL = '.hd, .navprompt, .lens, .lensprompt, .sg__media figcaption';
+  var DELAY = 4200;
+  function sweep(){
+    var els = document.querySelectorAll(SEL);
+    for (var i = 0; i < els.length; i++) els[i].classList.add('entrance-done');
+  }
+  setTimeout(sweep, DELAY);
+  /* Driven states animate too, so sweep again after any interaction. */
+  document.addEventListener('click', function(){ setTimeout(sweep, DELAY); }, true);
 }());
 </script>
 </body>

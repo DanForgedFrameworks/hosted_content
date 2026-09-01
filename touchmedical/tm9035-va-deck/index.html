@@ -567,6 +567,15 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
   .cs__media,.cs__body > *,.lo__item,.toc__item,.cta-btn,.howto__row{ opacity:1 !important; transform:none !important; }
   .cs__media{ transform:none !important; } .cs__hero{ opacity:0 !important; }
 }
+
+/* A finished animation is not a released layer. fill-mode:both keeps the animation
+   APPLIED for the life of the page, so the block keeps its own compositing layer; at
+   Visme's fractional embed width (1370.58349609375) that layer is rasterised once and
+   composited at a sub-pixel offset, which reads as a uniformly soft panel. Owner-confirmed
+   on va-scene4 (2026-09-01) and fixed there the same way.
+   Released on a TIMER, never on animationend: animationend does not fire when rAF is
+   throttled, and a backgrounded embed is exactly that case. */
+.entrance-done{ animation:none !important; opacity:1 !important; }
 </style>
 </head>
 <body>
@@ -1305,6 +1314,28 @@ body{ background:#0b1622; font-family:var(--font); color:var(--navy); -webkit-fo
   window.__swReset=function(){ swShow(1); };
   swShow(1);
 })();
+</script>
+
+<script>
+/* Release the entrance compositing layers - see .entrance-done in the stylesheet. */
+(function(){
+  var SEL = '.scene, .cover__title, .cover__bar, .cta-btn';
+  var DELAY = 1200;
+  function sweep(){
+    var els = document.querySelectorAll(SEL);
+    for (var i = 0; i < els.length; i++) els[i].classList.add('entrance-done');
+  }
+  function unsweep(){
+    var els = document.querySelectorAll(SEL);
+    for (var i = 0; i < els.length; i++) els[i].classList.remove('entrance-done');
+  }
+  /* Scenes re-animate on EVERY navigation (.scene.in-left / .in-right), so the release
+     must LIFT before the next transition or the deck stops animating between scenes. */
+  function again(){ unsweep(); setTimeout(sweep, DELAY); }
+  setTimeout(sweep, DELAY);
+  document.addEventListener('click', again, true);
+  document.addEventListener('keydown', again, true);
+}());
 </script>
 </body>
 </html>
