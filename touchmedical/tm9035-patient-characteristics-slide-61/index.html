@@ -48,11 +48,23 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 .navprompt__ic{ flex:0 0 auto; width:26px; height:26px; display:grid; place-items:center; color:var(--teal); }
 .navprompt__ic svg{ width:100%; height:100%; }
 
-.card{ position:relative; border:0; background:transparent; padding:0; font:inherit; color:inherit; cursor:pointer; perspective:1300px; min-height:0; }
+.card{ position:relative; border:0; background:transparent; padding:0; font:inherit; color:inherit; cursor:pointer; min-height:0; }
 .card:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; border-radius:18px; }
-.card__inner{ position:relative; display:grid; width:100%; height:100%; transition:transform .55s cubic-bezier(.4,0,.2,1); transform-style:preserve-3d; will-change:transform; }
+.card__inner{ position:relative; display:grid; width:100%; height:100%; transition:transform .55s cubic-bezier(.4,0,.2,1); }
 .card[aria-expanded="true"] .card__inner{ transform:rotateY(180deg); }
-.card__face{ grid-area:1 / 1; -webkit-backface-visibility:hidden; backface-visibility:hidden; display:flex; flex-direction:column; border:2px solid var(--line); border-radius:16px; background:#fff; overflow:hidden; transition:border-color .16s ease, box-shadow .16s ease; }
+.card__face{ grid-area:1 / 1; display:flex; flex-direction:column; border:2px solid var(--line); border-radius:16px; background:#fff; overflow:hidden; transition:border-color .16s ease, box-shadow .16s ease; }
+
+/* 3D ONLY WHILE A CARD IS IN PLAY.
+   perspective + preserve-3d + backface-visibility form a permanent 3D rendering
+   context: every face is rasterised to its own texture for the life of the page,
+   and inside a fractionally-sized embed those textures are resampled, which reads
+   as soft text. Gating them on .is-3d releases all 32 layers at rest while leaving
+   the flip itself byte-for-byte identical. The back face needs hiding by other
+   means at rest, since backface-visibility is no longer doing it. */
+.card.is-3d{ perspective:1300px; }
+.card.is-3d .card__inner{ transform-style:preserve-3d; }
+.card.is-3d .card__face{ -webkit-backface-visibility:hidden; backface-visibility:hidden; }
+.card:not(.is-3d) .card__back{ visibility:hidden; }
 
 /* front */
 .card__front{ padding:clamp(8px,1.2vh,13px) clamp(10px,1.1vw,15px); transform:rotateY(0deg); }
@@ -344,6 +356,15 @@ body.is-fullscreen{ padding-top:56px; }
   const nudge=document.getElementById('nudge');
   const flipped=new Set();
   function flip(card){
+    card.classList.add('is-3d');                    /* 3D context on, for the flip */
+    var inner3d = card.querySelector('.card__inner');
+    if (inner3d && !inner3d.dataset.relBound) {
+      inner3d.dataset.relBound = '1';
+      inner3d.addEventListener('transitionend', function(e){
+        if (e.propertyName !== 'transform') return;
+        if (card.getAttribute('aria-expanded') !== 'true') card.classList.remove('is-3d');
+      });
+    }
     const on=card.getAttribute('aria-expanded')!=='true';
     card.setAttribute('aria-expanded', on?'true':'false');
     if(on){

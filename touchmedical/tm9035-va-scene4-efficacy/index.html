@@ -82,9 +82,14 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
   transform:translate(calc(var(--dx,0px) * 1.7), calc(var(--dy,0px) * 1.7)); }
 .rseg__c{ transition:opacity .16s ease, stroke-width .16s ease; }
 @media (prefers-reduced-motion: reduce){ .ring__svg .rseg{ transition:none; } .ring.is-tight .rseg{ transform:translate(var(--dx,0px),var(--dy,0px)); } }
-.ring__hole{ grid-area:1 / 1; place-self:center; width:66%; height:66%; border-radius:50%; background:#fff; display:grid; place-items:center; box-shadow:inset 0 0 0 1px var(--line); }
-.ring__val{ display:block; font-size:clamp(2.3rem,4.8vh,2.95rem); font-weight:700; color:var(--teal-strong); line-height:1; white-space:nowrap; }
-.ring__ci{ display:block; font-size:clamp(.82rem,1.35vw,.94rem); font-weight:600; color:var(--muted); margin-top:4px; white-space:nowrap; }
+.ring__hole{ grid-area:1 / 1; place-self:center; width:68%; height:68%; border-radius:50%; background:#fff; display:grid; place-items:center; box-shadow:inset 0 0 0 1px var(--line); }
+.ring__val{ display:block; font-size:clamp(1.5rem,4.05vh,2.6rem); font-weight:700; color:var(--teal-strong); line-height:1; white-space:nowrap; }
+.ring__ci{ display:block; font-size:clamp(.70rem,1.6vh,.86rem); font-weight:600; color:var(--muted); margin-top:3px;
+  /* Was nowrap, which forced one long line through the narrowest part of the circle and
+     put "57.4" on the ring. A circle is widest at its centre: two short lines fit where
+     one long one cannot, and it stays legible at the small gate viewports where shrinking
+     the type to fit dropped it to 8.8px. */
+  max-width:88%; margin-inline:auto; text-wrap:balance; line-height:1.2; }
 .orr__cap{ font-size:clamp(.96rem,1.65vw,1.12rem); line-height:1.45; color:var(--muted); max-width:38ch; }
 /* opening the split hides the summary caption so the ring stays FULL-SIZE (doughnut never resizes/wraps) */
 .orr.is-split .orr__cap{ display:none; }
