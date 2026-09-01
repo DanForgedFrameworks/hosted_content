@@ -224,6 +224,19 @@ body{ background:#f2f2f2; color:var(--navy); font-family:var(--font); -webkit-fo
 @keyframes fadeUp{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
 @keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
 
+/* A finished animation is not a released layer. fill-mode:both keeps the animation
+   APPLIED for the life of the page, so the block stays on its own compositing layer;
+   at Visme's fractional embed width (1370.58349609375) that layer is rasterised once
+   and resampled to a sub-pixel offset, which reads as a uniformly soft panel — border,
+   headings and figures together. Stripping the animation returns it to normal painting.
+
+   Released on a TIMER, never on animationend: animationend does not fire when rAF is
+   throttled (measured: zero events in a headless preview, and a backgrounded Visme tab
+   is the same case). The timer also makes this strictly SAFER than fill-mode alone —
+   if the animation never runs at all, this is what makes the content visible, rather
+   than leaving it stuck at opacity 0. Content is never gated behind animation (§6). */
+.entrance-done{ animation:none !important; opacity:1 !important; }
+
 /* opacity-only entrance (no transform) — avoids sub-pixel text blur on the
    composited layer during load, which reads as haze on Visme's scaled canvas */
 .hd{ animation:fadeIn .5s ease both; }
@@ -695,6 +708,19 @@ body.is-fullscreen{ padding-top:56px; }
   if (isMobile) { document.body.classList.add('is-mobile'); }
   if (inIframe && isMobile && !fullscreen) { document.body.classList.add('is-embedded-mobile'); }
   if (fullscreen) { document.body.classList.add('is-fullscreen'); }
+}());
+
+/* Release the entrance compositing layers — see .entrance-done above. */
+(function(){
+  var SEL = '.hd, .navprompt, .eff__cols .panel, .metric, .nudge';
+  function sweep(){
+    var els = document.querySelectorAll(SEL);
+    for (var i = 0; i < els.length; i++) els[i].classList.add('entrance-done');
+  }
+  setTimeout(sweep, 1200);                       /* entrance blocks */
+  document.addEventListener('click', function(){ /* driven states: metrics, nudge */
+    setTimeout(sweep, 1200);
+  }, true);
 }());
 </script>
 </body>
