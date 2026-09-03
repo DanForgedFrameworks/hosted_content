@@ -32,12 +32,16 @@ verbatim from the approved source.
    (optional), then seven slides each holding one iframe embed at the URLs
    below, in order.
 3. Add Back and Next buttons on the Visme canvas, linked to the previous and
-   next slide, styled per the spec under Navigation.
+   next slide, styled per the spec under Navigation. Inside the builds the
+   Back, Next and pip controls are display-only.
 4. Confirm Print-tab export works from inside a Visme embed (see Behaviours).
 
 ## Folder structure
 
     visme/
+      README.md             this document
+      SCENES.md             screen-by-screen inventory: layout, gating, reveal order
+      regenerate.mjs        rebuilds the seven from the master
       index.html            contents page listing the seven builds, for checking
       support.js            shared runtime, loaded by every build
       lilly/                shared design kit (tokens, artwork, component CSS)
@@ -50,8 +54,8 @@ verbatim from the approved source.
       06-references/index.html
 
 The scene folders reference `../support.js` and `../lilly/styles.css`, so the
-parent folder must be uploaded whole. Do not rename folders: Back and Next
-inside each build link to the sibling folder by name.
+parent folder must be uploaded whole. Folder names are stable identifiers
+for the Visme slide order; keep them.
 
 ## Embed URLs and slide order
 
@@ -68,6 +72,11 @@ Query-string options, appended to any embed URL:
 
     ?chrome=0    hide the in-embed Back and Next buttons (pips stay)
 
+Scene linking is switched off in every build (`hostLinksScenes`, on by
+default in the master). Back, Next, the pips, "Get started" and the contents
+buttons on scene 06 render but do not navigate; arrow keys do nothing;
+"Back to contents" is removed. All movement between scenes is Visme's.
+
 ## Embed geometry
 
 Design size is **1280 x 720**. Each build scales itself to fit whatever box the
@@ -81,11 +90,12 @@ Code inside an iframe cannot move a Visme slide. So:
 
 - **Visme canvas buttons drive the deck.** Add Back and Next on each Visme
   slide with Visme's link-to-slide action. These are the primary controls.
-- **In-embed Back and Next** link to the sibling folder. They make the seven
-  work as a chain when opened outside Visme and act as a fallback inside it.
-  Hide them with `?chrome=0` once the canvas buttons are in, or keep both.
-- **Pips** (the numbered dots) mark position: scenes before the current one
-  show as reached and jump to that folder; later scenes are locked.
+- **In-embed Back and Next** are visual only. They show the learner where
+  the controls sit and that the scene is complete (Next appears once
+  everything is opened) but do not navigate. Hide them with `?chrome=0` if
+  the canvas buttons make them redundant.
+- **Pips** (the numbered dots) mark position only. Earlier scenes show as
+  reached, later ones as locked; none navigate.
 
 Canvas button spec, matching the in-embed chrome:
 
@@ -148,14 +158,99 @@ From `lilly/tokens/tokens.css`; all extracted from the approved deck.
     --lly-panel    #EBF2FA   pale framing panel
     --lly-font     Ringside, falling back to Arial (Ringside is not shipped)
 
+## Interface copy inventory
+
+Every string below was authored for the interactive layer and is marked
+`title="Placeholder copy - not from the approved infographic"` in the build.
+Approve or replace as one pass. Everything not listed is verbatim from the
+approved infographic.
+
+Masthead and title
+- How to use this
+- A walk through the considerations behind first-line and subsequent treatment decisions in elderly patients with active CLL
+- Get started
+
+Prompt lines
+- Select each patient example to explore the details
+- Select each consideration to explore its questions
+- Select each treatment option to explore its features
+- Select each therapy option to explore its pathway
+- Select the box below to explore the questions
+
+Bridging prompts
+- Next, three considerations: patient background, disease background and patient preference
+- With those in mind, what are the key features of the first-line treatment options?
+- How might those options play out across a treatment algorithm?
+- And once a patient has moved beyond first line, what should we consider next?
+
+End of resource
+- Congratulations, you have reached the end of this resource
+- Thank you for working through the considerations behind first-line and subsequent treatment decisions in elderly patients with active CLL
+- Is there anything you would like to revisit? Select an option below to go back to it.
+- References
+- Print / Save PDF
+- Back to contents (single-page build only)
+
+Footer
+- Background motion
+
+Source overlay
+- Preparing your source / Loading the source record for this reference.
+- Your source is ready
+- Select below to open it in a new tab, or copy the link.
+- The source link will be added here on publication.
+
+Walkthrough (title / body), eight steps: see `walkSteps()` in the master.
+
+Toast
+- References copied to your clipboard.
+
+## Source URL slots
+
+The citation overlay reads a URL per reference. All seven are empty.
+
+    1  Hallek 2021        doi:10.1002/ajh.26367
+    2  Stauder 2017       doi:10.1093/annonc/mdw547
+    3  Brieghel 2025      doi:10.1002/hem3.70172
+    4  Soumerai 2025      doi:10.1182/bloodadvances.2024014474
+    5  Anderson 2024      doi:10.3390/cancers16050980
+    6  Eichhorst 2026     doi:10.1002/hem3.70403
+    7  Goede 2021         doi:10.1016/S2666-7568(21)00184-7
+
+## Acceptance checklist, per scene
+
+- Loads with no console errors; masthead, pips and footer present (00 has no footer).
+- Nothing is open on arrival; every diamond affordance pulses.
+- Open everything: Next appears bottom right with the bridging prompt (01–04).
+- Back, Next, pips, Get started (00) and the contents buttons (06) render but do not navigate; arrow keys do nothing.
+- Escape closes any overlay and restores focus to its trigger.
+- Gloss tooltips show on hover; citation chips show and clear.
+- Background motion toggle stops the field; `prefers-reduced-motion` stops all animation.
+- 06: References overlay opens; Print / Save PDF opens the print tab, or toasts if blocked.
+- Job code slot present (empty until issued).
+- `?chrome=0` hides Back and Next and nothing else.
+
+## Versions
+
+Canonical master: `CLL Decision Making Scenes v5.dc.html`. v2–v4 are earlier
+single-page iterations kept for history. `deploy/`, `package/cll-asset/` and
+`package/standalone/cll-decision-making.html` are the single-page build (v4)
+and are superseded by this folder for the Visme delivery.
+
+## Change log
+
+- 2026-09-03: in-build scene navigation disabled (`hostLinksScenes`).
+  Visme owns all slide-to-slide movement. Back to contents removed.
+
 ## Editing and regeneration
 
 Do not edit the seven `index.html` files. They are generated from
 `CLL Decision Making Scenes v5.dc.html` in the project root: one master, seven
 outputs. Each generated file differs from the master only by
 `window.CLL_SCENE = N` (0-6) in its head and two relative paths
-(`../support.js`, `../lilly/styles.css`). Change the master, regenerate,
-re-upload.
+(`../support.js`, `../lilly/styles.css`). Change the master, then run
+`node visme/regenerate.mjs` from the project root, then re-upload. Copy
+`support.js` and `lilly/` into `visme/` again only if they changed.
 
 `?scene=N` on the master previews a single scene without generating anything.
 

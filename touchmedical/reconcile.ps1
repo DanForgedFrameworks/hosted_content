@@ -9,6 +9,10 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $here = $PSScriptRoot
+if (-not $here) { $here = Split-Path -Parent $MyInvocation.MyCommand.Path }
+# Under `powershell -File` in 5.1 the default above can evaluate while $PSScriptRoot is still empty,
+# producing C:\..\..\Codex and a Test-Path exception - section [4] then never ran. Rebuild it here.
+if (-not $CodexRoot -or $CodexRoot -like '\..\..*' -or $CodexRoot -like '..\*') { $CodexRoot = Join-Path $here '..\..\Codex\html\production\2026\TM9035' }
 $fail = 0
 function Bad($m) { Write-Host "  FAIL  $m" -ForegroundColor Red; $script:fail++ }
 function Warn($m) { Write-Host "  warn  $m" -ForegroundColor Yellow }

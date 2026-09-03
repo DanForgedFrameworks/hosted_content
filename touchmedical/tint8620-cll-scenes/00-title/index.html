@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- build: TINT 8620-5 | tint8620-cll-scenes/00-title | v1 | 2026-09-03 -->
+<!-- build: TINT 8620-5 | tint8620-cll-scenes/00-title | v2 | 2026-09-03 -->
 <html>
 <head>
 <meta charset="utf-8">
@@ -8,7 +8,7 @@
 <script src="../support.js"></script>
 
 <title>TINT 8620-5: CLL Decision Making, scene 1: Title</title>
-<meta name="build-version" content="TINT 8620-5 tint8620-cll-scenes/00-title v1 2026-09-03">
+<meta name="build-version" content="TINT 8620-5 tint8620-cll-scenes/00-title v2 2026-09-03">
 </head>
 <body>
 <x-dc>
@@ -649,7 +649,7 @@
 </div>
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect width="400" height="300" fill="#E1251B"/><text x="200" y="150" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="86" font-weight="700" fill="#FFFFFF">CLL</text><text x="200" y="196" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="20" fill="#FFFFFF" opacity="0.9">Clinical decision making</text></svg></template>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:720},&quot;sceneOnly&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:-1,&quot;min&quot;:-1,&quot;max&quot;:6,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Build&quot;},&quot;showChrome&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Build&quot;},&quot;showBridging&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Copy&quot;},&quot;showHowToPill&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Copy&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:720},&quot;sceneOnly&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:-1,&quot;min&quot;:-1,&quot;max&quot;:6,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Build&quot;},&quot;hostLinksScenes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Build&quot;},&quot;showChrome&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Build&quot;},&quot;showBridging&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Copy&quot;},&quot;showHowToPill&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Copy&quot;}}">
 class Component extends DCLogic {
   /* One master, six builds: the six pip scenes. A generated scene folder sets
      window.CLL_SCENE (0-6); ?scene=N previews one from this file; -1 is the full flow. */
@@ -774,6 +774,7 @@ class Component extends DCLogic {
     this.onKey = e => {
       if (e.key === "Escape") { clearTimeout(this.srcTimer); this.setState({ refsOpen: false, walk: null, tip: null, src: null }); }
       else if (this.state.src) return;
+      else if (this.single >= 0 && (this.props.hostLinksScenes ?? true)) return;
       else if (e.key === "ArrowRight" && this.canAdvance()) this.go(this.state.scene + 1);
       else if (e.key === "ArrowLeft" && this.state.scene > 1) this.go(this.state.scene - 1);
     };
@@ -855,7 +856,9 @@ class Component extends DCLogic {
   /* The outgoing scene fades away before the next one is mounted. */
   go(i) {
     const s = Math.max(0, Math.min(this.LAST, i));
-    if (this.single >= 0) { if (s !== this.single) window.location.href = this.hrefFor(s); return; }
+    /* Scene-to-scene linking is handled by the host page (Visme), so a single-scene
+       build displays its nav but does not act on it. */
+    if (this.single >= 0) { if (s !== this.single && !(this.props.hostLinksScenes ?? true)) window.location.href = this.hrefFor(s); return; }
     if (s === this.state.scene || this.leaving) return;
     const jump = Math.abs(s - this.state.scene) > 1;
     this.leaving = true;
@@ -938,7 +941,9 @@ class Component extends DCLogic {
   walkSteps() {
     return [
       { kind: "nav", title: "Move between scenes", body: "The red forward control appears bottom right once you have opened everything on a scene. Back sits bottom left." },
-      { kind: "pips", title: "Jump to any scene", body: "The numbered pips along the bottom cover every scene you have reached. Select one to move back or forward at any point." },
+      { kind: "pips", title: "Jump to any scene", body: this.single >= 0
+        ? "The numbered pips along the bottom mark where you are. Select an earlier one to go back to that scene at any point."
+        : "The numbered pips along the bottom cover every scene you have reached. Select one to move back or forward at any point." },
       { kind: "diamond", title: "Open a box", body: "A red diamond marks anything that opens, and it pulses until you open it. Patient examples, treatment options and each branch of the algorithm roll down when you select them." },
       { kind: "gloss", title: "See a definition", body: "Hover an abbreviation with a dotted underline for what it stands for. Each one is marked the first time it appears." },
       { kind: "chip", title: "Check a source", body: "Select a red citation chip next to a statement to see that reference in place. It clears as soon as you do anything else." },
@@ -992,7 +997,7 @@ class Component extends DCLogic {
       toastMsg: s.toast || "",
       hasToast: !!s.toast,
       /* Once they have reached the contents scene, offer a way straight back to it. */
-      showContents: this.single < 0 && cur !== 0 && cur !== this.LAST && s.visited.includes(this.LAST),
+      showContents: this.single < 0 && !(this.props.hostLinksScenes ?? true) && cur !== 0 && cur !== this.LAST && s.visited.includes(this.LAST),
       goContents: () => this.go(this.LAST),
       howToPill: (this.props.showHowToPill ?? true) && s.walk === null && cur !== 0,
       howToPillTitle: (this.props.showHowToPill ?? true) && s.walk === null && cur === 0,
@@ -1195,7 +1200,7 @@ class Component extends DCLogic {
   }
 }
 </script>
-<script id="build-stamp">(function(){var T="TINT 8620-5: CLL Decision Making, scene 1: Title",M="TINT 8620-5 tint8620-cll-scenes/00-title v1 2026-09-03";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<script id="build-stamp">(function(){var T="TINT 8620-5: CLL Decision Making, scene 1: Title",M="TINT 8620-5 tint8620-cll-scenes/00-title v2 2026-09-03";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
 <script id="layer-release">(function(){var SAFE=/^(cllExpand|cllFade|cllLaunchPop|cllPop|cllSceneBack|cllSceneNext|cllScenePrev|cllSettle|cllStage|cllTip|cllTrunk|cllUp)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var op=getComputedStyle(el).opacity;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
 </body>
 </html>
