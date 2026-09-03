@@ -1,0 +1,5 @@
+/* Lilly CLL design system - entry point.
+   A rendered design receives ONLY this file's transitive @import closure, so
+   everything the components need must be reachable from here. */
+@import "./tokens/index.css";
+@import "./_ds_bundle.css";

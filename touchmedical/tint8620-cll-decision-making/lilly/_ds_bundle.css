@@ -1,0 +1,238 @@
+/* ===========================================================================
+   Lilly CLL - component styles (the class vocabulary)
+   Structure and colour are lifted from the approved infographic. Anything the
+   print source could not have (hover, focus, selected) is marked DERIVED and
+   is built only from tokens already present in the source palette.
+   =========================================================================== */
+
+/* --- Foundations --------------------------------------------------------- */
+.lly-root {
+  font-family: var(--lly-font);
+  font-size: var(--lly-size-body);
+  line-height: var(--lly-lh-body);
+  color: var(--lly-ink);
+  background: var(--lly-white);
+}
+.lly-root *, .lly-root *::before, .lly-root *::after { box-sizing: border-box; }
+
+/* Screen shell. The source is text-dense: keep generous internal padding and
+   do not stretch measure much beyond 72ch. */
+.lly-screen { padding: 24px; max-width: 1200px; margin: 0 auto; }
+.lly-stack  { display: flex; flex-direction: column; gap: var(--lly-gap); }
+.lly-row    { display: flex; gap: var(--lly-gap); flex-wrap: wrap; }
+.lly-grid   { display: grid; gap: var(--lly-gap); grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+
+/* --- Title bar ------------------------------------------------------------
+   Solid red band, white text. In the source this is Background shape.png, a
+   3630x312 solid #E1251B block, reproduced here as a fill rather than an image. */
+.lly-titlebar {
+  background: var(--lly-red);
+  color: var(--lly-white);
+  padding: 14px 24px;
+  border-radius: var(--lly-radius-sm);
+}
+.lly-titlebar__title {
+  font-family: var(--lly-font-bold);
+  font-size: var(--lly-size-title);
+  line-height: var(--lly-lh-tight);
+  font-weight: 700;
+  margin: 0;
+}
+.lly-titlebar__sub {
+  font-size: var(--lly-size-subtitle);
+  line-height: var(--lly-lh-tight);
+  margin: 4px 0 0;
+  opacity: .95;
+}
+
+/* --- Card base ------------------------------------------------------------
+   Every content block in the source is a thin ink outline on white with a
+   generous corner radius. */
+.lly-card {
+  background: var(--lly-white);
+  border: var(--lly-border) solid var(--lly-ink);
+  border-radius: var(--lly-radius);
+  padding: var(--lly-pad);
+}
+
+/* --- Consider card --------------------------------------------------------
+   The four "Consider: ..." clusters. Heading is red, questions are an unmarked
+   list in ink, icon is the supplied artwork for that cluster. */
+.lly-consider__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 10px;
+}
+.lly-consider__title {
+  font-family: var(--lly-font-bold);
+  font-size: var(--lly-size-section);
+  line-height: var(--lly-lh-tight);
+  color: var(--lly-red);
+  font-weight: 700;
+  margin: 0;
+}
+.lly-icon {
+  width: 34px; height: 34px; flex: 0 0 34px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+.lly-icon--frailty    { background-image: var(--lly-icon-frailty); }
+.lly-icon--patient    { background-image: var(--lly-icon-patient); }
+.lly-icon--disease    { background-image: var(--lly-icon-disease); }
+.lly-icon--preference { background-image: var(--lly-icon-preference); }
+.lly-icon--bcl2i      { background-image: var(--lly-icon-bcl2i); }
+/* The cog artwork is WHITE. It must sit on red, never on white. */
+.lly-icon--btki {
+  background-image: var(--lly-icon-btki);
+  background-color: var(--lly-red);
+  border-radius: 50%;
+  padding: 3px;
+}
+
+.lly-questions { list-style: none; margin: 0; padding: 0; }
+.lly-questions > li {
+  position: relative;
+  padding-left: 18px;
+  margin: 0 0 10px;
+}
+.lly-questions > li:last-child { margin-bottom: 0; }
+.lly-questions > li::before {
+  content: "";
+  position: absolute; left: 0; top: .55em;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--lly-red);
+}
+
+/* DERIVED - not in the print source. Use only on cards the learner can select. */
+.lly-card--interactive { cursor: pointer; transition: box-shadow .15s, transform .15s; }
+.lly-card--interactive:hover { box-shadow: 0 4px 14px rgba(33,33,33,.16); transform: translateY(-2px); }
+.lly-card--interactive:focus-visible { outline: 3px solid var(--lly-red); outline-offset: 3px; }
+.lly-card--interactive[aria-pressed="true"],
+.lly-card--selected { background: var(--lly-panel); border-color: var(--lly-red); border-width: 2px; }
+
+/* --- Pale panel -----------------------------------------------------------
+   The "Identifying frailty" block: pale blue fill, ink outline. */
+.lly-panel {
+  background: var(--lly-panel);
+  border: var(--lly-border) solid var(--lly-ink);
+  border-radius: var(--lly-radius);
+  padding: var(--lly-pad);
+}
+
+/* --- Patient profile ------------------------------------------------------
+   The two worked patient examples. Attribute list, no bullets. */
+.lly-profile__name {
+  font-family: var(--lly-font-bold);
+  font-size: var(--lly-size-body);
+  font-weight: 700;
+  color: var(--lly-ink);
+  margin: 0 0 8px;
+}
+.lly-profile__attrs { list-style: none; margin: 0; padding: 0; font-size: var(--lly-size-small); }
+.lly-profile__attrs > li { padding: 4px 0; border-top: 1px solid rgba(33,33,33,.15); }
+.lly-profile__attrs > li:first-child { border-top: 0; }
+
+/* --- 1L feature panel -----------------------------------------------------
+   BTKi / BCL-2i. Sky fill, navy outline, TOP corners only, red header bar with
+   white text, exactly as the source draws it. */
+.lly-feature {
+  background: var(--lly-sky);
+  border: var(--lly-border) solid var(--lly-navy);
+  border-radius: var(--lly-radius) var(--lly-radius) 0 0;
+  overflow: hidden;
+}
+.lly-feature__head {
+  background: var(--lly-red);
+  color: var(--lly-white);
+  font-family: var(--lly-font-bold);
+  font-weight: 700;
+  font-size: var(--lly-size-body);
+  padding: 10px 14px;
+  display: flex; align-items: center; gap: 10px;
+}
+.lly-feature__body { padding: 14px; }
+.lly-feature__list { list-style: none; margin: 0; padding: 0; }
+.lly-feature__list > li {
+  position: relative; padding-left: 16px; margin-bottom: 8px;
+  font-size: var(--lly-size-small);
+}
+.lly-feature__list > li:last-child { margin-bottom: 0; }
+.lly-feature__list > li::before {
+  content: ""; position: absolute; left: 0; top: .5em;
+  width: 6px; height: 6px; border-radius: 50%; background: var(--lly-navy);
+}
+
+/* --- Treatment algorithm --------------------------------------------------
+   Two branches, colour-coded throughout: TIME-LIMITED = forest, CONTINUOUS =
+   navy. The branch colour carries both the outline AND the text of its nodes. */
+.lly-branch {
+  display: inline-block;
+  color: var(--lly-white);
+  font-family: var(--lly-font-bold);
+  font-weight: 700;
+  font-size: var(--lly-size-body);
+  padding: 8px 18px;
+  border-radius: var(--lly-radius);
+}
+.lly-branch--timelimited { background: var(--lly-forest); }
+.lly-branch--continuous  { background: var(--lly-navy); }
+
+.lly-node {
+  background: var(--lly-white);
+  border: var(--lly-border) solid currentColor;
+  border-radius: var(--lly-radius);
+  padding: 12px 14px;
+  font-size: var(--lly-size-small);
+}
+.lly-node--timelimited { color: var(--lly-forest); }
+.lly-node--continuous  { color: var(--lly-navy); }
+.lly-node__trigger {
+  font-family: var(--lly-font-bold);
+  font-weight: 700;
+  display: block;
+  margin-bottom: 6px;
+}
+.lly-node__options { list-style: none; margin: 0; padding: 0; color: var(--lly-ink); }
+.lly-node__options > li { padding: 3px 0; }
+
+/* --- Key message ----------------------------------------------------------
+   The closing shared-decision-making statement: ink outline, red text. */
+.lly-keymsg {
+  border: var(--lly-border) solid var(--lly-ink);
+  border-radius: var(--lly-radius);
+  padding: 14px 18px;
+  color: var(--lly-red);
+  font-family: var(--lly-font-bold);
+  font-weight: 700;
+}
+
+/* --- Furniture ------------------------------------------------------------
+   Abbreviation lists and numbered references. 8pt in the source: small, but
+   approved copy that must ship on every screen that cites. */
+.lly-footnote { font-size: var(--lly-size-footnote); line-height: 1.35; color: var(--lly-ink); }
+.lly-sup { font-size: .72em; vertical-align: super; line-height: 0; }
+
+/* --- Section heading (non-card) ------------------------------------------ */
+.lly-section-title {
+  font-family: var(--lly-font-bold);
+  font-size: var(--lly-size-section);
+  font-weight: 700;
+  color: var(--lly-red);
+  margin: 0 0 8px;
+}
+
+/* --- Lilly logo ----------------------------------------------------------- */
+.lly-logo {
+  background-image: var(--lly-logo-lilly);
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: contain;
+  width: 120px; height: 40px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lly-card--interactive { transition: none; }
+  .lly-card--interactive:hover { transform: none; }
+}
