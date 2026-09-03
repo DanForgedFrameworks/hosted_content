@@ -1,4 +1,4 @@
-# touchmedical — TM9035 / VISION live assets
+# touchmedical — Touch Medical live assets (TM9035 / VISION · TINT 8620-5 / Lilly CLL)
 
 **This folder is the live Pages mirror — not the edit source.** Asset code is edited in
 `HTML Edits\Touch Medical\production\<slug>-<date>-vN\`. Three trees, all current, each with
@@ -16,6 +16,36 @@ version too: a `…-v1` folder can hold v2 content, so compare `index.html` by h
 
 Project home (specs, review rounds, sign-offs): `touchMedical\TM 9035\03-html\`
 Build skill: `touchmedical-html` · Deploy: `references/deploy-runbook.md` in that skill.
+
+## TINT 8620-5 (Eli Lilly) — the second job in this tenant
+
+Added 2026-09-03. Same three-tree model, different job folder and a different embed box:
+
+| Tree | TINT 8620-5 path |
+|---|---|
+| Edit | `HTML Edits\Touch Medical\production\tint8620-*\` |
+| Snapshot | `Codex\html\production\2026\TINT8620-5\` — **not** `TM9035` |
+| Live | `hosted_content\touchmedical\tint8620-*\` (here) |
+
+Project home: `touchMedical\TINT 8620-5 (Eli Lilly)\03-html\ASSET-INDEX.md`. Embed box is
+**1368 × 768 full-canvas, no bottom banner** — not TM9035's 1370 × 700. Builds arrive as finished
+packages and are stamped with `Touch Medical\tools\stamp-build.py` (title, version marker,
+compositing-layer release), never edited by hand.
+
+- **`tint8620-cll-scenes/` is nested — the only two-level asset here.** Seven scene folders
+  (`00-title` … `06-references`) plus shared `support.js` and `lilly/` under one parent. The scene
+  files reference `../`, and their Back/Next resolve siblings **by folder name**, so the parent ships
+  whole and the children are never renamed. **Embed the children, never the parent**; the parent's
+  `index.html` is a contents page. `?chrome=0` hides the in-embed Back/Next once Visme's own
+  canvas buttons are in.
+- **`tint8620-cll-decision-making/` is the superseded single-page original.** Status `retain`: kept
+  live because a Visme embed may still point at it; not linked from anywhere; do not delete.
+- **`tint8620-brand-guide/` and `tint8620-brand-spec/` are documents, not embeds** — scrolling
+  pages sent to the team as links. The fit gate reads their height as bleed *by design*.
+- **Register convention:** TINT `codex_build` values are written relative to the TM9035 Codex root
+  (`..\TINT8620-5\…`) because `reconcile.ps1` and `snapshot-to-codex.ps1` default `-CodexRoot` to
+  `2026\TM9035`. Pass `-CodexRoot` explicitly to snapshot a TINT asset with that script, or copy
+  by hand as the 2026-09-03 deploys did.
 
 ## The register
 
@@ -73,3 +103,4 @@ because nothing was checking.
   never checked `Touch Medical\production\`, which is the real edit source and was current all
   along: all 19 assets verified byte-identical to live once line endings were normalised.
   Codex was stale *by design* — it holds releases, not the working copy.
+- **2026-09-03** — TINT 8620-5 (Eli Lilly) lands in this tenant: `tint8620-brand-guide`, `tint8620-brand-spec`, `tint8620-cll-decision-making` (deployed earlier that day but **unregistered** — rule 1 broken for a few hours; rows added now) and the nested `tint8620-cll-scenes` (seven per-scene builds). Register 36 → 40 rows.

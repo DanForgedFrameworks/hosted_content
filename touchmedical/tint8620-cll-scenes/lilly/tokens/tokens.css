@@ -1,0 +1,58 @@
+/* ===========================================================================
+   Lilly CLL — design tokens
+   Every value below was extracted from the approved infographic
+   (00-source/FINAL_GLOBAL_ClinCase_Scenario-1_080726_CLEAN.pptx), not chosen.
+   Provenance is noted per token. Do not add colours that are not here.
+   =========================================================================== */
+:root {
+  /* --- Core palette (pptx theme1 colour scheme) --------------------------- */
+  --lly-red:     #E1251B;  /* accent1 — Lilly red. Title band, section headings, icons */
+  --lly-ink:     #212121;  /* tx1     — all body copy and card outlines */
+  --lly-white:   #FFFFFF;  /* bg1     — page and card fill */
+  --lly-navy:    #0F3A85;  /* accent2 — CONTINUOUS therapy branch */
+  --lly-sky:     #99BFE5;  /* accent3 — 1L feature-panel fill */
+  --lly-forest:  #144B2D;  /* accent4 — TIME-LIMITED therapy branch */
+
+  /* --- Surfaces (measured from slide shapes / supplied art) --------------- */
+  --lly-panel:   #EBF2FA;  /* pale blue panel — frailty block, stethoscope art bg */
+  --lly-mist:    #E4EBF1;  /* network background art field */
+
+  /* --- In the theme but UNUSED on both slides. Kept for provenance;
+         do not introduce them without client approval. -------------------- */
+  --lly-amber-unused:  #FFC709;  /* accent5 */
+  --lly-salmon-unused: #F58E7D;  /* accent6 */
+
+  /* --- Type ---------------------------------------------------------------
+     Brand face is Ringside (Black / Medium / Book) per the deck theme, but the
+     deck's own runs set Arial — Ringside is licensed and is NOT shipped here.
+     Arial is therefore the real rendering face; the stack keeps Ringside first
+     so it is used wherever the client has it installed. */
+  --lly-font: "Ringside Book", "Ringside", Arial, Helvetica, sans-serif;
+  --lly-font-bold: "Ringside Medium", "Ringside Black", Arial, Helvetica, sans-serif;
+
+  /* Sizes are the deck's print points mapped to screen px.
+     deck 24-26pt / 14pt / 10-11pt / 8pt */
+  --lly-size-title:    28px;
+  --lly-size-subtitle: 19px;
+  --lly-size-section:  18px;  /* "Consider: …" / "Identifying frailty" */
+  --lly-size-body:     15px;
+  --lly-size-small:    13px;
+  --lly-size-footnote: 11px;  /* abbreviations, references */
+  --lly-lh-body: 1.45;
+  --lly-lh-tight: 1.25;
+
+  /* --- Shape ---------------------------------------------------------------
+     The deck uses two rounded families: fully-rounded rectangles for Consider
+     cards and algorithm nodes, top-corners-only for the 1L feature panels. */
+  --lly-radius:     14px;
+  --lly-radius-sm:   8px;
+  --lly-radius-pill: 999px;
+  --lly-border:     1.5px;   /* every card in the deck is a thin outline */
+  --lly-gap:        16px;
+  --lly-pad:        16px;
+
+  /* --- Canvas -------------------------------------------------------------
+     Source is 11 x 8.5 in landscape (NOT 16:9). Interactive screens are not
+     bound to that ratio, but keep the density: the source is text-dense. */
+  --lly-source-ratio: 1.294;
+}

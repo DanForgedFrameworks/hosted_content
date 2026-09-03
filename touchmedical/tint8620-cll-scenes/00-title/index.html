@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<!-- build: TINT 8620-5 | tint8620-cll-scenes/00-title | v1 | 2026-09-03 -->
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>window.CLL_SCENE = 0;</script>
+<script src="../support.js"></script>
+
+<title>TINT 8620-5: CLL Decision Making, scene 1: Title</title>
+<meta name="build-version" content="TINT 8620-5 tint8620-cll-scenes/00-title v1 2026-09-03">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="../lilly/styles.css">
+<style>
+  body { margin: 0; background: #212121; overflow: hidden; }
+  a { color: #E1251B; text-decoration: none; }
+  a:hover { color: #212121; }
+  @keyframes cllUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes cllExpand { from { opacity: 0; transform: translateY(-7px); } to { opacity: 1; transform: none; } }
+  @keyframes cllRoll { from { max-height: 0; opacity: 0; } to { max-height: 420px; opacity: 1; } }
+  @keyframes cllGrow { from { grid-template-rows: 0fr; opacity: 0; } to { grid-template-rows: 1fr; opacity: 1; } }
+  @keyframes cllPop { from { opacity: 0; transform: translateX(-4px); } to { opacity: 1; transform: none; } }
+  @keyframes cllTrunk { from { transform: scaleY(0); opacity: 0; } to { transform: scaleY(1); opacity: 1; } }
+  @keyframes cllSceneNext { from { opacity: 0; transform: translateX(30px) scale(.99); } to { opacity: 1; transform: none; } }
+  @keyframes cllScenePrev { from { opacity: 0; transform: translateX(-30px) scale(.99); } to { opacity: 1; transform: none; } }
+  @keyframes cllSceneBack { from { opacity: 0; transform: scale(1.03); } to { opacity: 1; transform: none; } }
+  @keyframes cllSceneOut { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-6px); } }
+  @keyframes cllStage { from { opacity: 0; transform: translateY(-9px); } to { opacity: 1; transform: none; } }
+  @keyframes cllSpin { to { transform: rotate(360deg); } }
+  @keyframes cllLaunchPop { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: none; } }
+  @keyframes cllSettle { 0% { opacity: 0; transform: translateY(26px) scale(.97); } 70% { opacity: 1; transform: translateY(0) scale(1.008); } 100% { opacity: 1; transform: none; } }
+  @keyframes cllFade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes cllTip { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
+  @keyframes cllSign { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+  @keyframes cllNudgeSoft { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(2px); } }
+  /* Transform only - the chevrons' own inline opacity has to be free to fade them out. */
+  @keyframes cllBreathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+  @keyframes cllDrawLine { from { stroke-dashoffset: 60; } to { stroke-dashoffset: 0; } }
+  @keyframes cllFieldMigrate { from { mask-size: 340% 340%; -webkit-mask-size: 340% 340%; } to { mask-size: 118% 118%; -webkit-mask-size: 118% 118%; } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+  @media print {
+    body * { visibility: hidden !important; }
+    [data-print-refs], [data-print-refs] * { visibility: visible !important; }
+    [data-stage] { transform: none !important; left: 0 !important; top: 0 !important; width: 100% !important; height: auto !important; box-shadow: none !important; overflow: visible !important; }
+    [data-print-refs] { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; box-shadow: none !important; }
+    [data-print-hide] { display: none !important; }
+    [data-print-refs] { border: 0 !important; padding: 0 !important; box-shadow: none !important; }
+    [data-print-refs] ol { padding-left: 26px !important; border-top: 1.5px solid #212121; }
+    [data-print-refs] ol li { padding: 9px 4px 9px 4px !important; margin: 0 !important; border-bottom: 1px solid rgba(33,33,33,.4); break-inside: avoid; }
+  }
+</style>
+</helmet>
+<div class="lly-root" style="position:fixed;inset:0;background:#212121;overflow:hidden">
+<div ref="{{ stageRef }}" data-stage="1" style="width:1280px;height:720px;position:absolute;left:50%;top:50%;background:#fff;overflow:hidden;transform-origin:center center;box-shadow:0 30px 80px rgba(0,0,0,.45);border-radius:10px;border:12px solid #E1251B">
+
+  <canvas ref="{{ canvasRef }}" width="1280" height="720" aria-hidden="true" style="position:absolute;inset:0;z-index:0;pointer-events:none;mask-image:radial-gradient(circle at 100% 0, #000 0%, #000 44%, transparent 72%);-webkit-mask-image:radial-gradient(circle at 100% 0, #000 0%, #000 44%, transparent 72%);mask-repeat:no-repeat;-webkit-mask-repeat:no-repeat;mask-position:100% 0;-webkit-mask-position:100% 0;mask-size:340% 340%;-webkit-mask-size:340% 340%;animation:{{ fieldAnim }}"></canvas>
+
+  <div style="position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;padding:14px 26px 10px">
+
+    <sc-if value="{{ notTitle }}" hint-placeholder-val="{{ false }}">
+      <div class="lly-titlebar" style="position:relative;flex:0 0 auto;border-radius:var(--lly-radius);animation:cllFade .4s ease both">
+        <p class="lly-titlebar__title">CLL Clinical Decision Making: Patient Focused</p>
+        <p class="lly-titlebar__sub" style="font-style:italic">Elderly patients with active CLL</p>
+        <sc-if value="{{ howToPill }}" hint-placeholder-val="{{ true }}">
+          <button type="button" onClick="{{ openWalk }}" data-print-hide="1" style="position:absolute;right:22px;top:50%;transform:translateY(-50%);display:inline-flex;align-items:center;justify-content:center;gap:9px;width:186px;padding:8px 16px;border:1.5px solid #fff;border-radius:12px;background:#fff;color:#E1251B;font-family:var(--lly-font-bold);font-size:var(--lly-size-footnote);text-align:center;cursor:pointer;box-shadow:0 4px 14px rgba(33,33,33,.22);transition:box-shadow .18s ease" style-hover="box-shadow:0 7px 18px rgba(33,33,33,.3)">
+            <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.6" fill="none" stroke="currentColor" stroke-width="1.4"></circle><path d="M6.3 6.2a1.8 1.8 0 1 1 2.1 2.1v1" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path><circle cx="8" cy="11.4" r=".85" fill="currentColor"></circle></svg>
+            <span title="Placeholder copy - not from the approved infographic">How to use this</span>
+          </button>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <div style="flex:1 1 auto;min-height:0;display:flex;flex-direction:column;padding:12px 0;justify-content:{{ sceneJustify }};animation:{{ sceneAnim }}">
+
+      <sc-if value="{{ show0 }}" hint-placeholder-val="{{ true }}">
+        <div style="position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px;text-align:center;height:100%">
+          <div class="lly-titlebar" style="padding:30px 52px;border-radius:var(--lly-radius);animation:cllSettle .9s cubic-bezier(.16,1,.3,1) both">
+            <p class="lly-titlebar__title" style="font-size:35px;line-height:1.15;white-space:nowrap">CLL Clinical Decision Making: Patient Focused</p>
+            <p class="lly-titlebar__sub" style="font-size:22px;margin-top:12px;font-style:italic">Elderly patients with active CLL</p>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:18px;animation:cllFade .8s ease both;animation-delay:1s">
+            <p style="margin:0;font-size:var(--lly-size-section)" title="Placeholder copy - not from the approved infographic">A walk through the considerations behind first-line and subsequent treatment decisions</p>
+            <button type="button" onClick="{{ next }}" style="display:inline-flex;align-items:center;gap:12px;padding:13px 28px;border-radius:var(--lly-radius-pill);border:0;background:#E1251B;color:#fff;font-family:var(--lly-font-bold);font-weight:700;font-size:var(--lly-size-section);cursor:pointer;box-shadow:0 6px 18px rgba(225,37,27,.26);transition:box-shadow .18s ease" style-hover="box-shadow:0 9px 22px rgba(225,37,27,.34)">
+              <span title="Placeholder copy - not from the approved infographic">Get started</span>
+              <svg width="17" height="17" viewBox="0 0 14 14" aria-hidden="true" style="animation:cllNudgeSoft 3.2s ease-in-out infinite"><path d="M4 1l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"></path></svg>
+            </button>
+          </div>
+          <span class="lly-logo" style="position:absolute;left:4px;bottom:2px;width:150px;height:50px;animation:cllSign 1.3s cubic-bezier(.35,.9,.2,1) both;animation-delay:1.5s" aria-hidden="true"></span>
+          <span class="lly-footnote" style="position:absolute;right:4px;bottom:14px;color:#212121;font-family:var(--lly-font-bold);letter-spacing:.06em;animation:cllFade .6s ease both;animation-delay:1.9s">8620-5</span>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ show1 }}" hint-placeholder-val="{{ false }}">
+        <div class="lly-panel" style="border-radius:var(--lly-radius);animation:cllUp .5s ease both">
+          <div class="lly-consider__head">
+            <span class="lly-icon lly-icon--frailty" aria-hidden="true"></span>
+            <p class="lly-consider__title" style="font-size:24px;color:#212121;font-family:var(--lly-font);font-weight:400">Considerations in elderly patients</p>
+          </div>
+          <ul class="lly-questions">
+            <li style="margin-bottom:14px;animation:cllUp .5s ease both;animation-delay:.15s">The median age at <span data-gloss="CLL, chronic lymphocytic leukemia." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #E1251B;cursor:help">CLL</span> diagnosis is 70 years, and the age at first treatment is even higher as many patients do not require immediate treatment<span class="lly-sup" data-ref="1. Hallek M, et al. Am J Hematol. 2021;96(12):1679-1705.
+2. Stauder R, et al. Ann Oncol. 2017;28(2):218-227." onClick="{{ refClick }}" role="button" tabIndex="0" style="display:inline-grid;place-items:center;min-width:26px;height:16px;padding:0 4px;margin-left:4px;border-radius:4px;background:#E1251B;color:#fff;font-size:10px;vertical-align:super;cursor:pointer;transition:transform .18s ease" style-hover="transform:scale(1.16)">1, 2</span></li>
+            <li style="animation:cllUp .5s ease both;animation-delay:.32s">Elderly patients often present with comorbidities and/or polypharmacy<span class="lly-sup" data-ref="1. Hallek M, et al. Am J Hematol. 2021;96(12):1679-1705.
+2. Stauder R, et al. Ann Oncol. 2017;28(2):218-227.
+3. Brieghel C, et al. Hemasphere. 2025;9(7):e70172." onClick="{{ refClick }}" role="button" tabIndex="0" style="display:inline-grid;place-items:center;min-width:26px;height:16px;padding:0 4px;margin-left:4px;border-radius:4px;background:#E1251B;color:#fff;font-size:10px;vertical-align:super;cursor:pointer;transition:transform .18s ease" style-hover="transform:scale(1.16)">1-3</span></li>
+          </ul>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin:20px 0 10px;animation:cllUp .5s ease both;animation-delay:.5s">
+            <p class="lly-section-title" style="margin:0">Patient examples</p>
+            <span class="lly-footnote" style="color:#E1251B" title="Placeholder copy - not from the approved infographic">Select each patient example to explore the details</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch;min-height:186px">
+            <div class="lly-card" onClick="{{ openPatientA }}" role="button" tabIndex="0" style="cursor:pointer;border-color:#E1251B;background:linear-gradient(180deg,#fff,rgba(225,37,27,.05));border-radius:var(--lly-radius);transition:box-shadow .2s ease;animation:cllUp .5s ease both;animation-delay:.64s" style-hover="box-shadow:0 4px 14px rgba(33,33,33,.14)">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+                <p class="lly-profile__name" style="color:#E1251B;margin:0">Patient with comorbidity and functional frailty</p>
+                <sc-if value="{{ patientAClosed }}" hint-placeholder-val="{{ true }}">
+                  <span aria-hidden="true" style="flex:0 0 22px;color:#E1251B;animation:{{ pulse }}">
+                    <svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.6"></path><path d="M8.6 10.4 12 13.8l3.4-3.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
+                  </span>
+                </sc-if>
+              </div>
+              <sc-if value="{{ patientAOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="overflow:hidden;max-height:420px;opacity:1;animation:cllRoll .55s cubic-bezier(.16,1,.3,1)">
+                  <div style="overflow:hidden">
+                    <ul class="lly-profile__attrs" style="margin-top:10px">
+                      <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.10s both">75 years old</li>
+                      <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.40s both"><span data-gloss="ECOG PS, Eastern Cooperative Oncology Group performance status." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #E1251B;cursor:help">ECOG PS</span> 2</li>
+                      <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.70s both">Atrial fibrillation (on anticoagulation), <span data-gloss="T2DM, type 2 diabetes mellitus." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #E1251B;cursor:help">T2DM</span></li>
+                      <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 1.00s both">Polypharmacy</li>
+                    </ul>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+            <div class="lly-card" onClick="{{ openPatientB }}" role="button" tabIndex="0" style="cursor:pointer;border-color:#E1251B;background:linear-gradient(180deg,#fff,rgba(225,37,27,.05));border-radius:var(--lly-radius);transition:box-shadow .2s ease;animation:cllUp .5s ease both;animation-delay:.76s" style-hover="box-shadow:0 4px 14px rgba(33,33,33,.14)">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+                <p class="lly-profile__name" style="color:#E1251B;margin:0">Elderly patient with high-risk disease and comorbidity</p>
+                <sc-if value="{{ patientBClosed }}" hint-placeholder-val="{{ true }}">
+                  <span aria-hidden="true" style="flex:0 0 22px;color:#E1251B;animation:{{ pulse }}">
+                    <svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.6"></path><path d="M8.6 10.4 12 13.8l3.4-3.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
+                  </span>
+                </sc-if>
+              </div>
+              <sc-if value="{{ patientBOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="overflow:hidden;max-height:420px;opacity:1;animation:cllRoll .55s cubic-bezier(.16,1,.3,1)">
+                  <div style="overflow:hidden">
+                    <ul class="lly-profile__attrs" style="margin-top:10px">
+                      <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.10s both">80 years old</li>
+                      <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.40s both">ECOG PS 2</li>
+                      <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.70s both">del(17p)/<span data-gloss="TP53, tumor protein 53." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #E1251B;cursor:help">TP53</span> mutation</li>
+                      <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 1.00s both">Hypertension, <span data-gloss="COPD, chronic obstructive pulmonary disease." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #E1251B;cursor:help">COPD</span></li>
+                    </ul>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ show2 }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:12px">
+              <p class="lly-footnote" style="margin:0;text-align:right;color:#E1251B;align-self:flex-end" title="Placeholder copy - not from the approved infographic">Select each consideration to explore the questions</p>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;animation:cllUp .45s ease both">
+                <button type="button" onClick="{{ tabPatient }}" style="flex:1 1 0;display:flex;align-items:center;gap:13px;padding:19px 18px;border-radius:var(--lly-radius);cursor:pointer;text-align:left;font-family:var(--lly-font-bold);font-size:var(--lly-size-section);transition:box-shadow .2s ease,background .2s ease,border-color .2s ease,color .2s ease;border:{{ tabPatientBorder }};background:{{ tabPatientBg }};color:{{ tabPatientInk }};box-shadow:{{ tabPatientShadow }}" style-hover="box-shadow:0 5px 16px rgba(33,33,33,.16)">
+                  <span class="lly-icon lly-icon--patient" style="width:34px;height:34px;flex:0 0 34px" aria-hidden="true"></span>
+                  <span style="flex:1 1 auto">Consider: Patient background</span>
+                  <sc-if value="{{ tabPatientClosed }}" hint-placeholder-val="{{ true }}">
+                    <span aria-hidden="true" style="flex:0 0 18px;color:#E1251B;animation:{{ pulse }}"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.6"></path><path d="M8.6 10.4 12 13.8l3.4-3.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></span>
+                  </sc-if>
+                </button>
+                <button type="button" onClick="{{ tabDisease }}" style="flex:1 1 0;display:flex;align-items:center;gap:13px;padding:19px 18px;border-radius:var(--lly-radius);cursor:pointer;text-align:left;font-family:var(--lly-font-bold);font-size:var(--lly-size-section);transition:box-shadow .2s ease,background .2s ease,border-color .2s ease,color .2s ease;border:{{ tabDiseaseBorder }};background:{{ tabDiseaseBg }};color:{{ tabDiseaseInk }};box-shadow:{{ tabDiseaseShadow }}" style-hover="box-shadow:0 5px 16px rgba(33,33,33,.16)">
+                  <span class="lly-icon lly-icon--disease" style="width:34px;height:34px;flex:0 0 34px" aria-hidden="true"></span>
+                  <span style="flex:1 1 auto">Consider: Disease background</span>
+                  <sc-if value="{{ tabDiseaseClosed }}" hint-placeholder-val="{{ true }}">
+                    <span aria-hidden="true" style="flex:0 0 18px;color:#E1251B;animation:{{ pulse }}"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.6"></path><path d="M8.6 10.4 12 13.8l3.4-3.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></span>
+                  </sc-if>
+                </button>
+                <button type="button" onClick="{{ tabPreference }}" style="flex:1 1 0;display:flex;align-items:center;gap:13px;padding:19px 18px;border-radius:var(--lly-radius);cursor:pointer;text-align:left;font-family:var(--lly-font-bold);font-size:var(--lly-size-section);transition:box-shadow .2s ease,background .2s ease,border-color .2s ease,color .2s ease;border:{{ tabPreferenceBorder }};background:{{ tabPreferenceBg }};color:{{ tabPreferenceInk }};box-shadow:{{ tabPreferenceShadow }}" style-hover="box-shadow:0 5px 16px rgba(33,33,33,.16)">
+                  <span class="lly-icon lly-icon--preference" style="width:34px;height:34px;flex:0 0 34px" aria-hidden="true"></span>
+                  <span style="flex:1 1 auto">Consider: Patient preference</span>
+                  <sc-if value="{{ tabPreferenceClosed }}" hint-placeholder-val="{{ true }}">
+                    <span aria-hidden="true" style="flex:0 0 18px;color:#E1251B;animation:{{ pulse }}"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.6"></path><path d="M8.6 10.4 12 13.8l3.4-3.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></span>
+                  </sc-if>
+                </button>
+              </div>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;align-items:start;min-height:284px">
+                <sc-if value="{{ tabPatientSeen }}" hint-placeholder-val="{{ false }}">
+                  <div class="lly-card" style="border-radius:var(--lly-radius);padding:16px 18px;font-size:var(--lly-size-small);box-shadow:0 4px 14px rgba(33,33,33,.09);overflow:hidden;max-height:420px;opacity:1;animation:cllRoll .55s cubic-bezier(.16,1,.3,1)">
+                    <div style="overflow:hidden">
+                      <ul class="lly-questions">
+                        <li style="margin-bottom:13px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.15s both">What is the patient's current medication burden (≥5 medications), and are any likely to interact with CLL therapy?</li>
+                        <li style="margin-bottom:13px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.60s both">What comorbidities does the patient present with, and how severe are they? (Consider cardiac, renal, and hepatic function)</li>
+                        <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 1.05s both">Is the patient up to date on vaccinations, and are there concerns about infection risk?</li>
+                      </ul>
+                    </div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ tabDiseaseSeen }}" hint-placeholder-val="{{ false }}">
+                  <div class="lly-card" style="border-radius:var(--lly-radius);padding:16px 18px;font-size:var(--lly-size-small);box-shadow:0 4px 14px rgba(33,33,33,.09);overflow:hidden;max-height:420px;opacity:1;animation:cllRoll .55s cubic-bezier(.16,1,.3,1)">
+                    <div style="overflow:hidden">
+                      <ul class="lly-questions">
+                        <li style="margin-bottom:13px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.15s both">What symptoms is the patient presenting with, and how would you classify their disease?</li>
+                        <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.60s both">Are high-risk features present (del(17p)/TP53 mutation, <span data-gloss="IGHV, immunoglobulin heavy-chain variable region." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #E1251B;cursor:help">IGHV</span> mutational status, cytogenetics), and is the disease behaving indolently or aggressively for the risk group?</li>
+                      </ul>
+                    </div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ tabPreferenceSeen }}" hint-placeholder-val="{{ false }}">
+                  <div class="lly-card" style="border-radius:var(--lly-radius);padding:16px 18px;font-size:var(--lly-size-small);box-shadow:0 4px 14px rgba(33,33,33,.09);overflow:hidden;max-height:420px;opacity:1;animation:cllRoll .55s cubic-bezier(.16,1,.3,1)">
+                    <div style="overflow:hidden">
+                      <ul class="lly-questions">
+                        <li style="margin-bottom:13px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.15s both">How does the patient define a successful treatment? Improved/sustained <span data-gloss="QOL, quality of life." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #E1251B;cursor:help">QOL</span>? Minimal side effects? Treatment-free periods?</li>
+                        <li style="margin-bottom:13px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.60s both">How far away does the patient live from the clinic and do they have easy access to transportation and caregiver support?</li>
+                        <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 1.05s both">What is their preference for drug administration (eg, no <span data-gloss="IV, intravenous." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #E1251B;cursor:help">IV</span>)?</li>
+                      </ul>
+                    </div>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+      </sc-if>
+
+      <sc-if value="{{ show3 }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:12px;animation:cllUp .45s ease both">
+          <div class="lly-card" style="border-radius:var(--lly-radius);padding:14px 24px;text-align:center;box-shadow:0 4px 14px rgba(33,33,33,.09)">
+            <p class="lly-consider__title" style="font-size:24px;color:#212121;font-family:var(--lly-font);font-weight:400">Consider: Key features of <span data-gloss="1L, first-line." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #E1251B;cursor:help">1L</span> treatment options</p>
+          </div>
+          <p class="lly-footnote" style="margin:0;align-self:flex-end;color:#E1251B" title="Placeholder copy - not from the approved infographic">Select each treatment option to explore its features</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:stretch;min-height:296px">
+            <div class="lly-feature" onClick="{{ openBcl2i }}" role="button" tabIndex="0" style="border-radius:var(--lly-radius);background:linear-gradient(180deg,#fff,var(--lly-panel));border-color:var(--lly-navy);overflow:hidden;cursor:pointer;display:flex;flex-direction:column;transition:box-shadow .2s ease" style-hover="box-shadow:0 5px 16px rgba(15,58,133,.18)">
+              <div class="lly-feature__head">
+                <span class="lly-icon lly-icon--bcl2i" aria-hidden="true"></span>
+                <span style="flex:1 1 auto"><span data-gloss="BCL-2i, B-cell lymphoma 2 inhibitor." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #fff;cursor:help">BCL-2i</span> features and considerations<span class="lly-sup" data-ref="4. Soumerai JD, et al. Blood Adv. 2025;9(5):1213-1229.
+5. Anderson MA, et al. Cancers (Basel). 2024;16(5):980." onClick="{{ refClick }}" role="button" tabIndex="0" style="display:inline-grid;place-items:center;min-width:26px;height:16px;padding:0 4px;margin-left:5px;border-radius:4px;background:#fff;color:#E1251B;font-size:10px;vertical-align:super;cursor:pointer;transition:transform .18s ease" style-hover="transform:scale(1.14)">4, 5</span></span>
+                <sc-if value="{{ bcl2iClosed }}" hint-placeholder-val="{{ true }}">
+                  <span aria-hidden="true" style="flex:0 0 20px;color:#fff;animation:{{ pulse }}"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.6"></path><path d="M8.6 10.4 12 13.8l3.4-3.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></span>
+                </sc-if>
+              </div>
+              <sc-if value="{{ bcl2iOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="flex:1 1 auto;overflow:hidden;max-height:420px;opacity:1;animation:cllRoll .55s cubic-bezier(.16,1,.3,1)">
+                  <div style="overflow:hidden;height:100%">
+                    <div class="lly-feature__body" style="height:100%">
+                      <ul class="lly-feature__list" style="height:100%;display:flex;flex-direction:column;justify-content:space-around;gap:10px">
+                        <li style="animation:cllStage .6s cubic-bezier(.16,1,.3,1) .15s both">Time-limited therapy (treatment-free periods)</li>
+                        <li style="animation:cllStage .6s cubic-bezier(.16,1,.3,1) .55s both">May include intravenous multidrug therapy</li>
+                        <li style="animation:cllStage .6s cubic-bezier(.16,1,.3,1) .95s both">Frequent visits/labs in the first 8 weeks</li>
+                        <li style="animation:cllStage .6s cubic-bezier(.16,1,.3,1) 1.35s both">Additional surveillance for <span data-gloss="TLS, tumor lysis syndrome." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted var(--lly-navy);cursor:help">TLS</span> in patients with kidney disease along with TLS prevention (eg, hydration)</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+            <div class="lly-feature" onClick="{{ openBtki }}" role="button" tabIndex="0" style="border-radius:var(--lly-radius);background:linear-gradient(180deg,#fff,var(--lly-panel));border-color:var(--lly-navy);overflow:hidden;cursor:pointer;display:flex;flex-direction:column;transition:box-shadow .2s ease" style-hover="box-shadow:0 5px 16px rgba(15,58,133,.18)">
+              <div class="lly-feature__head">
+                <span class="lly-icon lly-icon--btki" aria-hidden="true"></span>
+                <span style="flex:1 1 auto"><span data-gloss="BTKi, Bruton’s tyrosine kinase inhibitor." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #fff;cursor:help">BTKi</span> features and considerations<span class="lly-sup" data-ref="4. Soumerai JD, et al. Blood Adv. 2025;9(5):1213-1229." onClick="{{ refClick }}" role="button" tabIndex="0" style="display:inline-grid;place-items:center;min-width:16px;height:16px;padding:0 4px;margin-left:5px;border-radius:4px;background:#fff;color:#E1251B;font-size:10px;vertical-align:super;cursor:pointer;transition:transform .18s ease" style-hover="transform:scale(1.14)">4</span></span>
+                <sc-if value="{{ btkiClosed }}" hint-placeholder-val="{{ true }}">
+                  <span aria-hidden="true" style="flex:0 0 20px;color:#fff;animation:{{ pulse }}"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.6"></path><path d="M8.6 10.4 12 13.8l3.4-3.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></span>
+                </sc-if>
+              </div>
+              <sc-if value="{{ btkiOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="flex:1 1 auto;overflow:hidden;max-height:420px;opacity:1;animation:cllRoll .55s cubic-bezier(.16,1,.3,1)">
+                  <div style="overflow:hidden;height:100%">
+                    <div class="lly-feature__body" style="height:100%">
+                      <ul class="lly-feature__list" style="height:100%;display:flex;flex-direction:column;justify-content:space-around;gap:10px">
+                        <li style="animation:cllStage .6s cubic-bezier(.16,1,.3,1) .15s both">Continuous oral therapy</li>
+                        <li style="animation:cllStage .6s cubic-bezier(.16,1,.3,1) .55s both">Limited visits/laboratory monitoring</li>
+                        <li style="animation:cllStage .6s cubic-bezier(.16,1,.3,1) .95s both">Additional pretreatment workup recommended for patients with <span data-gloss="CV, cardiovascular." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted var(--lly-navy);cursor:help">CV</span> risk factors</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ show4 }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:8px;animation:cllUp .45s ease both">
+          <div class="lly-card" style="border-radius:var(--lly-radius);padding:9px 24px;text-align:center;box-shadow:0 4px 14px rgba(33,33,33,.09)">
+            <p class="lly-consider__title" style="font-size:24px;color:#212121;font-family:var(--lly-font);font-weight:400">Treatment algorithm example<span class="lly-sup" data-ref="4. Soumerai JD, et al. Blood Adv. 2025;9(5):1213-1229.
+6. Eichhorst B, et al. Hemasphere. 2026;10(6):e70403." onClick="{{ refClick }}" role="button" tabIndex="0" style="display:inline-grid;place-items:center;min-width:26px;height:16px;padding:0 4px;margin-left:6px;border-radius:4px;background:#E1251B;color:#fff;font-size:10px;vertical-align:super;cursor:pointer;transition:transform .18s ease" style-hover="transform:scale(1.14)">4, 6</span></p>
+          </div>
+          <p class="lly-footnote" style="margin:0;align-self:flex-end;color:#E1251B" title="Placeholder copy - not from the approved infographic">Select each therapy option to explore its pathway</p>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;min-height:0">
+
+            <div style="display:flex;flex-direction:column">
+              <button type="button" onClick="{{ pickTL }}" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:11px 18px;border-radius:var(--lly-radius);border:0;background:var(--lly-forest);color:#fff;font-family:var(--lly-font-bold);font-weight:700;font-size:var(--lly-size-section);cursor:pointer;transition:box-shadow .2s ease;box-shadow:{{ tlShadow }}" style-hover="box-shadow:0 6px 16px rgba(20,75,45,.26)">
+                <span>Time-limited therapy</span>
+                <span aria-hidden="true" style="display:flex;transition:opacity .55s ease;opacity:{{ tlChev }};animation:{{ pulse }}"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.6"></path><path d="M8.6 10.4 12 13.8l3.4-3.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></span>
+              </button>
+              <sc-if value="{{ tlOn }}" hint-placeholder-val="{{ false }}">
+                <div style="position:relative;display:flex;flex-direction:column">
+                  <div style="margin:8px 0;padding:7px 14px;border-radius:var(--lly-radius-sm);border:1.5px solid var(--lly-forest);background:linear-gradient(90deg,#fff,rgba(20,75,45,.10));color:var(--lly-forest);font-family:var(--lly-font-bold);font-weight:700;text-align:center;font-size:var(--lly-size-small);animation:cllExpand .45s ease both">BCL-2i + anti-<span data-gloss="CD20, cluster of differentiation 20." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted var(--lly-forest);cursor:help">CD20</span> <span data-gloss="mAb, monoclonal antibody." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted var(--lly-forest);cursor:help">mAb</span> or BCL-2i + <span data-gloss="cBTKi, covalent Bruton’s tyrosine kinase inhibitor." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted var(--lly-forest);cursor:help">cBTKi</span> + anti-CD20 mAb</div>
+                  <div style="position:relative;display:flex;flex-direction:column;gap:8px">
+                    <div style="position:relative;display:flex;align-items:flex-start;gap:0">
+                      <span style="position:absolute;left:13px;top:-10px;height:calc(100% + 10px);border-left:1.4px dashed var(--lly-forest);transform-origin:top;animation:cllTrunk .5s cubic-bezier(.16,1,.3,1) both;animation-delay:.1s" aria-hidden="true"></span>
+                      <svg width="30" height="14" viewBox="0 0 30 14" aria-hidden="true" style="flex:0 0 30px;margin-top:11px"><defs><marker id="tlA" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#144B2D"></path></marker></defs><path d="M14 7 H21.4" fill="none" stroke="#144B2D" stroke-width="1.4" stroke-dasharray="3 2" style="stroke-dashoffset:60;animation:cllDrawLine .45s ease both;animation-delay:.2s"></path><path d="M21.4 3.6 L27.6 7 L21.4 10.4 z" fill="#144B2D" style="animation:cllPop .34s cubic-bezier(.16,1,.3,1) both;animation-delay:.62s"></path></svg>
+                      <div class="lly-node lly-node--timelimited" onClick="{{ tlCompToggle }}" role="button" tabIndex="0" style="flex:1 1 auto;padding:9px 13px;border-radius:var(--lly-radius);cursor:pointer;transition:box-shadow .2s ease;animation:cllExpand .5s ease both;animation-delay:.25s" style-hover="box-shadow:0 4px 14px rgba(20,75,45,.16)">
+                        <span class="lly-node__trigger" style="display:flex;justify-content:space-between;gap:8px">
+                          <span>Completed planned therapy, then progressed<span data-note="&gt;2 years off of treatment.
+6. Eichhorst B, et al. Hemasphere. 2026;10(6):e70403." onMouseEnter="{{ noteEnter }}" onMouseLeave="{{ glossLeave }}" style="cursor:help;color:#E1251B;font-size:19px;line-height:0;font-family:var(--lly-font-bold)">*</span></span>
+                          <span aria-hidden="true" style="display:flex;transition:opacity .55s ease;opacity:{{ tlCompChev }};animation:{{ pulse }}"><svg width="17" height="17" viewBox="0 0 24 24"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.6"></path><path d="M8.6 10.4 12 13.8l3.4-3.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></span>
+                        </span>
+                        <sc-if value="{{ tlCompOpen }}" hint-placeholder-val="{{ false }}">
+                          <div style="display:grid;grid-template-rows:1fr;animation:cllGrow .6s cubic-bezier(.22,1,.36,1) both"><div style="overflow:hidden;min-height:0"><ul class="lly-node__options"><li style="position:relative;padding:2px 0 2px 15px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.08s both" style-before="content:'•';position:absolute;left:2px;top:3px;color:#E1251B">BCL-2i + anti-CD20 mAb</li><li style="position:relative;padding:2px 0 2px 15px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.32s both" style-before="content:'•';position:absolute;left:2px;top:3px;color:#E1251B">cBTKi</li><li style="position:relative;padding:2px 0 2px 15px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.56s both" style-before="content:'•';position:absolute;left:2px;top:3px;color:#E1251B"><span data-gloss="ncBTKi, noncovalent Bruton’s tyrosine kinase inhibitor." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted var(--lly-forest);cursor:help">ncBTKi</span></li></ul></div></div>
+                        </sc-if>
+                      </div>
+                    </div>
+                    <div style="position:relative;display:flex;align-items:flex-start;gap:0">
+                      <span style="position:absolute;left:13px;top:-10px;height:calc(100% + 10px);border-left:1.4px dashed var(--lly-forest);transform-origin:top;animation:cllTrunk .5s cubic-bezier(.16,1,.3,1) both;animation-delay:.28s" aria-hidden="true"></span>
+                      <svg width="30" height="14" viewBox="0 0 30 14" aria-hidden="true" style="flex:0 0 30px;margin-top:11px"><path d="M14 7 H21.4" fill="none" stroke="#144B2D" stroke-width="1.4" stroke-dasharray="3 2" style="stroke-dashoffset:60;animation:cllDrawLine .45s ease both;animation-delay:.35s"></path><path d="M21.4 3.6 L27.6 7 L21.4 10.4 z" fill="#144B2D" style="animation:cllPop .34s cubic-bezier(.16,1,.3,1) both;animation-delay:.88s"></path></svg>
+                      <div class="lly-node lly-node--timelimited" onClick="{{ tlIntolToggle }}" role="button" tabIndex="0" style="flex:1 1 auto;padding:9px 13px;border-radius:var(--lly-radius);cursor:pointer;transition:box-shadow .2s ease;animation:cllExpand .5s ease both;animation-delay:.4s" style-hover="box-shadow:0 4px 14px rgba(20,75,45,.16)">
+                        <span class="lly-node__trigger" style="display:flex;justify-content:space-between;gap:8px">Intolerance<span aria-hidden="true" style="display:flex;transition:opacity .55s ease;opacity:{{ tlIntolChev }};animation:{{ pulse }}"><svg width="17" height="17" viewBox="0 0 24 24"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.6"></path><path d="M8.6 10.4 12 13.8l3.4-3.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></span></span>
+                        <sc-if value="{{ tlIntolOpen }}" hint-placeholder-val="{{ false }}">
+                          <div style="display:grid;grid-template-rows:1fr;animation:cllGrow .6s cubic-bezier(.22,1,.36,1) both"><div style="overflow:hidden;min-height:0"><ul class="lly-node__options"><li style="position:relative;padding:2px 0 2px 15px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.08s both" style-before="content:'•';position:absolute;left:2px;top:3px;color:#E1251B">cBTKi</li><li style="position:relative;padding:2px 0 2px 15px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.32s both" style-before="content:'•';position:absolute;left:2px;top:3px;color:#E1251B">ncBTKi</li></ul></div></div>
+                        </sc-if>
+                      </div>
+                    </div>
+                    <div style="position:relative;display:flex;align-items:flex-start;gap:0">
+                      <span style="position:absolute;left:13px;top:-10px;height:28px;border-left:1.4px dashed var(--lly-forest);transform-origin:top;animation:cllTrunk .5s cubic-bezier(.16,1,.3,1) both;animation-delay:.46s" aria-hidden="true"></span>
+                      <svg width="30" height="14" viewBox="0 0 30 14" aria-hidden="true" style="flex:0 0 30px;margin-top:11px"><path d="M14 7 H21.4" fill="none" stroke="#144B2D" stroke-width="1.4" stroke-dasharray="3 2" style="stroke-dashoffset:60;animation:cllDrawLine .45s ease both;animation-delay:.5s"></path><path d="M21.4 3.6 L27.6 7 L21.4 10.4 z" fill="#144B2D" style="animation:cllPop .34s cubic-bezier(.16,1,.3,1) both;animation-delay:1.14s"></path></svg>
+                      <div class="lly-node lly-node--timelimited" onClick="{{ tlProgToggle }}" role="button" tabIndex="0" style="flex:1 1 auto;padding:9px 13px;border-radius:var(--lly-radius);cursor:pointer;transition:box-shadow .2s ease;animation:cllExpand .5s ease both;animation-delay:.55s" style-hover="box-shadow:0 4px 14px rgba(20,75,45,.16)">
+                        <span class="lly-node__trigger" style="display:flex;justify-content:space-between;gap:8px">Progression<span aria-hidden="true" style="display:flex;transition:opacity .55s ease;opacity:{{ tlProgChev }};animation:{{ pulse }}"><svg width="17" height="17" viewBox="0 0 24 24"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.6"></path><path d="M8.6 10.4 12 13.8l3.4-3.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></span></span>
+                        <sc-if value="{{ tlProgOpen }}" hint-placeholder-val="{{ false }}">
+                          <div style="display:grid;grid-template-rows:1fr;animation:cllGrow .6s cubic-bezier(.22,1,.36,1) both"><div style="overflow:hidden;min-height:0"><ul class="lly-node__options"><li style="position:relative;padding:2px 0 2px 15px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.08s both" style-before="content:'•';position:absolute;left:2px;top:3px;color:#E1251B">cBTKi</li><li style="position:relative;padding:2px 0 2px 15px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.32s both" style-before="content:'•';position:absolute;left:2px;top:3px;color:#E1251B">ncBTKi</li></ul></div></div>
+                        </sc-if>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+
+            <div style="display:flex;flex-direction:column">
+              <button type="button" onClick="{{ pickCont }}" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:11px 18px;border-radius:var(--lly-radius);border:0;background:var(--lly-navy);color:#fff;font-family:var(--lly-font-bold);font-weight:700;font-size:var(--lly-size-section);cursor:pointer;transition:box-shadow .2s ease;box-shadow:{{ ctShadow }}" style-hover="box-shadow:0 6px 16px rgba(15,58,133,.26)">
+                <span>Continuous therapy</span>
+                <span aria-hidden="true" style="display:flex;transition:opacity .55s ease;opacity:{{ ctChev }};animation:{{ pulse }}"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.6"></path><path d="M8.6 10.4 12 13.8l3.4-3.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></span>
+              </button>
+              <sc-if value="{{ ctOn }}" hint-placeholder-val="{{ false }}">
+                <div style="position:relative;display:flex;flex-direction:column">
+                  <div style="margin:8px 0;padding:7px 14px;border-radius:var(--lly-radius-sm);border:1.5px solid var(--lly-navy);background:linear-gradient(90deg,#fff,rgba(15,58,133,.10));color:var(--lly-navy);font-family:var(--lly-font-bold);font-weight:700;text-align:center;font-size:var(--lly-size-small);animation:cllExpand .45s ease both">BTKi</div>
+                  <div style="position:relative;display:flex;flex-direction:column;gap:8px">
+                    <div style="position:relative;display:flex;align-items:flex-start;gap:0">
+                      <span style="position:absolute;left:13px;top:-10px;height:calc(100% + 10px);border-left:1.4px dashed var(--lly-navy);transform-origin:top;animation:cllTrunk .5s cubic-bezier(.16,1,.3,1) both;animation-delay:.1s" aria-hidden="true"></span>
+                      <svg width="30" height="14" viewBox="0 0 30 14" aria-hidden="true" style="flex:0 0 30px;margin-top:11px"><defs><marker id="ctA" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#0F3A85"></path></marker></defs><path d="M14 7 H21.4" fill="none" stroke="#0F3A85" stroke-width="1.4" stroke-dasharray="3 2" style="stroke-dashoffset:60;animation:cllDrawLine .45s ease both;animation-delay:.2s"></path><path d="M21.4 3.6 L27.6 7 L21.4 10.4 z" fill="#0F3A85" style="animation:cllPop .34s cubic-bezier(.16,1,.3,1) both;animation-delay:.62s"></path></svg>
+                      <div class="lly-node lly-node--continuous" onClick="{{ ctIntolToggle }}" role="button" tabIndex="0" style="flex:1 1 auto;padding:9px 13px;border-radius:var(--lly-radius);cursor:pointer;transition:box-shadow .2s ease;animation:cllExpand .5s ease both;animation-delay:.25s" style-hover="box-shadow:0 4px 14px rgba(15,58,133,.16)">
+                        <span class="lly-node__trigger" style="display:flex;justify-content:space-between;gap:8px">Intolerance<span aria-hidden="true" style="display:flex;transition:opacity .55s ease;opacity:{{ ctIntolChev }};animation:{{ pulse }}"><svg width="17" height="17" viewBox="0 0 24 24"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.6"></path><path d="M8.6 10.4 12 13.8l3.4-3.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></span></span>
+                        <sc-if value="{{ ctIntolOpen }}" hint-placeholder-val="{{ false }}">
+                          <div style="display:grid;grid-template-rows:1fr;animation:cllGrow .6s cubic-bezier(.22,1,.36,1) both"><div style="overflow:hidden;min-height:0"><ul class="lly-node__options"><li style="position:relative;padding:2px 0 2px 15px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.08s both" style-before="content:'•';position:absolute;left:2px;top:3px;color:#E1251B">BCL-2i ± anti-CD20 mAb</li><li style="position:relative;padding:2px 0 2px 15px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.32s both" style-before="content:'•';position:absolute;left:2px;top:3px;color:#E1251B">BTKi (based on prior treatment selection)<ul style="list-style:none;margin:4px 0 0;padding:0 0 0 17px"><li style="position:relative;padding:2px 0 2px 15px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.56s both" style-before="content:'•';position:absolute;left:2px;top:3px;color:#E1251B">Alternative cBTKi</li><li style="position:relative;padding:2px 0 2px 15px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.80s both" style-before="content:'•';position:absolute;left:2px;top:3px;color:#E1251B">ncBTKi</li></ul></li></ul></div></div>
+                        </sc-if>
+                      </div>
+                    </div>
+                    <div style="position:relative;display:flex;align-items:flex-start;gap:0">
+                      <span style="position:absolute;left:13px;top:-10px;height:28px;border-left:1.4px dashed var(--lly-navy);transform-origin:top;animation:cllTrunk .5s cubic-bezier(.16,1,.3,1) both;animation-delay:.28s" aria-hidden="true"></span>
+                      <svg width="30" height="14" viewBox="0 0 30 14" aria-hidden="true" style="flex:0 0 30px;margin-top:11px"><path d="M14 7 H21.4" fill="none" stroke="#0F3A85" stroke-width="1.4" stroke-dasharray="3 2" style="stroke-dashoffset:60;animation:cllDrawLine .45s ease both;animation-delay:.35s"></path><path d="M21.4 3.6 L27.6 7 L21.4 10.4 z" fill="#0F3A85" style="animation:cllPop .34s cubic-bezier(.16,1,.3,1) both;animation-delay:.88s"></path></svg>
+                      <div class="lly-node lly-node--continuous" onClick="{{ ctProgToggle }}" role="button" tabIndex="0" style="flex:1 1 auto;padding:9px 13px;border-radius:var(--lly-radius);cursor:pointer;transition:box-shadow .2s ease;animation:cllExpand .5s ease both;animation-delay:.4s" style-hover="box-shadow:0 4px 14px rgba(15,58,133,.16)">
+                        <span class="lly-node__trigger" style="display:flex;justify-content:space-between;gap:8px">Progression<span aria-hidden="true" style="display:flex;transition:opacity .55s ease;opacity:{{ ctProgChev }};animation:{{ pulse }}"><svg width="17" height="17" viewBox="0 0 24 24"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.6"></path><path d="M8.6 10.4 12 13.8l3.4-3.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></span></span>
+                        <sc-if value="{{ ctProgOpen }}" hint-placeholder-val="{{ false }}">
+                          <div style="display:grid;grid-template-rows:1fr;animation:cllGrow .6s cubic-bezier(.22,1,.36,1) both"><div style="overflow:hidden;min-height:0"><ul class="lly-node__options"><li style="position:relative;padding:2px 0 2px 15px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.08s both" style-before="content:'•';position:absolute;left:2px;top:3px;color:#E1251B">BCL-2i ± anti-CD20 mAb</li><li style="position:relative;padding:2px 0 2px 15px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.32s both" style-before="content:'•';position:absolute;left:2px;top:3px;color:#E1251B">BTKi (based on prior treatment selection)<ul style="list-style:none;margin:4px 0 0;padding:0 0 0 17px"><li style="position:relative;padding:2px 0 2px 15px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.56s both" style-before="content:'•';position:absolute;left:2px;top:3px;color:#E1251B">cBTKi</li><li style="position:relative;padding:2px 0 2px 15px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.80s both" style-before="content:'•';position:absolute;left:2px;top:3px;color:#E1251B">ncBTKi</li></ul></li></ul></div></div>
+                        </sc-if>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ show5 }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;justify-content:flex-start;gap:22px;min-height:462px;padding-top:18px;animation:cllUp .45s ease both">
+          <p class="lly-footnote" style="margin:0;align-self:flex-end;color:#E1251B" title="Placeholder copy - not from the approved infographic">Select the box below to explore the questions</p>
+          <div class="lly-card" onClick="{{ openSubsequent }}" role="button" tabIndex="0" style="border-radius:var(--lly-radius);cursor:pointer;transition:box-shadow .2s ease;box-shadow:0 4px 14px rgba(33,33,33,.09);min-height:196px" style-hover="box-shadow:0 5px 16px rgba(33,33,33,.15)">
+            <div class="lly-consider__head" style="justify-content:space-between;margin-bottom:0">
+              <div style="display:flex;align-items:center;gap:10px">
+                <span class="lly-icon lly-icon--patient" aria-hidden="true"></span>
+                <p class="lly-consider__title" style="font-size:24px;color:#212121;font-family:var(--lly-font);font-weight:400">Consider: For subsequent treatment</p>
+              </div>
+              <sc-if value="{{ subsequentClosed }}" hint-placeholder-val="{{ true }}">
+                <span aria-hidden="true" style="flex:0 0 26px;color:#E1251B;animation:{{ pulse }}"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.6"></path><path d="M8.6 10.4 12 13.8l3.4-3.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></span>
+              </sc-if>
+            </div>
+            <sc-if value="{{ subsequentOpen }}" hint-placeholder-val="{{ false }}">
+              <div style="overflow:hidden;max-height:420px;opacity:1;animation:cllRoll .6s cubic-bezier(.16,1,.3,1)">
+                <div style="overflow:hidden">
+                  <ul class="lly-questions" style="margin:14px 0 0">
+                    <li style="margin-bottom:11px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.15s both">Is the patient presenting with active CLL symptoms (considering subsequent treatment), or are they under surveillance (considering a treatment holiday)?</li>
+                    <li style="margin-bottom:11px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.60s both">What were the prior lines of therapy, their outcomes, reasons for discontinuation, and any notable adverse reactions?</li>
+                    <li style="margin-bottom:11px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 1.05s both">What is the current del(17p)/TP53 mutation status, and has it been reassessed since prior therapy?</li>
+                    <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 1.50s both">Has the patient's medical history, comorbidities, or treatment goals changed since initiating prior therapy?</li>
+                  </ul>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+          <sc-if value="{{ subsequentOpen }}" hint-placeholder-val="{{ false }}">
+            <div class="lly-card" style="border-radius:var(--lly-radius);border:2px solid #E1251B;background:linear-gradient(140deg,#fff,rgba(225,37,27,.12));display:flex;align-items:flex-start;gap:20px;animation:cllExpand .7s cubic-bezier(.16,1,.3,1) both;animation-delay:2.35s;box-shadow:0 6px 20px rgba(225,37,27,.16)">
+              <span class="lly-icon lly-icon--frailty" style="width:46px;height:46px;flex:0 0 46px" aria-hidden="true"></span>
+              <p style="margin:0;text-align:left">
+                <span style="display:block;color:#E1251B;font-family:var(--lly-font-bold);font-weight:700;font-size:22px;margin-bottom:4px">For elderly patients with CLL</span>
+                <span style="display:block">Engaging in shared decision making to understand their treatment goals in context with their full medical history and disease/treatment background can aid in optimizing subsequent treatment decisions<span class="lly-sup" data-ref="4. Soumerai JD, et al. Blood Adv. 2025;9(5):1213-1229.
+7. Goede V, et al. Lancet Healthy Longev. 2021;2(11):e736-e745." onClick="{{ refClick }}" role="button" tabIndex="0" style="display:inline-grid;place-items:center;min-width:26px;height:16px;padding:0 4px;margin-left:5px;border-radius:4px;background:#E1251B;color:#fff;font-size:10px;vertical-align:super;cursor:pointer;transition:transform .18s ease" style-hover="transform:scale(1.14)">4, 7</span></span>
+              </p>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ show6 }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;justify-content:center;gap:24px;height:100%;padding:0 26px">
+          <div class="lly-card" style="border-radius:var(--lly-radius);border:2px solid #E1251B;background:linear-gradient(140deg,#fff,rgba(225,37,27,.10));text-align:center;padding:30px 38px;box-shadow:0 6px 20px rgba(225,37,27,.14);animation:cllExpand .6s cubic-bezier(.16,1,.3,1) .1s both">
+            <p style="margin:0;color:#E1251B;font-family:var(--lly-font-bold);font-weight:700;font-size:28px" title="Placeholder copy - not from the approved infographic">Congratulations, you have reached the end of this resource</p>
+            <p style="margin:12px 0 0;font-size:var(--lly-size-section)" title="Placeholder copy - not from the approved infographic">Thank you for working through the considerations behind first-line and subsequent treatment decisions in elderly patients with active CLL.</p>
+          </div>
+          <div>
+            <p class="lly-section-title" style="margin:0 0 16px;text-align:center;animation:cllUp .55s ease 1.1s both" title="Placeholder copy - not from the approved infographic">Is there anything you would like to revisit? Select an option below to go back to it.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 24px">
+              <sc-for list="{{ contents }}" as="item" hint-placeholder-count="5">
+                <button type="button" onClick="{{ item.go }}" style="display:flex;align-items:center;gap:12px;padding:13px 18px;border:1.5px solid #212121;border-radius:12px;background:#fff;color:#212121;font-family:var(--lly-font-bold);font-size:var(--lly-size-small);text-align:left;cursor:pointer;transition:box-shadow .18s ease,border-color .18s ease,color .18s ease;animation:{{ item.anim }}" style-hover="box-shadow:0 5px 14px rgba(33,33,33,.14);border-color:#E1251B;color:#E1251B">
+                  <span style="display:grid;place-items:center;width:24px;height:24px;flex:0 0 24px;border-radius:50%;background:#E1251B;color:#fff;font-size:12px">{{ item.n }}</span>
+                  <span style="flex:1 1 auto">{{ item.label }}</span>
+                  <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true"><path d="M4 1l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"></path></svg>
+                </button>
+              </sc-for>
+              <button type="button" onClick="{{ openRefs }}" style="display:flex;align-items:center;gap:12px;padding:13px 18px;border:1.5px solid #E1251B;border-radius:12px;background:#fff;color:#E1251B;font-family:var(--lly-font-bold);font-size:var(--lly-size-small);text-align:left;cursor:pointer;transition:box-shadow .18s ease,background .18s ease,color .18s ease;animation:cllUp .5s cubic-bezier(.16,1,.3,1) 2.95s both" style-hover="box-shadow:0 5px 14px rgba(225,37,27,.18);background:#E1251B;color:#fff">
+                <span style="display:grid;place-items:center;width:24px;height:24px;flex:0 0 24px">
+                  <svg width="15" height="15" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5h6.5L11 3.5v9H3z" fill="none" stroke="currentColor" stroke-width="1.4"></path><path d="M5 5h4M5 7.5h4M5 10h2.5" stroke="currentColor" stroke-width="1.2"></path></svg>
+                </span>
+                <span style="flex:1 1 auto" title="Placeholder copy - not from the approved infographic">References</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+
+    <sc-if value="{{ navOn }}" hint-placeholder-val="{{ false }}">
+      <div data-print-hide="1" style="flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:40px">
+        <div style="display:flex;align-items:center;gap:16px;flex:0 0 auto">
+          <sc-if value="{{ showPrev }}" hint-placeholder-val="{{ false }}">
+            <button type="button" onClick="{{ prev }}" aria-label="Previous scene" style="display:grid;place-items:center;width:40px;height:40px;border:1.5px solid #212121;border-radius:12px;background:#fff;color:#212121;cursor:pointer;transition:box-shadow .18s ease;animation:cllFade .3s ease both" style-hover="box-shadow:0 4px 12px rgba(33,33,33,.16)">
+              <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true"><path d="M10 1L4 7l6 6" fill="none" stroke="currentColor" stroke-width="2"></path></svg>
+            </button>
+          </sc-if>
+          <div style="display:flex;gap:8px">
+            <sc-for list="{{ dots }}" as="dot" hint-placeholder-count="6">
+              <button type="button" onClick="{{ dot.go }}" aria-label="{{ dot.label }}" title="{{ dot.label }}" style="display:grid;place-items:center;width:24px;height:24px;padding:0;border-radius:50%;cursor:pointer;font-family:var(--lly-font-bold);font-size:11px;transition:transform .18s ease;background:{{ dot.bg }};color:{{ dot.ink }};border:1.5px solid {{ dot.ring }}" style-hover="transform:scale(1.16)">{{ dot.n }}</button>
+            </sc-for>
+          </div>
+          <button type="button" onClick="{{ toggleMotion }}" aria-label="Background motion" style="display:flex;align-items:center;gap:8px;border:0;background:none;padding:0;cursor:pointer;color:#212121">
+            <span style="display:flex;align-items:center;width:32px;height:17px;border-radius:999px;padding:2px;transition:background .25s ease;background:{{ motionTrack }}">
+              <span style="width:13px;height:13px;border-radius:50%;background:#fff;margin-left:{{ motionKnob }};transition:margin .25s ease"></span>
+            </span>
+            <span class="lly-footnote" title="Placeholder copy - not from the approved infographic">Background motion</span>
+          </button>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;flex:0 1 auto;justify-content:flex-end">
+          <sc-if value="{{ hasBridge }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:9px;padding:8px 18px;border-radius:12px;background:var(--lly-panel);border:1px solid #E1251B;animation:cllFade .6s ease both;animation-delay:.5s" title="Placeholder copy - not from the approved infographic">
+              <p style="margin:0;text-align:right;font-size:var(--lly-size-small)">{{ bridge }}</p>
+            </div>
+          </sc-if>
+          <div style="position:relative;display:flex;align-items:center">
+            <sc-if value="{{ showContents }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ goContents }}" data-print-hide="1" style="position:absolute;right:0;bottom:50px;display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border:1.5px solid #E1251B;border-radius:12px;background:#fff;color:#E1251B;font-family:var(--lly-font-bold);font-size:var(--lly-size-footnote);white-space:nowrap;cursor:pointer;box-shadow:0 4px 12px rgba(33,33,33,.14);transition:background .18s ease,color .18s ease;animation:cllUp .45s cubic-bezier(.16,1,.3,1) both" style-hover="background:#E1251B;color:#fff">
+                <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 3h10M2 7h10M2 11h6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>
+                <span title="Placeholder copy - not from the approved infographic">Back to contents</span>
+              </button>
+            </sc-if>
+            <sc-if value="{{ showNext }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ next }}" aria-label="Next scene" style="display:grid;place-items:center;width:40px;height:40px;flex:0 0 40px;border:0;border-radius:12px;background:#E1251B;color:#fff;cursor:pointer;transition:box-shadow .18s ease;animation:cllFade .4s ease both" style-hover="box-shadow:0 5px 14px rgba(225,37,27,.3)">
+                <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true" style="animation:cllNudgeSoft 3.2s ease-in-out infinite"><path d="M4 1l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"></path></svg>
+              </button>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+  </div>
+
+  <sc-if value="{{ howToPillTitle }}" hint-placeholder-val="{{ false }}">
+    <button type="button" onClick="{{ openWalk }}" data-print-hide="1" style="position:absolute;z-index:5;right:42px;top:30px;display:inline-flex;align-items:center;justify-content:center;gap:9px;width:186px;padding:8px 16px;border:1.5px solid #E1251B;border-radius:12px;background:#fff;color:#E1251B;font-family:var(--lly-font-bold);font-size:var(--lly-size-footnote);text-align:center;cursor:pointer;box-shadow:0 4px 14px rgba(33,33,33,.18);transition:transform .18s ease,box-shadow .18s ease" style-hover="transform:translateY(-1px);box-shadow:0 7px 18px rgba(33,33,33,.24)">
+      <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.6" fill="none" stroke="currentColor" stroke-width="1.4"></circle><path d="M6.3 6.2a1.8 1.8 0 1 1 2.1 2.1v1" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path><circle cx="8" cy="11.4" r=".85" fill="currentColor"></circle></svg>
+      <span title="Placeholder copy - not from the approved infographic">How to use this</span>
+    </button>
+  </sc-if>
+
+  <sc-if value="{{ walkOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeWalk }}" data-print-hide="1" style="position:absolute;inset:0;z-index:8;display:grid;place-items:center;background:rgba(33,33,33,.5);animation:cllFade .2s ease both">
+      <div class="lly-card" style="width:560px;border-radius:22px;background:#fff;padding:0;overflow:hidden;animation:cllExpand .35s cubic-bezier(.16,1,.3,1) both;box-shadow:0 24px 60px rgba(0,0,0,.35)">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;background:var(--lly-panel);border-bottom:1.5px solid #212121">
+          <span class="lly-footnote" style="color:#E1251B;font-family:var(--lly-font-bold);letter-spacing:.1em;text-transform:uppercase" title="Placeholder copy - not from the approved infographic">How to use this resource</span>
+          <button type="button" onClick="{{ closeWalk }}" aria-label="Close" style="display:grid;place-items:center;width:30px;height:30px;border-radius:50%;border:1.5px solid #212121;background:#fff;color:#212121;cursor:pointer;font-size:15px;line-height:1">×</button>
+        </div>
+        <div style="padding:26px 30px 10px;text-align:center;min-height:196px">
+          <div style="display:grid;place-items:center;min-height:74px;margin-bottom:14px">
+            <sc-if value="{{ walkIsNav }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;align-items:center;gap:14px">
+                <span style="display:grid;place-items:center;width:40px;height:40px;border:1.5px solid #212121;border-radius:12px;background:#fff;color:#212121">
+                  <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true"><path d="M10 1L4 7l6 6" fill="none" stroke="currentColor" stroke-width="2"></path></svg>
+                </span>
+                <span style="display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:#E1251B;color:#fff">
+                  <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true"><path d="M4 1l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"></path></svg>
+                </span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ walkIsPips }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="display:grid;place-items:center;width:24px;height:24px;border-radius:50%;border:1.5px solid #E1251B;background:rgba(225,37,27,.14);color:#E1251B;font-family:var(--lly-font-bold);font-size:11px">1</span>
+                <span style="display:grid;place-items:center;width:24px;height:24px;border-radius:50%;border:1.5px solid #E1251B;background:rgba(225,37,27,.14);color:#E1251B;font-family:var(--lly-font-bold);font-size:11px">2</span>
+                <span style="display:grid;place-items:center;width:24px;height:24px;border-radius:50%;border:1.5px solid #E1251B;background:#E1251B;color:#fff;font-family:var(--lly-font-bold);font-size:11px">3</span>
+                <span style="display:grid;place-items:center;width:24px;height:24px;border-radius:50%;border:1.5px solid rgba(33,33,33,.3);background:#fff;color:rgba(33,33,33,.45);font-family:var(--lly-font-bold);font-size:11px">4</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ walkIsDiamond }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:12px;padding:9px 14px;border:1.5px solid #E1251B;border-radius:var(--lly-radius);background:linear-gradient(180deg,#fff,rgba(225,37,27,.05))">
+                <span style="font-family:var(--lly-font-bold);font-size:13px;color:#E1251B">Patient example</span>
+                <span style="display:flex;color:#E1251B;animation:cllBreathe 2.6s ease-in-out infinite" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.6"></path><path d="M8.6 10.4 12 13.8l3.4-3.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
+                </span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ walkIsGloss }}" hint-placeholder-val="{{ false }}">
+              <span style="font-family:var(--lly-font-bold);font-size:19px;border-bottom:1px dotted #E1251B;padding-bottom:3px">CLL</span>
+            </sc-if>
+            <sc-if value="{{ walkIsChip }}" hint-placeholder-val="{{ false }}">
+              <span style="font-size:14px">comorbidities and/or polypharmacy<span style="display:inline-grid;place-items:center;width:16px;height:16px;margin-left:4px;border-radius:4px;background:#E1251B;color:#fff;font-size:10px;vertical-align:super">1</span></span>
+            </sc-if>
+            <sc-if value="{{ walkIsPrompt }}" hint-placeholder-val="{{ false }}">
+              <span class="lly-footnote" style="color:#E1251B">Select each consideration to explore the questions</span>
+            </sc-if>
+            <sc-if value="{{ walkIsRefs }}" hint-placeholder-val="{{ false }}">
+              <span style="display:flex;align-items:center;gap:12px;padding:11px 16px;border:1.5px solid #E1251B;border-radius:12px;color:#E1251B;font-family:var(--lly-font-bold);font-size:13px">
+                <svg width="15" height="15" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5h6.5L11 3.5v9H3z" fill="none" stroke="currentColor" stroke-width="1.4"></path><path d="M5 5h4M5 7.5h4M5 10h2.5" stroke="currentColor" stroke-width="1.2"></path></svg>
+                References
+              </span>
+            </sc-if>
+            <sc-if value="{{ walkIsContents }}" hint-placeholder-val="{{ false }}">
+              <span style="display:flex;align-items:center;gap:12px;padding:11px 16px;border:1.5px solid #212121;border-radius:12px;font-family:var(--lly-font-bold);font-size:13px">
+                <span style="display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#E1251B;color:#fff;font-size:11px">1</span>
+                Considerations in elderly patients
+                <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true"><path d="M4 1l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2"></path></svg>
+              </span>
+            </sc-if>
+          </div>
+          <p style="margin:0 0 8px;font-family:var(--lly-font-bold);font-weight:700;font-size:22px;color:#E1251B">{{ walkTitle }}</p>
+          <p style="margin:0 auto;max-width:42ch;font-size:var(--lly-size-small)" title="Placeholder copy - not from the approved infographic">{{ walkBody }}</p>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 24px 22px">
+          <div style="display:flex;gap:7px">
+            <sc-for list="{{ walkDots }}" as="d" hint-placeholder-count="7">
+              <span style="width:8px;height:8px;border-radius:50%;background:{{ d.bg }}"></span>
+            </sc-for>
+          </div>
+          <div style="display:flex;gap:10px">
+            <button type="button" onClick="{{ walkPrev }}" style="padding:9px 18px;border-radius:var(--lly-radius-pill);border:1.5px solid #212121;background:#fff;color:#212121;font-family:var(--lly-font-bold);font-size:var(--lly-size-footnote);cursor:pointer;opacity:{{ walkPrevOpacity }}">Back</button>
+            <button type="button" onClick="{{ walkNext }}" style="padding:9px 20px;border-radius:var(--lly-radius-pill);border:0;background:#E1251B;color:#fff;font-family:var(--lly-font-bold);font-size:var(--lly-size-footnote);cursor:pointer">{{ walkNextLabel }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ refsOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeRefs }}" style="position:absolute;inset:0;z-index:6;display:grid;place-items:center;background:rgba(33,33,33,.42);animation:cllFade .2s ease both">
+      <div class="lly-card" data-print-refs="1" style="width:700px;border-radius:22px;background:#fff;border:3px solid #E1251B;padding:30px 34px;animation:cllExpand .35s ease both;box-shadow:0 24px 60px rgba(0,0,0,.35)">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px">
+          <p class="lly-consider__title" title="Placeholder copy - not from the approved infographic">References</p>
+          <div style="display:flex;gap:10px" data-print-hide="1">
+            <button type="button" onClick="{{ printRefs }}" style="display:flex;align-items:center;gap:7px;padding:7px 16px;border-radius:var(--lly-radius-pill);border:1.5px solid #212121;background:#fff;color:#212121;cursor:pointer;font-size:var(--lly-size-footnote);font-family:var(--lly-font-bold);transition:background .18s ease,color .18s ease" style-hover="background:#212121;color:#fff">
+              <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true"><path d="M4 5V1.5h6V5M3 5h8v5H9.5v2.5h-5V10H3z" fill="none" stroke="currentColor" stroke-width="1.3"></path></svg>
+              <span title="Placeholder copy - not from the approved infographic">Print / Save PDF</span>
+            </button>
+            <button type="button" onClick="{{ closeRefs }}" aria-label="Close" style="display:grid;place-items:center;width:32px;height:32px;border-radius:50%;border:1.5px solid #212121;background:#fff;color:#212121;cursor:pointer;font-size:15px;line-height:1">×</button>
+          </div>
+        </div>
+        <ol style="margin:0;padding-left:20px;font-size:13px;line-height:1.45">
+          <li style="margin-bottom:9px">Hallek M, Al-Sawaf O. Chronic lymphocytic leukemia: 2022 update on diagnostic and therapeutic procedures. <i>Am J Hematol.</i> 2021;96(12):1679-1705. doi:10.1002/ajh.26367</li>
+          <li style="margin-bottom:9px">Stauder R, Eichhorst B, Hamaker ME, et al. Management of chronic lymphocytic leukemia (CLL) in the elderly: a position paper from an international Society of Geriatric Oncology (SIOG) Task Force. <i>Ann Oncol.</i> 2017;28(2):218-227. doi:10.1093/annonc/mdw547</li>
+          <li style="margin-bottom:9px">Brieghel C, Lacoppidan T, Packness E, et al. Polypharmacy independently predicts survival, hospitalization, and infections in patients with lymphoid cancer. <i>HemaSphere.</i> 2025;9(7):e70172. doi:10.1002/hem3.70172</li>
+          <li style="margin-bottom:9px">Soumerai JD, Barrientos JC, Ahn IE, et al. Consensus recommendations from the 2024 Lymphoma Research Foundation workshop on treatment selection and sequencing in CLL or SLL. <i>Blood Adv.</i> 2025;9(5):1213-1229. doi:10.1182/bloodadvances.2024014474</li>
+          <li style="margin-bottom:9px">Anderson MA, Walewska R, Hackett F, et al. Venetoclax initiation in chronic lymphocytic leukemia: international insights and innovative approaches for optimal patient care. <i>Cancers (Basel).</i> 2024;16(5):980. doi:10.3390/cancers16050980</li>
+          <li style="margin-bottom:9px">Eichhorst B, Ghia P, Bosch F, et al. EHA Guidelines on management of chronic lymphocytic leukemia and Richter transformation. <i>HemaSphere.</i> 2026;10(6):e70403. doi:10.1002/hem3.70403</li>
+          <li style="">Goede V, Neuendorff NR, Schulz RJ, Hormigo AI, Martinez-Peromingo FJ, Cordoba R. Frailty assessment in the care of older people with haematological malignancies. <i>Lancet Healthy Longev.</i> 2021;2(11):e736-e745. doi:10.1016/S2666-7568(21)00184-7</li>
+        </ol>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+    <div role="status" aria-live="polite" style="position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:12;padding:10px 18px;border-radius:var(--lly-radius-pill);background:#212121;color:#fff;font-family:var(--lly-font-bold);font-size:var(--lly-size-small);box-shadow:0 8px 22px rgba(33,33,33,.32);animation:cllUp .25s ease both;white-space:nowrap">{{ toastMsg }}</div>
+  </sc-if>
+
+  <sc-if value="{{ srcOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ backdropClose }}" data-print-hide="1" role="dialog" aria-modal="true" aria-labelledby="srcTitle" style="position:absolute;inset:0;z-index:10;display:grid;place-items:center;background:rgba(33,33,33,.62);animation:cllFade .25s ease both">
+      <div ref="{{ srcCardRef }}" role="document" class="lly-card" onClick="{{ stopClick }}" style="position:relative;width:520px;max-width:92%;border-radius:22px;background:#fff;text-align:center;padding:36px 40px 26px;animation:cllLaunchPop .45s cubic-bezier(.16,1,.3,1) both;box-shadow:0 40px 90px rgba(33,33,33,.45)">
+        <button ref="{{ srcCloseRef }}" type="button" onClick="{{ closeSource }}" aria-label="Close" style="position:absolute;top:14px;right:16px;display:grid;place-items:center;width:42px;height:42px;border:0;border-radius:50%;background:none;color:#616161;font-size:26px;line-height:1;cursor:pointer;transition:background .18s ease,color .18s ease" style-hover="background:var(--lly-panel);color:#212121">&times;</button>
+
+        <sc-if value="{{ srcLoading }}" hint-placeholder-val="{{ true }}">
+          <div>
+            <span style="display:block;width:66px;height:66px;margin:6px auto 26px;border-radius:50%;border:6px solid var(--lly-panel);border-top-color:#E1251B;animation:cllSpin 1s linear infinite" aria-hidden="true"></span>
+            <p id="srcTitle" style="margin:0 0 10px;font-family:var(--lly-font-bold);font-weight:700;font-size:26px;color:#E1251B" title="Placeholder copy - not from the approved infographic">Preparing the link</p>
+            <p class="lly-footnote" style="margin:0 auto;max-width:34ch" title="Placeholder copy - not from the approved infographic">Loading the source record for this reference.</p>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ srcReady }}" hint-placeholder-val="{{ false }}">
+          <div style="animation:cllLaunchPop .4s cubic-bezier(.16,1,.3,1) both">
+            <span style="display:grid;place-items:center;width:74px;height:74px;margin:2px auto 22px;border-radius:50%;background:#E1251B;color:#fff" aria-hidden="true">
+              <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </span>
+            <p style="margin:0 0 10px;font-family:var(--lly-font-bold);font-weight:700;font-size:26px;color:#E1251B" title="Placeholder copy - not from the approved infographic">Your source is ready</p>
+            <p class="lly-footnote" style="margin:0 auto 6px;max-width:40ch">{{ srcCitation }}</p>
+            <p class="lly-footnote" style="margin:0 auto 14px;max-width:40ch;color:{{ srcSubInk }}">{{ srcSub }}</p>
+            <p style="margin:0 auto 18px;padding:9px 12px;max-width:100%;border:1px solid rgba(33,33,33,.2);border-radius:10px;background:var(--lly-panel);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.4;color:#212121;word-break:break-all">{{ srcUrl }}</p>
+            <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center">
+              <a ref="{{ srcGoRef }}" href="{{ srcHref }}" target="_blank" rel="noopener" onClick="{{ goGuard }}" aria-disabled="{{ srcDisabledAria }}" style="display:inline-flex;align-items:center;gap:10px;padding:15px 30px;border-radius:14px;background:{{ srcGoBg }};color:{{ srcGoInk }};border:{{ srcGoBorder }};font-family:var(--lly-font-bold);font-size:var(--lly-size-small);box-shadow:{{ srcGoShadow }};pointer-events:{{ srcGoEvents }};transition:transform .18s ease,filter .18s ease" style-hover="transform:translateY(-2px);filter:brightness(1.03)" title="Placeholder copy - not from the approved infographic">Open in a new tab
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg>
+              </a>
+              <button type="button" onClick="{{ copyLink }}" style="display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:14px;background:#fff;color:#E1251B;border:1.5px solid #E1251B;font-family:var(--lly-font-bold);font-size:var(--lly-size-small);cursor:pointer;transition:background .18s ease,color .18s ease" style-hover="background:#E1251B;color:#fff" title="Placeholder copy - not from the approved infographic">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15V5a2 2 0 0 1 2-2h8"></path></svg>
+                Copy link
+              </button>
+            </div>
+            <p aria-live="polite" class="lly-footnote" style="margin:14px 0 0;min-height:22px;font-family:var(--lly-font-bold);color:{{ srcStatusInk }}">{{ srcStatus }}</p>
+            <button ref="{{ srcBackRef }}" type="button" onClick="{{ closeSource }}" class="lly-footnote" style="display:block;margin:12px auto 0;border:0;background:none;color:#616161;cursor:pointer;text-decoration:underline;font-family:var(--lly-font-bold)" style-hover="color:#212121" title="Placeholder copy - not from the approved infographic">Back to references</button>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ tipOn }}" hint-placeholder-val="{{ false }}">
+    <div class="lly-footnote" style="position:absolute;z-index:9;max-width:380px;white-space:pre-line;background:#fff;border:1.5px solid #212121;border-radius:var(--lly-radius-sm);padding:9px 12px;box-shadow:0 10px 28px rgba(33,33,33,.2);pointer-events:none;left:{{ tipX }};top:{{ tipY }};animation:cllTip .28s cubic-bezier(.16,1,.3,1) both">{{ tipText }}</div>
+  </sc-if>
+
+</div>
+</div>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect width="400" height="300" fill="#E1251B"/><text x="200" y="150" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="86" font-weight="700" fill="#FFFFFF">CLL</text><text x="200" y="196" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="20" fill="#FFFFFF" opacity="0.9">Clinical decision making</text></svg></template>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:720},&quot;sceneOnly&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:-1,&quot;min&quot;:-1,&quot;max&quot;:6,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Build&quot;},&quot;showChrome&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Build&quot;},&quot;showBridging&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Copy&quot;},&quot;showHowToPill&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Copy&quot;}}">
+class Component extends DCLogic {
+  /* One master, six builds: the six pip scenes. A generated scene folder sets
+     window.CLL_SCENE (0-6); ?scene=N previews one from this file; -1 is the full flow. */
+  SLUGS = ["00-title", "01-considerations", "02-consider", "03-1l-options", "04-algorithm", "05-subsequent", "06-references"];
+
+  single = this.fixedScene();
+
+  state = {
+    scene: this.single >= 0 ? this.single : 0, dir: 1, visited: [0], motion: true, tip: null, refsOpen: false,
+    jump: false, walk: null, src: null,
+    patients: {}, tab: null, tabsSeen: [], features: {},
+    branch: {}, nodes: {}, subsequent: false, leaving: false
+  };
+
+  LAST = 6;
+
+  qp(k) { try { return new URLSearchParams(window.location.search).get(k); } catch (e) { return null; } }
+
+  fixedScene() {
+    const clamp = n => Math.max(0, Math.min(6, Math.floor(n)));
+    if (typeof window !== "undefined" && window.CLL_SCENE != null) return clamp(window.CLL_SCENE);
+    const q = this.qp("scene");
+    if (q !== null && q !== "" && !isNaN(+q)) return clamp(+q);
+    const p = this.props.sceneOnly;
+    return (p == null || p < 0) ? -1 : clamp(p);
+  }
+
+  chromeOn() {
+    const q = this.qp("chrome");
+    if (q === "0" || q === "false") return false;
+    return this.props.showChrome ?? true;
+  }
+
+  /* Each scene is a sibling folder, so a move is a page load, not a state change. */
+  hrefFor(i) {
+    let q = "";
+    try { const p = new URLSearchParams(window.location.search); p.delete("scene"); q = p.toString(); } catch (e) {}
+    return "../" + this.SLUGS[Math.max(0, Math.min(6, i))] + "/index.html" + (q ? "?" + q : "");
+  }
+
+  refLines() {
+    return ["1. Hallek M, Al-Sawaf O. Chronic lymphocytic leukemia: 2022 update on diagnostic and therapeutic procedures. Am J Hematol. 2021;96(12):1679-1705. doi:10.1002/ajh.26367",
+        "2. Stauder R, Eichhorst B, Hamaker ME, et al. Management of chronic lymphocytic leukemia (CLL) in the elderly: a position paper from an international Society of Geriatric Oncology (SIOG) Task Force. Ann Oncol. 2017;28(2):218-227. doi:10.1093/annonc/mdw547",
+        "3. Brieghel C, Lacoppidan T, Packness E, et al. Polypharmacy independently predicts survival, hospitalization, and infections in patients with lymphoid cancer. HemaSphere. 2025;9(7):e70172. doi:10.1002/hem3.70172",
+        "4. Soumerai JD, Barrientos JC, Ahn IE, et al. Consensus recommendations from the 2024 Lymphoma Research Foundation workshop on treatment selection and sequencing in CLL or SLL. Blood Adv. 2025;9(5):1213-1229. doi:10.1182/bloodadvances.2024014474",
+        "5. Anderson MA, Walewska R, Hackett F, et al. Venetoclax initiation in chronic lymphocytic leukemia: international insights and innovative approaches for optimal patient care. Cancers (Basel). 2024;16(5):980. doi:10.3390/cancers16050980",
+        "6. Eichhorst B, Ghia P, Bosch F, et al. EHA Guidelines on management of chronic lymphocytic leukemia and Richter transformation. HemaSphere. 2026;10(6):e70403. doi:10.1002/hem3.70403",
+        "7. Goede V, Neuendorff NR, Schulz RJ, Hormigo AI, Martinez-Peromingo FJ, Cordoba R. Frailty assessment in the care of older people with haematological malignancies. Lancet Healthy Longev. 2021;2(11):e736-e745. doi:10.1016/S2666-7568(21)00184-7"];
+  }
+
+  /* Print / Save PDF: a new tab carrying only the reference list fires its own
+     print dialog on load, so the learner saves as PDF from there. Hosted players
+     block window.print() in the embed itself. If the tab is blocked, the list
+     goes to the clipboard and a toast says so. */
+  exportRefs() {
+    const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+    const J = ["Am J Hematol.", "Ann Oncol.", "HemaSphere.", "Blood Adv.", "Cancers (Basel).", "Lancet Healthy Longev."];
+    const rows = this.refLines().map(l => {
+      const m = l.match(/^(\d+)\. (.*)$/);
+      let c = esc(m[2]);
+      for (const j of J) c = c.replace(esc(j), "<em>" + esc(j) + "</em>");
+      return '<li><span class="rn">' + m[1] + '.</span><span class="rc">' + c + '</span></li>';
+    }).join("");
+    const html = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>References - CLL Clinical Decision Making: Patient Focused</title><style>' +
+      'body{font-family:Arial,Helvetica,sans-serif;color:#212121;max-width:760px;margin:26px auto;padding:0 22px;line-height:1.5}' +
+      'h1{font-size:19px;color:#E1251B;border-bottom:2px solid #E1251B;padding-bottom:6px;margin:0 0 4px}' +
+      '.sub{font-size:12px;color:#616161;margin:0 0 14px}' +
+      'ol{list-style:none;padding:0;margin:0}li{display:flex;gap:9px;margin:0 0 8px;font-size:12.5px;break-inside:avoid}' +
+      '.rn{font-weight:700;min-width:22px;text-align:right}em{font-style:italic}' +
+      '@media print{body{margin:0}@page{margin:16mm}}</style></head><body>' +
+      '<h1>References</h1><p class="sub">CLL Clinical Decision Making: Patient Focused</p><ol>' + rows + '</ol>' +
+      '<scr' + 'ipt>window.onload=function(){setTimeout(function(){try{window.print();}catch(e){}},300);};</scr' + 'ipt>' +
+      '</body></html>';
+    let w = null;
+    try { w = window.open("", "_blank"); } catch (e) { w = null; }
+    if (w && w.document) {
+      try { w.document.open(); w.document.write(html); w.document.close(); return; } catch (e) { /* fall through */ }
+    }
+    const text = ["References", "CLL Clinical Decision Making: Patient Focused", ""].concat(this.refLines()).join("\n");
+    const done = () => this.toast("References copied to your clipboard.");
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, () => this.fallbackCopy(text) && done());
+      else if (this.fallbackCopy(text)) done();
+    } catch (e) { if (this.fallbackCopy(text)) done(); }
+  }
+
+  fallbackCopy(t) {
+    const ta = document.createElement("textarea");
+    ta.value = t; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.left = "-9999px";
+    document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  toast(msg) {
+    clearTimeout(this.toastTimer);
+    this.setState({ toast: msg });
+    this.toastTimer = setTimeout(() => this.setState({ toast: null }), 3400);
+  }
+
+  componentDidMount() {
+    this.fit = () => {
+      const vw = window.innerWidth, vh = window.innerHeight;
+      if (!this.stageEl || !vw || !vh) { requestAnimationFrame(this.fit); return; }
+      const k = Math.min(vw / 1280, vh / 720);
+      this.stageEl.style.transform = "translate(-50%,-50%) scale(" + k + ")";
+      this.scale = k;
+    };
+    this.fit();
+    window.addEventListener("resize", this.fit);
+    /* Embedded in a slide, a scene build sits on the host's own background. */
+    if (this.single >= 0) {
+      try {
+        document.body.style.background = "transparent";
+        if (this.stageEl) this.stageEl.style.boxShadow = "0 10px 30px rgba(33,33,33,.18)";
+      } catch (e) {}
+    }
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) { this.setState({ motion: false }); this.paintOnce(); }
+    else this.startField();
+    this.onKey = e => {
+      if (e.key === "Escape") { clearTimeout(this.srcTimer); this.setState({ refsOpen: false, walk: null, tip: null, src: null }); }
+      else if (this.state.src) return;
+      else if (e.key === "ArrowRight" && this.canAdvance()) this.go(this.state.scene + 1);
+      else if (e.key === "ArrowLeft" && this.state.scene > 1) this.go(this.state.scene - 1);
+    };
+    window.addEventListener("keydown", this.onKey);
+    this.onSrcKey = e => this.srcKeys(e);
+    document.addEventListener("keydown", this.onSrcKey, true);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.fit);
+    window.removeEventListener("keydown", this.onKey);
+    document.removeEventListener("keydown", this.onSrcKey, true);
+    clearTimeout(this.srcTimer);
+    clearTimeout(this.leaveTimer);
+    this.freezeField();
+  }
+
+  seedField() {
+    if (this.parts) return;
+    const n = Math.min(Math.floor(1280 / 34), 46);
+    this.parts = [];
+    for (let i = 0; i < n; i++) {
+      this.parts.push({
+        x: Math.random() * 1280, y: Math.random() * 720,
+        vx: (Math.random() - 0.5) * 0.32, vy: (Math.random() - 0.5) * 0.32,
+        r: Math.random() * 1.7 + 0.9
+      });
+    }
+  }
+
+  /* The approved decision-network motif, red-tinted per the deck's slide master.
+     It runs full-bleed on the title, then the mask migrates it into the top-right
+     corner and it keeps moving there for the rest of the flow. */
+  paintFrame(step) {
+    const c = this.canvasEl;
+    if (!c) return;
+    const ctx = c.getContext("2d"), W = 1280, H = 720, p = this.parts;
+    ctx.clearRect(0, 0, W, H);
+    for (const q of p) {
+      if (step) {
+        q.x += q.vx; q.y += q.vy;
+        if (q.x < 0 || q.x > W) q.vx = -q.vx;
+        if (q.y < 0 || q.y > H) q.vy = -q.vy;
+      }
+      ctx.beginPath();
+      ctx.arc(q.x, q.y, q.r, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(225, 37, 27, 0.34)";
+      ctx.fill();
+    }
+    for (let i = 0; i < p.length; i++) {
+      for (let j = i + 1; j < p.length; j++) {
+        const dx = p[i].x - p[j].x, dy = p[i].y - p[j].y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < 150) {
+          ctx.beginPath();
+          ctx.moveTo(p[i].x, p[i].y);
+          ctx.lineTo(p[j].x, p[j].y);
+          ctx.strokeStyle = "rgba(225, 37, 27, " + (0.13 - d / 1500) + ")";
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  paintOnce() { this.seedField(); this.paintFrame(false); }
+
+  startField() {
+    if (this.frame) return;
+    this.seedField();
+    const loop = () => { this.paintFrame(true); this.frame = requestAnimationFrame(loop); };
+    loop();
+  }
+
+  freezeField() {
+    if (this.frame) { cancelAnimationFrame(this.frame); this.frame = null; }
+  }
+
+  /* The outgoing scene fades away before the next one is mounted. */
+  go(i) {
+    const s = Math.max(0, Math.min(this.LAST, i));
+    if (this.single >= 0) { if (s !== this.single) window.location.href = this.hrefFor(s); return; }
+    if (s === this.state.scene || this.leaving) return;
+    const jump = Math.abs(s - this.state.scene) > 1;
+    this.leaving = true;
+    this.setState({ leaving: true, tip: null, refsOpen: false, walk: null, src: null });
+    clearTimeout(this.leaveTimer);
+    this.leaveTimer = setTimeout(() => {
+      this.leaving = false;
+      this.setState(st => ({
+        scene: s, dir: s > st.scene ? 1 : -1, jump, leaving: false,
+        visited: st.visited.includes(s) ? st.visited : st.visited.concat([s])
+      }));
+    }, 240);
+  }
+
+  /* Everything on the scene must be opened before the flow moves on. */
+  exploredAt(cur) {
+    const s = this.state, isNode = k => !!s.nodes[k];
+    if (cur === 1) return !!s.patients.a && !!s.patients.b;
+    if (cur === 2) return s.tabsSeen.length >= 3;
+    if (cur === 3) return !!s.features.btki && !!s.features.bcl2i;
+    if (cur === 4) return !!s.branch.tl && !!s.branch.ct && isNode("tl-c") && isNode("tl-i") && isNode("tl-p") && isNode("ct-i") && isNode("ct-p");
+    if (cur === 5) return s.subsequent;
+    return true;
+  }
+
+  canAdvance() { return this.state.scene < this.LAST && this.exploredAt(this.state.scene); }
+
+  touch(fn) { this.setState(st => fn(st)); }
+
+  closeSource() {
+    clearTimeout(this.srcTimer);
+    this.setState({ src: null });
+    const t = this.srcTrigger;
+    if (t && t.focus) setTimeout(() => { try { t.focus(); } catch (err) {} }, 30);
+  }
+
+  /* Capture phase, exactly as the hub does it, so the scene keys never see these. */
+  srcKeys(e) {
+    if (!this.state.src) return;
+    if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); this.closeSource(); return; }
+    if (e.key !== "Tab" || !this.srcCard) return;
+    const f = this.srcCard.querySelectorAll('a[href], button:not([disabled])');
+    if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+
+  tipFor(el, text) {
+    if (!this.stageEl) return null;
+    const a = el.getBoundingClientRect(), b = this.stageEl.getBoundingClientRect();
+    const k = this.scale || 1;
+    return { text, x: Math.min((a.left - b.left) / k, 860), y: (a.bottom - b.top) / k + 8 };
+  }
+
+  /* The pop-up shows the definition only - the abbreviation is already on screen. */
+  definitionOf(gloss) {
+    const i = gloss.indexOf(", ");
+    const body = i > 0 ? gloss.slice(i + 2) : gloss;
+    return body.replace(/\.$/, "");
+  }
+
+  labels() {
+    return ["CLL Clinical Decision Making: Patient Focused", "Considerations in elderly patients",
+      "Consider: Patient background, Disease background, Patient preference",
+      "Consider: Key features of 1L treatment options", "Treatment algorithm example",
+      "Consider: For subsequent treatment", "End of resource"];
+  }
+
+  bridgeFor(i) {
+    return ["", "Next, three considerations: patient background, disease background and patient preference",
+      "With those in mind, what are the key features of the first-line treatment options?",
+      "How might those options play out across a treatment algorithm?",
+      "And once a patient has moved beyond first line, what should we consider next?",
+      "", ""][i] || "";
+  }
+
+  /* Placeholder walkthrough copy - not from the approved infographic.
+     Each step shows the real on-screen control, not a stand-in icon. */
+  walkSteps() {
+    return [
+      { kind: "nav", title: "Move between scenes", body: "The red forward control appears bottom right once you have opened everything on a scene. Back sits bottom left." },
+      { kind: "pips", title: "Jump to any scene", body: "The numbered pips along the bottom cover every scene you have reached. Select one to move back or forward at any point." },
+      { kind: "diamond", title: "Open a box", body: "A red diamond marks anything that opens, and it pulses until you open it. Patient examples, treatment options and each branch of the algorithm roll down when you select them." },
+      { kind: "gloss", title: "See a definition", body: "Hover an abbreviation with a dotted underline for what it stands for. Each one is marked the first time it appears." },
+      { kind: "chip", title: "Check a source", body: "Select a red citation chip next to a statement to see that reference in place. It clears as soon as you do anything else." },
+      { kind: "prompt", title: "Follow the prompts", body: "A short red line above each group tells you what to open on that scene." },
+      { kind: "refs", title: "References", body: "The full numbered reference list sits on the final scene, with a source link for each and a print option." },
+      { kind: "contents", title: "Contents at the end", body: "The final scene lists every section so you can go back over anything you want to revisit." }
+    ];
+  }
+
+  renderVals() {
+    const s = this.state, cur = s.scene, tip = s.tip;
+    const isNode = k => !!s.nodes[k];
+    const openNode = k => () => this.touch(st => ({ nodes: Object.assign({}, st.nodes, { [k]: true }) }));
+    const pickTab = t => () => this.touch(st => ({
+      tab: t, tabsSeen: st.tabsSeen.includes(t) ? st.tabsSeen : st.tabsSeen.concat([t])
+    }));
+    /* A trigger stays lit once its panel has been revealed - all three end up open. */
+    const tabStyle = t => {
+      const on = s.tabsSeen.includes(t);
+      return {
+        border: on ? "2px solid #E1251B" : "1.5px solid #212121",
+        bg: on ? "var(--lly-panel)" : "#fff",
+        ink: on ? "#E1251B" : "#212121",
+        shadow: on ? "0 6px 18px rgba(225,37,27,.16)" : "0 2px 6px rgba(33,33,33,.06)"
+      };
+    };
+    const tp = tabStyle("patient"), td = tabStyle("disease"), tf = tabStyle("preference");
+    const explored = this.exploredAt(cur);
+    const steps = this.walkSteps();
+    const wi = s.walk == null ? 0 : s.walk;
+    const step = steps[wi];
+
+    const vals = {
+      stageRef: el => { this.stageEl = el; if (el && this.fit) this.fit(); },
+      canvasRef: el => { this.canvasEl = el; },
+      notTitle: cur !== 0,
+      sceneJustify: (cur === 0 || cur === 1 || cur === 2 || cur === 5) ? "center" : "flex-start",
+      sceneAnim: s.leaving
+        ? "cllSceneOut .24s ease both"
+        : (s.jump ? "cllSceneBack .6s" : (s.dir > 0 ? "cllSceneNext .5s" : "cllScenePrev .5s")) + " cubic-bezier(.16,1,.3,1) both",
+      fieldAnim: cur === 0 ? "none" : "cllFieldMigrate 1.8s cubic-bezier(.4,0,.2,1) both",
+      pulse: "cllBreathe 2.6s ease-in-out infinite",
+
+      bridge: this.bridgeFor(cur),
+      hasBridge: (this.props.showBridging ?? true) && explored && this.bridgeFor(cur) !== "",
+      prev: () => this.go(cur - 1),
+      next: () => this.go(cur + 1),
+      showPrev: cur > 1,
+      showNext: cur < this.LAST && explored,
+      navOn: cur !== 0 && this.chromeOn(),
+      toastMsg: s.toast || "",
+      hasToast: !!s.toast,
+      /* Once they have reached the contents scene, offer a way straight back to it. */
+      showContents: this.single < 0 && cur !== 0 && cur !== this.LAST && s.visited.includes(this.LAST),
+      goContents: () => this.go(this.LAST),
+      howToPill: (this.props.showHowToPill ?? true) && s.walk === null && cur !== 0,
+      howToPillTitle: (this.props.showHowToPill ?? true) && s.walk === null && cur === 0,
+      /* In a scene build the pips mark position: everything before the current
+         scene reads as reached (and jumps to its folder), everything after stays locked. */
+      dots: this.labels().map((label, i) => {
+        const seen = this.single >= 0 ? i <= cur : s.visited.includes(i);
+        return {
+          label, n: i, go: () => { if (seen && i !== 0) this.go(i); },
+          bg: i === cur ? "#E1251B" : seen ? "rgba(225,37,27,.14)" : "#FFFFFF",
+          ink: i === cur ? "#FFFFFF" : seen ? "#E1251B" : "rgba(33,33,33,.45)",
+          ring: i === cur ? "#E1251B" : seen ? "#E1251B" : "rgba(33,33,33,.3)"
+        };
+      }).slice(1),
+      contents: this.labels().slice(1, 6).map((label, i) => ({
+        n: i + 1, label, go: () => this.go(i + 1),
+        anim: "cllUp .5s cubic-bezier(.16,1,.3,1) " + (1.45 + i * 0.3).toFixed(2) + "s both"
+      })),
+
+      motionTrack: s.motion ? "rgba(33,33,33,.55)" : "rgba(33,33,33,.2)",
+      motionKnob: s.motion ? "auto" : "0",
+      toggleMotion: () => {
+        const on = !s.motion;
+        if (on) this.startField(); else this.freezeField();
+        this.setState({ motion: on });
+      },
+
+      glossEnter: e => this.setState({ tip: this.tipFor(e.currentTarget, this.definitionOf(e.currentTarget.dataset.gloss)) }),
+      noteEnter: e => this.setState({ tip: this.tipFor(e.currentTarget, e.currentTarget.dataset.note) }),
+      glossLeave: () => this.setState({ tip: null }),
+      refClick: e => {
+        e.stopPropagation();
+        const t = e.currentTarget.dataset.ref;
+        const same = s.tip && s.tip.text === t;
+        this.setState({ tip: same ? null : this.tipFor(e.currentTarget, t) });
+        if (same) return;
+        /* A citation stays up only until the learner does anything else. */
+        clearTimeout(this.armDismiss);
+        this.armDismiss = setTimeout(() => {
+          const off = () => {
+            document.removeEventListener("pointerdown", off, true);
+            document.removeEventListener("keydown", off, true);
+            this.setState({ tip: null });
+          };
+          document.addEventListener("pointerdown", off, true);
+          document.addEventListener("keydown", off, true);
+        }, 0);
+      },
+      tipOn: !!tip,
+      tipText: tip ? tip.text : "",
+      tipX: tip ? tip.x + "px" : "0px",
+      tipY: tip ? tip.y + "px" : "0px",
+
+      refsOpen: s.refsOpen,
+      openRefs: e => { if (e && e.stopPropagation) e.stopPropagation(); this.setState({ refsOpen: true, tip: null }); },
+      closeRefs: () => this.setState({ refsOpen: false }),
+      printRefs: e => {
+        e.stopPropagation();
+        this.exportRefs();
+      },
+
+      /* View source mirrors the references-hub modal: reset on open, 1700ms prepare,
+         the link shown and only opened when pressed, copy-to-clipboard with textarea
+         fallback and a live status line, dialog semantics, Tab trap, focus restore. */
+      srcOpen: !!s.src,
+      srcLoading: !!s.src && !s.src.ready,
+      srcReady: !!s.src && !!s.src.ready,
+      srcUrl: s.src ? s.src.url : "",
+      srcHref: s.src && s.src.url ? s.src.url : "#",
+      srcCitation: s.src ? s.src.cite : "",
+      srcSub: s.src && s.src.url
+        ? "Select below to open it in a new tab, or copy the link."
+        : "The source link will be added here on publication.",
+      srcSubInk: s.src && s.src.url ? "#616161" : "#8D6708",
+      srcDisabledAria: s.src && s.src.url ? "false" : "true",
+      srcGoBg: s.src && s.src.url ? "#E1251B" : "#FFFFFF",
+      srcGoInk: s.src && s.src.url ? "#FFFFFF" : "#9E9E9E",
+      srcGoBorder: s.src && s.src.url ? "0" : "2px solid rgba(33,33,33,.2)",
+      srcGoShadow: s.src && s.src.url ? "0 6px 18px rgba(225,37,27,.26)" : "none",
+      srcGoEvents: s.src && s.src.url ? "auto" : "none",
+      srcStatus: s.src ? (s.src.status || "") : "",
+      srcStatusInk: s.src && s.src.warn ? "#8D6708" : "#1B7A3D",
+      srcCardRef: el => { this.srcCard = el; },
+      srcGoRef: el => { this.srcGoEl = el; },
+      srcCloseRef: el => { this.srcCloseEl = el; },
+      srcBackRef: el => { this.srcBackEl = el; },
+      stopClick: e => e.stopPropagation(),
+      backdropClose: e => { if (e.target === e.currentTarget) this.closeSource(); },
+      goGuard: e => { if (!(this.state.src && this.state.src.url)) e.preventDefault(); },
+      openSource: e => {
+        e.stopPropagation();
+        const el = e.currentTarget;
+        const active = document.activeElement;
+        this.srcTrigger = active && active !== document.body && active.focus ? active : el;
+        clearTimeout(this.srcTimer);
+        this.setState({ src: { url: el.dataset.url, cite: el.dataset.cite, ready: false, status: "", warn: false } });
+        setTimeout(() => { try { this.srcCloseEl && this.srcCloseEl.focus(); } catch (err) {} }, 30);
+        this.srcTimer = setTimeout(() => {
+          this.setState(st => (st.src ? { src: Object.assign({}, st.src, { ready: true }) } : {}));
+          setTimeout(() => {
+            const hasUrl = this.state.src && this.state.src.url;
+            const target = hasUrl ? this.srcGoEl : this.srcBackEl;
+            try { target && target.focus(); } catch (err) {}
+          }, 40);
+        }, 1700);
+      },
+      copyLink: e => {
+        e.stopPropagation();
+        const url = this.state.src && this.state.src.url;
+        if (!url) return;
+        const setStatus = (status, warn) => this.setState(st => (st.src ? { src: Object.assign({}, st.src, { status, warn }) } : {}));
+        const ok = () => setStatus("Copied. Paste the link wherever you need it.", false);
+        const fallback = () => {
+          const ta = document.createElement("textarea");
+          ta.value = url;
+          ta.setAttribute("readonly", "");
+          ta.style.position = "fixed";
+          ta.style.left = "-9999px";
+          document.body.appendChild(ta);
+          ta.select();
+          let done = false;
+          try { done = document.execCommand("copy"); } catch (err) {}
+          document.body.removeChild(ta);
+          if (done) ok();
+          else setStatus("Copy was blocked. Select the link above and copy it manually.", true);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(ok, fallback);
+        else fallback();
+      },
+      closeSource: () => this.closeSource(),
+      walkOpen: s.walk !== null,
+      openWalk: () => this.setState({ walk: 0, tip: null }),
+      closeWalk: () => this.setState({ walk: null }),
+      walkKind: step ? step.kind : "nav",
+      walkIsNav: !step || step.kind === "nav",
+      walkIsPips: !!step && step.kind === "pips",
+      walkIsDiamond: !!step && step.kind === "diamond",
+      walkIsGloss: !!step && step.kind === "gloss",
+      walkIsChip: !!step && step.kind === "chip",
+      walkIsPrompt: !!step && step.kind === "prompt",
+      walkIsRefs: !!step && step.kind === "refs",
+      walkIsContents: !!step && step.kind === "contents",
+      walkTitle: step ? step.title : "",
+      walkBody: step ? step.body : "",
+      walkDots: steps.map((x, i) => ({ bg: i === wi ? "#E1251B" : "#E3E8EE" })),
+      walkPrev: e => { e.stopPropagation(); this.setState({ walk: Math.max(0, wi - 1) }); },
+      walkNext: e => {
+        e.stopPropagation();
+        if (wi >= steps.length - 1) this.setState({ walk: null });
+        else this.setState({ walk: wi + 1 });
+      },
+      walkPrevOpacity: wi === 0 ? 0.4 : 1,
+      walkNextLabel: wi >= steps.length - 1 ? "Done" : "Next",
+
+      patientAOpen: !!s.patients.a, patientBOpen: !!s.patients.b,
+      patientAClosed: !s.patients.a, patientBClosed: !s.patients.b,
+      openPatientA: () => this.touch(st => ({ patients: Object.assign({}, st.patients, { a: true }) })),
+      openPatientB: () => this.touch(st => ({ patients: Object.assign({}, st.patients, { b: true }) })),
+
+      tabPatient: pickTab("patient"), tabDisease: pickTab("disease"), tabPreference: pickTab("preference"),
+      tabIsPatient: s.tab === "patient", tabIsDisease: s.tab === "disease", tabIsPreference: s.tab === "preference",
+      tabPatientClosed: !s.tabsSeen.includes("patient"),
+      tabDiseaseClosed: !s.tabsSeen.includes("disease"),
+      tabPreferenceClosed: !s.tabsSeen.includes("preference"),
+      tabPatientSeen: s.tabsSeen.includes("patient"),
+      tabDiseaseSeen: s.tabsSeen.includes("disease"),
+      tabPreferenceSeen: s.tabsSeen.includes("preference"),
+      tabPatientBorder: tp.border, tabPatientBg: tp.bg, tabPatientInk: tp.ink, tabPatientShadow: tp.shadow,
+      tabDiseaseBorder: td.border, tabDiseaseBg: td.bg, tabDiseaseInk: td.ink, tabDiseaseShadow: td.shadow,
+      tabPreferenceBorder: tf.border, tabPreferenceBg: tf.bg, tabPreferenceInk: tf.ink, tabPreferenceShadow: tf.shadow,
+
+      btkiOpen: !!s.features.btki, btkiClosed: !s.features.btki,
+      bcl2iOpen: !!s.features.bcl2i, bcl2iClosed: !s.features.bcl2i,
+      openBtki: () => this.touch(st => ({ features: Object.assign({}, st.features, { btki: true }) })),
+      openBcl2i: () => this.touch(st => ({ features: Object.assign({}, st.features, { bcl2i: true }) })),
+
+      tlOn: !!s.branch.tl, ctOn: !!s.branch.ct,
+      tlOff: !s.branch.tl, ctOff: !s.branch.ct,
+      pickTL: () => this.touch(st => ({ branch: Object.assign({}, st.branch, { tl: true }) })),
+      pickCont: () => this.touch(st => ({ branch: Object.assign({}, st.branch, { ct: true }) })),
+      tlShadow: s.branch.tl ? "0 6px 18px rgba(20,75,45,.28)" : "0 2px 8px rgba(33,33,33,.12)",
+      ctShadow: s.branch.ct ? "0 6px 18px rgba(15,58,133,.28)" : "0 2px 8px rgba(33,33,33,.12)",
+      tlIntolOpen: isNode("tl-i"), tlProgOpen: isNode("tl-p"), tlCompOpen: isNode("tl-c"),
+      ctIntolOpen: isNode("ct-i"), ctProgOpen: isNode("ct-p"),
+      tlIntolClosed: !isNode("tl-i"), tlProgClosed: !isNode("tl-p"), tlCompClosed: !isNode("tl-c"),
+      ctIntolClosed: !isNode("ct-i"), ctProgClosed: !isNode("ct-p"),
+      tlIntolToggle: openNode("tl-i"), tlProgToggle: openNode("tl-p"), tlCompToggle: openNode("tl-c"),
+      ctIntolToggle: openNode("ct-i"), ctProgToggle: openNode("ct-p"),
+      /* Chevrons stay mounted and fade out, so opening a box has no jump in it. */
+      tlChev: s.branch.tl ? "0" : "1", ctChev: s.branch.ct ? "0" : "1",
+      tlCompChev: isNode("tl-c") ? "0" : "1", tlIntolChev: isNode("tl-i") ? "0" : "1",
+      tlProgChev: isNode("tl-p") ? "0" : "1", ctIntolChev: isNode("ct-i") ? "0" : "1",
+      ctProgChev: isNode("ct-p") ? "0" : "1",
+
+      subsequentOpen: s.subsequent, subsequentClosed: !s.subsequent,
+      openSubsequent: () => this.touch(() => ({ subsequent: true }))
+    };
+    for (let i = 0; i <= this.LAST; i++) vals["show" + i] = cur === i;
+    return vals;
+  }
+}
+</script>
+<script id="build-stamp">(function(){var T="TINT 8620-5: CLL Decision Making, scene 1: Title",M="TINT 8620-5 tint8620-cll-scenes/00-title v1 2026-09-03";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<script id="layer-release">(function(){var SAFE=/^(cllExpand|cllFade|cllLaunchPop|cllPop|cllSceneBack|cllSceneNext|cllScenePrev|cllSettle|cllStage|cllTip|cllTrunk|cllUp)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var op=getComputedStyle(el).opacity;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
+</body>
+</html>
