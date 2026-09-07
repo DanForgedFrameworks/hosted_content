@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<!-- build: TINT 8620-5 | tint8620-cll-decision-making | v3 | 2026-09-03 -->
+<!-- build: TINT 8620-5 | tint8620-cll-decision-making | v4 | 2026-09-07 -->
 <html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./vendor/react.production.min.js"></script>
+<script src="./vendor/react-dom.production.min.js"></script>
 <script src="./support.js"></script>
 
 <title>TINT 8620-5: CLL Clinical Decision Making</title>
-<meta name="build-version" content="TINT 8620-5 tint8620-cll-decision-making v3 2026-09-03">
+<meta name="build-version" content="TINT 8620-5 tint8620-cll-decision-making v4 2026-09-07">
 </head>
 <body>
 <x-dc>
@@ -1123,7 +1125,7 @@ class Component extends DCLogic {
   }
 }
 </script>
-<script id="build-stamp">(function(){var T="TINT 8620-5: CLL Clinical Decision Making",M="TINT 8620-5 tint8620-cll-decision-making v3 2026-09-03";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<script id="build-stamp">(function(){var T="TINT 8620-5: CLL Clinical Decision Making",M="TINT 8620-5 tint8620-cll-decision-making v4 2026-09-07";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
 <script id="layer-release">(function(){var SAFE=/^(cllExpand|cllFade|cllLaunchPop|cllPop|cllSceneBack|cllSceneNext|cllScenePrev|cllSettle|cllStage|cllTip|cllTrunk|cllUp)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var op=getComputedStyle(el).opacity;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
 </body>
 </html>
