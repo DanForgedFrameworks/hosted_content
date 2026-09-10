@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- build: CLL Decision Making | tint8620-cll-scenes/00-title | v4 | 2026-09-10 -->
+<!-- build: CLL Decision Making | tint8620-cll-scenes/00-title | v5 | 2026-09-10 -->
 <html>
 <head>
 <meta charset="utf-8">
@@ -10,7 +10,7 @@
 <script src="../support.js"></script>
 
 <title>CLL Decision Making: Scene 0: Title page</title>
-<meta name="build-version" content="CLL Decision Making tint8620-cll-scenes/00-title v4 2026-09-10">
+<meta name="build-version" content="CLL Decision Making tint8620-cll-scenes/00-title v5 2026-09-10">
 </head>
 <body>
 <x-dc>
@@ -58,7 +58,7 @@
 <div ref="{{ rootRef }}" class="lly-root" style="position:fixed;inset:0;background:#212121;overflow:hidden">
 <div ref="{{ stageRef }}" data-stage="1" style="width:1280px;height:720px;position:absolute;left:50%;top:50%;background:#fff;overflow:hidden;transform-origin:center center;box-shadow:0 30px 80px rgba(0,0,0,.45);border-radius:10px;border:12px solid #E1251B">
 
-  <canvas ref="{{ canvasRef }}" width="1280" height="720" aria-hidden="true" style="position:absolute;inset:0;z-index:0;pointer-events:none;mask-image:radial-gradient(circle at 100% 0, #000 0%, #000 44%, transparent 72%);-webkit-mask-image:radial-gradient(circle at 100% 0, #000 0%, #000 44%, transparent 72%);mask-repeat:no-repeat;-webkit-mask-repeat:no-repeat;mask-position:100% 0;-webkit-mask-position:100% 0;mask-size:340% 340%;-webkit-mask-size:340% 340%;animation:{{ fieldAnim }}"></canvas>
+  <canvas ref="{{ canvasRef }}" width="1280" height="720" aria-hidden="true" style="position:absolute;inset:0;z-index:0;pointer-events:none;animation:{{ fieldAnim }}"></canvas>
 
   <div style="position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;padding:14px 26px 10px">
 
@@ -668,6 +668,11 @@ class Component extends DCLogic {
   LAST = 6;
   /* ?field=drift|magnetic - see seedField(). Default magnetic (owner ruling 2026-09-10). */
   FIELD = (() => { try { return new URLSearchParams(location.search).get("field") || "magnetic"; } catch (e) { return "magnetic"; } })();
+  FIELD_TUNE = (() => {
+    const d = { noise: 0.012, pull: 0.18, vmax: 0.45, r0: 64, cut: 240 };
+    try { const q = new URLSearchParams(location.search); for (const k in d) { const v = parseFloat(q.get(k)); if (!isNaN(v)) d[k] = v; } } catch (e) {}
+    return d;
+  })();
 
   qp(k) { try { return new URLSearchParams(window.location.search).get(k); } catch (e) { return null; } }
 
@@ -823,7 +828,7 @@ class Component extends DCLogic {
      neither mode moves. apply() freezes the field, so review captures are unaffected. */
   seedField() {
     if (this.parts) return;
-    const n = Math.min(Math.floor(1280 / 34), 46);
+    const n = 70;  /* was 46; raised so the cursor has enough field to act on (owner, 2026-09-10) */
     this.parts = [];
     for (let i = 0; i < n; i++) {
       this.parts.push({
@@ -837,7 +842,10 @@ class Component extends DCLogic {
   stepField() {
     const W = 1280, H = 720, p = this.parts;
     const magnetic = this.FIELD === "magnetic", m = magnetic ? this.pointer : null;
-    const R0 = 48, CUT = 260, K = 0.9, AMAX = 0.5, NOISE = 0.06, DAMP = 0.985, VMAX = 1.4;
+    /* Calm by default (owner, 2026-09-10: the first cut was "far too hectic"). Tunable from the URL
+       for review without a rebuild: ?noise=0.012&pull=0.18&vmax=0.45&r0=64&cut=240 */
+    const T = this.FIELD_TUNE;
+    const R0 = T.r0, CUT = T.cut, K = T.pull, AMAX = T.pull * 0.25, NOISE = T.noise, DAMP = 0.96, VMAX = T.vmax;
     const gauss = () => (Math.random() + Math.random() + Math.random() - 1.5) * 1.63;
     for (const q of p) {
       if (magnetic) {
@@ -1241,7 +1249,7 @@ class Component extends DCLogic {
       sceneAnim: s.leaving
         ? "cllSceneOut .24s ease both"
         : (s.jump ? "cllSceneBack .6s" : (s.dir > 0 ? "cllSceneNext .5s" : "cllScenePrev .5s")) + " cubic-bezier(.16,1,.3,1) both",
-      fieldAnim: cur === 0 ? "none" : "cllFieldMigrate 1.8s cubic-bezier(.4,0,.2,1) both",
+      fieldAnim: "none",  /* full-bleed on every scene (owner ruling 2026-09-10): the corner mask put the field under the title bar */
       pulse: "cllBreathe 2.6s ease-in-out infinite",
 
       bridge: this.bridgeFor(cur),
@@ -1457,7 +1465,7 @@ class Component extends DCLogic {
   }
 }
 </script>
-<script id="build-stamp">(function(){var T="CLL Decision Making: Scene 0: Title page",M="CLL Decision Making tint8620-cll-scenes/00-title v4 2026-09-10";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<script id="build-stamp">(function(){var T="CLL Decision Making: Scene 0: Title page",M="CLL Decision Making tint8620-cll-scenes/00-title v5 2026-09-10";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
 <script id="layer-release">(function(){var SAFE=/^(cllExpand|cllFade|cllLaunchPop|cllPop|cllSceneBack|cllSceneNext|cllScenePrev|cllSettle|cllStage|cllTip|cllTrunk|cllUp)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var op=getComputedStyle(el).opacity;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
 </body>
 </html>
