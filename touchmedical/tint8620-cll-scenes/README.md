@@ -44,6 +44,13 @@ verbatim from the approved source.
       regenerate.mjs        rebuilds the seven from the master
       index.html            contents page listing the seven builds, for checking
       support.js            shared runtime, loaded by every build
+      vendor/               React 18.3.1 + ReactDOM UMD, loaded locally (no unpkg)
+      REVIEW.md             review declarations as implemented on this asset
+      REVIEW-DECLARATIONS-SPEC.md   the asset-agnostic build-side spec
+      standalone/           single-file offline copies, for review and reference:
+                              cll-decision-making-master.html  (full flow, ?scene=N for one)
+                              touch-lilly-spec.html            (interactive spec)
+                              touch-lilly-brand-guide.html     (design kit / brand guide)
       lilly/                shared design kit (tokens, artwork, component CSS)
       00-title/index.html
       01-considerations/index.html
@@ -161,7 +168,7 @@ From `lilly/tokens/tokens.css`; all extracted from the approved deck.
 ## Interface copy inventory
 
 Every string below was authored for the interactive layer and is marked
-`title="Placeholder copy - not from the approved infographic"` in the build.
+`data-copy="placeholder"` in the build.
 Approve or replace as one pass. Everything not listed is verbatim from the
 approved infographic.
 
@@ -237,10 +244,33 @@ single-page iterations kept for history. `deploy/`, `package/cll-asset/` and
 `package/standalone/cll-decision-making.html` are the single-page build (v4)
 and are superseded by this folder for the Visme delivery.
 
+## Review declarations
+
+Every build declares its interactions for the review engine (see
+`REVIEW.md`): `data-review` / `data-review-id` on every interactive element,
+`data-review-ready` on the scene container, and `window.__review` with
+`scenes`, `states`, `apply(id)`, `ready()`, `manifest()` and `lint()`.
+
 ## Change log
+
+- 2026-09-10: `ready()` in the master self-heals against a frozen document
+  timeline (unpainted frame): if `document.timeline.currentTime` does not move
+  across two polls, finite animations are finished so readiness can flip. No
+  visible change in a painted tab. All seven builds regenerated. Audit runner
+  tears down a timed-out build before starting the next.
+
+- 2026-09-03: review declarations added; React and ReactDOM now load from
+  `vendor/` (no runtime request to unpkg); the dark surround is transparent
+  in scene builds, so a non-16:9 iframe shows the Visme slide, not dark bars.
 
 - 2026-09-03: in-build scene navigation disabled (`hostLinksScenes`).
   Visme owns all slide-to-slide movement. Back to contents removed.
+
+## Review gate
+
+Run `/ff-review-audit` (`skills/ff-review-audit/`) before any zip leaves the
+project. Runner page: `visme/Review Audit.dc.html`. Last run 2026-09-10: all
+seven builds PASS. Any FAIL is a build failure: fix the master, regenerate, rerun.
 
 ## Editing and regeneration
 
@@ -258,7 +288,7 @@ outputs. Each generated file differs from the master only by
 
 - Job code to be issued and inserted. The slot is present and empty.
 - Interface copy authored for the interactive layer carries
-  `title="Placeholder copy - not from the approved infographic"`. Everything
+  `data-copy="placeholder"`. Everything
   unmarked is verbatim from the approved source.
 - Reference titles, author strings and DOIs were sourced from the literature,
   not from the supplied slides. Verify before use.
