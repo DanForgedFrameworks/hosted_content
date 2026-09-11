@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- build: CLL Decision Making | tint8620-cll-scenes/01-considerations | v5 | 2026-09-10 -->
+<!-- build: CLL Decision Making | tint8620-cll-scenes/01-considerations | v6 | 2026-09-11 -->
 <html>
 <head>
 <meta charset="utf-8">
@@ -10,7 +10,8 @@
 <script src="../support.js"></script>
 
 <title>CLL Decision Making: Scene 1: Considerations in elderly patients</title>
-<meta name="build-version" content="CLL Decision Making tint8620-cll-scenes/01-considerations v5 2026-09-10">
+
+<meta name="build-version" content="CLL Decision Making tint8620-cll-scenes/01-considerations v6 2026-09-11">
 </head>
 <body>
 <x-dc>
@@ -539,10 +540,10 @@
               <span style="font-size:14px">comorbidities and/or polypharmacy<span style="display:inline-grid;place-items:center;width:16px;height:16px;margin-left:4px;border-radius:4px;background:#E1251B;color:#fff;font-size:10px;vertical-align:super">1</span></span>
             </sc-if>
             <sc-if value="{{ walkIsPrompt }}" hint-placeholder-val="{{ false }}">
-              <span class="lly-footnote" style="color:#E1251B">Select each consideration to explore the questions</span>
+              <span class="lly-footnote" data-copy="placeholder" style="color:#E1251B">Select each consideration to explore the questions</span>
             </sc-if>
             <sc-if value="{{ walkIsRefs }}" hint-placeholder-val="{{ false }}">
-              <span style="display:flex;align-items:center;gap:12px;padding:11px 16px;border:1.5px solid #E1251B;border-radius:12px;color:#E1251B;font-family:var(--lly-font-bold);font-size:13px">
+              <span data-copy="placeholder" style="display:flex;align-items:center;gap:12px;padding:11px 16px;border:1.5px solid #E1251B;border-radius:12px;color:#E1251B;font-family:var(--lly-font-bold);font-size:13px">
                 <svg width="15" height="15" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5h6.5L11 3.5v9H3z" fill="none" stroke="currentColor" stroke-width="1.4"></path><path d="M5 5h4M5 7.5h4M5 10h2.5" stroke="currentColor" stroke-width="1.2"></path></svg>
                 References
               </span>
@@ -1465,7 +1466,7 @@ class Component extends DCLogic {
   }
 }
 </script>
-<script id="build-stamp">(function(){var T="CLL Decision Making: Scene 1: Considerations in elderly patients",M="CLL Decision Making tint8620-cll-scenes/01-considerations v5 2026-09-10";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<script id="build-stamp">(function(){var T="CLL Decision Making: Scene 1: Considerations in elderly patients",M="CLL Decision Making tint8620-cll-scenes/01-considerations v6 2026-09-11";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
 <script id="layer-release">(function(){var SAFE=/^(cllExpand|cllFade|cllLaunchPop|cllPop|cllSceneBack|cllSceneNext|cllScenePrev|cllSettle|cllStage|cllTip|cllTrunk|cllUp)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var op=getComputedStyle(el).opacity;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
 </body>
 </html>

@@ -82,14 +82,17 @@
 .lly-icon--patient    { background-image: var(--lly-icon-patient); }
 .lly-icon--disease    { background-image: var(--lly-icon-disease); }
 .lly-icon--preference { background-image: var(--lly-icon-preference); }
-.lly-icon--bcl2i      { background-image: var(--lly-icon-bcl2i); }
-/* The cog artwork is WHITE. It must sit on red, never on white. */
+/* BOTH 1L feature icons are WHITE line art from the approved deck and sit on the red
+   panel head, never on white. Identical treatment so the two heads match.
+   (2026-09-11: bcl2i was the supplied PNG, which is a screenshot of the panel itself.) */
+.lly-icon--bcl2i,
 .lly-icon--btki {
-  background-image: var(--lly-icon-btki);
   background-color: var(--lly-red);
   border-radius: 50%;
   padding: 3px;
 }
+.lly-icon--bcl2i { background-image: var(--lly-icon-bcl2i); }
+.lly-icon--btki  { background-image: var(--lly-icon-btki); }
 
 .lly-questions { list-style: none; margin: 0; padding: 0; }
 .lly-questions > li {
