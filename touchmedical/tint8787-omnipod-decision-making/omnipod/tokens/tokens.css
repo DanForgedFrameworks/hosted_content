@@ -1,0 +1,68 @@
+/* ===========================================================================
+   Omnipod® — design tokens
+   Every colour and type value traces to the Omnipod® Brand Guidelines pages
+   supplied 2026-09-10 (see _source/brand-guide-extract.md). Roles for the
+   secondary colours were agreed with the team on the same date; they are
+   DERIVED (the guide assigns no quiz semantics). Do not add colours not here.
+   =========================================================================== */
+@import "../fonts/fonts.css";   /* self-hosted 2026-09-11; was fonts.googleapis.com */
+
+:root {
+  /* --- Primary (guide p.23) --------------------------------------------- */
+  --omn-mango:        #FFA700;  /* Omni-Mango, PMS 4008. Lead brand colour. Accent only in this asset (white-led). */
+  --omn-white:        #FFFFFF;  /* supporting colour; page and card fill */
+
+  /* --- Secondary (guide p.24) — one at a time, ≤20% of graphic colour --- */
+  --omn-grape:        #743DBC;  /* PMS 266. Banner/social buttons only */
+  --omn-grape-80:     #8D61C8;  /* web Grape (p.25). ROLE: all clickable actions, links, selected state */
+  --omn-arctic:       #1AD1DB;  /* PMS 319. Never as text/graphics on white */
+  --omn-arctic-dark:  #00A2AC;  /* PMS 7467 (p.25). ROLE: data / charts / CORRECT. Text+graphic on white only, never a background */
+  --omn-raspberry:    #F75E4C;  /* PMS 7625. ROLE: INCORRECT / alerts */
+  --omn-beige:        #F1EFE9;  /* PMS 7527. ROLE: secondary surfaces (panels, stepper track) */
+
+  /* --- Greys (guide p.27, p.31, p.37) ----------------------------------- */
+  --omn-ink:          #1B1A1A;  /* Black 95% — headlines */
+  --omn-ink-2:        #454545;  /* body, footnotes, H6 */
+  --omn-grey:         #808080;  /* Black 60% — muted labels */
+  --omn-grey-tag:     #808285;  /* tagline grey (p.31) */
+  --omn-surface:      #F6F6F6;  /* Black 4% — light surface */
+  --omn-line:         #E6E4DF;  /* DERIVED hairline: Beige darkened one step; the guide has no rule colour */
+
+  /* --- touchENDOCRINOLOGY mark (Touch Medical Media) --------------------
+     NOT Omnipod® colours. Used only on the touch mark. Values sampled from the
+     mood board; confirm against Touch brand guide before final. */
+  --omn-tm-navy:      #1D1F5E;
+  --omn-tm-teal:      #00A9B5;
+
+  /* --- Type (guide p.30, p.36, p.37) ----------------------------------- */
+  --omn-font:        "IBM Plex Sans", Arial, Helvetica, sans-serif;   /* headlines + digital body */
+  --omn-font-caps:   "Open Sans", Arial, Helvetica, sans-serif;       /* micro-headers, call-outs: Bold, uppercase, tracking 75 */
+  --omn-font-legal:  "Helvetica Neue LT Std 57 Condensed", "Helvetica Neue", "Arial Narrow", Arial, sans-serif; /* legal / disclaimers (not shipped) */
+
+  /* Web hierarchy (p.37) scaled to a 1280-wide learning screen */
+  --omn-size-h1:       40px;  /* p.37 H1 60 — SemiBold */
+  --omn-size-h2:       32px;  /* H2 48 — SemiBold */
+  --omn-size-h3:       24px;  /* H3 36 — SemiBold */
+  --omn-size-h4:       20px;  /* H5 24 — Bold */
+  --omn-size-body:     18px;  /* Body Regular 18 #454545 */
+  --omn-size-small:    16px;  /* Small/footnote 16 */
+  --omn-size-micro:    13px;  /* Open Sans Bold caps label */
+  --omn-size-legal:    12px;  /* legal / disclaimers */
+  --omn-lh-body:  1.5;
+  --omn-lh-tight: 1.15;      /* headlines: line height ≈ font size (p.34) */
+  --omn-track-caps: 0.075em; /* tracking 75 (p.36) */
+  --omn-track-head: 0.02em;  /* tracking 20 (p.34) */
+
+  /* --- Shape ------------------------------------------------------------ */
+  --omn-radius:      12px;   /* card */
+  --omn-radius-sm:    8px;
+  --omn-radius-pill: 999px;  /* CTA (p.38) */
+  --omn-radius-pod:  30% 30% 45% 45% / 30% 30% 50% 50%; /* Pod silhouette — logo shape */
+  --omn-border:      1px;
+  --omn-gap:         16px;
+  --omn-pad:         20px;
+
+  /* --- Canvas ----------------------------------------------------------- */
+  --omn-screen-w: 1280px;
+  --omn-screen-h: 720px;
+}

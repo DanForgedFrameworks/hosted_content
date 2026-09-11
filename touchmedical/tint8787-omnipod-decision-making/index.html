@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<!-- build: Omnipod 5 Decision Making | tint8787-omnipod-decision-making | v1 | 2026-09-11 -->
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./vendor/react.production.min.js"></script>
+<script src="./vendor/react-dom.production.min.js"></script>
+<script src="./support.js"></script>
+
+<title>Omnipod 5 Decision Making: The whole activity (review version)</title>
+<meta name="build-version" content="Omnipod 5 Decision Making tint8787-omnipod-decision-making v1 2026-09-11">
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="./omnipod/styles.css">
+  <style>
+    body { margin: 0; background: #ECEBE8; overflow: hidden; }
+    a { color: #8D61C8; } a:hover { color: #743DBC; }
+    @keyframes omnInA { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+    @keyframes omnInB { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+    @keyframes omnUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+    @keyframes omnFade { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes omnRoll { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+    @keyframes omnNudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(3px); } }
+    @keyframes omnBreathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+    @keyframes omnPop { from { opacity: 0; transform: scale(.94) translateY(6px); } to { opacity: 1; transform: none; } }
+    @keyframes omnSwipe { from { opacity: 0; clip-path: inset(0 100% 0 0); } to { opacity: 1; clip-path: inset(0 0 0 0); } }
+    @keyframes omnTraceDraw { 0% { stroke-dashoffset: 1000; } 62% { stroke-dashoffset: 0; } 78% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -1000; } }
+    @keyframes omnPulseRing { 0%, 100% { transform: scale(1); opacity: .7; } 50% { transform: scale(1.35); opacity: 0; } }
+    @keyframes omnZoomIn { from { opacity: 0; transform: scale(.55); } to { opacity: 1; transform: none; } }
+    @keyframes omnBarBounce { 0% { transform: scaleX(0); } 55% { transform: scaleX(1.14); } 75% { transform: scaleX(.95); } 90% { transform: scaleX(1.03); } 100% { transform: scaleX(1); } }
+    @keyframes omnBob { 0%, 100% { transform: rotate(90deg) translateX(0); } 50% { transform: rotate(90deg) translateX(4px); } }
+    @keyframes omnTitleRise { from { transform: translateY(150px); } to { transform: none; } }
+    @keyframes omnSoft { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+    @keyframes omnSoftB { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+    [data-tags="off"] .omn-tag { display: none !important; }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+  </style>
+</helmet>
+<div ref="{{ rootRef }}" class="omn-root" style="position:fixed;inset:0;background:{{ rootBg }};overflow:hidden">
+<div ref="{{ stageRef }}" data-stage="1" data-tags="{{ tagsAttr }}" class="omn-screen" style="position:absolute;left:50%;top:50%;transform-origin:center center;border-radius:8px;box-shadow:0 20px 60px rgba(27,26,26,.22);grid-template-rows:76px minmax(0,1fr) 72px;height:720px;overflow:hidden;opacity:{{ stageOpacity }};transition:opacity .3s ease">
+
+  <div style="position:relative;border-bottom:4px solid #FFA700;height:76px;box-sizing:border-box">
+    <div class="omn-titlebar" style="height:72px;padding-top:0;padding-bottom:0;border-bottom:0;animation:omnFade .85s ease both">
+      <sc-if value="{{ isTitle }}" hint-placeholder-val="{{ true }}">
+        <span></span>
+        <span class="omn-logo omn-logo--omnipod" role="img" data-copy="placeholder" aria-label="Omnipod® simplify life™" style="width:100px;height:60px;animation:omnZoomIn 1.25s cubic-bezier(.16,1,.3,1) .4s both"></span>
+      </sc-if>
+      <sc-if value="{{ notTitle }}" hint-placeholder-val="{{ false }}">
+        <div class="omn-titlebar__section">
+          <p class="omn-micro omn-micro--muted" style="white-space:nowrap;animation:omnSwipe .95s cubic-bezier(.16,1,.3,1) .15s both">{{ sectionLabel }}</p>
+          <div style="display:flex;align-items:center;gap:4px;margin-left:14px;flex:0 0 auto" role="img" aria-label="{{ progressLabel }}">
+            <sc-for list="{{ progress }}" as="p" hint-placeholder-count="13"><span style="display:grid;place-items:center;width:{{ p.size }};height:{{ p.size }};border-radius:50%;background:{{ p.bg }};color:#fff;font-size:10px;font-weight:600;transition:background .4s ease,width .3s ease,height .3s ease">{{ p.num }}</span></sc-for>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;flex:0 0 auto;white-space:nowrap">
+          <sc-if value="{{ reviewTools }}" hint-placeholder-val="{{ true }}">
+            <button type="button" data-review="chrome" data-review-id="g-tags" onClick="{{ toggleTags }}" aria-pressed="{{ tagsPressed }}" aria-label="Show proposed-copy tags" title="Proposed-copy tags (review aid)" style="display:grid;place-items:center;width:32px;height:32px;border-radius:50%;border:1.5px dashed {{ tagsInk }};background:{{ tagsBg }};color:{{ tagsInk }};cursor:pointer;line-height:0;font:inherit;font-size:11px;font-weight:600">P</button>
+            <button type="button" class="omn-btn omn-btn--secondary" data-review="dialog" data-review-id="g-reset" onClick="{{ resetProgress }}" style="min-height:40px;padding:6px 16px;font-size:16px"><span class="omn-ico omn-ico--x" aria-hidden="true"></span><span data-copy="placeholder" style="white-space:nowrap">Reset progress</span></button>
+          </sc-if>
+          <button type="button" data-review="chrome" data-review-id="g-motion" onClick="{{ toggleMotion }}" aria-pressed="{{ motionPressed }}" style="display:flex;align-items:center;gap:8px;border:0;background:none;padding:0;cursor:pointer;color:#454545;font:inherit;font-size:14px">
+            <span style="display:flex;align-items:center;width:34px;height:18px;border-radius:999px;padding:2px;transition:background .25s ease;background:{{ motionTrack }}"><span style="width:14px;height:14px;border-radius:50%;background:#fff;margin-left:{{ motionKnob }};transition:margin .25s ease"></span></span>
+            <span data-copy="placeholder" style="white-space:nowrap">Background motion</span>
+          </button>
+          <button type="button" class="omn-btn omn-btn--secondary" data-review="dialog" data-review-id="g-walk-open" onClick="{{ openWalk }}" style="min-height:40px;padding:6px 16px;font-size:16px">
+            <span class="omn-ico omn-ico--info" aria-hidden="true"></span><span data-copy="placeholder" style="white-space:nowrap">How to use this</span>
+          </button>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+
+  <div ref="{{ sceneRef }}" data-review="scene" data-review-id="{{ sceneRid }}" data-review-ready="{{ readyAttr }}" class="omn-screen__body" style="position:relative;min-height:0;max-height:572px;overflow:hidden;animation:{{ sceneAnim }}">
+
+    <div class="omn-trace" aria-hidden="true" style="bottom:0;height:120px;z-index:0;opacity:{{ traceOpacity }}">{{ trace }}</div>
+
+    <sc-if value="{{ show1 }}" hint-placeholder-val="{{ true }}">
+      <div data-screen-label="01" style="display:flex;flex-direction:column;justify-content:center;gap:28px;max-width:820px;height:100%;position:relative;z-index:1">
+        <div class="omn-accent-rule" style="animation:omnFade .95s ease both"></div>
+        <p class="omn-h1" style="font-size:52px;animation:omnUp 1.15s cubic-bezier(.16,1,.3,1) .2s both">Interactive Decision‑Making with the Omnipod® 5: Real‑World T1D Scenarios</p>
+        <sc-if value="{{ crossNav }}" hint-placeholder-val="{{ true }}">
+        <div class="omn-row" style="animation:omnUp 1.05s cubic-bezier(.16,1,.3,1) .7s both">
+          <button type="button" class="omn-btn omn-btn--primary" data-review="nav" data-review-id="s1-start" onClick="{{ next }}"><span data-copy="placeholder">Start the case</span><span class="omn-ico omn-ico--chevron" aria-hidden="true" style="animation:omnNudge 3.2s ease-in-out infinite"></span></button>
+        </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ showContents }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="{{ contentsLabel }}" style="display:flex;flex-direction:column;justify-content:center;gap:20px;height:100%;position:relative;z-index:1;max-width:1000px;margin:0 auto;width:100%">
+        <sc-if value="{{ show15 }}" hint-placeholder-val="{{ false }}">
+          <div class="omn-keymsg" style="align-items:center;padding:16px 20px;animation:omnZoomIn 1.15s cubic-bezier(.16,1,.3,1) both">
+            <span class="omn-ico-tile omn-ico-tile--beige" style="color:#00A2AC"><span class="omn-ico omn-ico--check" aria-hidden="true"></span></span>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <p data-copy="placeholder">Congratulations, you have reached the end of this resource</p>
+              <p class="omn-body" style="font-weight:400;font-size:16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span data-copy="placeholder">Is there anything you would like to revisit? Select a section below to go back to it.</span><span class="omn-tag"><span class="omn-ico omn-ico--info" aria-hidden="true"></span>Proposed</span></p>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;margin-left:auto;flex-wrap:wrap;justify-content:flex-end">
+              <button type="button" class="omn-btn omn-btn--secondary" data-review="dialog" data-review-id="s15-references" data-copy="placeholder" onClick="{{ openRefs }}" style="min-height:40px;padding:6px 16px;font-size:16px"><span class="omn-ico omn-ico--info" aria-hidden="true"></span>References</button>
+              <button type="button" class="omn-btn omn-btn--secondary" data-review="source" data-review-id="s15-guide" data-review-label="Omnipod® 5 User Guide (omnipod.com)" onClick="{{ openGuide }}" style="min-height:40px;padding:6px 16px;font-size:16px"><span data-copy="placeholder">Omnipod® 5 User Guide</span><span class="omn-ico omn-ico--chevron" aria-hidden="true"></span></button>
+              <span class="omn-tag"><span class="omn-ico omn-ico--info" aria-hidden="true"></span>Proposed</span>
+            </div>
+          </div>
+        </sc-if>
+        <div style="display:flex;flex-direction:column;justify-content:space-between;gap:10px;flex:1 1 auto;min-height:0">
+          <sc-for list="{{ contents }}" as="c" hint-placeholder-count="7">
+            <div style="display:flex;align-items:center;gap:16px;padding:10px 18px;border:1.5px solid {{ c.border }};border-radius:12px;background:#fff;color:#1B1A1A;font-size:{{ c.fs }};width:{{ c.width }};min-height:{{ c.minh }};margin-left:{{ c.indent }};animation:omnUp .85s cubic-bezier(.16,1,.3,1) {{ c.delay }} both">
+              <span style="display:grid;place-items:center;width:{{ c.dot }};height:{{ c.dot }};flex:0 0 {{ c.dot }};border-radius:50%;background:{{ c.dotBg }};color:#fff;font-weight:600;font-size:14px">{{ c.badge }}</span>
+              <span style="flex:1 1 auto;line-height:1.3">{{ c.label }}</span>
+              <sc-if value="{{ c.nav }}" hint-placeholder-val="{{ false }}">
+                <button type="button" class="omn-btn omn-btn--secondary" data-review="nav" data-review-id="s15-item-{{ c.n }}" onClick="{{ c.go }}" style="min-height:36px;padding:4px 14px;font-size:15px"><span data-copy="placeholder">Revisit</span><span class="omn-ico omn-ico--chevron" aria-hidden="true"></span></button>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ show3 }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="03" style="display:flex;flex-direction:column;justify-content:center;gap:24px;height:100%;position:relative;z-index:1">
+        <div class="omn-accent-rule" style="animation:omnFade .95s ease both"></div>
+        <p class="omn-h1" style="animation:omnSwipe 1.15s cubic-bezier(.16,1,.3,1) .2s both">About the case</p>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ show4 }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="04" style="display:grid;grid-template-columns:1fr 360px;gap:48px;align-items:center;height:100%;position:relative;z-index:1">
+        <div style="display:flex;flex-direction:column;gap:22px">
+          <div style="display:flex;flex-direction:column;gap:14px;animation:omnTitleRise 1.1s cubic-bezier(.16,1,.3,1) 1.6s both">
+            <div class="omn-accent-rule" style="animation:omnFade .95s ease both"></div>
+            <p class="omn-h1" style="animation:omnSwipe 1.15s cubic-bezier(.16,1,.3,1) .2s both">About the case</p>
+          </div>
+          <p class="omn-micro omn-micro--muted" style="animation:omnSwipe 1.1s cubic-bezier(.16,1,.3,1) 2.7s both">Introduction to the case</p>
+          <p class="omn-h2" style="font-size:28px;line-height:1.3;animation:omnUp 1.3s cubic-bezier(.16,1,.3,1) 3.0s both">This is a case of a young adult male with T1D who has a history of poorly controlled diabetes initiating the Omnipod® 5 and optimizing settings</p>
+        </div>
+        <div style="display:grid;place-items:center;height:100%;max-height:440px;animation:omnZoomIn 1.6s cubic-bezier(.16,1,.3,1) 3.6s both">
+          <img src="assets/omnipod5-pod-ios-cropped.png" alt="Omnipod® 5 Pod and app" data-copy="placeholder" style="max-width:100%;max-height:440px;object-fit:contain">
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ show5 }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="05" style="position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;gap:22px;height:100%">
+        <p class="omn-h3" style="animation:omnSwipe 1.05s cubic-bezier(.16,1,.3,1) both">Case demographics and clinical characteristics</p>
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:16px">
+          <sc-for list="{{ demo }}" as="d" hint-placeholder-count="7">
+            <div style="grid-column:span {{ d.span }};min-height:132px">
+              <sc-if value="{{ d.on }}" hint-placeholder-val="{{ true }}">
+                <div class="omn-attr" style="flex-direction:row;align-items:center;gap:18px;padding:18px 20px;height:132px;position:relative;animation:omnUp .9s cubic-bezier(.16,1,.3,1) both">
+                  <sc-if value="{{ d.hasRanges }}" hint-placeholder-val="{{ false }}">
+                    <button type="button" data-review="reveal" data-review-id="s5-hba1c-ranges" data-review-label="HbA1c reference ranges" onClick="{{ toggleRanges }}" aria-expanded="{{ rangesOpen }}" aria-label="HbA1c reference ranges" data-copy="placeholder" style="position:absolute;top:10px;right:10px;z-index:3;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1.5px solid #8D61C8;background:{{ rangesBtnBg }};color:{{ rangesBtnInk }};cursor:pointer;line-height:0"><span class="omn-ico omn-ico--info" style="width:18px;height:18px;flex-basis:18px" aria-hidden="true"></span></button>
+                    <sc-if value="{{ rangesOn }}" hint-placeholder-val="{{ false }}">
+                      <div data-ranges-panel="1" style="position:absolute;inset:0;z-index:2;background:#F1EFE9;border-radius:12px;padding:12px 52px 10px 16px;display:flex;flex-direction:column;justify-content:center;gap:4px;animation:omnFade .4s ease both">
+                        <p class="omn-micro omn-micro--muted" style="font-size:10px;display:flex;gap:8px;align-items:center"><span data-copy="placeholder">HbA1c reference ranges</span><span class="omn-tag" style="font-size:9px;padding:0 6px"><span class="omn-ico omn-ico--info" aria-hidden="true"></span>Proposed</span></p>
+                        <p style="margin:0;font-size:13px;line-height:1.3;color:#1B1A1A" data-copy="placeholder"><span style="font-weight:600">Non-diabetic normal range:</span> Below 42 mmol/mol (6.0%).</p>
+                        <p style="margin:0;font-size:13px;line-height:1.3;color:#1B1A1A" data-copy="placeholder"><span style="font-weight:600">Type 1 target:</span> 48 mmol/mol (6.5%) or lower, if it can be achieved safely without frequent or severe hypos (low blood sugar).<button type="button" data-review="citation" data-review-id="s5-cite-1" data-review-label="Citation 1" data-cite="1" onClick="{{ cite }}" style="display:inline-grid;place-items:center;min-width:18px;height:16px;padding:0 4px;margin-left:4px;border:0;border-radius:4px;background:#8D61C8;color:#fff;font:inherit;font-size:10px;font-weight:600;vertical-align:super;line-height:1;cursor:pointer">1</button></p>
+                      </div>
+                    </sc-if>
+                  </sc-if>
+                  <span class="omn-ico-tile" style="width:64px;height:64px;flex-basis:64px"><span class="omn-ico omn-ico--{{ d.icon }} omn-ico--lg" aria-hidden="true"></span></span>
+                  <p class="omn-attr__label" style="display:flex;flex-direction:column;gap:2px;line-height:1.2">
+                    <sc-if value="{{ d.hasGloss }}" hint-placeholder-val="{{ false }}"><span style="font-size:17px">{{ d.pre }}<span data-review="glossary" data-review-id="{{ d.rid }}" data-gloss="{{ d.def }}" onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #8D61C8;cursor:help">{{ d.abbr }}</span>{{ d.mid }}</span></sc-if>
+                    <sc-if value="{{ d.hasNum }}" hint-placeholder-val="{{ false }}"><span style="font-weight:600;font-size:34px;color:#1B1A1A;line-height:1;margin:2px 0">{{ d.num }}<span style="font-size:16px;color:#808080;font-weight:400">{{ d.unit }}</span></span></sc-if>
+                    <span style="font-weight:{{ d.postWeight }};font-size:{{ d.postSize }};color:#1B1A1A">{{ d.post }}</span>
+                  </p>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+        
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ show6 }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="06" style="position:relative;z-index:1;display:flex;flex-direction:column;justify-content:flex-start;gap:14px;height:100%;min-height:0;padding-top:6px">
+        <p class="omn-h3" style="font-size:20px;animation:omnSwipe 1.05s cubic-bezier(.16,1,.3,1) both">Challenges in the management of this case leading to Omnipod® 5 being trailed</p>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;animation:omnFade .95s ease .4s both">
+          <p class="omn-body">The patient has several current challenges in their diabetes management:</p>
+          <p class="omn-small" style="color:#8D61C8;display:flex;align-items:center;gap:8px;white-space:nowrap"><span data-copy="placeholder">Select each challenge to explore it</span><span class="omn-tag"><span class="omn-ico omn-ico--info" aria-hidden="true"></span>Proposed</span></p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;align-items:stretch;flex:0 0 auto">
+          <sc-for list="{{ challenges }}" as="c" hint-placeholder-count="5">
+            <div style="display:flex;flex-direction:column;gap:10px;animation:omnUp .95s cubic-bezier(.16,1,.3,1) {{ c.delay }} both">
+              <button type="button" class="omn-card" data-review="reveal" data-review-id="s6-ch-{{ c.key }}" onClick="{{ c.open }}" aria-expanded="{{ c.expanded }}" style="display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:12px;min-height:196px;width:100%;font:inherit;text-align:left;cursor:pointer;border-color:{{ c.border }};background:{{ c.bg }};transition:border-color .3s ease,background .3s ease,box-shadow .3s ease;box-shadow:{{ c.shadow }}">
+                <span class="omn-ico-tile" style="width:40px;height:40px;flex-basis:40px"><span class="omn-ico omn-ico--{{ c.icon }}" aria-hidden="true"></span></span>
+                <span style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;width:100%"><span style="font-weight:600;font-size:16px;color:#1B1A1A;line-height:1.25">{{ c.label }}</span><sc-if value="{{ c.closed }}" hint-placeholder-val="{{ true }}"><span class="omn-ico omn-ico--chevron" aria-hidden="true" style="color:#8D61C8;transform:rotate(90deg);width:20px;height:20px;flex-basis:20px;animation:omnBob 1.8s ease-in-out infinite"></span></sc-if><sc-if value="{{ c.on }}" hint-placeholder-val="{{ false }}"><span class="omn-ico omn-ico--check" aria-hidden="true" style="color:#00A2AC;width:18px;height:18px;flex-basis:18px"></span></sc-if></span>
+                <sc-if value="{{ c.on }}" hint-placeholder-val="{{ false }}"><span style="display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.35;color:#454545;animation:omnSoft 1.1s ease both"><sc-if value="{{ c.hasGloss }}" hint-placeholder-val="{{ false }}"><span data-copy="placeholder">{{ c.pre }}<span data-review="glossary" data-review-id="s6-gloss-cgm" data-gloss="continuous glucose monitoring" onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #8D61C8;cursor:help">CGM</span>{{ c.post }}</span></sc-if><sc-if value="{{ c.noGloss }}" hint-placeholder-val="{{ true }}"><span>{{ c.detail }}</span></sc-if><sc-if value="{{ c.proposed }}" hint-placeholder-val="{{ false }}"><span class="omn-tag" style="font-size:9px;padding:0 6px;align-self:flex-start"><span class="omn-ico omn-ico--info" aria-hidden="true"></span>Proposed</span></sc-if></span></sc-if>
+              </button>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr;flex:0 0 auto;height:104px"><sc-if value="{{ chActiveOn }}" hint-placeholder-val="{{ false }}">
+            <div class="omn-feature__answer" style="flex-direction:row;align-items:center;gap:18px;padding:10px 16px;height:104px;box-sizing:border-box;overflow:hidden;animation:{{ chPanelAnim }}">
+              <span class="omn-ico-tile" style="width:40px;height:40px;flex-basis:40px"><span class="omn-ico omn-ico--{{ chActiveIcon }}" aria-hidden="true"></span></span>
+              <div style="display:flex;flex-direction:column;gap:6px">
+              <p style="font-size:15px;line-height:1.35;color:#1B1A1A">{{ chActiveFeature }}</p>
+              <sc-if value="{{ chActiveHasBullets }}" hint-placeholder-val="{{ false }}"><p class="omn-micro omn-micro--muted" style="font-size:10px;margin-top:2px">Omnipod® 5 features:</p><p style="font-size:15px;line-height:1.35;color:#1B1A1A;font-weight:600">{{ chActiveBullets }}</p></sc-if>
+              </div>
+            </div>
+        </sc-if></div>
+        <div style="min-height:44px;flex:0 0 auto"><sc-if value="{{ challengesDone }}" hint-placeholder-val="{{ false }}">
+          <p class="omn-h4" style="flex:0 0 auto;display:flex;align-items:center;gap:12px;font-size:17px;line-height:1.3;animation:omnUp .95s cubic-bezier(.16,1,.3,1) 1.6s both"><span class="omn-ico-tile" style="width:32px;height:32px;flex-basis:32px"><span class="omn-ico omn-ico--pod" aria-hidden="true"></span></span>The patient is initiated on Omnipod® 5, which includes several relevant features</p>
+        </sc-if></div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ show7 }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="07" style="position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;gap:24px;height:100%;max-width:820px">
+        <div class="omn-accent-rule" style="animation:omnFade .95s ease both"></div>
+        <p class="omn-h1" style="animation:omnSwipe 1.15s cubic-bezier(.16,1,.3,1) .2s both">Optimizing the Omnipod® 5</p>
+        <p class="omn-h2" style="font-size:28px;line-height:1.3;display:flex;flex-wrap:wrap;align-items:center;gap:10px;animation:omnUp 1.15s cubic-bezier(.16,1,.3,1) .6s both"><span data-copy="placeholder">Are you ready?</span><span class="omn-tag"><span class="omn-ico omn-ico--info" aria-hidden="true"></span>Proposed</span></p>
+        <p class="omn-body" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;animation:omnUp 1.05s cubic-bezier(.16,1,.3,1) .85s both"><span data-copy="placeholder">Six questions follow. Each reveals its answer once submitted.</span><span class="omn-tag"><span class="omn-ico omn-ico--info" aria-hidden="true"></span>Proposed</span></p>
+        <sc-if value="{{ crossNav }}" hint-placeholder-val="{{ true }}">
+        <div class="omn-row" style="gap:14px;animation:omnUp 1.05s cubic-bezier(.16,1,.3,1) 1.2s both">
+          <button type="button" class="omn-btn omn-btn--secondary" data-review="nav" data-review-id="s7-back" onClick="{{ prev }}" style="min-height:44px"><span class="omn-ico omn-ico--chevron" aria-hidden="true" style="transform:rotate(180deg)"></span><span data-copy="placeholder">Return to previous sections</span></button>
+          <button type="button" class="omn-btn omn-btn--primary" data-review="nav" data-review-id="s7-start" onClick="{{ next }}" style="min-height:44px"><span data-copy="placeholder">Start the questions</span><span class="omn-ico omn-ico--chevron" aria-hidden="true" style="animation:omnNudge 3.2s ease-in-out infinite"></span></button>
+        </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isQ }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="{{ qLabel }}" style="position:relative;z-index:1;display:grid;grid-template-columns:5fr 4fr;grid-template-rows:minmax(0,1fr);gap:40px;align-items:center;height:100%">
+        <div class="omn-stack" style="gap:14px;min-height:0">
+          <p class="omn-h3" style="font-size:22px;animation:omnUp .95s cubic-bezier(.16,1,.3,1) both">{{ qSetup }}</p>
+          <div class="omn-question" style="animation:omnUp .95s cubic-bezier(.16,1,.3,1) .18s both">
+            <p class="omn-micro omn-micro--muted">Question</p>
+            <p class="omn-question__stem">{{ qStem }}</p>
+            <sc-if value="{{ qMulti }}" hint-placeholder-val="{{ false }}"><p class="omn-small" style="color:#808080">Options (can select multiple):</p></sc-if>
+            <ul class="omn-options" role="{{ qRole }}">
+              <sc-for list="{{ qOptions }}" as="o" hint-placeholder-count="4">
+                <li style="animation:omnUp .85s cubic-bezier(.16,1,.3,1) {{ o.delay }} both"><button type="button" class="omn-option {{ o.cls }}" role="{{ o.role }}" aria-checked="{{ o.checked }}" data-revealed="{{ o.revealedAttr }}" disabled="{{ o.disabled }}" data-review="reveal" data-review-id="{{ o.rid }}" onClick="{{ o.pick }}" style="font-size:{{ qOptFont }};padding:{{ qOptPad }};min-height:{{ qOptMin }};border-color:{{ o.border }}"><span class="omn-option__mark" style="position:relative;background:{{ o.markBg }};border-color:{{ o.markBorder }}"><sc-if value="{{ o.idle }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position:absolute;inset:-4px;border-radius:50%;border:2px solid #8D61C8;animation:omnPulseRing 2.4s ease-in-out {{ o.delay }} infinite"></span></sc-if><sc-if value="{{ o.showIco }}" hint-placeholder-val="{{ false }}"><span class="omn-ico omn-ico--{{ o.ico }}" style="width:16px;height:16px;flex-basis:16px" aria-hidden="true"></span></sc-if></span>{{ o.text }}</button></li>
+              </sc-for>
+            </ul>
+            <sc-if value="{{ qShowSubmit }}" hint-placeholder-val="{{ false }}">
+              <div class="omn-row" style="gap:12px;animation:omnFade .3s ease both">
+                <button type="button" class="omn-btn omn-btn--primary" data-review="reveal" data-review-id="{{ qSubmitRid }}" disabled="{{ qSubmitDisabled }}" onClick="{{ submit }}" style="min-height:44px"><span data-copy="placeholder">Submit</span></button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ qShowConfirm }}" hint-placeholder-val="{{ false }}">
+              <div class="omn-panel" style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 18px;animation:omnRoll .55s ease both">
+                <p class="omn-body" style="color:#1B1A1A;font-weight:600" data-copy="placeholder">Are you sure?</p>
+                <button type="button" class="omn-btn omn-btn--primary" data-review="reveal" data-review-id="{{ qConfirmRid }}" onClick="{{ confirm }}" style="min-height:40px;padding:6px 18px;font-size:16px"><span data-copy="placeholder">Yes, submit</span></button>
+                <button type="button" class="omn-btn omn-btn--secondary" data-review="chrome" data-review-id="{{ qChangeRid }}" onClick="{{ change }}" style="min-height:40px;padding:6px 18px;font-size:16px"><span data-copy="placeholder">Change answer</span></button>
+                <span class="omn-tag"><span class="omn-ico omn-ico--info" aria-hidden="true"></span>Proposed</span>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+        <div class="omn-stack" style="gap:10px;min-height:0;max-height:100%;overflow:auto;padding-right:4px">
+          <sc-if value="{{ qHasReadouts }}" hint-placeholder-val="{{ false }}">
+            <div class="omn-panel omn-stack" style="gap:6px;padding:8px 12px;justify-content:center;animation:omnUp .85s cubic-bezier(.16,1,.3,1) .2s both">
+              <sc-for list="{{ qReadouts }}" as="r" hint-placeholder-count="2">
+                <div class="omn-readout" style="gap:4px">
+                  <div class="omn-readout__head"><p class="omn-micro omn-micro--muted" style="font-size:11px">{{ r.label }}</p><p class="omn-readout__value {{ r.valueCls }}" style="font-size:18px">{{ r.value }}</p></div>
+                  <div class="omn-bar" style="background:#fff;height:8px"><span class="omn-bar__fill {{ r.fillCls }}" style="width:{{ r.fill }};transform-origin:left center;animation:omnBarBounce 1.2s ease-out .2s both"></span><span class="omn-bar__target" style="left:{{ r.target }}"></span></div>
+                  <div class="omn-readout__legend" style="font-size:11px"><span><span class="omn-swatch" style="background:{{ r.swatch }}"></span><span data-copy="placeholder">Patient</span></span><span><span class="omn-swatch" style="background:#1B1A1A"></span><span data-copy="placeholder">Target</span> {{ r.targetText }}</span></div>
+                </div>
+              </sc-for>
+              <span class="omn-tag" style="align-self:flex-start;font-size:9px;padding:0 6px"><span class="omn-ico omn-ico--info" aria-hidden="true"></span>Proposed</span>
+            </div>
+          </sc-if>
+          <sc-for list="{{ qFeedback }}" as="fb" hint-placeholder-count="0">
+            <div class="omn-feedback {{ fb.cls }}" role="status" style="padding:10px 12px;gap:10px;align-items:center;animation:omnRoll .7s cubic-bezier(.16,1,.3,1) {{ fb.delay }} both">
+              <span class="omn-feedback__ico"><span class="omn-ico omn-ico--{{ fb.ico }}" aria-hidden="true"></span></span>
+              <div class="omn-feedback__head">
+                <sc-if value="{{ fb.hasOutcome }}" hint-placeholder-val="{{ false }}"><p class="omn-micro" style="display:flex;align-items:center;gap:8px;color:{{ fb.outcomeInk }}"><span data-copy="placeholder">{{ fb.outcome }}</span><span class="omn-tag" style="font-size:9px;padding:0 6px"><span class="omn-ico omn-ico--info" aria-hidden="true"></span>Proposed</span></p></sc-if>
+                <sc-if value="{{ fb.hasLabel }}" hint-placeholder-val="{{ true }}"><p class="omn-feedback__label">{{ fb.label }}</p></sc-if>
+                <sc-if value="{{ fb.noGloss }}" hint-placeholder-val="{{ true }}"><p class="omn-feedback__text" style="font-size:14px;line-height:1.35;white-space:pre-line">{{ fb.text }}</p></sc-if>
+                <sc-if value="{{ fb.hasGloss }}" hint-placeholder-val="{{ false }}"><p class="omn-feedback__text" style="font-size:14px;line-height:1.35;white-space:pre-line">{{ fb.pre }}<span data-review="glossary" data-review-id="{{ fb.gRid }}" data-gloss="{{ fb.gDef }}" onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #8D61C8;cursor:help">{{ fb.gAbbr }}</span>{{ fb.post }}</p></sc-if>
+              </div>
+            </div>
+          </sc-for>
+          <sc-if value="{{ qShowSummary }}" hint-placeholder-val="{{ false }}">
+            <div class="omn-panel omn-stack" data-review="scene-part" data-review-id="s13-summary-panel" style="gap:8px;padding:12px 14px;animation:omnUp .9s cubic-bezier(.16,1,.3,1) 1.1s both">
+              <p class="omn-micro omn-micro--muted" style="display:flex;gap:8px;align-items:center"><span data-copy="placeholder">Questions summary</span><span class="omn-tag" style="font-size:9px;padding:0 6px"><span class="omn-ico omn-ico--info" aria-hidden="true"></span>Proposed</span></p>
+              <p class="omn-body" style="font-weight:600;color:#1B1A1A;font-size:15px" data-copy="placeholder">{{ scoreLine }}</p>
+              <div style="display:flex;gap:8px" role="img" aria-label="{{ scoreLine }}">
+                <sc-for list="{{ summaryQs }}" as="g" hint-placeholder-count="6"><span style="display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:{{ g.bg }};color:#fff;font-weight:600;font-size:13px">{{ g.q }}</span></sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ show14 }}" hint-placeholder-val="{{ false }}">
+      <div data-screen-label="14" style="position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;height:100%">
+        <div class="omn-stack" style="gap:18px">
+          <p class="omn-h3" style="animation:omnSwipe 1.05s cubic-bezier(.16,1,.3,1) both">Take home messages</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+            <sc-for list="{{ takeHome }}" as="k" hint-placeholder-count="6">
+              <div style="height:190px"><sc-if value="{{ k.on }}" hint-placeholder-val="{{ true }}">
+              <div class="omn-keymsg" style="flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:18px 20px;gap:12px;height:190px;box-sizing:border-box;animation:omnUp .9s cubic-bezier(.16,1,.3,1) both"><span class="omn-ico-tile" style="width:32px;height:32px;flex-basis:32px"><span class="omn-ico omn-ico--pod" aria-hidden="true" style="width:18px;height:18px;flex-basis:18px"></span></span><p style="font-size:17px;line-height:1.4;text-wrap:pretty">{{ k.text }}<sc-if value="{{ k.hasSup }}" hint-placeholder-val="{{ false }}"><button type="button" data-review="citation" data-review-id="s14-cite-{{ k.cid }}" data-review-label="Citation {{ k.sup }}" data-cite="{{ k.sup }}" onClick="{{ cite }}" style="display:inline-grid;place-items:center;min-width:18px;height:16px;padding:0 4px;margin-left:4px;border:0;border-radius:4px;background:#8D61C8;color:#fff;font:inherit;font-size:10px;font-weight:600;vertical-align:super;line-height:1;cursor:pointer">{{ k.sup }}</button></sc-if></p></div>
+              </sc-if></div>
+            </sc-for>
+          </div>
+          <div style="min-height:52px"><sc-if value="{{ takeDone }}" hint-placeholder-val="{{ false }}">
+            <div class="omn-panel" style="display:flex;align-items:center;gap:14px;padding:10px 16px;animation:omnUp 1s cubic-bezier(.16,1,.3,1) .9s both">
+              <span class="omn-ico-tile omn-ico-tile--beige" style="width:32px;height:32px;flex-basis:32px;color:#8D61C8"><span class="omn-ico omn-ico--info" aria-hidden="true" style="width:18px;height:18px;flex-basis:18px"></span></span>
+              <p class="omn-body" style="font-size:15px;color:#1B1A1A;display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span data-copy="placeholder">You have reached the end of the case. Finish and revisit takes you to a page where any section can be reopened.</span><span class="omn-tag"><span class="omn-ico omn-ico--info" aria-hidden="true"></span>Proposed</span></p>
+            </div>
+          </sc-if></div>
+        </div>
+      </div>
+    </sc-if>
+
+  </div>
+
+  <div class="omn-footer" style="height:72px;padding-top:0;padding-bottom:0;box-sizing:border-box;background:{{ footerBg }};border-top:{{ footerLine }};position:relative;z-index:2;animation:omnFade .95s ease .3s both">
+    <div style="display:flex;align-items:center;gap:18px">
+      <sc-if value="{{ showBack }}" hint-placeholder-val="{{ false }}">
+        <button type="button" class="omn-btn omn-btn--secondary" data-review="nav" data-review-id="g-back" data-review-label="Back" onClick="{{ prev }}" aria-label="Back" style="min-height:44px;padding:6px 16px;font-size:16px"><span class="omn-ico omn-ico--chevron" aria-hidden="true" style="transform:rotate(180deg)"></span><span data-copy="placeholder">Back</span></button>
+      </sc-if>
+      <sc-if value="{{ isTitle }}" hint-placeholder-val="{{ true }}">
+        <span class="omn-logo omn-logo--touch" role="img" aria-label="touchENDOCRINOLOGY" style="width:190px;height:52px;animation:omnZoomIn 1.25s cubic-bezier(.16,1,.3,1) 1s both"></span>
+        <p class="omn-micro omn-micro--muted" style="animation:omnSwipe 1.05s cubic-bezier(.16,1,.3,1) 1.3s both">touchINTERACTIVE</p>
+      </sc-if>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px">
+      <sc-if value="{{ showNext }}" hint-placeholder-val="{{ false }}">
+        <button type="button" class="omn-btn omn-btn--primary" data-review="nav" data-review-id="g-next" data-review-label="Next" onClick="{{ next }}" style="min-height:44px;animation:omnFade .3s ease both"><span data-copy="placeholder">{{ nextLabel }}</span><span class="omn-ico omn-ico--chevron" aria-hidden="true" style="animation:omnNudge 3.2s ease-in-out infinite"></span></button>
+      </sc-if>
+    </div>
+  </div>
+
+  <sc-if value="{{ resetAsk }}" hint-placeholder-val="{{ false }}">
+    <div data-review="chrome" data-review-id="g-reset-backdrop" onClick="{{ closeReset }}" style="position:absolute;inset:0;z-index:8;display:grid;place-items:center;background:rgba(27,26,26,.5);animation:omnFade .2s ease both">
+      <div class="omn-card" data-review="chrome" data-review-id="g-reset-card" onClick="{{ stopClick }}" style="width:460px;padding:0;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.3);animation:omnRoll .55s cubic-bezier(.16,1,.3,1) both">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;background:#F1EFE9;border-bottom:1px solid #E6E4DF">
+          <p class="omn-micro" data-copy="placeholder">Reset progress</p>
+          <button type="button" data-review="chrome" data-review-id="g-reset-close" data-review-close="1" onClick="{{ closeReset }}" aria-label="Close" style="display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1.5px solid #1B1A1A;background:#fff;color:#1B1A1A;cursor:pointer;line-height:0"><span class="omn-ico omn-ico--x" style="width:16px;height:16px;flex-basis:16px" aria-hidden="true"></span></button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:16px;padding:20px 24px 22px">
+          <p class="omn-body" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span data-copy="placeholder">Your answers will be cleared and the case starts again from the beginning.</span><span class="omn-tag"><span class="omn-ico omn-ico--info" aria-hidden="true"></span>Proposed</span></p>
+          <div class="omn-row" style="gap:12px">
+            <button type="button" class="omn-btn omn-btn--primary" data-review="chrome" data-review-id="g-reset-confirm" onClick="{{ doReset }}" style="min-height:40px;padding:6px 18px;font-size:16px"><span data-copy="placeholder">Reset</span></button>
+            <button type="button" class="omn-btn omn-btn--secondary" data-review="chrome" data-review-id="g-reset-keep" onClick="{{ closeReset }}" style="min-height:40px;padding:6px 18px;font-size:16px"><span data-copy="placeholder">Keep going</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ refsOpen }}" hint-placeholder-val="{{ false }}">
+    <div data-review="chrome" data-review-id="g-refs-backdrop" onClick="{{ closeRefs }}" style="position:absolute;inset:0;z-index:8;display:grid;place-items:center;background:rgba(27,26,26,.5);animation:omnFade .2s ease both">
+      <div class="omn-card" data-review="chrome" data-review-id="g-refs-card" onClick="{{ stopClick }}" style="width:760px;padding:0;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.3);animation:omnRoll .55s cubic-bezier(.16,1,.3,1) both">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;background:#F1EFE9;border-bottom:1px solid #E6E4DF">
+          <p class="omn-micro" data-copy="placeholder">References</p>
+          <div style="display:flex;align-items:center;gap:10px">
+            <button type="button" class="omn-btn omn-btn--secondary" data-review="chrome" data-review-id="g-refs-export" data-review-label="Save references as PDF" onClick="{{ exportRefs }}" style="min-height:36px;padding:4px 14px;font-size:15px"><span data-copy="placeholder">Save as PDF</span></button>
+            <span class="omn-tag"><span class="omn-ico omn-ico--info" aria-hidden="true"></span>Proposed</span>
+            <button type="button" data-review="chrome" data-review-id="g-refs-close" data-review-close="1" onClick="{{ closeRefs }}" aria-label="Close" style="display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1.5px solid #1B1A1A;background:#fff;color:#1B1A1A;cursor:pointer;line-height:0"><span class="omn-ico omn-ico--x" style="width:16px;height:16px;flex-basis:16px" aria-hidden="true"></span></button>
+          </div>
+        </div>
+        <ol class="omn-footnote" style="margin:0;padding:20px 24px 22px 44px;display:flex;flex-direction:column;gap:8px;font-size:15px;line-height:1.4">
+          <sc-for list="{{ refs }}" as="r" hint-placeholder-count="7"><li style="word-break:break-word">{{ r.text }}<sc-if value="{{ r.proposed }}" hint-placeholder-val="{{ false }}"> <span class="omn-tag" style="font-size:9px;padding:0 6px"><span class="omn-ico omn-ico--info" aria-hidden="true"></span>Proposed</span></sc-if></li></sc-for>
+        </ol>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ linkOn }}" hint-placeholder-val="{{ false }}">
+    <div data-review="chrome" data-review-id="g-link-backdrop" onClick="{{ closeLink }}" style="position:absolute;inset:0;z-index:8;display:grid;place-items:center;background:rgba(27,26,26,.5);animation:omnFade .2s ease both">
+      <div class="omn-card" data-review="chrome" data-review-id="g-link-card" onClick="{{ stopClick }}" style="width:640px;padding:0;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.3);animation:omnRoll .55s cubic-bezier(.16,1,.3,1) both">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;background:#F1EFE9;border-bottom:1px solid #E6E4DF">
+          <p class="omn-micro">{{ linkTitle }}</p>
+          <button type="button" data-review="chrome" data-review-id="g-link-close" data-review-close="1" onClick="{{ closeLink }}" aria-label="Close" style="display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1.5px solid #1B1A1A;background:#fff;color:#1B1A1A;cursor:pointer;line-height:0"><span class="omn-ico omn-ico--x" style="width:16px;height:16px;flex-basis:16px" aria-hidden="true"></span></button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;padding:20px 24px 22px">
+          <p class="omn-body" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span data-copy="placeholder">{{ linkHint }}</span><span class="omn-tag"><span class="omn-ico omn-ico--info" aria-hidden="true"></span>Proposed</span></p>
+          <p style="margin:0;font-size:14px;line-height:1.45;color:#1B1A1A;overflow-wrap:anywhere;background:#F6F6F6;border-radius:8px;padding:12px 14px;max-height:220px;overflow:auto;white-space:pre-line">{{ linkText }}</p>
+          <div class="omn-row" style="gap:12px">
+            <sc-if value="{{ linkIsLeave }}" hint-placeholder-val="{{ false }}">
+              <button type="button" class="omn-btn omn-btn--primary" data-review="source" data-review-id="g-link-continue" data-review-label="Continue to omnipod.com" onClick="{{ continueLink }}" style="min-height:40px;padding:6px 18px;font-size:16px"><span data-copy="placeholder">Continue to omnipod.com</span><span class="omn-ico omn-ico--chevron" aria-hidden="true"></span></button>
+              <button type="button" class="omn-btn omn-btn--secondary" data-review="chrome" data-review-id="g-link-stay" onClick="{{ closeLink }}" style="min-height:40px;padding:6px 18px;font-size:16px"><span data-copy="placeholder">Stay here</span></button>
+            </sc-if>
+            <sc-if value="{{ linkIsCopy }}" hint-placeholder-val="{{ false }}">
+              <button type="button" class="omn-btn omn-btn--primary" data-review="chrome" data-review-id="g-link-copy" onClick="{{ copyLink }}" style="min-height:40px;padding:6px 18px;font-size:16px"><span data-copy="placeholder">{{ copyLabel }}</span></button>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ tipOn }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;z-index:9;max-width:420px;background:#1B1A1A;color:#fff;border-radius:8px;padding:8px 12px;font-size:14px;line-height:1.4;white-space:pre-line;word-break:break-word;box-shadow:0 10px 28px rgba(27,26,26,.25);pointer-events:none;left:{{ tipX }};top:{{ tipY }};animation:omnRoll .3s cubic-bezier(.16,1,.3,1) both">{{ tipText }}</div>
+  </sc-if>
+
+  <sc-if value="{{ walkOpen }}" hint-placeholder-val="{{ false }}">
+    <div data-review="chrome" data-review-id="g-walk-backdrop" onClick="{{ closeWalk }}" style="position:absolute;inset:0;z-index:8;display:grid;place-items:center;background:rgba(27,26,26,.5);animation:omnFade .2s ease both">
+      <div class="omn-card" data-review="chrome" data-review-id="g-walk-card" onClick="{{ stopClick }}" style="width:540px;padding:0;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.3);animation:omnRoll .55s cubic-bezier(.16,1,.3,1) both">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;background:#F1EFE9;border-bottom:1px solid #E6E4DF">
+          <p class="omn-micro" data-copy="placeholder">How to use this resource</p>
+          <button type="button" data-review="chrome" data-review-id="g-walk-close" data-review-close="1" onClick="{{ closeWalk }}" aria-label="Close" style="display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1.5px solid #1B1A1A;background:#fff;color:#1B1A1A;cursor:pointer;line-height:0"><span class="omn-ico omn-ico--x" style="width:16px;height:16px;flex-basis:16px" aria-hidden="true"></span></button>
+        </div>
+        <div style="padding:22px 28px 8px;display:flex;flex-direction:column;gap:12px;min-height:200px">
+          <div style="display:grid;place-items:center;min-height:76px;padding:10px;border-radius:12px;background:#F6F6F6" aria-hidden="true" data-copy="placeholder">
+            <sc-if value="{{ walkIsNav }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;gap:14px;align-items:center">
+                <span class="omn-btn omn-btn--secondary" style="min-height:44px;padding:6px 16px;font-size:16px"><span class="omn-ico omn-ico--chevron" style="transform:rotate(180deg)"></span>Back</span>
+                <span class="omn-btn omn-btn--primary" style="min-height:44px;font-size:16px">Next<span class="omn-ico omn-ico--chevron"></span></span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ walkIsOption }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;gap:12px;align-items:center;width:100%">
+                <span class="omn-option" style="font-size:16px;padding:10px 14px;min-height:48px;flex:1 1 auto;border-color:#8D61C8;background:#F6F6F6"><span class="omn-option__mark" style="position:relative;background:#8D61C8;border-color:#8D61C8"><span style="position:absolute;inset:-4px;border-radius:50%;border:2px solid #8D61C8;animation:omnPulseRing 2.4s ease-in-out infinite"></span><span class="omn-ico omn-ico--check" style="width:16px;height:16px;flex-basis:16px"></span></span>Increase use of automated mode</span>
+                <span class="omn-btn omn-btn--primary" style="min-height:44px;font-size:16px">Submit</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ walkIsConfirm }}" hint-placeholder-val="{{ false }}">
+              <div class="omn-panel" style="display:flex;align-items:center;gap:12px;padding:10px 16px">
+                <span class="omn-body" style="color:#1B1A1A;font-weight:600;font-size:16px">Are you sure?</span>
+                <span class="omn-btn omn-btn--primary" style="min-height:36px;padding:4px 14px;font-size:15px">Yes, submit</span>
+                <span class="omn-btn omn-btn--secondary" style="min-height:36px;padding:4px 14px;font-size:15px">Change answer</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ walkIsAnswer }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:8px;width:100%">
+                <span class="omn-option" style="font-size:15px;padding:8px 14px;min-height:42px;border-color:#00A2AC"><span class="omn-option__mark" style="background:#00A2AC;border-color:#00A2AC"><span class="omn-ico omn-ico--check" style="width:16px;height:16px;flex-basis:16px"></span></span>Recommended option</span>
+                <span class="omn-option" style="font-size:15px;padding:8px 14px;min-height:42px;border-color:#F75E4C"><span class="omn-option__mark" style="background:#F75E4C;border-color:#F75E4C"><span class="omn-ico omn-ico--x" style="width:16px;height:16px;flex-basis:16px"></span></span>Option that does not address the problem</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ walkIsChallenge }}" hint-placeholder-val="{{ false }}">
+              <span class="omn-card" style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:12px 14px;width:200px"><span class="omn-ico-tile" style="width:36px;height:36px;flex-basis:36px"><span class="omn-ico omn-ico--burnout"></span></span><span style="display:flex;align-items:center;justify-content:space-between;width:100%;font-weight:600;font-size:15px;color:#1B1A1A">Burnout<span class="omn-ico omn-ico--chevron" style="color:#8D61C8;width:18px;height:18px;flex-basis:18px;animation:omnBob 1.8s ease-in-out infinite"></span></span></span>
+            </sc-if>
+            <sc-if value="{{ walkIsInfo }}" hint-placeholder-val="{{ false }}">
+              <span style="display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1.5px solid #8D61C8;background:#fff;color:#8D61C8;line-height:0"><span class="omn-ico omn-ico--info" style="width:18px;height:18px;flex-basis:18px"></span></span>
+            </sc-if>
+            <sc-if value="{{ walkIsCite }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:18px">
+                <span style="font-size:16px;color:#1B1A1A;white-space:nowrap">hybrid closed loop system<span style="display:inline-grid;place-items:center;min-width:18px;height:16px;padding:0 4px;margin-left:4px;border-radius:4px;background:#8D61C8;color:#fff;font-size:10px;font-weight:600;vertical-align:super;line-height:1">2</span></span>
+                <span class="omn-btn omn-btn--secondary" style="min-height:40px;padding:6px 16px;font-size:16px"><span class="omn-ico omn-ico--info"></span>References</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ walkIsExport }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:14px;padding:8px 16px;border-radius:8px;background:#F1EFE9;width:100%;box-sizing:border-box"><span class="omn-micro" style="flex:1 1 auto">References</span><span class="omn-btn omn-btn--secondary" style="min-height:36px;padding:4px 14px;font-size:15px">Save as PDF</span><span style="display:grid;place-items:center;width:30px;height:30px;border-radius:50%;border:1.5px solid #1B1A1A;background:#fff;color:#1B1A1A;line-height:0"><span class="omn-ico omn-ico--x" style="width:14px;height:14px;flex-basis:14px"></span></span></div>
+            </sc-if>
+            <sc-if value="{{ walkIsGate }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+                <div style="display:flex;gap:10px"><span class="omn-btn omn-btn--secondary" style="min-height:36px;padding:4px 14px;font-size:14px"><span class="omn-ico omn-ico--chevron" style="transform:rotate(180deg)"></span>Return to previous sections</span><span class="omn-btn omn-btn--primary" style="min-height:36px;padding:4px 14px;font-size:14px">Start the questions<span class="omn-ico omn-ico--chevron"></span></span></div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ walkIsGloss }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start"><span style="font-size:16px;color:#1B1A1A">Managing <span style="border-bottom:1px dotted #8D61C8">CGM</span> in a physical role</span><span style="background:#1B1A1A;color:#fff;border-radius:8px;padding:6px 10px;font-size:13px">continuous glucose monitoring</span></div>
+            </sc-if>
+            <sc-if value="{{ walkIsLink }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start"><span style="font-size:14px;color:#1B1A1A">You are about to leave this resource for omnipod.com</span><div style="display:flex;gap:10px"><span class="omn-btn omn-btn--primary" style="min-height:34px;padding:4px 12px;font-size:14px">Continue to omnipod.com<span class="omn-ico omn-ico--chevron"></span></span><span class="omn-btn omn-btn--secondary" style="min-height:34px;padding:4px 12px;font-size:14px">Stay here</span></div></div>
+            </sc-if>
+            <sc-if value="{{ walkIsMotion }}" hint-placeholder-val="{{ false }}">
+              <span style="display:flex;align-items:center;gap:16px;color:#454545;font-size:14px;flex-wrap:wrap;justify-content:center"><span style="display:flex;align-items:center;gap:8px"><span style="display:flex;align-items:center;width:34px;height:18px;border-radius:999px;padding:2px;background:#8D61C8"><span style="width:14px;height:14px;border-radius:50%;background:#fff;margin-left:auto"></span></span>Background motion</span><sc-if value="{{ reviewTools }}" hint-placeholder-val="{{ true }}"><span class="omn-btn omn-btn--secondary" style="min-height:36px;padding:4px 14px;font-size:15px"><span class="omn-ico omn-ico--x"></span>Reset progress</span></sc-if></span>
+            </sc-if>
+            <sc-if value="{{ walkIsRevisit }}" hint-placeholder-val="{{ false }}">
+              <span style="display:flex;align-items:center;gap:14px;padding:8px 16px;border:1.5px solid #8D61C8;border-radius:12px;background:#fff;color:#1B1A1A;font-size:16px;width:100%"><span style="display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#8D61C8;color:#fff;font-weight:600;font-size:13px">2</span><span style="flex:1 1 auto">Optimizing the Omnipod® 5 (Q&amp;A)</span><span class="omn-btn omn-btn--secondary" style="min-height:34px;padding:4px 12px;font-size:14px">Revisit<span class="omn-ico omn-ico--chevron"></span></span></span>
+            </sc-if>
+          </div>
+          <p class="omn-h4" data-copy="placeholder">{{ walkTitle }}</p>
+          <p class="omn-body" style="font-size:16px" data-copy="placeholder">{{ walkBody }}</p>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 24px 22px">
+          <div style="display:flex;gap:7px"><sc-for list="{{ walkDots }}" as="d" hint-placeholder-count="7"><span style="width:8px;height:8px;border-radius:50%;background:{{ d.bg }}"></span></sc-for></div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <button type="button" data-review="nav" data-review-id="g-walk-prev" data-review-label="Previous step" onClick="{{ walkPrev }}" aria-label="Previous step" style="display:grid;place-items:center;width:40px;height:40px;border-radius:50%;border:1.5px solid #E6E4DF;background:#fff;color:#8D61C8;cursor:pointer;opacity:{{ walkPrevOpacity }}"><span class="omn-ico omn-ico--chevron" style="transform:rotate(180deg);width:18px;height:18px;flex-basis:18px" aria-hidden="true"></span></button>
+            <button type="button" data-review="nav" data-review-id="g-walk-next" data-review-label="{{ walkNextLabel }}" onClick="{{ walkNext }}" aria-label="{{ walkNextLabel }}" style="display:grid;place-items:center;width:40px;height:40px;border-radius:50%;border:1.5px solid #E6E4DF;background:#fff;color:#8D61C8;cursor:pointer"><sc-if value="{{ walkIsLast }}" hint-placeholder-val="{{ false }}"><span class="omn-ico omn-ico--check" style="width:18px;height:18px;flex-basis:18px" aria-hidden="true"></span></sc-if><sc-if value="{{ walkNotLast }}" hint-placeholder-val="{{ true }}"><span class="omn-ico omn-ico--chevron" style="width:18px;height:18px;flex-basis:18px" aria-hidden="true"></span></sc-if></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:720},&quot;showHba1cRanges&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showProposedTags&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Review&quot;}}">
+class Component extends DCLogic {
+  /* Insulet Omnipod® 5. One master, 14 screens.
+     Copy is storyboard v2 verbatim (+ ® on every Omnipod); glue is data-copy="placeholder" and tagged. */
+  LAST = 15;
+  /* Split pack: a scene build sets window.CLL_SCENE before support.js loads. The build is then locked to that screen,
+     cross-build navigation SHOWS but go() ignores other screens (Visme hotspots sit over the buttons and do the moving), the review aids
+     (P tag toggle, Reset progress) render in the master only, progress is stored per build, and the review contract is scoped to the scene. */
+  SCENE = (typeof window !== "undefined" && Number.isInteger(window.CLL_SCENE)) ? window.CLL_SCENE : null;
+  KEY = "omn8787-tint-v2" + (this.SCENE ? "-s" + this.SCENE : "");
+  TITLES = ["", "Title screen", "Contents page", "About the case", "Introduction to the case", "Case demographics and clinical characteristics",
+    "Challenges in the management of this case leading to Omnipod® 5 being trailed", "Optimizing the Omnipod® 5",
+    "Optimizing the Omnipod® 5 (1/6 Q&A)", "Optimizing the Omnipod® 5 (2/6 Q&A)", "Optimizing the Omnipod® 5 (3/6 Q&A)",
+    "Optimizing the Omnipod® 5 (4/6 Q&A)", "Optimizing the Omnipod® 5 (5/6 Q&A)", "Optimizing the Omnipod® 5 (6/6 Q&A)", "Take home messages", "Revisit"];
+
+  Q = {
+    8: { setup: "The patient is experiencing >5% time in hypoglycemia and using the automated mode only 75% of the time",
+      stem: "Based on the information above, what might help reduce the hypoglycemia?",
+      options: ["Increase use of automated mode", "Investigate bolus doses", "Reduce the use of automated mode", "Investigate carb intake"], correct: [0],
+      correctLabel: "Correct answer",
+      correctText: "The target is to use the automated mode at least 90% of the time to prevent hypoglycemia. When in automated mode, the Omnipod® 5 system will pause insulin delivery for predicted or actual hypoglycemia, reducing the time spent below range.",
+      perOption: { 1: "Investigating bolus doses does not address the cause of hypoglycemia - lows are arising from recovery patterns and counter‑regulation rather than from incorrect meal bolusing.",
+        2: "The target is to use the automated mode at least 90% of the time to prevent hypoglycemia. When in automated mode, the Omnipod® 5 system will pause insulin delivery for predicted or actual hypoglycemia, reducing the time spent below range.",
+        3: "Investigating carb intake does not address the hypoglycemia, because the lows are occurring after treatment and counter‑regulation rather than from miscounted carbohydrates at meals." },
+      readouts: [{ label: "Time in hypoglycemia", value: ">5%", fill: 8, target: 4, alert: true, targetText: "<4%" },
+        { label: "Automated mode", value: "75%", fill: 75, target: 90, targetText: "at least 90%" }] },
+    9: { setup: "The patient is giving an average of 1.6 boluses per day for the meal bolus feature",
+      stem: "How does this number of boluses compare with what would be optimal?",
+      options: ["Lower than optimal", "As expected", "Higher than expected"], correct: [0], correctLabel: "Answer",
+      correctText: "At least 3 boluses per day would be optimal.",
+      readouts: [{ label: "Boluses per day", value: "1.6", fill: 32, target: 60, alert: true, targetText: "At least 3 boluses per day" }] },
+    10: { setup: { mg: "The patient is spending 35% of the time with a blood glucose of >180 mg/dL (>10.0 mmol/L)", mmol: "The patient is spending 35% of the time with a blood glucose of >10.0 mmol/L (>180 mg/dL)" },
+      stem: "Would the patient be considered as meeting their glycemic targets?",
+      options: ["Yes – the patient is meeting target ranges", "No - the patient is spending too much time in hyperglycemia"], correct: [1], correctLabel: "Answer",
+      gloss: { abbr: "TIR", def: "time in range", rid: "s10-gloss-tir" },   /* owner 2026-09-11: TIR is defined nowhere earlier */
+      correctText: { mg: "the target TIR is (70–180 mg/dL; 3.9–10.0 mmol/L) and <25% of time >180 mg/dL (>10.0 mmol/L)", mmol: "the target TIR is (3.9–10.0 mmol/L; 70–180 mg/dL) and <25% of time >10.0 mmol/L (>180 mg/dL)" },
+      readouts: [{ label: { mg: "Time >180 mg/dL", mmol: "Time >10.0 mmol/L" }, value: "35%", fill: 35, target: 25, alert: true, targetText: "<25%" }] },
+    11: { setup: "", stem: "If the patient was also spending too much time in hypoglycemia, what would the priority be for adjustment?",
+      options: ["Fixing patterns of hypoglycemia", "Fixing patterns of hyperglycemia"], correct: [0], correctLabel: "Answer",
+      correctText: "The priority would be fixing hypoglycemia are this is an immediate safety concern" },
+    12: { setup: "Following investigation, the patient is experiencing hyperglycemia 2 to 3 hours after meals due to under bolusing",
+      stem: "What action do you take?", multi: true,
+      options: ["Consider strengthening I:C ratios by 10–20%", "Assess if they are using Custom Foods", "Assess bolus timing", "Assess if patient is overriding the calculator and underdosing", "Lower algorithm target glucose"], correct: [0, 1, 2, 3, 4], correctLabel: "Answer",
+      correctText: "All options may help with reducing post-meal hyperglycemic episodes.\n\nWeakening the correction factor can prevent hypoglycemia post-meal.\n\nThe need for carb counting accuracy can be simplified using the Custom Food feature, which allows for set carb amounts for meals to be pre-specified.\n\nBolus timing should be 10–15 mins before all meals and snacks.\n\nIf a patient is overriding the calculator, they are they need education to follow the recommended bolus dose.\n\nA lower target glucose will make the Omnipod® 5 algorithm correct highs sooner and with more insulin, reducing time spent above range." },
+    13: { setup: "The patient is sometimes experiencing high blood glucose following a low", stem: "What action do you take?",
+      options: ["Re-educate on how to treat mild hypoglycemia", "Lower algorithm target glucose", "Strengthen the correction factor"], correct: [0], correctLabel: "Correct Answer",
+      correctText: "Hyperglycemia can follow hypoglycemia if lows are treated with too many grams of carbohydrate",
+      perOption: { 1: "Lowering the algorithm target glucose will not address highs after a low, because rebound hyperglycemia is not driven by the target glucose.",
+        2: "Strengthening the correction factor will not address highs after a low, because rebound hyperglycemia is not driven by how aggressively the system corrects highs." } }
+  };
+
+  /* Card subtext = short challenge (owner copy, Proposed; burnout verbatim v2). Panel = solution, owner's mapping of 10 Sep. */
+  CHALLENGES = [
+    { key: "missing", icon: "missing", label: "Missing injections", detail: "Missing many injections due to disengagement", proposed: true, feature: "Automation of insulin via the insulin pump", bullets: "" },
+    { key: "needle", icon: "mdi", label: "Needle phobia", detail: "T1D management complicated by fear of injections", proposed: true, feature: "Auto cannula insertion", bullets: "" },
+    { key: "labour", icon: "labour", label: "Manual labor job", detail: "Managing CGM in a physical role", gloss: { pre: "Managing ", post: " in a physical role" }, proposed: true, feature: "Customizable targets and activity feature to prevent hypoglycemia which could be common in a manual labor job", bullets: "Tubeless and waterproof · No need to disconnect during activities as the algorithm lives on the pod" },
+    { key: "carbs", icon: "carbs", label: "Not carb counting", detail: "Complicated bolus planning", proposed: true, feature: "Simplified bolusing", bullets: "Using Custom Foods" },
+    { key: "burnout", icon: "burnout", label: "Burnout", detail: "Struggling with diabetes burnout", feature: "System simplicity and discreetness requiring a pod change only every 3 days rather than daily injections can ease some mental burden", bullets: "" }
+  ];
+  GUIDE_URL = "https://www.omnipod.com/en-gb/current-podders/resources/paperless";
+  FEATURES = [
+    { icon: "missing", challenge: "Missing injections · Needle phobia", feature: "Automation of insulin via the insulin pump", bullets: "Tubeless and waterproof · Auto cannula insertion" },
+    { icon: "labour", challenge: "Manual labor job", feature: "Customizable targets and activity feature to prevent hypoglycemia which could be common in a manual labor job", bullets: "No need to disconnect during activities as the algorithm lives on the pod" },
+    { icon: "carbs", challenge: "Not carb counting", feature: "Simplified bolusing", bullets: "Using Custom Foods" },
+    { icon: "burnout", challenge: "Burnout", feature: "System simplicity and discreetness requiring a pod change only every 3 days rather than daily injections can ease some mental burden", bullets: "" }
+  ];
+
+  TAKE = [
+    { text: "The Omnipod® 5 is the first tubeless, waterproof hybrid closed loop system", sup: "2" },
+    { text: "It automatically adjusts insulin every 5 mins", sup: "" },
+    { text: "Optimizing settings with the Omnipod® 5 may facilitate a patient achieving diabetes goals", sup: "" },
+    { text: { mg: "The American Diabetes Association suggests aiming for ≥70% of time in range (70–180 mg/dL [3.9–10.0 mmol/L]) and <4% time below range", mmol: "The American Diabetes Association suggests aiming for ≥70% of time in range (3.9–10.0 mmol/L [70–180 mg/dL]) and <4% time below range" }, sup: "3" },
+    { text: "Real-world data suggest that users can spend more than 80% of time in range with optimized settings", sup: "4" },
+    { text: "The simplicity of Omnipod® 5 system may allow for improved quality of life, sleep, and more confidence in avoiding hypoglycemia", sup: "5–7" }
+  ];
+
+  REFS = [
+    { text: "National Institute for Health and Care Excellence. Type 1 diabetes in adults: diagnosis and management (NG17). Having your blood glucose checked (HbA1c). Available from: https://www.nice.org.uk/guidance/ng17/ifp/chapter/having-your-blood-glucose-checked-hba1c", proposed: true },
+    { text: "Insulet Corporation. Omnipod® 5 Automated Insulin Delivery System User Guide 2025 (Available from: https://www.omnipod.com/sites/default/files/Omnipod-5_User-Guide-SoC_United-Kindgom_English.pdf)" },
+    { text: "American Diabetes Association Professional Practice Committee for Diabetes; Diabetes Care. 2026;49(Supplement 1):S132–S149." },
+    { text: "Retrospective RWE data on file." },
+    { text: "Renard E, et al. Diabetes Care. 2024;47(12):2248–2257." },
+    { text: "Polonsky WH, et al. Diabetes Res Clin Pract. 2022;190:109998." },
+    { text: "Hood KK, et al. Pediatr Diabetes. 2023;2023:1–12." }
+  ];
+  /* "5–7" -> refs 5, 6, 7; "1" -> ref 1 */
+  citeText(sup) {
+    const m = sup.match(/^(\d+)[–-](\d+)$/); const ns = m ? Array.from({ length: +m[2] - +m[1] + 1 }, (_, i) => +m[1] + i) : sup.split(",").map(x => +x.trim());
+    return ns.map(n => n + ". " + (this.REFS[n - 1] || { text: "" }).text).join("\n");
+  }
+  WALK = [
+    { kind: "nav", title: "Move through the case", body: "Back sits bottom left and Next bottom right. Next appears once a screen is complete. The dots in the top bar show where you are; numbered dots are the six questions." },
+    { kind: "motion", title: "Top bar controls", body: "The switch pauses the glucose trace in the background. Reset progress clears your answers and returns to the start; it asks first if anything has been answered.", splitBody: "The switch pauses the glucose trace in the background." },
+    { kind: "gloss", title: "Abbreviations", body: "A term with a dotted underline shows its full form while the pointer rests on it." },
+    { kind: "info", title: "More information", body: "An information button on a card opens a reference note inside that card, such as HbA1c reference ranges. Select it again to close." },
+    { kind: "cite", title: "Check a source", body: "Select a numbered chip next to a statement to see that reference in place; it clears as soon as you do anything else. The full numbered list opens from the References button on the final Revisit page." },
+    { kind: "challenge", title: "Open a challenge", body: "A card with a bobbing chevron opens when selected: first the challenge, then the Omnipod® 5 feature that addresses it. Open all five to move on." },
+    { kind: "gate", title: "Six questions ahead", body: "Before the first question, a page asks if you are ready. Return to previous sections goes back to the case; Start the questions moves on." },
+    { kind: "option", title: "Select and submit", body: "Select an option, then Submit. One question allows more than one option to be selected." },
+    { kind: "confirm", title: "Confirm your answer", body: "You are asked to confirm before the answer is revealed. Change answer takes you back to the options." },
+    { kind: "answer", title: "Read the answer", body: "The recommended option turns teal with a tick; an option that does not address the problem turns red with a cross. The rationale appears beside the question." },
+    { kind: "revisit", title: "Finish and revisit", body: "After the sixth question a summary shows how many answers matched the recommended option. The take home messages then lead to a final page where every section can be revisited." },
+    { kind: "export", title: "Save the references", body: "In the References overlay, Save as PDF opens the list in a new tab ready to print or save. Where a new tab is not allowed, the list appears here with a Copy button instead." },
+    { kind: "link", title: "Open the User Guide", body: "The Omnipod® 5 User Guide button on the Revisit page first asks before leaving: Continue opens omnipod.com in a new tab, Stay here closes the notice. Where a new tab is not allowed, the link appears with a Copy button instead." }
+  ];
+
+  state = Object.assign({
+    scene: this.SCENE || 1, visited: [this.SCENE || 1], answers: {}, units: "mg", motion: true, walk: null, dir: 1, revReady: false, chTick: 0, fading: false, tags: (this.props && this.props.showProposedTags) || false, resetAsk: false
+  }, this.load());
+
+  load() {
+    try { const s = JSON.parse(localStorage.getItem(this.KEY) || "null"); if (s && typeof s.scene === "number") return { scene: this.SCENE || s.scene, visited: this.SCENE ? [this.SCENE] : (s.visited || [1]), answers: s.answers || {}, units: s.units || "mg", motion: s.motion !== false, ch: s.ch || {}, tags: !!s.tags }; } catch (e) {}
+    return {};
+  }
+  persist() {
+    if (this.noPersist) return;
+    const s = this.state;
+    try { localStorage.setItem(this.KEY, JSON.stringify({ scene: s.scene, visited: s.visited, answers: s.answers, units: s.units, motion: s.motion, ch: s.ch || {}, tags: !!s.tags })); } catch (e) {}
+  }
+  componentDidUpdate() { const prev = this._lastScene; this._lastScene = this.state.scene; this.persist(); if (this.state.scene === 5 && prev !== 5 && !this.reviewDriving) this.startCount(); if (this.state.scene === 14 && prev !== 14 && !this.reviewDriving) this.startTake(); this.rdCheck(); }
+
+  /* Take home messages release one at a time: 0.9 s ease-in + 0.7 s hold each. Reduced motion shows all six at once. */
+  startTake() {
+    this.stopTake();
+    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || (this.state.take && this.state.take.step >= this.TAKE.length)) { this.setState({ take: { step: this.TAKE.length } }); return; }
+    const run = i => { if (this.state.scene !== 14) return; this.setState({ take: { step: i } }); if (i < this.TAKE.length) this.takeTimer = setTimeout(() => run(i + 1), i === 0 ? 700 : 1600); };
+    run(0);
+  }
+  stopTake() { clearTimeout(this.takeTimer); }
+
+  /* Screen 5 cards appear one at a time; a numeric card counts up (ease-out, 1.2 s) before the next card is allowed in. */
+  DEMO = [
+    { icon: "age", num: 22, post: "years of age", span: 2 },
+    { icon: "male", post: "Male", big: true, span: 2 },
+    { icon: "duration", abbr: "T1D", def: "type 1 diabetes", mid: " for", num: 20, post: "years", rid: "s5-gloss-t1d", span: 2 },
+    { icon: "mdi", pre: "Treatment with ", abbr: "MDI", def: "multiple daily injections", mid: " for", num: 20, post: "years", rid: "s5-gloss-mdi", span: 3 },
+    { icon: "hba1c", abbr: "HbA1c", def: "glycated hemoglobin", num: 9.4, unit: "%", post: "", rid: "s5-gloss-hba1c", span: 3 },
+    { icon: "testing", post: "Inconsistent use of blood glucose testing", big: true, span: 3 },
+    { icon: "labour", post: "Manual labor job", big: true, span: 3 }
+  ];
+  startCount() {
+    this.stopCount();
+    const run = i => {
+      if (i >= this.DEMO.length || this.state.scene !== 5) return;
+      const d = this.DEMO[i];
+      this.setState(st => ({ demo: { step: i + 1, counts: st.demo ? st.demo.counts.slice() : this.DEMO.map(() => 0) } }));
+      if (d.num == null) { this.countTimer = setTimeout(() => run(i + 1), 800); return; }
+      const t0 = performance.now() + 500, dur = 1200;
+      const tick = now => {
+        if (this.state.scene !== 5) return;
+        const p = Math.max(0, Math.min(1, (now - t0) / dur)), e = 1 - Math.pow(1 - p, 3);
+        this.setState(st => { const c = st.demo.counts.slice(); c[i] = e; return { demo: { step: st.demo.step, counts: c } }; });
+        if (p < 1) this.countRaf = requestAnimationFrame(tick); else this.countTimer = setTimeout(() => run(i + 1), 250);
+      };
+      this.countRaf = requestAnimationFrame(tick);
+    };
+    this.setState({ demo: { step: 0, counts: this.DEMO.map(() => 0) } }, () => { this.countTimer = setTimeout(() => run(0), 900); });
+  }
+  stopCount() { cancelAnimationFrame(this.countRaf); clearTimeout(this.countTimer); }
+  /* Data panels (questions 1-3): the patient's figure counts up while its bar bounces in (owner 2026-09-11). */
+  countVal(v, p) { const m = String(v).match(/^([^\d]*)(\d+(?:\.\d+)?)(.*)$/); if (!m || p >= 1) return v; const dp = (m[2].split(".")[1] || "").length; return m[1] + (parseFloat(m[2]) * p).toFixed(dp) + m[3]; }
+  rdCheck() {
+    const n = this.state.scene, want = this.isQ(n) && this.ans(n).revealed && (this.Q[n].readouts || []).length > 0, key = want ? n : 0;
+    if (key === this._rdKey) return;
+    this._rdKey = key;
+    if (want && !this.reviewDriving) this.startRd();
+  }
+  startRd() {
+    this.stopRd();
+    const cur = this.state.scene, reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) { this.setState({ rd: null }); return; }
+    const t0 = performance.now() + 200, dur = 1100;
+    const tick = now => { if (this.state.scene !== cur) return; const q = Math.max(0, Math.min(1, (now - t0) / dur)); this.setState({ rd: { scene: cur, p: 1 - Math.pow(1 - q, 3) } }); if (q < 1) this.rdRaf = requestAnimationFrame(tick); };
+    this.setState({ rd: { scene: cur, p: 0 } }, () => { this.rdRaf = requestAnimationFrame(tick); });
+  }
+  stopRd() { cancelAnimationFrame(this.rdRaf); }
+  tipFor(el, text) {
+    if (!this.stageEl) return null;
+    const a = el.getBoundingClientRect(), b = this.stageEl.getBoundingClientRect(), k = b.width / 1280 || 1;
+    return { text, x: Math.min((a.left - b.left) / k, 900), y: (a.bottom - b.top) / k + 8 };
+  }
+
+  componentDidMount() {
+    this.fit = () => {
+      const vw = window.innerWidth, vh = window.innerHeight;
+      if (!this.stageEl || !vw || !vh) { requestAnimationFrame(this.fit); return; }
+      const k = Math.min(vw / 1320, vh / 760);
+      this.stageEl.style.transform = "translate(-50%,-50%) scale(" + k + ")";
+    };
+    this.fit(); window.addEventListener("resize", this.fit);
+    this._lastScene = this.state.scene;
+    if (this.state.scene === 5) this.startCount();
+    if (this.state.scene === 14) this.startTake();
+    this.rdCheck();
+    this.onKey = e => {
+      if (e.key === "Escape") this.setState({ walk: null, refsOpen: false, tip: null, ranges: false, link: null, resetAsk: false });
+      else if (this.state.walk !== null) return;
+      else if (e.key === "ArrowRight" && this.explored(this.state.scene) && this.state.scene < this.LAST) this.go(this.state.scene + 1);
+      else if (e.key === "ArrowLeft" && this.state.scene > 1) this.go(this.state.scene - 1);
+    };
+    window.addEventListener("keydown", this.onKey);
+    this.applyMotion();
+    this.installReview();
+  }
+  componentWillUnmount() { window.removeEventListener("resize", this.fit); window.removeEventListener("keydown", this.onKey); clearInterval(this.readyTimer); }
+
+  /* Background motion toggle pauses the ambient trace (CSS animations on .omn-trace). */
+  applyMotion() { if (this.stageEl) this.stageEl.style.setProperty("--omn-motion", this.state.motion ? "running" : "paused"); document.querySelectorAll(".omn-trace *").forEach(el => { el.style.animationPlayState = this.state.motion ? "running" : "paused"; }); }
+
+  ans(n) { return this.state.answers[n] || { picked: [], confirm: false, revealed: false }; }
+  setAns(n, patch) { this.setState(st => ({ answers: Object.assign({}, st.answers, { [n]: Object.assign({}, this.ans(n), patch) }) })); }
+  isQ(n) { return n >= 8 && n <= 13; }
+  explored(n) { if (n === 6) return this.CHALLENGES.every(c => (this.state.ch || {})[c.key]); if (n === 14) return !!(this.state.take && this.state.take.step >= this.TAKE.length); return this.isQ(n) ? this.ans(n).revealed : true; }
+  canAdvance() { return this.state.scene < this.LAST && this.explored(this.state.scene); }
+  allDone() { for (let n = 8; n <= 13; n++) if (!this.ans(n).revealed) return false; return this.state.visited.includes(14); }
+  isCorrect(n) { const a = this.ans(n), q = this.Q[n]; if (!a.revealed) return false; if (q.multi) return a.picked.length > 0; return a.picked.length === 1 && q.correct.includes(a.picked[0]); }
+
+  go(i) {
+    let s = Math.max(1, Math.min(this.LAST, i));
+    if (s === 3) s = i >= this.state.scene ? 4 : 2;
+    if (this.SCENE !== null && s !== this.SCENE) return;   /* screen 3 folded into 4; screen 7 is the Q&A gate (storyboard 7 merged into 6) */
+    if (s === this.state.scene) return;
+    this.setState(st => ({ scene: s, dir: s > st.scene ? 1 : -1, walk: null, ranges: false, tip: null, refsOpen: false, link: null, visited: st.visited.includes(s) ? st.visited : st.visited.concat([s]) }), () => this.applyMotion());
+  }
+  u(v) { return typeof v === "string" ? v : (v[this.state.units] || v.mg); }
+  ORDER = [2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+  hardReset() {
+    try { localStorage.removeItem(this.KEY); } catch (e) {} this.stopCount(); this.stopTake();
+    this.setState({ fading: true, tip: null, refsOpen: false, walk: null, ranges: false, resetAsk: false });   /* fade out, reset, fade back in */
+    setTimeout(() => this.setState({ scene: 1, visited: [1], answers: {}, ch: {}, chActive: null, chTick: 0, demo: null, take: null, fading: false }), 320);
+  }
+
+  /* Glucose trace, option 3a, drawn in the stage's own aspect (1280 x 130) so nothing stretches.
+     Twelve reading points; each fades in ~2 s ahead of the pen (draw-on 0-60% of 20 s), holds,
+     then fades as the draw-off (75-100%) passes it. Settles onto the Mango target line over the last third. */
+  traceSvg() {
+    if (this._trace) return this._trace;
+    const W = 1280, H = 130, T = 66, h = React.createElement;
+    /* Big swings first, damping toward the target line; every point sits on the curve (Catmull-Rom → cubic). Band 30–102. */
+    const pts = [[0, 66], [90, 36], [180, 98], [270, 38], [360, 94], [450, 44], [540, 88], [630, 52], [720, 80], [810, 58], [900, 74], [990, 62], [1080, 70], [1170, 65], [1280, 66]];
+    let d = "M" + pts[0][0] + " " + pts[0][1];
+    for (let i = 0; i < pts.length - 1; i++) {
+      const p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(pts.length - 1, i + 2)];
+      const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6], c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+      d += " C" + c1[0].toFixed(1) + " " + c1[1].toFixed(1) + " " + c2[0].toFixed(1) + " " + c2[1].toFixed(1) + " " + p2[0] + " " + p2[1];
+    }
+    const f = n => Math.max(0, Math.min(1, n)).toFixed(3);
+    const dots = pts.slice(1, pts.length - 1).map(([x, y], i) => {
+      const reach = x / W * 0.62; /* when the pen arrives (draw-on is 0–62% of the 24 s loop) */
+      const inStart = f(reach - 0.07), inEnd = f(reach - 0.035), outEnd = f(0.78 + x / W * 0.22), outStart = f(0.78 + x / W * 0.22 - 0.012);
+      return h("g", { key: i, className: "omn-trace__pt" },
+        h("circle", { className: "omn-trace__dot", cx: x, cy: y, r: 5, style: { animationDelay: (i * 0.25) + "s" } }),
+        h("circle", { cx: x, cy: y, r: 2.5, fill: "#fff" }),
+        h("animate", { attributeName: "opacity", dur: "24s", repeatCount: "indefinite", keyTimes: ["0", inStart, inEnd, outStart, outEnd, "1"].join(";"), values: "0;0;1;1;0;0" }));
+    });
+    this._trace = h("svg", { viewBox: "0 0 " + W + " " + H, preserveAspectRatio: "none", style: { width: "100%", height: "100%", display: "block" } },
+      h("rect", { className: "omn-trace__band", x: 0, y: 30, width: W, height: 72 }),
+      h("path", { className: "omn-trace__target", d: "M0 " + T + " H" + W }),
+      h("path", { className: "omn-trace__line", pathLength: 1000, d, style: { animation: "omnTraceDraw 24s linear infinite" } }),
+      dots);
+    return this._trace;
+  }
+
+  /* ---- Review declarations (house contract, see Lilly REVIEW-DECLARATIONS-SPEC) ---- */
+  liveScene() { const el = this.sceneEl; if (el && el.isConnected) return el; const f = document.querySelector('[data-review="scene"]'); if (f) this.sceneEl = f; return f || null; }
+  /* Readiness covers the whole stage, not just the scene body: overlays (walkthrough, dialogs, tooltips) mount beside the scene
+     and fade in from opacity 0, so a signature taken mid-fade would differ between passes. */
+  sceneReady() {
+    const el = (this.stageEl && this.stageEl.isConnected) ? this.stageEl : this.liveScene(); if (!el || !el.getAnimations) return true;
+    return !el.getAnimations({ subtree: true }).some(a => { if (a.playState !== "running") return false; const t = a.effect && a.effect.getTiming ? a.effect.getTiming() : {}; return t.iterations !== Infinity; });
+  }
+  installReview() {
+    this.readyTimer = setInterval(() => { const r = this.sceneReady(); if (r !== this.state.revReady) this.setState({ revReady: r }); }, 120);
+    const self = this;
+    const baseline = n => ({ scene: n, dir: 1, walk: null, tip: null, ranges: false, refsOpen: false, link: null, ch: {}, chActive: null, chTick: 0, fading: false, take: { step: 6 }, demo: { step: 7, counts: [1, 1, 1, 1, 1, 1, 1] }, units: "mg", motion: false, tags: false, resetAsk: false, visited: Array.from({ length: n }, (_, i) => i + 1), answers: {} });
+    const merge = (st, patch) => { const out = {}; for (const k of Object.keys(patch)) { const v = patch[k], cur = st[k]; out[k] = (v && typeof v === "object" && !Array.isArray(v) && cur && typeof cur === "object" && !Array.isArray(cur)) ? Object.assign({}, cur, v) : v; } return out; };
+    const set = p => new Promise(res => self.setState(st => merge(st, p), res));
+    const reset = n => new Promise(res => self.setState(baseline(n), res));
+    const wait = ms => new Promise(res => setTimeout(res, ms));
+    const finishFrozen = el => el.getAnimations({ subtree: true }).forEach(a => { const t = a.effect && a.effect.getTiming ? a.effect.getTiming() : {}; if (a.playState === "running" && t.iterations !== Infinity) { try { a.finish(); } catch (e) {} } });
+    const ready = (limit = 10000) => new Promise((res, rej) => {
+      const t0 = Date.now(); let last = null, stalls = 0;
+      const tick = () => {
+        const el = self.liveScene();
+        if (el && el.getAttribute("data-review-ready") === "true" && self.sceneReady()) return res(true);
+        const clock = document.timeline ? document.timeline.currentTime : null;
+        stalls = clock !== null && clock === last ? stalls + 1 : 0; last = clock;
+        if (stalls >= 2) finishFrozen((self.stageEl && self.stageEl.isConnected) ? self.stageEl : el);
+        if (Date.now() - t0 > limit) return rej(new Error("scene not ready within " + limit + "ms"));
+        setTimeout(tick, 80);
+      };
+      tick();
+    });
+    const find = id => (self.stageEl || document).querySelector('[data-review-id="' + id + '"]');
+    const act = (id, action) => { const el = find(id); if (!el) throw new Error("no element for data-review-id " + id); if (action === "hover") { el.dispatchEvent(new MouseEvent("mouseover", { bubbles: true })); el.dispatchEvent(new MouseEvent("mouseenter", { bubbles: false })); } else el.click(); };
+    const SC = this.SCENE;
+    const states = this.reviewStates().map(x => (SC !== null && x.id.startsWith("g-walk-")) ? Object.assign({}, x, { scene: SC }) : x).filter(x => SC === null || x.scene === SC);
+    const byId = {}; states.forEach(x => { byId[x.id] = x; });
+    const applyOne = async x => { if (x.patch) await set(x.patch); if (x.via) { await ready(); act(x.via, x.action || "click"); await wait(60); } };
+    window.__review = {
+      version: "1.0", asset: "tint8787-omnipod-scenes", scene: SC,
+      scenes: this.TITLES.slice(1).map((label, i) => ({ id: "s" + (i + 1), n: i + 1, label: i === 0 ? "Title page" : i === 6 ? "Optimizing the Omnipod® 5 (Q&A gate)" : label })).filter(x => x.n !== 3 && (SC === null || x.n === SC)),
+      states,
+      async apply(id) {
+        const x = byId[id]; if (!x) throw new Error("unknown review state " + id);
+        self.noPersist = true; self.reviewDriving = true; self.stopCount(); self.stopTake(); self.stopRd(); self.setState({ rd: null });
+        await reset(x.scene); self.stopCount(); self.stopTake(); await wait(30);
+        const chain = []; const walk = y => { (y.requires || []).forEach(r => { if (byId[r]) { walk(byId[r]); if (!chain.includes(byId[r])) chain.push(byId[r]); } }); }; walk(x);
+        for (const y of chain) await applyOne(y);
+        try { await applyOne(x); await ready(); } finally { self.reviewDriving = false; }
+        return id;
+      },
+      ready: () => ready(),
+      manifest() { return JSON.parse(JSON.stringify({ asset: this.asset, version: this.version, scene: this.scene, scenes: this.scenes, states: this.states })); },
+      lint() { return self.reviewLint(); }
+    };
+  }
+  reviewStates() {
+    const S = []; const add = (id, scene, label, extra) => S.push(Object.assign({ id, scene, label }, extra));
+    for (let n = 1; n <= this.LAST; n++) if (n !== 3) add("s" + n + "-base", n, this.TITLES[n], { patch: {} });
+    add("s7-complete", 7, "Q&A gate - all six answered, revisit numbers enabled", { patch: { answers: this.allRevealed() } });
+    add("s5-counted", 5, "Case demographics - all cards shown, numbers counted up", { patch: { demo: { step: 7, counts: [1, 1, 1, 1, 1, 1, 1] } } });
+    add("s5-hba1c-ranges", 5, "HbA1c reference ranges (NICE) - opened", { patch: { ranges: true }, requires: ["s5-counted"] });
+    [["t1d", "T1D - type 1 diabetes"], ["mdi", "MDI - multiple daily injections"], ["hba1c", "HbA1c - glycated hemoglobin"]].forEach(([k, l]) => add("s5-gloss-" + k, 5, l, { via: "s5-gloss-" + k, action: "hover", requires: ["s5-counted"] }));
+    this.CHALLENGES.forEach(c => add("s6-ch-" + c.key, 6, c.label + " - opened", { patch: { ch: { [c.key]: true }, chActive: c.key } }));
+    add("s6-complete", 6, "All five challenges opened - initiated line and Next shown", { patch: { ch: { missing: true, needle: true, labour: true, carbs: true, burnout: true }, chActive: "burnout" } });
+    add("s6-gloss-cgm", 6, "CGM - continuous glucose monitoring", { via: "s6-gloss-cgm", action: "hover", requires: ["s6-ch-labour"] });
+    add("s10-gloss-tir", 10, "TIR - time in range", { via: "s10-gloss-tir", action: "hover", requires: ["s10-revealed-correct"] });
+    add("s15-complete", 15, "Revisit page - all screens completed, every section revisitable", { patch: { visited: Array.from({ length: 15 }, (_, i) => i + 1), answers: this.allRevealed() } });
+    for (let n = 8; n <= 13; n++) {
+      const q = this.Q[n];
+      q.options.forEach((o, i) => add("s" + n + "-opt-" + i, n, o + " - selected", { patch: { answers: { [n]: { picked: [i], confirm: false, revealed: false } } } }));
+      add("s" + n + "-confirm", n, "Submit - confirmation shown", { patch: { answers: { [n]: { picked: [q.correct[0]], confirm: true, revealed: false } } } });
+      if (q.multi) add("s" + n + "-revealed", n, "All options submitted - Answer shown", { patch: { answers: { [n]: { picked: q.correct.slice(), confirm: false, revealed: true } } } });
+      else {
+        add("s" + n + "-revealed-correct", n, q.options[q.correct[0]] + " - revealed correct", { patch: { answers: { [n]: { picked: [q.correct[0]], confirm: false, revealed: true } } } });
+        q.options.forEach((o, i) => { if (!q.correct.includes(i)) add("s" + n + "-revealed-wrong-" + i, n, o + " - revealed, correct answer shown", { patch: { answers: { [n]: { picked: [i], confirm: false, revealed: true } } } }); });
+      }
+    }
+    add("s13-summary", 13, "Q&A 6 revealed - questions summary and Finish shown", { patch: { answers: this.allRevealed() } });
+    if (this.SCENE === null) add("g-reset-confirm", 8, "Reset progress - confirmation dialog (shown only when an answer exists)", { patch: { resetAsk: true, answers: { 8: { picked: [0], confirm: false, revealed: true } } } });
+    if (this.SCENE === null) add("g-tags-on", 6, "Proposed-copy tags shown (review aid, hidden by default)", { patch: { tags: true } });
+    add("s5-cite-1", 5, "Citation 1", { via: "s5-cite-1", action: "click", requires: ["s5-hba1c-ranges"] });
+    add("s15-references", 15, "References overlay", { patch: { refsOpen: true } });
+    add("s15-guide", 15, "Omnipod® 5 User Guide - leaving interstitial (Continue / Stay here)", { patch: { link: { title: "Omnipod® 5 User Guide", text: this.GUIDE_URL, mode: "leave" } } });
+    add("s15-guide-blocked", 15, "Omnipod® 5 User Guide - copy-link fallback when a new tab is blocked", { patch: { link: { title: "Omnipod® 5 User Guide", text: this.GUIDE_URL, mode: "copy" } } });
+    add("s14-releasing", 14, "Take home messages - third card releasing, Next not yet shown", { patch: { take: { step: 3 } }, partial: true });
+    this.TAKE.filter(k => k.sup).forEach(k => { const cid = k.sup.replace(/[–-]/g, "-"); add("s14-cite-" + cid, 14, "Citation " + k.sup, { via: "s14-cite-" + cid, action: "click", requires: ["s14-base"] }); });
+    add("g-refs-export", 15, "References overlay - Save as PDF button (opens a new tab; not driven in review)", { patch: { refsOpen: true } });
+    add("g-refs-export-fallback", 15, "Save as PDF - copy panel shown when a new tab is blocked", { patch: { link: { title: "References", text: this.REFS.map((r, i) => (i + 1) + ". " + r.text).join("\n"), mode: "copy" } } });
+    this.WALK.forEach((w, i) => add("g-walk-" + (i + 1), 2, "How to use this - " + w.title, { patch: { walk: i } }));
+    return S;
+  }
+  allRevealed() { const a = {}; for (let n = 8; n <= 13; n++) a[n] = { picked: this.Q[n].correct.slice(), confirm: false, revealed: true }; return a; }
+  reviewLint() {
+    const out = [], root = this.stageEl || document.body, EV = ["onClick", "onMouseEnter", "onMouseOver", "onPointerDown", "onKeyDown"], ids = {};
+    root.querySelectorAll("*").forEach(el => {
+      const pk = Object.keys(el).find(k => k.startsWith("__reactProps")); const props = pk ? el[pk] : null;
+      const listeners = props ? EV.filter(e => typeof props[e] === "function") : []; const cur = (el.style && el.style.cursor) || ""; const tagged = el.hasAttribute("data-review");
+      const desc = el.tagName.toLowerCase() + (el.textContent ? " '" + el.textContent.trim().slice(0, 40) + "'" : "");
+      if (!tagged && listeners.length) out.push({ kind: "undeclared-listener", el: desc, listeners });
+      else if (!tagged && (cur === "pointer" || cur === "help")) out.push({ kind: "undeclared-cursor", el: desc, cursor: cur });
+      if (tagged) { const id = el.getAttribute("data-review-id"); if (!id) out.push({ kind: "missing-id", el: desc }); else { if (ids[id]) out.push({ kind: "duplicate-id", id }); ids[id] = true; } }
+    });
+    root.querySelectorAll('[data-review="chrome"][data-review-id$="-backdrop"]').forEach(o => { const n = o.querySelectorAll("[data-review-close]").length; if (n !== 1) out.push({ kind: "dialog-close-count", dialog: o.getAttribute("data-review-id"), count: n }); });
+    const states = window.__review ? window.__review.states : []; const known = {}; states.forEach(x => { known[x.id] = true; });
+    /* unresolved-via is only meaningful when the scene is fully released (a partial state, e.g. cards mid-release, legitimately hides later controls) */
+    const partial = (this.state.scene === 14 && !this.explored(14)) || (this.state.scene === 5 && !(this.state.demo && this.state.demo.step >= this.DEMO.length));
+    states.forEach(x => { (x.requires || []).forEach(r => { if (!known[r]) out.push({ kind: "unknown-requires", state: x.id, requires: r }); }); if (!partial && x.via && !(x.requires || []).length && x.scene === this.state.scene && !root.querySelector('[data-review-id="' + x.via + '"]')) out.push({ kind: "unresolved-via", state: x.id, via: x.via }); });
+    return out;
+  }
+
+  renderVals() {
+    const s = this.state, cur = s.scene, isQ = this.isQ(cur), q = isQ ? this.Q[cur] : null, a = isQ ? this.ans(cur) : null;
+    const explored = this.explored(cur), split = this.SCENE !== null;
+    const vals = {
+      crossNav: true, reviewTools: !split, rootBg: split ? "transparent" : "#ECEBE8",
+      rootRef: el => { this.rootEl = el; }, stageRef: el => { this.stageEl = el; if (el && this.fit) this.fit(); }, sceneRef: el => { if (el) this.sceneEl = el; },
+      canvasRef: () => {},
+      sceneRid: "s" + cur, readyAttr: s.revReady ? "true" : "false",
+      sceneAnim: (cur % 2 ? "omnInA" : "omnInB") + " .45s cubic-bezier(.16,1,.3,1) both",
+      isTitle: cur === 1, notTitle: cur !== 1, isQ,
+      sectionLabel: cur === 15 ? "Revisit" : cur === 14 ? "Take home messages" : (isQ || cur === 7) ? "Optimizing the Omnipod® 5" : cur === 2 ? "Contents page" : "About the case",
+      stageOpacity: s.fading ? 0 : 1,
+      showContents: cur === 2 || cur === 15, contentsLabel: cur === 15 ? "15" : "02",
+      gateQs: [8, 9, 10, 11, 12, 13].map(n => { const done = this.ans(n).revealed; return { q: n - 7, border: done ? "#8D61C8" : "#E6E4DF", bg: done ? "#8D61C8" : "#fff", ink: done ? "#fff" : "#B8B5AE" }; }),
+      gatePipsLabel: [8, 9, 10, 11, 12, 13].filter(n => this.ans(n).revealed).length + " of 6 questions answered",
+      nextLabel: cur === 14 ? "Finish and revisit" : cur === 13 ? "Finish" : "Next",
+      takeDone: this.explored(14),
+      scoreLine: "You answered " + [8, 9, 10, 11, 12, 13].filter(n => this.isCorrect(n)).length + " of 6 as recommended",
+      summaryQs: [8, 9, 10, 11, 12, 13].map(n => ({ q: n - 7, bg: this.isCorrect(n) ? "#00A2AC" : this.ans(n).revealed ? "#F75E4C" : "#B8B5AE" })),
+      linkOn: !!s.link, linkTitle: s.link ? s.link.title : "", linkText: s.link ? s.link.text : "",
+      linkHint: s.link && s.link.mode === "leave" ? "You are about to leave this resource for omnipod.com." : s.link && s.link.title === "References" ? "This page cannot open a new tab here. Copy the references to paste or print them elsewhere." : "This page cannot open a new tab here. Copy the link and open it in your browser.",
+      linkIsLeave: !!(s.link && s.link.mode === "leave"), linkIsCopy: !!(s.link && s.link.mode !== "leave"),
+      continueLink: e => { e.stopPropagation(); let w = null; try { w = window.open(this.GUIDE_URL, "_blank", "noopener"); } catch (err) {} if (w) this.setState({ link: null }); else this.setState({ link: { title: "Omnipod® 5 User Guide", text: this.GUIDE_URL, mode: "copy" }, copied: false }); }, copyLabel: s.copied ? "Copied" : (s.link && s.link.title === "References" ? "Copy references" : "Copy link"),
+      closeLink: () => this.setState({ link: null, copied: false }),
+      copyLink: e => { e.stopPropagation(); const t = s.link ? s.link.text : ""; const done = () => { this.setState({ copied: true }); clearTimeout(this.copyT); this.copyT = setTimeout(() => this.setState({ copied: false }), 1600); }; if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, done); else done(); },
+      openGuide: e => { e.stopPropagation(); this.setState({ link: { title: "Omnipod® 5 User Guide", text: this.GUIDE_URL, mode: "leave" }, copied: false, tip: null }); },
+      chPanelAnim: (s.chTick % 2 ? "omnSoftB" : "omnSoft") + " 1.2s ease .25s both",
+      exportRefs: e => {
+        e.stopPropagation();
+        const esc = t => t.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+        const html = "<!doctype html><html><head><meta charset=\"utf-8\"><title>References - Interactive Decision-Making with the Omnipod® 5</title><style>body{font-family:Helvetica,Arial,sans-serif;max-width:760px;margin:40px auto;padding:0 24px;color:#1B1A1A;line-height:1.45}h1{font-size:22px;margin:0 0 6px}p{margin:0 0 18px;color:#454545}ol{padding-left:24px;margin:0}li{margin:0 0 10px;word-break:break-word;font-size:14px}@media print{body{margin:0}}</style></head><body><h1>References</h1><p>Interactive Decision-Making with the Omnipod® 5: Real-World T1D Scenarios</p><ol>" + this.REFS.map(r => "<li>" + esc(r.text) + "</li>").join("") + "</ol></body></html>";
+        /* Visme embeds sit in a sandboxed iframe: window.open is the route that works there; a Blob download is the fallback when pop-ups are blocked. */
+        const w = window.open("", "_blank");
+        if (w && w.document) { w.document.open(); w.document.write(html); w.document.close(); setTimeout(() => { try { w.focus(); w.print(); } catch (err) {} }, 500); return; }
+        this.setState({ refsOpen: false, link: { title: "References", text: this.REFS.map((r, i) => (i + 1) + ". " + r.text).join("\n"), mode: "copy" }, copied: false });
+      },
+      progress: this.ORDER.map(n => { const idx = this.ORDER.indexOf(cur), i = this.ORDER.indexOf(n); const state = i < idx ? "done" : i === idx ? "current" : "ahead"; const isQn = this.isQ(n); return { num: isQn ? String(n - 7) : "", size: isQn ? "16px" : "8px", bg: state === "done" ? "#8D61C8" : state === "current" ? "#FFA700" : "#E6E4DF" }; }),
+      progressLabel: "Screen " + (this.ORDER.indexOf(cur) + 1) + " of " + this.ORDER.length,
+      tagsAttr: s.tags ? "on" : "off", tagsPressed: s.tags ? "true" : "false", tagsInk: s.tags ? "#F75E4C" : "#B8B5AE", tagsBg: s.tags ? "#FFF3F0" : "#fff",
+      toggleTags: () => this.setState({ tags: !s.tags }),
+      resetAsk: !!s.resetAsk, closeReset: () => this.setState({ resetAsk: false }),
+      doReset: e => { e.stopPropagation(); this.setState({ resetAsk: false }); this.hardReset(); },
+      next: () => { if (cur < this.LAST) this.go(cur + 1); }, prev: () => this.go(cur - 1),
+      showBack: cur > 1 && cur !== 7, showNext: explored && cur !== 1 && cur !== 7 && cur !== this.LAST,
+      showContentsBtn: false, goContents: () => this.go(2),
+      footerBg: "#fff", footerLine: cur === 1 ? "3px solid #00A9B5" : "1px solid #E6E4DF",
+      trace: this.traceSvg(), traceOpacity: cur === 1 || cur === 4 ? 0.35 : 0.16,
+      motionPressed: s.motion ? "true" : "false", motionTrack: s.motion ? "#8D61C8" : "#B8B5AE", motionKnob: s.motion ? "auto" : "0",
+      toggleMotion: () => this.setState({ motion: !s.motion }, () => this.applyMotion()),
+      allDone: this.allDone(),
+      demo: this.DEMO.map((d, i) => {
+        const dm = s.demo || { step: 0, counts: [] }, p = dm.counts[i] || 0;
+        return { icon: d.icon, span: d.span, on: dm.step > i, hasGloss: !!d.abbr, hasRanges: d.icon === "hba1c" && (this.props.showHba1cRanges ?? true), pre: d.pre || "", abbr: d.abbr || "", def: d.def || "", mid: d.mid || "", rid: d.rid || "",
+          hasNum: d.num != null, num: d.num == null ? "" : (Number.isInteger(d.num) ? String(Math.round(d.num * p)) : (d.num * p).toFixed(1)), unit: d.unit || "",
+          post: d.post, postWeight: d.big ? 600 : 400, postSize: d.big ? "20px" : "17px" };
+      }),
+      resetProgress: () => { if (s.fading) return; const answered = Object.keys(s.answers || {}).some(k => s.answers[k].revealed || (s.answers[k].picked || []).length); if (answered) this.setState({ resetAsk: true, tip: null }); else this.hardReset(); },
+      rangesOn: !!s.ranges, rangesOpen: s.ranges ? "true" : "false", rangesBtnBg: s.ranges ? "#8D61C8" : "#fff", rangesBtnInk: s.ranges ? "#fff" : "#8D61C8",
+      toggleRanges: e => {
+        e.stopPropagation();
+        const open = !s.ranges;
+        this.setState({ ranges: open });
+        clearTimeout(this.rangesArm);
+        if (open) this.rangesArm = setTimeout(() => {   /* any next interaction dismisses it (Lilly citation-chip pattern) */
+          const off = ev => { if (ev.type === "pointerdown" && ev.target && ev.target.closest && ev.target.closest("[data-ranges-panel]")) return; document.removeEventListener("pointerdown", off, true); document.removeEventListener("keydown", off, true); this.setState({ ranges: false }); };
+          document.addEventListener("pointerdown", off, true); document.addEventListener("keydown", off, true);
+        }, 0);
+      },
+      glossEnter: e => this.setState({ tip: this.tipFor(e.currentTarget, e.currentTarget.dataset.gloss) }),
+      glossLeave: () => this.setState({ tip: null }),
+      tipOn: !!s.tip, tipText: s.tip ? s.tip.text : "", tipX: s.tip ? s.tip.x + "px" : "0px", tipY: s.tip ? s.tip.y + "px" : "0px",
+      /* Owner ruling O2 (2026-09-11): the three sections the top bar names are numbered 1-3; demographics and
+         challenges sit under section 1 as unnumbered sub-items. The revisit page renders the same list. */
+      contents: [[4, 0], [5, 1], [6, 1], [8, 0], [14, 0]].map(([n, sub], i, all) => {
+        const label = n === 8 ? "Optimizing the Omnipod® 5 (Q&A)" : n === 4 ? "About the case" : n === 6 ? "Challenges in the management of this case" : this.TITLES[n];
+        const done = n === 8 ? [8, 9, 10, 11, 12, 13].every(k => this.ans(k).revealed) : n === 6 ? this.explored(6) : s.visited.includes(n);
+        const nav = cur === 15;
+        return { n, label, go: () => this.go(n), nav, done,
+          border: nav ? "#8D61C8" : "#E6E4DF", dotBg: nav ? "#8D61C8" : "#FFA700", sub: !!sub,
+          badge: sub ? "" : String(all.slice(0, i + 1).filter(x => !x[1]).length), dot: sub ? "12px" : "30px",
+          width: sub ? "540px" : "560px", minh: sub ? "48px" : "58px", fs: sub ? "16px" : "17px",
+          indent: ((all.slice(0, i + 1).filter(x => !x[1]).length - 1) * 100 + (sub ? 56 : 0)) + "px", delay: (0.1 + i * 0.07).toFixed(2) + "s" };
+      }),
+      challenges: this.CHALLENGES.map((c, i) => { const on = !!(s.ch || {})[c.key]; return { key: c.key, icon: c.icon, label: c.label, detail: c.detail, hasDetail: !!c.detail, hasGloss: !!c.gloss, noGloss: !c.gloss, pre: c.gloss ? c.gloss.pre : "", post: c.gloss ? c.gloss.post : "", proposed: !!c.proposed, feature: c.feature, bullets: c.bullets, hasBullets: !!c.bullets, on, closed: !on, expanded: on ? "true" : "false",
+        border: on ? "#8D61C8" : "#E6E4DF", bg: on ? "#F6F6F6" : "#fff", shadow: on ? "0 6px 18px rgba(141,97,200,.18)" : "none", delay: (0.6 + i * 0.12).toFixed(2) + "s",
+        open: () => this.setState(st => ({ ch: Object.assign({}, st.ch || {}, { [c.key]: true }), chActive: c.key, chTick: st.chActive === c.key ? st.chTick : (st.chTick || 0) + 1 })) }; }),
+      challengesDone: this.explored(6),
+      chActiveOn: !!s.chActive, chActiveIcon: (this.CHALLENGES.find(c => c.key === s.chActive) || {}).icon || "pod",
+      chActiveDetail: (this.CHALLENGES.find(c => c.key === s.chActive) || {}).detail || "", chActiveHasDetail: !!((this.CHALLENGES.find(c => c.key === s.chActive) || {}).detail),
+      chActiveFeature: (this.CHALLENGES.find(c => c.key === s.chActive) || {}).feature || "", chActiveBullets: (this.CHALLENGES.find(c => c.key === s.chActive) || {}).bullets || "",
+      chActiveHasBullets: !!((this.CHALLENGES.find(c => c.key === s.chActive) || {}).bullets),
+      chCols: ((this.CHALLENGES.find(c => c.key === s.chActive) || {}).detail) ? "2fr 3fr" : "1fr",
+      takeHome: this.TAKE.map((k, i) => ({ text: this.u(k.text), sup: k.sup, hasSup: !!k.sup, cid: k.sup.replace(/[–-]/g, "-"), on: (s.take ? s.take.step : 0) > i })),
+      refs: this.REFS.map(r => ({ text: r.text, proposed: !!r.proposed })),
+      refsOpen: !!s.refsOpen, openRefs: e => { e.stopPropagation(); this.setState({ refsOpen: true, tip: null }); }, closeRefs: () => this.setState({ refsOpen: false }),
+      cite: e => {
+        e.stopPropagation();
+        const el = e.currentTarget, text = this.citeText(el.dataset.cite), same = s.tip && s.tip.text === text;
+        this.setState({ tip: same ? null : this.tipFor(el, text) });
+        if (same) return;
+        clearTimeout(this.citeArm);
+        this.citeArm = setTimeout(() => {   /* stays up only until the learner does anything else */
+          const off = () => { document.removeEventListener("pointerdown", off, true); document.removeEventListener("keydown", off, true); this.setState({ tip: null }); };
+          document.addEventListener("pointerdown", off, true); document.addEventListener("keydown", off, true);
+        }, 0);
+      },
+      walkOpen: s.walk !== null, openWalk: () => this.setState({ walk: 0 }), closeWalk: () => this.setState({ walk: null }), stopClick: e => e.stopPropagation(),
+      walkTitle: this.WALK[s.walk || 0].title, walkBody: (split && this.WALK[s.walk || 0].splitBody) || this.WALK[s.walk || 0].body,
+      walkIsNav: this.WALK[s.walk || 0].kind === "nav", walkIsOption: this.WALK[s.walk || 0].kind === "option", walkIsConfirm: this.WALK[s.walk || 0].kind === "confirm",
+      walkIsAnswer: this.WALK[s.walk || 0].kind === "answer", walkIsInfo: this.WALK[s.walk || 0].kind === "info", walkIsChallenge: this.WALK[s.walk || 0].kind === "challenge", walkIsCite: this.WALK[s.walk || 0].kind === "cite", walkIsMotion: this.WALK[s.walk || 0].kind === "motion", walkIsRevisit: this.WALK[s.walk || 0].kind === "revisit", walkIsExport: this.WALK[s.walk || 0].kind === "export", walkIsGate: this.WALK[s.walk || 0].kind === "gate", walkIsGloss: this.WALK[s.walk || 0].kind === "gloss", walkIsLink: this.WALK[s.walk || 0].kind === "link",
+      walkDots: this.WALK.map((w, i) => ({ bg: i === (s.walk || 0) ? "#8D61C8" : "#E6E4DF" })),
+      walkPrev: e => { e.stopPropagation(); this.setState({ walk: Math.max(0, (s.walk || 0) - 1) }); },
+      walkNext: e => { e.stopPropagation(); const w = s.walk || 0; this.setState({ walk: w >= this.WALK.length - 1 ? null : w + 1 }); },
+      walkPrevOpacity: (s.walk || 0) === 0 ? .4 : 1, walkNextLabel: (s.walk || 0) >= this.WALK.length - 1 ? "Done" : "Next step",
+      walkIsLast: (s.walk || 0) >= this.WALK.length - 1, walkNotLast: (s.walk || 0) < this.WALK.length - 1
+    };
+    for (let i = 1; i <= this.LAST; i++) vals["show" + i] = cur === i;
+    const dense = isQ && q.options.length > 4;   /* Q5: five options + long answer; tighter options so nothing clips */
+    vals.qOptFont = dense ? "16px" : "17px"; vals.qOptPad = dense ? "9px 14px" : "12px 16px"; vals.qOptMin = dense ? "44px" : "52px";
+
+    if (isQ) {
+      const picked = a.picked, revealed = a.revealed, confirm = a.confirm;
+      vals.qLabel = String(cur).padStart(2, "0"); vals.qSetup = this.u(q.setup); vals.qStem = q.stem; vals.qMulti = !!q.multi;
+      vals.qRole = q.multi ? "group" : "radiogroup";
+      vals.qOptions = q.options.map((text, i) => {
+        const on = picked.includes(i), isC = q.correct.includes(i);
+        let cls = q.multi ? "omn-option--multi" : "", ico = "", showIco = false;
+        if (revealed) { if (q.multi) { if (on) { cls += " omn-option--correct"; ico = "check"; showIco = true; } } else if (isC) { cls += " omn-option--correct"; ico = "check"; showIco = true; } else if (on) { cls += " omn-option--incorrect"; ico = "x"; showIco = true; } }
+        else if (on) { cls += " omn-option--selected"; ico = "check"; showIco = true; }
+        const tone = revealed ? (cls.includes("--correct") ? "#00A2AC" : cls.includes("--incorrect") ? "#F75E4C" : "") : (on ? "#8D61C8" : "");
+        return { text, cls, ico, showIco, role: q.multi ? "checkbox" : "radio", checked: on ? "true" : "false", revealedAttr: revealed ? "true" : "false", disabled: revealed || confirm, rid: "s" + cur + "-opt-" + i,
+          border: tone || "#E6E4DF", markBg: tone || "transparent", markBorder: tone || "#808080",
+          idle: !revealed && !confirm && !on, delay: (0.3 + i * 0.08).toFixed(2) + "s",
+          pick: () => { if (revealed || confirm) return; this.setAns(cur, { picked: q.multi ? (on ? picked.filter(x => x !== i) : picked.concat([i])) : [i] }); } };
+      });
+      vals.qShowSummary = cur === 13 && revealed;
+      vals.qShowSubmit = !revealed && !confirm; vals.qSubmitDisabled = picked.length === 0; vals.qShowConfirm = !revealed && confirm;
+      vals.qSubmitRid = "s" + cur + "-submit"; vals.qConfirmRid = "s" + cur + "-confirm"; vals.qChangeRid = "s" + cur + "-change";
+      vals.submit = () => { if (picked.length) this.setAns(cur, { confirm: true }); };
+      vals.confirm = () => this.setAns(cur, { confirm: false, revealed: true });
+      vals.change = () => this.setAns(cur, { confirm: false });
+      vals.qReadouts = (q.readouts || []).map(r => ({ label: this.u(r.label), value: this.countVal(r.value, s.rd && s.rd.scene === cur ? s.rd.p : 1), fill: r.fill + "%", target: r.target + "%", targetText: r.targetText,
+        valueCls: r.alert ? "omn-readout__value--alert" : "omn-readout__value--data", fillCls: r.alert ? "omn-bar__fill--alert" : "", swatch: r.alert ? "#F75E4C" : "#00A2AC" }));
+      vals.qHasReadouts = vals.qReadouts.length > 0 && revealed;   /* graphics would give the answer away: shown only after reveal */
+      const fb = [];
+      if (revealed) {
+        /* Outcome word (proposed glue) "Correct"/"Incorrect" sits above the storyboard label on single-answer questions; Q5 (select-all) carries none.
+           Q1 and Q6: v2 gives a rationale for every incorrect option - all are shown after the answer, the learner's own pick first and marked "Your answer". */
+        const wrong = q.multi ? [] : picked.filter(i => !q.correct.includes(i));
+        const gotIt = !q.multi && wrong.length === 0;
+        const ct = this.u(q.correctText), gi = q.gloss ? ct.indexOf(q.gloss.abbr) : -1;   /* an abbreviation in the answer gets its hover */
+        fb.push({ cls: q.correctLabel === "Answer" ? "omn-feedback--info" : "omn-feedback--correct", ico: q.correctLabel === "Answer" ? "info" : "check", hasLabel: true, label: q.correctLabel, text: ct,
+          hasGloss: gi > -1, pre: gi > -1 ? ct.slice(0, gi) : "", post: gi > -1 ? ct.slice(gi + q.gloss.abbr.length) : "", gAbbr: gi > -1 ? q.gloss.abbr : "", gDef: gi > -1 ? q.gloss.def : "", gRid: gi > -1 ? q.gloss.rid : "",
+          hasOutcome: !q.multi, outcome: gotIt ? "Correct" : "Incorrect", outcomeInk: gotIt ? "#00A2AC" : "#F75E4C" });
+        /* Owner 10 Sep: show only the learner's own answer and, if wrong, the correct one. The learner's own rationale goes first so it is never the part below the fold. */
+        wrong.forEach(i => { if (q.perOption && q.perOption[i]) fb.unshift({ cls: "omn-feedback--incorrect", ico: "x", hasLabel: true, label: q.options[i], text: q.perOption[i], hasOutcome: true, outcome: "Your answer", outcomeInk: "#F75E4C" }); });
+      }
+      vals.qFeedback = fb.map((f, i) => Object.assign({ hasOutcome: false, outcome: "", outcomeInk: "#1B1A1A", hasGloss: false, pre: "", post: "", gAbbr: "", gDef: "", gRid: "" }, f, { delay: (i * 0.15).toFixed(2) + "s", noGloss: !f.hasGloss }));
+    } else {
+      vals.qShowSummary = false; vals.qLabel = ""; vals.qSetup = ""; vals.qStem = ""; vals.qMulti = false; vals.qRole = "radiogroup"; vals.qOptions = []; vals.qShowSubmit = false; vals.qShowConfirm = false; vals.qReadouts = []; vals.qHasReadouts = false; vals.qFeedback = []; vals.qSubmitDisabled = true;
+      vals.qSubmitRid = ""; vals.qConfirmRid = ""; vals.qChangeRid = ""; vals.submit = () => {}; vals.confirm = () => {}; vals.change = () => {};
+    }
+    return vals;
+  }
+}
+</script>
+<script id="build-stamp">(function(){var T="Omnipod 5 Decision Making: The whole activity (review version)",M="Omnipod 5 Decision Making tint8787-omnipod-decision-making v1 2026-09-11";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<script id="layer-release">(function(){var SAFE=/^(omnBarBounce|omnFade|omnInA|omnInB|omnPop|omnRoll|omnSoft|omnSoftB|omnSwipe|omnTitleRise|omnUp|omnZoomIn)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
+</body>
+</html>

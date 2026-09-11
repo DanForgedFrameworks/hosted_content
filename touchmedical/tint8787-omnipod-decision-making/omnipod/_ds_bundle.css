@@ -1,0 +1,273 @@
+/* ===========================================================================
+   Omnipod® kit — component styles (the class vocabulary)
+   Colour, type and CTA shape follow the Omnipod® Brand Guidelines. Anything
+   the guide does not cover (quiz states, stepper, readouts) is marked DERIVED
+   and uses only palette tokens. Statuses are ALWAYS icon + word + colour.
+   =========================================================================== */
+
+/* --- Foundations --------------------------------------------------------- */
+.omn-root {
+  font-family: var(--omn-font);
+  font-size: var(--omn-size-body);
+  line-height: var(--omn-lh-body);
+  color: var(--omn-ink-2);
+  background: var(--omn-white);
+  -webkit-font-smoothing: antialiased;
+}
+.omn-root *, .omn-root *::before, .omn-root *::after { box-sizing: border-box; }
+.omn-root a { color: var(--omn-grape-80); text-decoration: underline; text-underline-offset: 2px; }
+.omn-root a:hover { color: var(--omn-grape); }
+
+/* Screen shell: white-led (agreed), Mango reserved for accents. */
+.omn-screen { position: relative; width: var(--omn-screen-w); height: var(--omn-screen-h); overflow: hidden; background: var(--omn-white); display: grid; grid-template-rows: auto 1fr auto; }
+.omn-screen__body { padding: 32px 60px; min-height: 0; display: flex; flex-direction: column; gap: var(--omn-gap); }
+.omn-stack { display: flex; flex-direction: column; gap: var(--omn-gap); }
+.omn-row   { display: flex; gap: var(--omn-gap); flex-wrap: wrap; align-items: center; }
+.omn-grid  { display: grid; gap: var(--omn-gap); grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+
+/* --- Type --------------------------------------------------------------- */
+.omn-h1, .omn-h2, .omn-h3 { font-family: var(--omn-font); font-weight: 600; color: var(--omn-ink); line-height: var(--omn-lh-tight); letter-spacing: var(--omn-track-head); margin: 0; text-wrap: pretty; }
+.omn-h1 { font-size: var(--omn-size-h1); }
+.omn-h2 { font-size: var(--omn-size-h2); }
+.omn-h3 { font-size: var(--omn-size-h3); }
+.omn-h4 { font-family: var(--omn-font); font-weight: 700; font-size: var(--omn-size-h4); color: var(--omn-ink); line-height: 1.25; margin: 0; }
+.omn-body  { font-size: var(--omn-size-body); color: var(--omn-ink-2); margin: 0; }
+.omn-small { font-size: var(--omn-size-small); color: var(--omn-ink-2); margin: 0; }
+/* Micro-header (guide p.36): Open Sans Bold, uppercase, tracking 75. Titles only — never body copy. */
+.omn-micro { font-family: var(--omn-font-caps); font-weight: 700; font-size: var(--omn-size-micro); text-transform: uppercase; letter-spacing: var(--omn-track-caps); color: var(--omn-ink); margin: 0; line-height: 1.4; }
+.omn-micro--muted { color: var(--omn-grey); }
+.omn-micro--mango { color: var(--omn-mango); }  /* headline-scale on white only; ≥19px equivalent rule -> use sparingly */
+.omn-sup { font-size: .6em; vertical-align: super; line-height: 0; }
+
+/* --- Icons (CSS mask, colour = currentColor) --------------------------- */
+.omn-ico { display: inline-block; width: 24px; height: 24px; flex: 0 0 24px; line-height: 0; vertical-align: middle; background-color: currentColor;
+  -webkit-mask: var(--i) center / contain no-repeat; mask: var(--i) center / contain no-repeat; }
+.omn-ico--age      { --i: var(--omn-ico-age); }
+.omn-ico--male     { --i: var(--omn-hi-male); }          /* pick: Healthicons male; redraw kept as --omn-ico-male */
+.omn-ico--duration { --i: var(--omn-ico-duration); }
+.omn-ico--mdi      { --i: var(--omn-hi-syringe); }       /* pick: Healthicons syringe */
+.omn-ico--hba1c    { --i: var(--omn-ico-hba1c); }
+.omn-ico--testing  { --i: var(--omn-hi-meter); }         /* pick: Healthicons meter; backup .omn-ico--hi-diabetes-drop */
+.omn-ico--labor, .omn-ico--labour { --i: var(--omn-tb-truck-loading); }   /* pick: Tabler truck-loading */   /* pick: manual-handling redraw */
+.omn-ico--missing  { --i: var(--omn-ico-missing); }
+.omn-ico--carbs    { --i: var(--omn-hi-carbohydrates); } /* pick: Healthicons carbohydrates; backup .omn-ico--cutlery */
+.omn-ico--burnout  { --i: var(--omn-tb-battery-exclamation); }   /* pick: Tabler battery-exclamation */ /* pick: battery over person; backup .omn-ico--burnout-battery */
+.omn-ico--check    { --i: var(--omn-ico-check); }
+.omn-ico--x        { --i: var(--omn-ico-x); }
+.omn-ico--info     { --i: var(--omn-ico-info); }
+.omn-ico--alert    { --i: var(--omn-ico-alert); }
+.omn-ico--chevron  { --i: var(--omn-ico-chevron); }
+.omn-ico--pod      { --i: var(--omn-ico-pod); }
+.omn-ico--tap      { --i: var(--omn-ico-tap); }
+.omn-ico--wave     { --i: var(--omn-ico-drop_wave); }
+.omn-ico--testing-meter { --i: var(--omn-ico-testing_meter); }
+.omn-ico--burnout-figure { --i: var(--omn-ico-burnout_figure); }
+.omn-ico--missing-syringe { --i: var(--omn-ico-missing_syringe); }
+.omn-ico--missing-dashed { --i: var(--omn-tb-vaccine-off); }   /* backup for missing injections: Tabler vaccine-off */
+.omn-ico--lifting  { --i: var(--omn-ico-lifting); }
+.omn-ico--burnout-standing { --i: var(--omn-ico-burnout_battery_person); }
+.omn-ico--cutlery  { --i: var(--omn-ico-cutlery); }
+.omn-ico--burnout-battery { --i: var(--omn-ico-burnout); }
+.omn-ico--hba1c-backup { --i: var(--omn-hi-blood-drop); }
+.omn-ico--hi-syringe { --i: var(--omn-hi-syringe); }
+.omn-ico--hi-meter { --i: var(--omn-hi-meter); }
+.omn-ico--hi-finger-prick { --i: var(--omn-hi-finger-prick); }
+.omn-ico--hi-diabetes-drop { --i: var(--omn-hi-diabetes-drop); }
+.omn-ico--hi-blood-drop { --i: var(--omn-hi-blood-drop); }
+.omn-ico--hi-test-tubes { --i: var(--omn-hi-test-tubes); }
+.omn-ico--hi-construction-worker { --i: var(--omn-hi-construction-worker); }
+.omn-ico--hi-factory-worker { --i: var(--omn-hi-factory-worker); }
+.omn-ico--hi-city-worker { --i: var(--omn-hi-city-worker); }
+.omn-ico--hi-construction { --i: var(--omn-hi-construction); }
+.omn-ico--hi-calendar { --i: var(--omn-hi-calendar); }
+.omn-ico--hi-calendar-x { --i: var(--omn-hi-calendar-x); }
+.omn-ico--hi-sad { --i: var(--omn-hi-sad); }
+.omn-ico--hi-carbohydrates { --i: var(--omn-hi-carbohydrates); }
+.omn-ico--hi-hot-meal { --i: var(--omn-hi-hot-meal); }
+.omn-ico--hi-man { --i: var(--omn-hi-man); }
+.omn-ico--hi-male { --i: var(--omn-hi-male); }
+.omn-ico--hi-blood-tube { --i: var(--omn-hi-blood-tube); }
+.omn-ico--tb-armchair { --i: var(--omn-tb-armchair); }
+.omn-ico--tb-barbell { --i: var(--omn-tb-barbell); }
+.omn-ico--tb-battery-1 { --i: var(--omn-tb-battery-1); }
+.omn-ico--tb-battery-exclamation { --i: var(--omn-tb-battery-exclamation); }
+.omn-ico--tb-battery-vertical-1 { --i: var(--omn-tb-battery-vertical-1); }
+.omn-ico--tb-bed { --i: var(--omn-tb-bed); }
+.omn-ico--tb-forklift { --i: var(--omn-tb-forklift); }
+.omn-ico--tb-gender-male { --i: var(--omn-tb-gender-male); }
+.omn-ico--tb-hammer { --i: var(--omn-tb-hammer); }
+.omn-ico--tb-helmet { --i: var(--omn-tb-helmet); }
+.omn-ico--tb-man { --i: var(--omn-tb-man); }
+.omn-ico--tb-mood-empty { --i: var(--omn-tb-mood-empty); }
+.omn-ico--tb-mood-sad-2 { --i: var(--omn-tb-mood-sad-2); }
+.omn-ico--tb-mood-sad-dizzy { --i: var(--omn-tb-mood-sad-dizzy); }
+.omn-ico--tb-package-import { --i: var(--omn-tb-package-import); }
+.omn-ico--tb-package { --i: var(--omn-tb-package); }
+.omn-ico--tb-packages { --i: var(--omn-tb-packages); }
+.omn-ico--tb-shovel { --i: var(--omn-tb-shovel); }
+.omn-ico--tb-sofa { --i: var(--omn-tb-sofa); }
+.omn-ico--tb-stretching-2 { --i: var(--omn-tb-stretching-2); }
+.omn-ico--tb-stretching { --i: var(--omn-tb-stretching); }
+.omn-ico--tb-tool { --i: var(--omn-tb-tool); }
+.omn-ico--tb-tools { --i: var(--omn-tb-tools); }
+.omn-ico--tb-truck-loading { --i: var(--omn-tb-truck-loading); }
+.omn-ico--tb-user { --i: var(--omn-tb-user); }
+.omn-ico--tb-vaccine-off { --i: var(--omn-tb-vaccine-off); }
+.omn-ico--tb-vaccine { --i: var(--omn-tb-vaccine); }
+.omn-ico--tb-wall { --i: var(--omn-tb-wall); }
+.omn-ico--tb-zzz { --i: var(--omn-tb-zzz); }
+.omn-ico--lg { width: 32px; height: 32px; flex-basis: 32px; }
+/* Guide p.46 treatment: line icon on a Mango rounded square, ink stroke (passes 4.5:1 on Mango) */
+.omn-ico-tile { width: 48px; height: 48px; flex: 0 0 48px; border-radius: var(--omn-radius-sm); background: var(--omn-mango); color: var(--omn-ink); display: inline-flex; align-items: center; justify-content: center; line-height: 0; padding: 0; box-sizing: border-box; }
+.omn-ico-tile > .omn-ico { margin: 0; flex: 0 0 24px; }
+.omn-ico-tile--beige { background: var(--omn-beige); }
+
+/* --- Logos --------------------------------------------------------------- */
+.omn-logo { display: inline-block; background: center / contain no-repeat; }
+.omn-logo--omnipod { background-image: var(--omn-logo-omnipod); width: 120px; height: 72px; border-radius: var(--omn-radius-sm); overflow: hidden; }   /* supplied lock-up "omnipod® simplify life™" */
+.omn-logo--touch   { background-image: var(--omn-logo-touch);   width: 220px; height: 61px; }  /* touchENDOCRINOLOGY */
+
+/* --- Title bar / masthead ------------------------------------------------
+   White band, hairline rule, touch mark left, section label right. A 4px
+   Mango accent rule is the only brand colour on the band (white-led). */
+.omn-titlebar { display: flex; align-items: center; justify-content: space-between; gap: var(--omn-gap); padding: 20px 60px; background: var(--omn-white); border-bottom: var(--omn-border) solid var(--omn-line); }
+.omn-titlebar__accent { position: absolute; left: 0; top: 0; width: 100%; height: 4px; background: var(--omn-mango); }
+.omn-titlebar__section { display: flex; align-items: center; gap: 12px; }
+
+/* --- Cards & panels ----------------------------------------------------- */
+.omn-card  { background: var(--omn-white); border: var(--omn-border) solid var(--omn-line); border-radius: var(--omn-radius); padding: var(--omn-pad); }
+.omn-panel { background: var(--omn-beige); border-radius: var(--omn-radius); padding: var(--omn-pad); }      /* Beige = surface role */
+.omn-panel--surface { background: var(--omn-surface); }
+/* Mango is used as a thin accent, never as a text-bearing block (guide p.26). */
+.omn-accent-rule { width: 56px; height: 4px; border-radius: 2px; background: var(--omn-mango); }
+
+/* --- Patient profile ------------------------------------------------------
+   Attribute tiles: icon tile + approved wording. Value tiles (HbA1c) carry the
+   figure in Plex SemiBold. */
+.omn-profile { display: grid; gap: var(--omn-gap); grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.omn-attr { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: var(--omn-border) solid var(--omn-line); border-radius: var(--omn-radius); background: var(--omn-white); }
+.omn-attr__label { font-size: var(--omn-size-body); color: var(--omn-ink); margin: 0; line-height: 1.3; text-wrap: pretty; }
+.omn-attr__value { font-weight: 600; font-size: var(--omn-size-h3); color: var(--omn-ink); line-height: 1; margin: 0; }
+.omn-attr__unit  { font-size: var(--omn-size-small); color: var(--omn-grey); }
+
+/* --- Feature panel (challenge -> Omnipod® 5 feature) -------------------- */
+.omn-feature { display: grid; grid-template-columns: 1fr 1fr; gap: var(--omn-gap); align-items: stretch; }
+.omn-feature__challenge { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; background: var(--omn-beige); border-radius: var(--omn-radius); }
+.omn-feature__answer    { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border: var(--omn-border) solid var(--omn-line); border-left: 4px solid var(--omn-mango); border-radius: var(--omn-radius); }
+.omn-feature p { margin: 0; color: var(--omn-ink); }
+
+/* --- Question & options (DERIVED; guide has no form controls) ---------- */
+.omn-question { display: flex; flex-direction: column; gap: 12px; }
+.omn-question__stem { font-weight: 600; font-size: var(--omn-size-h4); color: var(--omn-ink); margin: 0; }
+.omn-options { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.omn-option { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; padding: 14px 18px; min-height: 56px;
+  background: var(--omn-white); border: 1.5px solid var(--omn-line); border-radius: var(--omn-radius); font: inherit; color: var(--omn-ink); cursor: pointer;
+  transition: border-color .15s, background .15s, box-shadow .15s; }
+.omn-option:hover { border-color: var(--omn-grape-80); }
+.omn-option:focus-visible { outline: 3px solid var(--omn-grape-80); outline-offset: 2px; }
+.omn-option__mark { flex: 0 0 24px; width: 24px; height: 24px; border: 2px solid var(--omn-grey); border-radius: 50%; display: grid; place-items: center; color: var(--omn-white); }
+.omn-option--multi .omn-option__mark { border-radius: 6px; }
+.omn-option[aria-checked="true"], .omn-option--selected { border-color: var(--omn-grape-80); background: var(--omn-surface); }
+.omn-option[aria-checked="true"] .omn-option__mark, .omn-option--selected .omn-option__mark { background: var(--omn-grape-80); border-color: var(--omn-grape-80); }
+/* Revealed states: icon + colour, and the word appears in the Feedback panel */
+.omn-option--correct   { border-color: var(--omn-arctic-dark); background: var(--omn-white); }
+.omn-option--correct .omn-option__mark   { background: var(--omn-arctic-dark); border-color: var(--omn-arctic-dark); }
+.omn-option--incorrect { border-color: var(--omn-raspberry); background: var(--omn-white); }
+.omn-option--incorrect .omn-option__mark { background: var(--omn-raspberry); border-color: var(--omn-raspberry); }
+.omn-option:disabled { cursor: default; }
+
+/* --- Feedback panel (DERIVED) ------------------------------------------- */
+.omn-feedback { display: grid; grid-template-columns: auto 1fr; gap: 14px; padding: var(--omn-pad); border-radius: var(--omn-radius); background: var(--omn-surface); border-left: 4px solid var(--omn-grey); }
+.omn-feedback__ico { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; color: var(--omn-white); background: var(--omn-grey); }
+.omn-feedback__head { display: flex; flex-direction: column; gap: 6px; }
+.omn-feedback__label { font-family: var(--omn-font-caps); font-weight: 700; font-size: var(--omn-size-micro); text-transform: uppercase; letter-spacing: var(--omn-track-caps); margin: 0; }
+.omn-feedback__text { margin: 0; color: var(--omn-ink); }
+.omn-feedback--correct   { border-left-color: var(--omn-arctic-dark); }
+.omn-feedback--correct .omn-feedback__ico, .omn-feedback--correct .omn-feedback__label { background: var(--omn-arctic-dark); color: var(--omn-white); }
+.omn-feedback--correct .omn-feedback__label { background: none; color: var(--omn-arctic-dark); }
+.omn-feedback--incorrect { border-left-color: var(--omn-raspberry); }
+.omn-feedback--incorrect .omn-feedback__ico { background: var(--omn-raspberry); }
+.omn-feedback--incorrect .omn-feedback__label { color: var(--omn-raspberry); }
+.omn-feedback--info .omn-feedback__ico { background: var(--omn-grape-80); }
+.omn-feedback--info { border-left-color: var(--omn-grape-80); }
+.omn-feedback--info .omn-feedback__label { color: var(--omn-grape-80); }
+
+/* --- Progress stepper (DERIVED) ----------------------------------------- */
+.omn-stepper { display: flex; align-items: center; gap: 12px; }
+.omn-stepper__track { display: flex; gap: 6px; }
+.omn-stepper__seg { width: 28px; height: 6px; border-radius: 3px; background: var(--omn-beige); }
+.omn-stepper__seg--done    { background: var(--omn-grape-80); }
+.omn-stepper__seg--current { background: var(--omn-mango); }
+.omn-stepper__label { font-size: var(--omn-size-small); color: var(--omn-ink-2); margin: 0; white-space: nowrap; }
+
+/* --- Data readout (DERIVED; Dark Arctic = data role) -------------------- */
+.omn-readout { display: flex; flex-direction: column; gap: 8px; }
+.omn-readout__head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.omn-readout__value { font-weight: 600; font-size: var(--omn-size-h2); color: var(--omn-ink); line-height: 1; margin: 0; }
+.omn-readout__value--data { color: var(--omn-arctic-dark); }
+.omn-readout__value--alert { color: var(--omn-raspberry); }
+.omn-bar { position: relative; height: 14px; border-radius: 7px; background: var(--omn-beige); overflow: hidden; }
+.omn-bar__fill { position: absolute; inset: 0 auto 0 0; background: var(--omn-arctic-dark); border-radius: 7px; }
+.omn-bar__fill--alert { background: var(--omn-raspberry); }
+.omn-bar__fill--mango { background: var(--omn-mango); }
+.omn-bar__target { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--omn-ink); }
+.omn-readout__legend { display: flex; gap: 16px; font-size: var(--omn-size-small); color: var(--omn-ink-2); }
+.omn-readout__legend span { display: inline-flex; align-items: center; gap: 6px; }
+.omn-swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
+/* --- Unit toggle (DERIVED) ---------------------------------------------- */
+.omn-toggle { display: inline-flex; padding: 3px; border-radius: var(--omn-radius-pill); background: var(--omn-beige); gap: 2px; }
+.omn-toggle__opt { font: inherit; font-size: var(--omn-size-small); font-weight: 600; padding: 6px 16px; min-height: 36px; border-radius: var(--omn-radius-pill); border: 0; background: transparent; color: var(--omn-ink-2); cursor: pointer; }
+.omn-toggle__opt[aria-pressed="true"] { background: var(--omn-grape-80); color: var(--omn-white); }
+.omn-toggle__opt:focus-visible { outline: 3px solid var(--omn-grape-80); outline-offset: 2px; }
+
+/* --- Buttons (guide p.38) ----------------------------------------------- */
+.omn-btn { display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 10px 24px; border-radius: var(--omn-radius-pill); border: 2px solid transparent;
+  font: inherit; font-weight: 600; font-size: var(--omn-size-body); cursor: pointer; text-decoration: none; transition: background .15s, color .15s, border-color .15s; }
+.omn-btn--primary { background: var(--omn-grape-80); color: var(--omn-white); border-color: var(--omn-grape-80); }
+.omn-btn--primary:hover { background: var(--omn-mango); border-color: var(--omn-mango); color: var(--omn-ink); }
+.omn-btn--secondary { background: var(--omn-white); color: var(--omn-grape-80); border-color: var(--omn-grape-80); }
+.omn-btn--secondary:hover { background: var(--omn-mango); border-color: var(--omn-mango); color: var(--omn-ink); }
+.omn-btn:focus-visible { outline: 3px solid var(--omn-grape-80); outline-offset: 3px; }
+.omn-btn:disabled { opacity: .45; cursor: default; }
+.omn-btn .omn-ico { width: 18px; height: 18px; flex-basis: 18px; }
+
+/* --- Copy tag: marks UNAPPROVED / added wording -------------------------- */
+.omn-tag { display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 4px; font-family: var(--omn-font-caps); font-weight: 700; font-size: 11px; letter-spacing: var(--omn-track-caps); text-transform: uppercase;
+  background: var(--omn-white); color: var(--omn-raspberry); border: 1.5px dashed var(--omn-raspberry); vertical-align: middle; }
+.omn-tag .omn-ico { width: 12px; height: 12px; flex-basis: 12px; }
+.omn-unapproved { outline: 1.5px dashed var(--omn-raspberry); outline-offset: 3px; border-radius: 4px; }
+
+/* --- Device image slot --------------------------------------------------- */
+.omn-device { display: grid; place-items: center; background: var(--omn-beige); border-radius: var(--omn-radius); color: var(--omn-grey); text-align: center; padding: var(--omn-pad); }
+.omn-device img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.omn-device__caption { font-size: var(--omn-size-legal); color: var(--omn-grey); margin: 0; }   /* "Pod shown without necessary adhesive." — brand disclaimer */
+
+/* --- Key message ---------------------------------------------------------- */
+.omn-keymsg { display: flex; gap: 14px; align-items: flex-start; padding: var(--omn-pad); border-radius: var(--omn-radius); border: var(--omn-border) solid var(--omn-line); border-top: 4px solid var(--omn-mango); }
+.omn-keymsg p { margin: 0; font-weight: 600; font-size: var(--omn-size-h4); color: var(--omn-ink); line-height: 1.3; }
+.omn-keymsg .omn-ico-tile { width: 40px; height: 40px; flex-basis: 40px; }
+
+/* --- Footnote / references / legal -------------------------------------- */
+.omn-footnote { font-size: var(--omn-size-small); color: var(--omn-ink-2); margin: 0; line-height: 1.4; }
+.omn-footnote ol { margin: 0; padding-left: 1.4em; }
+.omn-legal { font-family: var(--omn-font-legal); font-size: var(--omn-size-legal); color: var(--omn-grey); line-height: 1.33; letter-spacing: .035em; margin: 0; }
+.omn-footer { display: flex; justify-content: space-between; align-items: center; gap: var(--omn-gap); padding: 16px 60px; border-top: var(--omn-border) solid var(--omn-line); }
+
+/* --- Glucose trace motif (ambient, decorative) ---------------------------
+   A single Dark Arctic line on Beige band, opacity kept low so it never
+   competes with copy. aria-hidden in markup. */
+.omn-trace { position: absolute; left: 0; right: 0; bottom: 0; height: 160px; pointer-events: none; opacity: .35; }
+.omn-trace svg { width: 100%; height: 100%; display: block; }
+.omn-trace__band { fill: var(--omn-beige); }
+.omn-trace__line { fill: none; stroke: var(--omn-arctic-dark); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 1000; animation: omn-trace-draw 20s linear infinite; }
+.omn-trace__target { fill: none; stroke: var(--omn-mango); stroke-width: 2; stroke-dasharray: 6 8; }
+.omn-trace__dot { fill: var(--omn-arctic-dark); animation: omn-trace-pulse 1.8s ease-in-out infinite; }
+/* 3a (agreed 2026-09-10): 20s loop — draw-on 0–60%, hold, draw-off 75–100%. Reading points fade in ~2s ahead of the pen and out as the draw-off passes. Trace settles onto target by the right edge. */
+@keyframes omn-trace-draw { 0% { stroke-dashoffset: 1000; } 60% { stroke-dashoffset: 0; } 75% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -1000; } }
+@keyframes omn-trace-pulse { 0%, 100% { r: 5; opacity: 1; } 50% { r: 9; opacity: .3; } }
+@media (prefers-reduced-motion: reduce) {
+  .omn-trace__line, .omn-trace__dot { animation: none; stroke-dashoffset: 0; }
+  .omn-trace__pt animate { display: none; }
+  .omn-trace__pt { opacity: 1; }
+}
