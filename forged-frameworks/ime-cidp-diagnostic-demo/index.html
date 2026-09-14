@@ -1,0 +1,478 @@
+<title>CIDP Criteria Walk-through</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+<style>
+/* Touch Medical house tokens (lifted from live TM9035 assets). Single light theme by design:
+   these embeds sit inside a Visme canvas that is always light. Everything is painted explicitly. */
+:root{
+  --font:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --navy:#222f55; --teal:#0098be; --teal-strong:#007a98; --pale:#d9eff8; --mist:#f4f7f9;
+  --line:#e3e8ee; --muted:#56608a; --faint:#8a91b0; --on-accent:#fff; --paper:#ffffff;
+  --good:#287d5c; --good-soft:#e3f3ec; --amber:#9a6a16; --amber-soft:#fbf0db;
+  --flag:#b64457; --flag-soft:#fbe7ea; --neutral:#c6d3e2;
+  --stage-w:1280px; --stage-h:720px;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--mist);color:var(--navy);font-family:var(--font);font-size:14px;line-height:1.45;overflow:hidden}
+/* Fixed 1280x720 canvas scaled to fit, the same model as the CLL scene builds. */
+#viewport{position:fixed;inset:0;background:var(--mist)}
+#stage{position:absolute;left:50%;top:50%;width:var(--stage-w);height:var(--stage-h);background:var(--paper);transform-origin:center;display:grid;grid-template-rows:56px 1fr 62px;box-shadow:0 8px 40px rgba(34,47,85,.12)}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* header strip */
+.strip{display:flex;align-items:center;gap:18px;padding:0 28px;border-bottom:1px solid var(--line)}
+.brand{font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--teal-strong)}
+.demo-tag{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--amber);background:var(--amber-soft);padding:4px 9px;border-radius:999px}
+.pips{display:flex;gap:6px;margin-left:auto;align-items:center}
+.pip{width:34px;height:6px;border-radius:3px;background:var(--line);border:0;padding:0}
+.pip[aria-current="step"]{background:var(--teal)}
+.pip.done{background:var(--teal-strong);opacity:.55}
+.lang{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.lang button{border:0;background:transparent;padding:5px 12px;font-size:12px;font-weight:600;color:var(--muted)}
+.lang button[aria-pressed="true"]{background:var(--navy);color:var(--on-accent)}
+
+/* body */
+.screen{display:none;grid-template-columns:1fr 430px;min-height:0}
+.screen.on{display:grid}
+.work{padding:26px 28px 14px;overflow:auto;min-height:0}
+.engine{border-left:1px solid var(--line);background:var(--mist);padding:24px 26px;overflow:auto;min-height:0}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-strong);margin:0 0 6px}
+h1{font-size:30px;line-height:1.15;font-weight:700;margin:0 0 12px;text-wrap:balance}
+h2{font-size:22px;line-height:1.2;font-weight:700;margin:0 0 10px;text-wrap:balance}
+h3{font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+p{margin:0 0 10px;max-width:62ch}
+.lede{font-size:16px;color:var(--muted);max-width:60ch}
+
+.vignette{background:var(--pale);border-radius:10px;padding:14px 16px;margin:0 0 16px;max-width:none}
+.vignette p{max-width:none;margin:0}
+.vignette strong{color:var(--teal-strong)}
+
+.checks{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.check{display:grid;grid-template-columns:22px 1fr auto;gap:12px;align-items:start;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--paper)}
+.check input{width:20px;height:20px;margin:1px 0 0;accent-color:var(--teal)}
+.check label{cursor:pointer}
+.check small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.check .why{display:none;grid-column:2/4;font-size:12px;padding:6px 10px;border-radius:6px;margin-top:2px}
+.applied .check.ok{border-color:var(--good)} .applied .check.ok .why{display:block;background:var(--good-soft);color:var(--good)}
+.applied .check.miss{border-color:var(--flag)} .applied .check.miss .why{display:block;background:var(--flag-soft);color:var(--flag)}
+.mark{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:999px;visibility:hidden;align-self:center}
+.applied .check.ok .mark{visibility:visible;background:var(--good-soft);color:var(--good)}
+.applied .check.miss .mark{visibility:visible;background:var(--flag-soft);color:var(--flag)}
+
+/* NCS table */
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:13px}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+td.num{text-align:right}
+td .lim{display:block;font-size:11px;color:var(--faint)}
+td.cell{text-align:center}
+td.cell input{width:18px;height:18px;accent-color:var(--teal)}
+.applied td.cell.ok{background:var(--good-soft)} .applied td.cell.miss{background:var(--flag-soft)}
+.applied td.cell.ok::after{content:" \2713";color:var(--good);font-weight:700}
+.applied td.cell.miss::after{content:" \2717";color:var(--flag);font-weight:700}
+.tnote{font-size:12px;color:var(--muted);margin-top:8px}
+
+/* engine panel */
+.rule{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:10px}
+.rule .t{display:flex;justify-content:space-between;align-items:center;gap:10px;font-weight:600;font-size:13px}
+.rule .d{font-size:12px;color:var(--muted);margin-top:4px}
+.st{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--line);color:var(--muted);white-space:nowrap}
+.st.met{background:var(--good-soft);color:var(--good)}
+.st.part{background:var(--amber-soft);color:var(--amber)}
+.st.no{background:var(--flag-soft);color:var(--flag)}
+.verdict{background:var(--navy);color:var(--on-accent);border-radius:10px;padding:14px 16px;margin-top:6px}
+.verdict .k{font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.75}
+.verdict .v{font-size:22px;font-weight:700;margin-top:2px}
+.verdict .v.pending{opacity:.5;font-size:16px;font-weight:500}
+.chain{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:6px}
+.chain li{display:grid;grid-template-columns:10px 1fr;gap:10px;font-size:13px;align-items:start}
+.chain li::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--neutral);margin-top:5px}
+.chain li.met::before{background:var(--good)} .chain li.no::before{background:var(--flag)} .chain li.part::before{background:var(--amber)}
+.whatif{margin-top:14px}
+.whatif button{width:100%;text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:13px;margin-bottom:6px;color:var(--navy)}
+.whatif button[aria-pressed="true"]{border-color:var(--teal);background:var(--pale)}
+textarea{width:100%;min-height:96px;font:inherit;font-size:13px;padding:10px;border:1px solid var(--line);border-radius:8px;resize:vertical;color:var(--navy);background:var(--paper)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.faculty{border-left:4px solid var(--teal);background:var(--pale);padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px}
+.faculty p{max-width:none}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.tile{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--paper)}
+.tile b{display:block;font-size:13px;margin-bottom:3px}
+.tile span{font-size:12px;color:var(--muted)}
+
+/* footer bar */
+.bar{display:flex;align-items:center;gap:10px;padding:0 28px;border-top:1px solid var(--line)}
+.bar .note{font-size:12px;color:var(--muted);margin-right:auto}
+.btn{border:1px solid var(--line);background:var(--paper);color:var(--navy);border-radius:999px;padding:9px 20px;font-weight:600;font-size:13px}
+.btn.primary{background:var(--teal);border-color:var(--teal);color:var(--on-accent)}
+.btn.primary:hover{background:var(--teal-strong)}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+@media (prefers-reduced-motion:no-preference){.check,.st,td.cell{transition:background .2s,border-color .2s}}
+@media print{#viewport{position:static}#stage{transform:none!important;box-shadow:none;height:auto}.screen{display:grid!important;grid-template-columns:1fr;page-break-after:always}.bar,.strip{display:none}}
+</style>
+
+<div id="viewport">
+<div id="stage">
+  <header class="strip">
+    <span class="brand" data-s="brand">Independent Medical Education</span>
+    <span class="demo-tag" data-s="demo">Demo · illustrative content · faculty review required</span>
+    <nav class="pips" aria-label="Progress" id="pips"></nav>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" id="lang-en" aria-pressed="true">EN</button>
+      <button type="button" id="lang-es" aria-pressed="false">ES</button>
+    </div>
+  </header>
+
+  <!-- 0 · Title -->
+  <section class="screen on" data-step="0" aria-labelledby="h0">
+    <div class="work">
+      <p class="eyebrow" data-s="s0.eyebrow">Diagnostic criteria walk-through</p>
+      <h1 id="h0" data-s="s0.h">Chronic inflammatory demyelinating polyneuropathy: apply the criteria to a case</h1>
+      <p class="lede" data-s="s0.lede">Work through one patient in four stages. At each stage you commit a judgement, then the criteria engine shows what the guideline requires and where your reading differs.</p>
+      <div class="tiles">
+        <div class="tile"><b data-s="s0.t1">1 · Clinical pattern</b><span data-s="s0.t1d">Does the presentation meet typical CIDP, or a variant?</span></div>
+        <div class="tile"><b data-s="s0.t2">2 · Nerve conduction</b><span data-s="s0.t2d">Which demyelinating parameters are present, in how many nerves?</span></div>
+        <div class="tile"><b data-s="s0.t3">3 · Supportive and exclusions</b><span data-s="s0.t3d">CSF, imaging, sensory studies, and the mimics to rule out.</span></div>
+      </div>
+      <div class="faculty"><p data-s="s0.fac"><strong>Faculty note.</strong> The criteria in this demo are a simplified paraphrase of the EAN/PNS 2021 CIDP guideline, written as placeholder content to show the mechanism. Thresholds, wording and the case data are for faculty to author and approve before any learner sees them.</p></div>
+    </div>
+    <aside class="engine">
+      <h3 data-s="eng.h">Criteria engine</h3>
+      <p class="d" style="font-size:13px;color:var(--muted)" data-s="s0.eng">This panel stays with you. It tracks each criterion as you commit, and builds the diagnostic category from the rules, not from a stored answer.</p>
+      <div class="verdict"><div class="k" data-s="eng.cat">Diagnostic category</div><div class="v pending" id="v0" data-s="eng.pending">Not yet assessed</div></div>
+      <div class="rule" style="margin-top:12px"><div class="t"><span data-s="s0.r1">Translation ready</span><span class="st met">EN · ES</span></div><div class="d" data-s="s0.r1d">Every string on this page lives in one language layer. Switch EN / ES at the top to see the same engine in a second language. The Spanish is machine-drafted for the demo, not validated.</div></div>
+      <div class="rule"><div class="t"><span data-s="s0.r2">Independence</span><span class="st met" data-s="s0.r2s">Faculty own</span></div><div class="d" data-s="s0.r2d">Content, thresholds and the case are data files. Faculty edit them; the build does not change.</div></div>
+    </aside>
+  </section>
+
+  <!-- 1 · Clinical -->
+  <section class="screen" data-step="1" aria-labelledby="h1">
+    <div class="work" id="w1">
+      <p class="eyebrow" data-s="s1.eyebrow">Stage 1 of 4 · Clinical pattern</p>
+      <h2 id="h1" data-s="s1.h">Read the presentation and mark the criteria it satisfies</h2>
+      <div class="vignette"><p data-s="s1.vig">A 58-year-old woman presents with <strong>four months</strong> of steadily worsening difficulty climbing stairs and opening jars. Examination shows <strong>symmetric weakness</strong> of hip flexion and shoulder abduction (MRC 4-) and of finger extension and ankle dorsiflexion (MRC 4). Vibration and pinprick sensation are reduced in <strong>both hands and both feet</strong>. <strong>Tendon reflexes are absent</strong> throughout. No pain, no bulbar or respiratory symptoms.</p></div>
+      <ul class="checks" id="c1"></ul>
+    </div>
+    <aside class="engine" id="e1"></aside>
+  </section>
+
+  <!-- 2 · NCS -->
+  <section class="screen" data-step="2" aria-labelledby="h2">
+    <div class="work" id="w2">
+      <p class="eyebrow" data-s="s2.eyebrow">Stage 2 of 4 · Motor nerve conduction</p>
+      <h2 id="h2" data-s="s2.h">Mark each parameter that reaches the demyelinating threshold</h2>
+      <p class="lede" style="font-size:14px" data-s="s2.lede">Limits are shown under each value. Tick a cell where the measurement crosses the threshold in that nerve. The engine then counts nerves per parameter.</p>
+      <div style="overflow-x:auto"><table id="ncs"></table></div>
+      <p class="tnote" data-s="s2.note">Thresholds (illustrative): distal motor latency ≥50% above the upper limit; conduction velocity ≥30% below the lower limit; F-wave latency ≥20% above the upper limit; conduction block ≥30% proximal-to-distal amplitude drop, tibial nerve excluded.</p>
+    </div>
+    <aside class="engine" id="e2"></aside>
+  </section>
+
+  <!-- 3 · Supportive + exclusions -->
+  <section class="screen" data-step="3" aria-labelledby="h3">
+    <div class="work" id="w3">
+      <p class="eyebrow" data-s="s3.eyebrow">Stage 3 of 4 · Supportive criteria and exclusions</p>
+      <h2 id="h3" data-s="s3.h">Which supportive findings are present, and does anything exclude the diagnosis?</h2>
+      <div class="two">
+        <div><h3 data-s="s3.sup">Supportive</h3><ul class="checks" id="c3s"></ul></div>
+        <div><h3 data-s="s3.exc">Exclusions to rule out</h3><ul class="checks" id="c3x"></ul></div>
+      </div>
+    </div>
+    <aside class="engine" id="e3"></aside>
+  </section>
+
+  <!-- 4 · Result -->
+  <section class="screen" data-step="4" aria-labelledby="h4">
+    <div class="work" id="w4">
+      <p class="eyebrow" data-s="s4.eyebrow">Stage 4 of 4 · Diagnosis</p>
+      <h2 id="h4" data-s="s4.h">How the category was reached, and what would change it</h2>
+      <p class="lede" style="font-size:14px" data-s="s4.lede">The chain on the right is built from your committed answers. Use the what-if switches to see how the category moves when the evidence changes.</p>
+      <div class="whatif" id="whatif"></div>
+      <h3 style="margin-top:14px" data-s="s4.refl">Reflection</h3>
+      <label class="sr" for="refl" data-s="s4.refl">Reflection</label>
+      <textarea id="refl" data-p="s4.reflp" placeholder="One thing you would do differently in your next suspected CIDP work-up."></textarea>
+      <p class="tnote" data-s="s4.reflnote">Kept on this device only. Print / save as PDF to keep a record.</p>
+    </div>
+    <aside class="engine" id="e4"></aside>
+  </section>
+
+  <footer class="bar">
+    <span class="note" data-s="bar.note">Illustrative demo built by Forged Frameworks · not for clinical use</span>
+    <button type="button" class="btn" id="back" data-s="bar.back">Back</button>
+    <button type="button" class="btn primary" id="apply" data-s="bar.apply">Apply criteria</button>
+    <button type="button" class="btn primary" id="next" data-s="bar.next">Next</button>
+    <button type="button" class="btn" id="print" data-s="bar.print" hidden>Print / Save PDF</button>
+  </footer>
+</div>
+</div>
+
+<script>
+/* ---------- STRINGS: one language layer. Faculty edit this; the engine below never changes. ---------- */
+const STR = {
+en: {
+  brand:"Independent Medical Education", demo:"Demo · illustrative content · faculty review required",
+  "eng.h":"Criteria engine","eng.cat":"Diagnostic category","eng.pending":"Not yet assessed",
+  "s0.eyebrow":"Diagnostic criteria walk-through","s0.h":"Chronic inflammatory demyelinating polyneuropathy: apply the criteria to a case",
+  "s0.lede":"Work through one patient in four stages. At each stage you commit a judgement, then the criteria engine shows what the guideline requires and where your reading differs.",
+  "s0.t1":"1 · Clinical pattern","s0.t1d":"Does the presentation meet typical CIDP, or a variant?","s0.t2":"2 · Nerve conduction","s0.t2d":"Which demyelinating parameters are present, in how many nerves?","s0.t3":"3 · Supportive and exclusions","s0.t3d":"CSF, imaging, sensory studies, and the mimics to rule out.",
+  "s0.fac":"<strong>Faculty note.</strong> The criteria in this demo are a simplified paraphrase of the EAN/PNS 2021 CIDP guideline, written as placeholder content to show the mechanism. Thresholds, wording and the case data are for faculty to author and approve before any learner sees them.",
+  "s0.eng":"This panel stays with you. It tracks each criterion as you commit, and builds the diagnostic category from the rules, not from a stored answer.",
+  "s0.r1":"Translation ready","s0.r1d":"Every string on this page lives in one language layer. Switch EN / ES at the top to see the same engine in a second language. The Spanish is machine-drafted for the demo, not validated.","s0.r2":"Independence","s0.r2s":"Faculty own","s0.r2d":"Content, thresholds and the case are data files. Faculty edit them; the build does not change.",
+  "s1.eyebrow":"Stage 1 of 4 · Clinical pattern","s1.h":"Read the presentation and mark the criteria it satisfies",
+  "s1.vig":"A 58-year-old woman presents with <strong>four months</strong> of steadily worsening difficulty climbing stairs and opening jars. Examination shows <strong>symmetric weakness</strong> of hip flexion and shoulder abduction (MRC 4-) and of finger extension and ankle dorsiflexion (MRC 4). Vibration and pinprick sensation are reduced in <strong>both hands and both feet</strong>. <strong>Tendon reflexes are absent</strong> throughout. No pain, no bulbar or respiratory symptoms.",
+  "s2.eyebrow":"Stage 2 of 4 · Motor nerve conduction","s2.h":"Mark each parameter that reaches the demyelinating threshold","s2.lede":"Limits are shown under each value. Tick a cell where the measurement crosses the threshold in that nerve. The engine then counts nerves per parameter.",
+  "s2.note":"Thresholds (illustrative): distal motor latency ≥50% above the upper limit; conduction velocity ≥30% below the lower limit; F-wave latency ≥20% above the upper limit; conduction block ≥30% proximal-to-distal amplitude drop, tibial nerve excluded.",
+  "s3.eyebrow":"Stage 3 of 4 · Supportive criteria and exclusions","s3.h":"Which supportive findings are present, and does anything exclude the diagnosis?","s3.sup":"Supportive","s3.exc":"Exclusions to rule out",
+  "s4.eyebrow":"Stage 4 of 4 · Diagnosis","s4.h":"How the category was reached, and what would change it","s4.lede":"The chain on the right is built from your committed answers. Use the what-if switches to see how the category moves when the evidence changes.","s4.refl":"Reflection","s4.reflp":"One thing you would do differently in your next suspected CIDP work-up.","s4.reflnote":"Kept on this device only. Print / save as PDF to keep a record.",
+  "bar.note":"Illustrative demo built by Forged Frameworks · not for clinical use","bar.back":"Back","bar.apply":"Apply criteria","bar.next":"Next","bar.print":"Print / Save PDF",
+  yes:"Present", no:"Absent", met:"Met", notmet:"Not met", partial:"Partial", ok:"Correct", miss:"Revisit", pending:"Pending", nerve:"Nerve", nerves:"nerves", value:"Value", limit:"limit",
+  clin:[
+    {id:"sym",t:"Symmetric weakness",s:"Both sides affected to a similar degree",ans:true,why:"Hip, shoulder, finger and ankle weakness is bilateral and equal."},
+    {id:"pd",t:"Proximal and distal weakness in upper and lower limbs",s:"Typical CIDP needs both, in arms and legs",ans:true,why:"Hip flexion and shoulder abduction (proximal) plus finger extension and dorsiflexion (distal)."},
+    {id:"sens",t:"Sensory involvement in at least two limbs",s:"",ans:true,why:"Vibration and pinprick reduced in both hands and both feet: four limbs."},
+    {id:"time",t:"Progression over at least 8 weeks",s:"Separates CIDP from Guillain-Barré syndrome",ans:true,why:"Four months of steady progression."},
+    {id:"refl",t:"Reduced or absent tendon reflexes in all limbs",s:"",ans:true,why:"Reflexes absent throughout."},
+    {id:"pain",t:"Prominent pain as a defining feature",s:"Distractor: pain is not a criterion",ans:false,why:"Pain is not part of the clinical criteria and this patient has none."}
+  ],
+  clinRules:[
+    {t:"Typical CIDP clinical criteria",d:"All five features present",key:"typical"},
+    {t:"CIDP variant pattern",d:"Distal, multifocal, focal, motor or sensory",key:"variant"}
+  ],
+  clinChain:{typical:"Clinical criteria for typical CIDP met",typicalNo:"Clinical criteria for typical CIDP not met on your reading",variant:"No variant pattern needed: the typical pattern is complete"},
+  ncsCols:["Distal motor latency","Conduction velocity","F-wave latency","Conduction block"],
+  ncsUnits:["ms","m/s","ms","% drop"],
+  ncsLim:["upper","lower","upper","threshold"],
+  nerves:["Median","Ulnar","Peroneal","Tibial"],
+  ncsRules:["Distal latency ≥50% above upper limit","Velocity ≥30% below lower limit","F-wave ≥20% above upper limit","Block ≥30% (tibial excluded)"],
+  ncsLevel:{cidp:"Electrodiagnostic criteria for CIDP: one parameter meets threshold in at least two nerves",possible:"Possible CIDP level: a parameter meets threshold in one nerve only",none:"No parameter reaches threshold"},
+  sup:[
+    {id:"csf",t:"CSF protein raised with white cells under 10 per µL",s:"Result: protein 1.2 g/L, white cells 3 per µL",ans:true,why:"Albuminocytological dissociation: supportive."},
+    {id:"mri",t:"MRI: gadolinium enhancement or hypertrophy of roots or plexus",s:"Result: lumbar root enhancement present",ans:true,why:"Root enhancement is a supportive criterion."},
+    {id:"us",t:"Nerve ultrasound: enlargement of proximal nerves or roots",s:"Result: not performed",ans:false,why:"Not performed, so it cannot count."},
+    {id:"sncs",t:"Sensory nerve conduction abnormalities",s:"Result: sural amplitude reduced, median sensory velocity slowed",ans:true,why:"Abnormal sensory studies are supportive."},
+    {id:"tx",t:"Objective improvement after immunotherapy",s:"Result: treatment not yet started",ans:false,why:"No treatment trial yet; this may become supportive later."}
+  ],
+  exc:[
+    {id:"mag",t:"IgM paraprotein with anti-MAG antibodies",s:"Result: immunofixation negative",ans:false,why:"Negative, so no exclusion."},
+    {id:"poems",t:"POEMS features: organomegaly, endocrinopathy, skin change, lambda paraprotein",s:"Result: none found",ans:false,why:"Absent."},
+    {id:"her",t:"Hereditary neuropathy: family history, foot deformity, very slow uniform conduction",s:"Result: no family history, no pes cavus",ans:false,why:"Nothing to suggest a hereditary cause."},
+    {id:"tox",t:"Drug or toxin exposure known to cause neuropathy",s:"Result: none on review",ans:false,why:"Absent."}
+  ],
+  supRule:"Supportive criteria present",excRule:"Exclusion criteria triggered",
+  cats:{cidp:"CIDP",possible:"Possible CIDP",no:"Criteria not met",excl:"Excluded: consider the alternative"},
+  chain4:{clin:"Clinical pattern",ncs:"Electrodiagnostic level",sup:"Supportive criteria",exc:"Exclusions",upg:"Possible CIDP upgraded to CIDP by two supportive criteria (illustrative rule)"},
+  whatif:[
+    {id:"onenerve",t:"What if only one nerve had met a demyelinating threshold?",d:"Electrodiagnostic level drops to possible CIDP. The two supportive criteria then carry it back to CIDP."},
+    {id:"nosup",t:"…and the CSF and MRI had been normal too?",d:"Possible CIDP remains: treat, reassess, and let treatment response become the supportive evidence."},
+    {id:"mag",t:"What if anti-MAG antibodies had been positive?",d:"The diagnosis is excluded. This becomes anti-MAG neuropathy, managed differently."}
+  ],
+  next4:"Next: what this means for treatment. In the full programme this stage would branch into the individualisation tool."
+},
+es: {
+  brand:"Educación médica independiente", demo:"Demo · contenido ilustrativo · requiere revisión del profesorado",
+  "eng.h":"Motor de criterios","eng.cat":"Categoría diagnóstica","eng.pending":"Sin evaluar",
+  "s0.eyebrow":"Recorrido por los criterios diagnósticos","s0.h":"Polineuropatía desmielinizante inflamatoria crónica: aplique los criterios a un caso",
+  "s0.lede":"Trabaje un paciente en cuatro etapas. En cada una usted compromete un juicio y el motor de criterios muestra lo que exige la guía y dónde difiere su lectura.",
+  "s0.t1":"1 · Patrón clínico","s0.t1d":"¿La presentación cumple la CIDP típica o una variante?","s0.t2":"2 · Conducción nerviosa","s0.t2d":"¿Qué parámetros desmielinizantes están presentes y en cuántos nervios?","s0.t3":"3 · Criterios de apoyo y exclusiones","s0.t3d":"LCR, imagen, estudios sensitivos y los imitadores que hay que descartar.",
+  "s0.fac":"<strong>Nota para el profesorado.</strong> Los criterios de esta demo son una paráfrasis simplificada de la guía EAN/PNS 2021 de CIDP, escrita como contenido provisional para mostrar el mecanismo. Umbrales, redacción y datos del caso deben ser redactados y aprobados por el profesorado antes de llegar a cualquier alumno.",
+  "s0.eng":"Este panel le acompaña. Registra cada criterio a medida que usted decide y construye la categoría diagnóstica a partir de las reglas, no de una respuesta almacenada.",
+  "s0.r1":"Preparado para traducción","s0.r1d":"Cada cadena de texto vive en una sola capa de idioma. Cambie EN / ES arriba para ver el mismo motor en un segundo idioma. El español es un borrador automático para la demo, sin validar.","s0.r2":"Independencia","s0.r2s":"Del profesorado","s0.r2d":"Contenido, umbrales y caso son archivos de datos. El profesorado los edita; la construcción no cambia.",
+  "s1.eyebrow":"Etapa 1 de 4 · Patrón clínico","s1.h":"Lea la presentación y marque los criterios que cumple",
+  "s1.vig":"Mujer de 58 años con <strong>cuatro meses</strong> de dificultad progresiva para subir escaleras y abrir frascos. La exploración muestra <strong>debilidad simétrica</strong> de la flexión de cadera y la abducción del hombro (MRC 4-) y de la extensión de los dedos y la dorsiflexión del tobillo (MRC 4). La sensibilidad vibratoria y al pinchazo está reducida en <strong>ambas manos y ambos pies</strong>. <strong>Reflejos tendinosos abolidos</strong> de forma generalizada. Sin dolor ni síntomas bulbares o respiratorios.",
+  "s2.eyebrow":"Etapa 2 de 4 · Conducción nerviosa motora","s2.h":"Marque cada parámetro que alcanza el umbral desmielinizante","s2.lede":"Los límites aparecen bajo cada valor. Marque la celda cuando la medición cruza el umbral en ese nervio. El motor cuenta después los nervios por parámetro.",
+  "s2.note":"Umbrales (ilustrativos): latencia motora distal ≥50% por encima del límite superior; velocidad de conducción ≥30% por debajo del límite inferior; latencia de onda F ≥20% por encima del límite superior; bloqueo de conducción ≥30% de caída de amplitud proximal-distal, excluido el tibial.",
+  "s3.eyebrow":"Etapa 3 de 4 · Criterios de apoyo y exclusiones","s3.h":"¿Qué hallazgos de apoyo están presentes y hay algo que excluya el diagnóstico?","s3.sup":"De apoyo","s3.exc":"Exclusiones a descartar",
+  "s4.eyebrow":"Etapa 4 de 4 · Diagnóstico","s4.h":"Cómo se llegó a la categoría y qué la cambiaría","s4.lede":"La cadena de la derecha se construye con sus respuestas. Use los interruptores de escenario para ver cómo se mueve la categoría cuando cambia la evidencia.","s4.refl":"Reflexión","s4.reflp":"Una cosa que haría diferente en su próximo estudio de sospecha de CIDP.","s4.reflnote":"Se guarda solo en este dispositivo. Imprima o guarde en PDF para conservar un registro.",
+  "bar.note":"Demo ilustrativa de Forged Frameworks · no para uso clínico","bar.back":"Atrás","bar.apply":"Aplicar criterios","bar.next":"Siguiente","bar.print":"Imprimir / Guardar PDF",
+  yes:"Presente", no:"Ausente", met:"Cumplido", notmet:"No cumplido", partial:"Parcial", ok:"Correcto", miss:"Revisar", pending:"Pendiente", nerve:"Nervio", nerves:"nervios", value:"Valor", limit:"límite",
+  clin:[
+    {id:"sym",t:"Debilidad simétrica",s:"Ambos lados afectados en grado similar",ans:true,why:"La debilidad de cadera, hombro, dedos y tobillo es bilateral e igual."},
+    {id:"pd",t:"Debilidad proximal y distal en miembros superiores e inferiores",s:"La CIDP típica requiere ambas, en brazos y piernas",ans:true,why:"Flexión de cadera y abducción del hombro (proximal) más extensión de dedos y dorsiflexión (distal)."},
+    {id:"sens",t:"Afectación sensitiva en al menos dos miembros",s:"",ans:true,why:"Vibración y pinchazo reducidos en ambas manos y ambos pies: cuatro miembros."},
+    {id:"time",t:"Progresión durante al menos 8 semanas",s:"Separa la CIDP del síndrome de Guillain-Barré",ans:true,why:"Cuatro meses de progresión constante."},
+    {id:"refl",t:"Reflejos tendinosos reducidos o abolidos en todos los miembros",s:"",ans:true,why:"Reflejos abolidos de forma generalizada."},
+    {id:"pain",t:"Dolor prominente como rasgo definitorio",s:"Distractor: el dolor no es un criterio",ans:false,why:"El dolor no forma parte de los criterios clínicos y esta paciente no lo tiene."}
+  ],
+  clinRules:[
+    {t:"Criterios clínicos de CIDP típica",d:"Los cinco rasgos presentes",key:"typical"},
+    {t:"Patrón de variante de CIDP",d:"Distal, multifocal, focal, motora o sensitiva",key:"variant"}
+  ],
+  clinChain:{typical:"Criterios clínicos de CIDP típica cumplidos",typicalNo:"Criterios clínicos de CIDP típica no cumplidos según su lectura",variant:"No se necesita patrón de variante: el patrón típico está completo"},
+  ncsCols:["Latencia motora distal","Velocidad de conducción","Latencia de onda F","Bloqueo de conducción"],
+  ncsUnits:["ms","m/s","ms","% caída"],
+  ncsLim:["superior","inferior","superior","umbral"],
+  nerves:["Mediano","Cubital","Peroneo","Tibial"],
+  ncsRules:["Latencia distal ≥50% sobre el límite superior","Velocidad ≥30% bajo el límite inferior","Onda F ≥20% sobre el límite superior","Bloqueo ≥30% (tibial excluido)"],
+  ncsLevel:{cidp:"Criterios electrodiagnósticos de CIDP: un parámetro alcanza el umbral en al menos dos nervios",possible:"Nivel de CIDP posible: un parámetro alcanza el umbral en un solo nervio",none:"Ningún parámetro alcanza el umbral"},
+  sup:[
+    {id:"csf",t:"Proteínas en LCR elevadas con menos de 10 leucocitos por µL",s:"Resultado: proteínas 1,2 g/L, leucocitos 3 por µL",ans:true,why:"Disociación albuminocitológica: de apoyo."},
+    {id:"mri",t:"RM: realce con gadolinio o hipertrofia de raíces o plexo",s:"Resultado: realce de raíces lumbares presente",ans:true,why:"El realce radicular es un criterio de apoyo."},
+    {id:"us",t:"Ecografía nerviosa: engrosamiento de nervios proximales o raíces",s:"Resultado: no realizada",ans:false,why:"No realizada, por lo que no puede contar."},
+    {id:"sncs",t:"Alteraciones de la conducción nerviosa sensitiva",s:"Resultado: amplitud sural reducida, velocidad sensitiva del mediano enlentecida",ans:true,why:"Los estudios sensitivos alterados son de apoyo."},
+    {id:"tx",t:"Mejoría objetiva tras inmunoterapia",s:"Resultado: tratamiento aún no iniciado",ans:false,why:"Sin ensayo terapéutico todavía; puede convertirse en apoyo más adelante."}
+  ],
+  exc:[
+    {id:"mag",t:"Paraproteína IgM con anticuerpos anti-MAG",s:"Resultado: inmunofijación negativa",ans:false,why:"Negativa, sin exclusión."},
+    {id:"poems",t:"Rasgos de POEMS: organomegalia, endocrinopatía, cambios cutáneos, paraproteína lambda",s:"Resultado: ninguno",ans:false,why:"Ausentes."},
+    {id:"her",t:"Neuropatía hereditaria: antecedentes familiares, deformidad del pie, conducción uniformemente muy lenta",s:"Resultado: sin antecedentes, sin pie cavo",ans:false,why:"Nada sugiere una causa hereditaria."},
+    {id:"tox",t:"Exposición a fármacos o tóxicos causantes de neuropatía",s:"Resultado: ninguna en la revisión",ans:false,why:"Ausente."}
+  ],
+  supRule:"Criterios de apoyo presentes",excRule:"Criterios de exclusión activados",
+  cats:{cidp:"CIDP",possible:"CIDP posible",no:"Criterios no cumplidos",excl:"Excluida: considere la alternativa"},
+  chain4:{clin:"Patrón clínico",ncs:"Nivel electrodiagnóstico",sup:"Criterios de apoyo",exc:"Exclusiones",upg:"CIDP posible ascendida a CIDP por dos criterios de apoyo (regla ilustrativa)"},
+  whatif:[
+    {id:"onenerve",t:"¿Y si solo un nervio hubiera alcanzado un umbral desmielinizante?",d:"El nivel electrodiagnóstico baja a CIDP posible. Los dos criterios de apoyo la devuelven a CIDP."},
+    {id:"nosup",t:"…y el LCR y la RM hubieran sido normales?",d:"Se mantiene CIDP posible: tratar, reevaluar y dejar que la respuesta al tratamiento sea la evidencia de apoyo."},
+    {id:"mag",t:"¿Y si los anticuerpos anti-MAG hubieran sido positivos?",d:"El diagnóstico queda excluido. Pasa a ser neuropatía anti-MAG, con un manejo diferente."}
+  ],
+  next4:"Siguiente: qué significa para el tratamiento. En el programa completo esta etapa se ramificaría hacia la herramienta de individualización."
+}};
+
+/* ---------- CASE DATA (faculty-owned). Values and limits are illustrative. ---------- */
+const NCS = [ // per nerve: [DML, ULN], [CV, LLN], [F, ULN], [block %, threshold]
+  {v:[[8.1,4.4],[32,49],[41,31],[38,30]]},
+  {v:[[5.0,3.3],[35,49],[39,32],[0,30]]},
+  {v:[[7.0,6.5],[30,40],[62,56],[0,30]]},
+  {v:[[6.9,6.0],[33,41],[66,58],[null,30]]} // tibial: block not assessable
+];
+const THRESH = [ (v,l)=>v>=l*1.5, (v,l)=>v<=l*0.7, (v,l)=>v>=l*1.2, (v,l)=>v!==null&&v>=l ];
+
+/* ---------- STATE ---------- */
+let lang="en", step=0;
+const applied={1:false,2:false,3:false};
+const picks={clin:{},ncs:{},sup:{},exc:{}};
+const wi={onenerve:false,nosup:false,mag:false};
+const T=()=>STR[lang];
+const $=s=>document.querySelector(s);
+
+/* ---------- RENDER ---------- */
+function text(){
+  document.querySelectorAll("[data-s]").forEach(el=>{const v=T()[el.dataset.s]; if(v!==undefined) el.innerHTML=v;});
+  document.querySelectorAll("[data-p]").forEach(el=>{el.placeholder=T()[el.dataset.p]||"";});
+  document.documentElement.lang=lang;
+}
+function checklist(ul,items,bucket){
+  ul.innerHTML=items.map(i=>`<li class="check" data-id="${i.id}">
+    <input type="checkbox" id="${bucket}-${i.id}" ${picks[bucket][i.id]?"checked":""}>
+    <label for="${bucket}-${i.id}">${i.t}${i.s?`<small>${i.s}</small>`:""}</label>
+    <span class="mark"></span><span class="why">${i.why}</span></li>`).join("");
+  ul.querySelectorAll("input").forEach(inp=>inp.addEventListener("change",e=>{picks[bucket][e.target.id.split("-")[1]]=e.target.checked; live();}));
+}
+function markChecklist(ul,items,bucket){
+  items.forEach(i=>{const li=ul.querySelector(`[data-id="${i.id}"]`); const ok=!!picks[bucket][i.id]===i.ans; li.classList.toggle("ok",ok); li.classList.toggle("miss",!ok); li.querySelector(".mark").textContent=ok?T().ok:T().miss;});
+}
+function ncsTable(){
+  const t=T(), tb=$("#ncs");
+  tb.innerHTML=`<thead><tr><th>${t.nerve}</th>${t.ncsCols.map((c,i)=>`<th colspan="2">${c}<span style="display:block;font-weight:400;text-transform:none;letter-spacing:0">${t.ncsUnits[i]} · ${t.ncsLim[i]} ${t.limit}</span></th>`).join("")}</tr></thead>
+  <tbody>${NCS.map((n,r)=>`<tr><th scope="row" style="text-transform:none;letter-spacing:0;font-size:13px;color:var(--navy)">${t.nerves[r]}</th>${n.v.map(([v,l],c)=>{
+     const na=v===null; const key=r+"-"+c;
+     return `<td class="num">${na?"n/a":v}<span class="lim">${na?"":l}</span></td><td class="cell" data-key="${key}">${na?"":`<input type="checkbox" id="ncs-${key}" aria-label="${t.nerves[r]}: ${t.ncsCols[c]}" ${picks.ncs[key]?"checked":""}>`}</td>`;}).join("")}</tr>`).join("")}</tbody>`;
+  tb.querySelectorAll("input").forEach(inp=>inp.addEventListener("change",e=>{picks.ncs[e.target.id.slice(4)]=e.target.checked; live();}));
+}
+function markNcs(){
+  NCS.forEach((n,r)=>n.v.forEach(([v,l],c)=>{ if(v===null) return; const td=$(`#ncs [data-key="${r}-${c}"]`); const truth=THRESH[c](v,l); const ok=!!picks.ncs[r+"-"+c]===truth; td.classList.toggle("ok",ok); td.classList.toggle("miss",!ok);}));
+}
+
+/* ---------- ENGINE ---------- */
+function clinState(){ const t=T(); const req=t.clin.filter(i=>i.ans); const got=req.filter(i=>picks.clin[i.id]).length; return {got,need:req.length,typical:got===req.length}; }
+function ncsCounts(useTruth){ // nerves per parameter
+  return [0,1,2,3].map(c=>NCS.reduce((acc,n,r)=>{const [v,l]=n.v[c]; if(v===null) return acc; const hit=useTruth?THRESH[c](v,l):!!picks.ncs[r+"-"+c]; return acc+(hit?1:0);},0));
+}
+function ncsLevel(counts){ const max=Math.max(...counts); return max>=2?"cidp":max===1?"possible":"none"; }
+function supCount(useTruth){ return T().sup.filter(i=>useTruth?i.ans:picks.sup[i.id]).length; }
+function excHit(useTruth){ return T().exc.some(i=>useTruth?i.ans:picks.exc[i.id]); }
+function category(o){ // o: {typical, level, sup, exc}
+  if(o.exc) return "excl";
+  if(!o.typical) return "no";
+  if(o.level==="cidp") return "cidp";
+  if(o.level==="possible") return o.sup>=2?"cidp":"possible";
+  return "no";
+}
+function stTag(s,label){return `<span class="st ${s}">${label}</span>`;}
+
+function live(){ // engine panels update as the learner ticks; verdict only after Apply
+  const t=T();
+  // Stage 1
+  if(step===1){ const c=clinState(); $("#e1").innerHTML=`<h3>${t["eng.h"]}</h3>
+    ${t.clinRules.map(r=>`<div class="rule"><div class="t"><span>${r.t}</span>${r.key==="typical"?stTag(applied[1]?(c.typical?"met":"part"):"", applied[1]?(c.typical?t.met:`${c.got}/${c.need}`):t.pending):stTag("",applied[1]?"—":t.pending)}</div><div class="d">${r.d}</div></div>`).join("")}
+    ${verdictBox(applied[1]?null:undefined)}`; }
+  // Stage 2
+  if(step===2){ const counts=ncsCounts(false); const lvl=ncsLevel(counts); $("#e2").innerHTML=`<h3>${t["eng.h"]}</h3>
+    ${t.ncsRules.map((r,i)=>`<div class="rule"><div class="t"><span>${r}</span>${stTag(counts[i]>=2?"met":counts[i]===1?"part":"", `${counts[i]} / ${NCS.length} ${t.nerves_word||""}`.trim())}</div></div>`).join("")}
+    <div class="rule"><div class="t"><span>${t.ncsLevel[lvl]}</span>${stTag(lvl==="cidp"?"met":lvl==="possible"?"part":"no", lvl==="cidp"?t.met:lvl==="possible"?t.partial:t.notmet)}</div></div>
+    ${verdictBox(applied[2]?null:undefined)}`; }
+  // Stage 3
+  if(step===3){ const s=supCount(false), x=excHit(false); $("#e3").innerHTML=`<h3>${t["eng.h"]}</h3>
+    <div class="rule"><div class="t"><span>${t.supRule}</span>${stTag(s>=2?"met":s===1?"part":"", `${s} / ${t.sup.length}`)}</div></div>
+    <div class="rule"><div class="t"><span>${t.excRule}</span>${stTag(x?"no":"met", x?t.yes:t.no)}</div></div>
+    ${verdictBox(applied[3]?null:undefined)}`; }
+  if(step===4) result();
+}
+function verdictBox(){ // category from committed truth so far, shown only once the stage is applied
+  const t=T();
+  const s1=applied[1], s2=applied[2], s3=applied[3];
+  let label=t["eng.pending"], cls="pending";
+  if(s1&&s2&&s3){ label=t.cats[category({typical:true,level:ncsLevel(ncsCounts(true)),sup:supCount(true),exc:excHit(true)})]; cls=""; }
+  else if(s1&&s2){ label=t.cats[category({typical:true,level:ncsLevel(ncsCounts(true)),sup:0,exc:false})]+" · "+t.pending.toLowerCase(); cls=""; }
+  else if(s1){ const c=clinState(); label=t.clinChain.typical+` (${c.got}/${c.need})`; cls=""; }
+  return `<div class="verdict"><div class="k">${t["eng.cat"]}</div><div class="v ${cls}">${label}</div></div>`;
+}
+function result(){
+  const t=T();
+  const level = wi.onenerve ? "possible" : ncsLevel(ncsCounts(true));
+  const sup = wi.nosup ? supCount(true)-2 : supCount(true);
+  const exc = wi.mag;
+  const cat=category({typical:true,level,sup,exc});
+  const upg = level==="possible" && sup>=2 && !exc;
+  $("#e4").innerHTML=`<h3>${t["eng.h"]}</h3>
+    <div class="verdict"><div class="k">${t["eng.cat"]}</div><div class="v">${t.cats[cat]}</div>
+    <ul class="chain">
+      <li class="met">${t.chain4.clin}: ${t.clinChain.typical}</li>
+      <li class="${level==="cidp"?"met":level==="possible"?"part":"no"}">${t.chain4.ncs}: ${t.ncsLevel[level]}</li>
+      <li class="${sup>=2?"met":sup===1?"part":"no"}">${t.chain4.sup}: ${sup} / ${t.sup.length}</li>
+      ${upg?`<li class="met">${t.chain4.upg}</li>`:""}
+      <li class="${exc?"no":"met"}">${t.chain4.exc}: ${exc?t.yes:t.no}</li>
+    </ul></div>
+    <p style="font-size:12px;color:var(--muted);margin-top:12px">${t.next4}</p>`;
+  $("#whatif").innerHTML=t.whatif.map(w=>`<button type="button" data-wi="${w.id}" aria-pressed="${wi[w.id]}"><strong>${w.t}</strong><span style="display:block;font-size:12px;color:var(--muted);margin-top:2px">${w.d}</span></button>`).join("");
+  $("#whatif").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{const id=b.dataset.wi; wi[id]=!wi[id]; if(id==="nosup"&&wi.nosup) wi.onenerve=true; if(id==="onenerve"&&!wi.onenerve) wi.nosup=false; result();}));
+}
+
+/* ---------- NAV ---------- */
+function show(n){
+  step=n;
+  document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("on",+s.dataset.step===n));
+  $("#pips").innerHTML=[0,1,2,3,4].map(i=>`<button type="button" class="pip ${i<n?"done":""}" ${i===n?'aria-current="step"':""} aria-label="Step ${i+1}" data-go="${i}"></button>`).join("");
+  $("#pips").querySelectorAll(".pip").forEach(p=>p.addEventListener("click",()=>{const g=+p.dataset.go; if(g<=n||canAdvance(g-1)) show(g);}));
+  const gated=[1,2,3].includes(n);
+  $("#apply").hidden=!gated; $("#apply").disabled=gated&&applied[n];
+  $("#next").hidden=n===4; $("#next").disabled=gated&&!applied[n];
+  $("#back").disabled=n===0;
+  $("#print").hidden=n!==4;
+  if(n===1){checklist($("#c1"),T().clin,"clin"); if(applied[1]){$("#w1").classList.add("applied"); markChecklist($("#c1"),T().clin,"clin");}}
+  if(n===2){ncsTable(); if(applied[2]){$("#w2").classList.add("applied"); markNcs();}}
+  if(n===3){checklist($("#c3s"),T().sup,"sup"); checklist($("#c3x"),T().exc,"exc"); if(applied[3]){$("#w3").classList.add("applied"); markChecklist($("#c3s"),T().sup,"sup"); markChecklist($("#c3x"),T().exc,"exc");}}
+  live();
+  const h=document.querySelector(".screen.on h1, .screen.on h2"); if(h){h.setAttribute("tabindex","-1"); h.focus({preventScroll:true});}
+}
+function canAdvance(from){ return from<1 || applied[from]; }
+$("#apply").addEventListener("click",()=>{
+  applied[step]=true; $(`#w${step}`).classList.add("applied");
+  if(step===1) markChecklist($("#c1"),T().clin,"clin");
+  if(step===2) markNcs();
+  if(step===3){ markChecklist($("#c3s"),T().sup,"sup"); markChecklist($("#c3x"),T().exc,"exc"); }
+  $("#apply").disabled=true; $("#next").disabled=false; live(); $("#next").focus();
+});
+$("#next").addEventListener("click",()=>show(Math.min(4,step+1)));
+$("#back").addEventListener("click",()=>show(Math.max(0,step-1)));
+$("#print").addEventListener("click",()=>window.print());
+["en","es"].forEach(l=>$("#lang-"+l).addEventListener("click",()=>{lang=l; ["en","es"].forEach(k=>$("#lang-"+k).setAttribute("aria-pressed",k===l)); text(); show(step);}));
+
+/* ---------- FIT: scale the 1280x720 stage to the viewport ---------- */
+function fit(){ const s=Math.min(innerWidth/1280, innerHeight/720); $("#stage").style.transform=`translate(-50%,-50%) scale(${s})`; }
+addEventListener("resize",fit);
+text(); fit(); show(0);
+</script>
