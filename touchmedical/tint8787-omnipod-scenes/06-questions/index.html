@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<!-- build: Omnipod 5 Decision Making | tint8787-omnipod-scenes/08-q3-q4 | v1 | 2026-09-14 -->
+<!-- build: Omnipod 5 Decision Making | tint8787-omnipod-scenes/06-questions | v2 | 2026-09-15 -->
 <html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script>window.CLL_SCENE = 10;</script>
+<script>window.CLL_SCENE = 8;</script>
 <script src="../vendor/react.production.min.js"></script>
 <script src="../vendor/react-dom.production.min.js"></script>
 <script src="../support.js"></script>
 
-<title>Omnipod 5 Decision Making: Questions 3 and 4 of 6</title>
+<title>Omnipod 5 Decision Making: Questions 1 to 6</title>
 
-<meta name="build-version" content="Omnipod 5 Decision Making tint8787-omnipod-scenes/08-q3-q4 v1 2026-09-14">
+<meta name="build-version" content="Omnipod 5 Decision Making tint8787-omnipod-scenes/06-questions v2 2026-09-15">
 </head>
 <body>
 <x-dc>
@@ -37,11 +37,15 @@
     @keyframes omnTitleRise { from { transform: translateY(150px); } to { transform: none; } }
     @keyframes omnSoft { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
     @keyframes omnSoftB { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+    @keyframes omnFeatHead { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    @keyframes omnFeatIn { 0% { opacity: 0; transform: translateY(18px) scale(.985); } 60% { opacity: 1; } 100% { opacity: 1; transform: none; } }
+    @keyframes omnFeatInB { 0% { opacity: 0; transform: translateY(18px) scale(.985); } 60% { opacity: 1; } 100% { opacity: 1; transform: none; } }
     [data-tags="off"] .omn-tag { display: none !important; }
     @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
   </style>
 </helmet>
 <div ref="{{ rootRef }}" class="omn-root" style="position:fixed;inset:0;background:{{ rootBg }};overflow:hidden">
+<sc-if value="{{ live }}" hint-placeholder-val="{{ true }}">
 <div ref="{{ stageRef }}" data-stage="1" data-tags="{{ tagsAttr }}" class="omn-screen" style="position:absolute;left:50%;top:50%;transform-origin:center center;border-radius:8px;box-shadow:0 20px 60px rgba(27,26,26,.22);grid-template-rows:76px minmax(0,1fr) 72px;height:720px;overflow:hidden;opacity:{{ stageOpacity }};transition:opacity .3s ease">
 
   <div style="position:relative;border-bottom:4px solid #FFA700;height:76px;box-sizing:border-box">
@@ -192,7 +196,7 @@
           </sc-for>
         </div>
         <div style="display:flex;flex-direction:column;flex:0 0 auto;height:162px"><sc-if value="{{ chActiveOn }}" hint-placeholder-val="{{ false }}">
-            <p class="omn-h4" style="font-size:18px;color:#8D61C8;margin:0 0 8px;animation:{{ chPanelAnim }}">The Omnipod® 5 includes the following feature(s) to address this challenge</p>
+            <p class="omn-h4" style="font-size:18px;color:#8D61C8;margin:0 0 8px;animation:omnFeatHead .6s cubic-bezier(.16,1,.3,1) both">The Omnipod® 5 includes the following feature(s) to address this challenge</p>
             <div class="omn-feature__answer" style="flex-direction:row;align-items:center;gap:18px;padding:12px 16px;height:126px;box-sizing:border-box;overflow:hidden;animation:{{ chPanelAnim }}">
               <span class="omn-ico-tile" style="width:52px;height:52px;flex-basis:52px"><span class="omn-ico omn-ico--{{ chActiveIcon }}" aria-hidden="true" style="width:30px;height:30px;flex-basis:30px"></span></span>
               <div style="display:flex;flex-direction:column;gap:4px">
@@ -489,6 +493,7 @@
   </sc-if>
 
 </div>
+</sc-if>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:720},&quot;showHba1cRanges&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showProposedTags&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Review&quot;}}">
@@ -501,6 +506,11 @@ class Component extends DCLogic {
      (P tag toggle, Reset progress) render in the master only, progress is stored per build, and the review contract is scoped to the scene. */
   SCENE = (typeof window !== "undefined" && Number.isInteger(window.CLL_SCENE)) ? window.CLL_SCENE : null;
   KEY = "omn8787-tint-v2" + (this.SCENE ? "-s" + this.SCENE : "");
+  /* Owner 15 Sep 2026: one scene build can cover several screens. Questions 1-6 are one Visme embed (screen 8 spans 8-13, 11 being
+     question 4 under question 3), so answers and the questions summary live together and Next/Back move between questions inside it.
+     go() still ignores screens outside the span: Back on question 1 and Finish on question 6 are left to Visme. */
+  SPAN = { 8: [8, 9, 10, 11, 12, 13] };
+  inScene(n) { return this.SCENE === null || (this.SPAN[this.SCENE] || [this.SCENE]).includes(n); }
   TITLES = ["", "Title screen", "Contents page", "About the case", "Introduction to the case", "Case demographics and clinical characteristics",
     "Challenges in the management of this case leading to Omnipod® 5 being trialed", "Optimizing the Omnipod® 5",
     "Optimizing the Omnipod® 5 (1/6 Q&A)", "Optimizing the Omnipod® 5 (2/6 Q&A)", "Optimizing the Omnipod® 5 (3–4/6 Q&A)",
@@ -596,8 +606,28 @@ class Component extends DCLogic {
   ];
 
   state = Object.assign({
-    scene: this.SCENE || 1, visited: [this.SCENE || 1], answers: {}, units: "mg", motion: true, walk: null, dir: 1, revReady: false, chTick: 0, fading: false, tags: (this.props && this.props.showProposedTags) || false, resetAsk: false
+    scene: this.SCENE || 1, visited: [this.SCENE || 1], answers: {}, units: "mg", motion: true, walk: null, dir: 1, revReady: false, chTick: 0, fading: false, tags: (this.props && this.props.showProposedTags) || false, resetAsk: false, held: this.holdUntilSeen()
   }, this.load());
+
+  /* Visme loads every slide's iframe up front, so a scene build would play its entrance off screen. Inside an iframe the
+     scene stays unmounted until at least half of it is first on screen, then mounts once (first arrival only, owner 15 Sep 2026).
+     The whole-activity page, a scene opened directly, and review captures are never held. */
+  holdUntilSeen() {
+    if (this.SCENE === null || typeof window === "undefined") return false;
+    try { return window.self !== window.top; } catch (e) { return true; }
+  }
+  watchSeen() {
+    if (!this.state.held) return;
+    const release = () => {
+      if (!this.state.held) return;
+      if (this.seenIO) { this.seenIO.disconnect(); this.seenIO = null; }
+      this.setState({ held: false }, () => { if (this.reviewDriving) return; if (this.state.scene === 5) this.startCount(); if (this.state.scene === 14) this.startTake(); });
+    };
+    this.releaseHold = release;
+    if (typeof IntersectionObserver === "undefined") { release(); return; }
+    this.seenIO = new IntersectionObserver(entries => { const e = entries[entries.length - 1]; if (e && e.isIntersecting && e.intersectionRatio >= 0.5) release(); }, { threshold: [0, 0.5, 1] });
+    this.seenIO.observe(document.documentElement);
+  }
 
   load() {
     try { const s = JSON.parse(localStorage.getItem(this.KEY) || "null"); if (s && typeof s.scene === "number") return { scene: this.SCENE || s.scene, visited: this.SCENE ? [this.SCENE] : (s.visited || [1]), answers: s.answers || {}, units: s.units || "mg", motion: s.motion !== false, ch: s.ch || {}, tags: !!s.tags }; } catch (e) {}
@@ -674,6 +704,7 @@ class Component extends DCLogic {
 
   componentDidMount() {
     this.fit = () => {
+      if (this.state.held) return;   /* the stage mounts on release and calls fit itself */
       const vw = window.innerWidth, vh = window.innerHeight;
       if (!this.stageEl || !vw || !vh) { requestAnimationFrame(this.fit); return; }
       const k = Math.min(vw / 1320, vh / 760);
@@ -681,9 +712,10 @@ class Component extends DCLogic {
     };
     this.fit(); window.addEventListener("resize", this.fit);
     this._lastScene = this.state.scene;
-    if (this.state.scene === 5) this.startCount();
-    if (this.state.scene === 14) this.startTake();
+    if (this.state.scene === 5 && !this.state.held) this.startCount();
+    if (this.state.scene === 14 && !this.state.held) this.startTake();
     this.rdCheck();
+    this.watchSeen();
     this.onKey = e => {
       if (e.key === "Escape") this.setState({ walk: null, refsOpen: false, tip: null, ranges: false, link: null, resetAsk: false });
       else if (this.state.walk !== null) return;
@@ -694,7 +726,7 @@ class Component extends DCLogic {
     this.applyMotion();
     this.installReview();
   }
-  componentWillUnmount() { window.removeEventListener("resize", this.fit); window.removeEventListener("keydown", this.onKey); clearInterval(this.readyTimer); }
+  componentWillUnmount() { if (this.seenIO) this.seenIO.disconnect(); window.removeEventListener("resize", this.fit); window.removeEventListener("keydown", this.onKey); clearInterval(this.readyTimer); }
 
   /* Background motion toggle pauses the ambient trace (CSS animations on .omn-trace). */
   applyMotion() { if (this.stageEl) this.stageEl.style.setProperty("--omn-motion", this.state.motion ? "running" : "paused"); document.querySelectorAll(".omn-trace *").forEach(el => { el.style.animationPlayState = this.state.motion ? "running" : "paused"; }); }
@@ -711,7 +743,7 @@ class Component extends DCLogic {
     let s = Math.max(1, Math.min(this.LAST, i));
     if (s === 3) s = i >= this.state.scene ? 4 : 2;
     if (s === 11) s = i >= this.state.scene ? 12 : 10;
-    if (this.SCENE !== null && s !== this.SCENE) return;   /* screen 3 folded into 4; screen 7 is the Q&A gate (storyboard 7 merged into 6) */
+    if (this.SCENE !== null && !this.inScene(s)) return;   /* screen 3 folded into 4; screen 7 is the Q&A gate (storyboard 7 merged into 6) */
     if (s === this.state.scene) return;
     this.setState(st => ({ scene: s, dir: s > st.scene ? 1 : -1, walk: null, ranges: false, tip: null, refsOpen: false, link: null, visited: st.visited.includes(s) ? st.visited : st.visited.concat([s]) }), () => this.applyMotion());
   }
@@ -767,7 +799,7 @@ class Component extends DCLogic {
   installReview() {
     this.readyTimer = setInterval(() => { const r = this.sceneReady(); if (r !== this.state.revReady) this.setState({ revReady: r }); }, 120);
     const self = this;
-    const baseline = n => ({ scene: n, dir: 1, walk: null, tip: null, ranges: false, refsOpen: false, link: null, ch: {}, chActive: null, chTick: 0, fading: false, take: { step: 6 }, demo: { step: 7, counts: [1, 1, 1, 1, 1, 1, 1] }, units: "mg", motion: false, tags: false, resetAsk: false, visited: Array.from({ length: n }, (_, i) => i + 1), answers: {} });
+    const baseline = n => ({ held: false, scene: n, dir: 1, walk: null, tip: null, ranges: false, refsOpen: false, link: null, ch: {}, chActive: null, chTick: 0, fading: false, take: { step: 6 }, demo: { step: 7, counts: [1, 1, 1, 1, 1, 1, 1] }, units: "mg", motion: false, tags: false, resetAsk: false, visited: Array.from({ length: n }, (_, i) => i + 1), answers: {} });
     const merge = (st, patch) => { const out = {}; for (const k of Object.keys(patch)) { const v = patch[k], cur = st[k]; out[k] = (v && typeof v === "object" && !Array.isArray(v) && cur && typeof cur === "object" && !Array.isArray(cur)) ? Object.assign({}, cur, v) : v; } return out; };
     const set = p => new Promise(res => self.setState(st => merge(st, p), res));
     const reset = n => new Promise(res => self.setState(baseline(n), res));
@@ -789,12 +821,12 @@ class Component extends DCLogic {
     const find = id => (self.stageEl || document).querySelector('[data-review-id="' + id + '"]');
     const act = (id, action) => { const el = find(id); if (!el) throw new Error("no element for data-review-id " + id); if (action === "hover") { el.dispatchEvent(new MouseEvent("mouseover", { bubbles: true })); el.dispatchEvent(new MouseEvent("mouseenter", { bubbles: false })); } else el.click(); };
     const SC = this.SCENE;
-    const states = this.reviewStates().map(x => (SC !== null && x.id.startsWith("g-walk-")) ? Object.assign({}, x, { scene: SC }) : x).filter(x => SC === null || x.scene === SC);
+    const states = this.reviewStates().map(x => (SC !== null && x.id.startsWith("g-walk-")) ? Object.assign({}, x, { scene: SC }) : x).filter(x => SC === null || this.inScene(x.scene));
     const byId = {}; states.forEach(x => { byId[x.id] = x; });
     const applyOne = async x => { if (x.patch) await set(x.patch); if (x.via) { await ready(); act(x.via, x.action || "click"); await wait(60); } };
     window.__review = {
       version: "1.0", asset: "tint8787-omnipod-scenes", scene: SC,
-      scenes: this.TITLES.slice(1).map((label, i) => ({ id: "s" + (i + 1), n: i + 1, label: i === 0 ? "Title page" : i === 6 ? "Optimizing the Omnipod® 5 (Q&A gate)" : label })).filter(x => x.n !== 3 && x.n !== 11 && (SC === null || x.n === SC)),
+      scenes: this.TITLES.slice(1).map((label, i) => ({ id: "s" + (i + 1), n: i + 1, label: i === 0 ? "Title page" : i === 6 ? "Optimizing the Omnipod® 5 (Q&A gate)" : label })).filter(x => x.n !== 3 && x.n !== 11 && (SC === null || this.inScene(x.n))),
       states,
       async apply(id) {
         const x = byId[id]; if (!x) throw new Error("unknown review state " + id);
@@ -903,7 +935,7 @@ class Component extends DCLogic {
     const s = this.state, cur = s.scene, isQ = this.isQ(cur), q = isQ ? this.Q[cur] : null, a = isQ ? this.ans(cur) : null;
     const explored = this.explored(cur), split = this.SCENE !== null;
     const vals = {
-      crossNav: true, reviewTools: !split, rootBg: split ? "transparent" : "#ECEBE8",
+      crossNav: true, reviewTools: !split, live: !s.held, rootBg: split ? "transparent" : "#ECEBE8",
       rootRef: el => { this.rootEl = el; }, stageRef: el => { this.stageEl = el; if (el && this.fit) this.fit(); }, sceneRef: el => { if (el) this.sceneEl = el; },
       canvasRef: () => {},
       sceneRid: "s" + cur, readyAttr: s.revReady ? "true" : "false",
@@ -925,7 +957,7 @@ class Component extends DCLogic {
       closeLink: () => this.setState({ link: null, copied: false }),
       copyLink: e => { e.stopPropagation(); const t = s.link ? s.link.text : ""; const done = () => { this.setState({ copied: true }); clearTimeout(this.copyT); this.copyT = setTimeout(() => this.setState({ copied: false }), 1600); }; if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, done); else done(); },
       openGuide: e => { e.stopPropagation(); this.setState({ link: { title: "Omnipod® 5 User Guide", text: this.GUIDE_URL, mode: "leave" }, copied: false, tip: null }); },
-      chPanelAnim: (s.chTick % 2 ? "omnSoftB" : "omnSoft") + " 1.2s ease .25s both",
+      chPanelAnim: (s.chTick % 2 ? "omnFeatInB" : "omnFeatIn") + " .7s cubic-bezier(.16,1,.3,1) " + ((s.chTick || 0) <= 1 ? ".2s" : "0s") + " both",   /* first open follows the title in; a switch rises straight away */
       exportRefs: e => {
         e.stopPropagation();
         const esc = t => t.replace(/&/g, "&amp;").replace(/</g, "&lt;");
@@ -942,7 +974,7 @@ class Component extends DCLogic {
       resetAsk: !!s.resetAsk, closeReset: () => this.setState({ resetAsk: false }),
       doReset: e => { e.stopPropagation(); this.setState({ resetAsk: false }); this.hardReset(); },
       next: () => { if (cur < this.LAST) this.go(cur + 1); }, prev: () => this.go(cur - 1),
-      showBack: cur > 1 && cur !== 7, showNext: explored && cur !== 1 && cur !== 7 && cur !== this.LAST,
+      showBack: cur > 1 && cur !== 7 && !(split && cur === 15),   /* owner 15 Sep: Visme handles leaving Revisit */ showNext: explored && cur !== 1 && cur !== 7 && cur !== this.LAST,
       showContentsBtn: false, goContents: () => this.go(2),
       footerBg: "#fff", footerLine: cur === 1 ? "3px solid #00A9B5" : "1px solid #E6E4DF",
       trace: this.traceSvg(), traceOpacity: cur === 1 || cur === 4 ? 0.35 : 0.16,
@@ -1043,7 +1075,7 @@ class Component extends DCLogic {
   }
 }
 </script>
-<script id="build-stamp">(function(){var T="Omnipod 5 Decision Making: Questions 3 and 4 of 6",M="Omnipod 5 Decision Making tint8787-omnipod-scenes/08-q3-q4 v1 2026-09-14";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
-<script id="layer-release">(function(){var SAFE=/^(omnBarBounce|omnFade|omnInA|omnInB|omnPop|omnRoll|omnSoft|omnSoftB|omnSwipe|omnTitleRise|omnUp|omnZoomIn)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
+<script id="build-stamp">(function(){var T="Omnipod 5 Decision Making: Questions 1 to 6",M="Omnipod 5 Decision Making tint8787-omnipod-scenes/06-questions v2 2026-09-15";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<script id="layer-release">(function(){var SAFE=/^(omnBarBounce|omnFade|omnFeatHead|omnFeatIn|omnFeatInB|omnInA|omnInB|omnPop|omnRoll|omnSoft|omnSoftB|omnSwipe|omnTitleRise|omnUp|omnZoomIn)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
 </body>
 </html>
