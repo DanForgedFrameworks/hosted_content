@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- build: Omnipod 5 Decision Making | tint8787-omnipod-scenes/05-qa-gate | v4 | 2026-09-15 -->
+<!-- build: Omnipod 5 Decision Making | tint8787-omnipod-scenes/05-qa-gate | v5 | 2026-09-15 -->
 <html>
 <head>
 <meta charset="utf-8">
@@ -10,7 +10,7 @@
 <script src="../support.js"></script>
 
 <title>Omnipod 5 Decision Making: Optimizing the Omnipod 5: are you ready?</title>
-<meta name="build-version" content="Omnipod 5 Decision Making tint8787-omnipod-scenes/05-qa-gate v4 2026-09-15">
+<meta name="build-version" content="Omnipod 5 Decision Making tint8787-omnipod-scenes/05-qa-gate v5 2026-09-15">
 </head>
 <body>
 <x-dc>
@@ -235,7 +235,7 @@
             <sc-if value="{{ qMulti }}" hint-placeholder-val="{{ false }}"><p class="omn-small" style="color:#808080">Options (can select multiple):</p></sc-if>
             <ul class="omn-options" role="{{ qRole }}">
               <sc-for list="{{ qOptions }}" as="o" hint-placeholder-count="4">
-                <li style="animation:omnUp .85s cubic-bezier(.16,1,.3,1) {{ o.delay }} both"><button type="button" class="omn-option {{ o.cls }}" role="{{ o.role }}" aria-checked="{{ o.checked }}" data-revealed="{{ o.revealedAttr }}" disabled="{{ o.disabled }}" data-review="reveal" data-review-id="{{ o.rid }}" onClick="{{ o.pick }}" style="font-size:{{ qOptFont }};padding:{{ qOptPad }};min-height:{{ qOptMin }};border-color:{{ o.border }}"><span class="omn-option__mark" style="position:relative;background:{{ o.markBg }};border-color:{{ o.markBorder }}"><sc-if value="{{ o.idle }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position:absolute;inset:-4px;border-radius:50%;border:2px solid #8D61C8;animation:omnPulseRing 2.4s ease-in-out {{ o.delay }} infinite"></span></sc-if><sc-if value="{{ o.showIco }}" hint-placeholder-val="{{ false }}"><span class="omn-ico omn-ico--{{ o.ico }}" style="width:16px;height:16px;flex-basis:16px" aria-hidden="true"></span></sc-if></span>{{ o.text }}</button></li>
+                <li style="animation:omnUp .85s cubic-bezier(.16,1,.3,1) {{ o.delay }} both"><button type="button" class="omn-option {{ o.cls }}" role="{{ o.role }}" aria-checked="{{ o.checked }}" data-revealed="{{ o.revealedAttr }}" disabled="{{ o.disabled }}" data-review="reveal" data-review-id="{{ o.rid }}" onClick="{{ o.pick }}" style="font-size:{{ qOptFont }};padding:{{ qOptPad }};min-height:{{ qOptMin }};border-color:{{ o.border }}"><span class="omn-option__mark" style="position:relative;background:{{ o.markBg }};border-color:{{ o.markBorder }}"><sc-if value="{{ o.idle }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position:absolute;inset:-4px;border-radius:50%;border:2px solid #8D61C8;animation:omnPulseRing 2.4s ease-in-out {{ o.delay }} infinite"></span></sc-if><sc-if value="{{ o.showIco }}" hint-placeholder-val="{{ false }}"><span class="omn-ico omn-ico--{{ o.ico }}" style="width:16px;height:16px;flex-basis:16px" aria-hidden="true"></span></sc-if></span><sc-if value="{{ o.noGloss }}" hint-placeholder-val="{{ true }}">{{ o.text }}</sc-if><sc-if value="{{ o.hasGloss }}" hint-placeholder-val="{{ false }}"><span>{{ o.pre }}<span data-review="glossary" data-review-id="{{ o.gRid }}" data-gloss="{{ o.gDef }}" onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #8D61C8;cursor:help">{{ o.gAbbr }}</span>{{ o.post }}</span></sc-if></button></li>
               </sc-for>
             </ul>
             <sc-if value="{{ qShowSubmit }}" hint-placeholder-val="{{ false }}">
@@ -250,7 +250,7 @@
               <p class="omn-question__stem">{{ q2Stem }}</p>
               <ul class="omn-options" role="radiogroup">
                 <sc-for list="{{ q2Options }}" as="o" hint-placeholder-count="2">
-                  <li style="animation:omnUp .85s cubic-bezier(.16,1,.3,1) {{ o.delay }} both"><button type="button" class="omn-option {{ o.cls }}" role="{{ o.role }}" aria-checked="{{ o.checked }}" data-revealed="{{ o.revealedAttr }}" disabled="{{ o.disabled }}" data-review="reveal" data-review-id="{{ o.rid }}" onClick="{{ o.pick }}" style="font-size:{{ q2OptFont }};padding:{{ q2OptPad }};min-height:{{ q2OptMin }};border-color:{{ o.border }}"><span class="omn-option__mark" style="position:relative;background:{{ o.markBg }};border-color:{{ o.markBorder }}"><sc-if value="{{ o.idle }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position:absolute;inset:-4px;border-radius:50%;border:2px solid #8D61C8;animation:omnPulseRing 2.4s ease-in-out {{ o.delay }} infinite"></span></sc-if><sc-if value="{{ o.showIco }}" hint-placeholder-val="{{ false }}"><span class="omn-ico omn-ico--{{ o.ico }}" style="width:16px;height:16px;flex-basis:16px" aria-hidden="true"></span></sc-if></span>{{ o.text }}</button></li>
+                  <li style="animation:omnUp .85s cubic-bezier(.16,1,.3,1) {{ o.delay }} both"><button type="button" class="omn-option {{ o.cls }}" role="{{ o.role }}" aria-checked="{{ o.checked }}" data-revealed="{{ o.revealedAttr }}" disabled="{{ o.disabled }}" data-review="reveal" data-review-id="{{ o.rid }}" onClick="{{ o.pick }}" style="font-size:{{ q2OptFont }};padding:{{ q2OptPad }};min-height:{{ q2OptMin }};border-color:{{ o.border }}"><span class="omn-option__mark" style="position:relative;background:{{ o.markBg }};border-color:{{ o.markBorder }}"><sc-if value="{{ o.idle }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position:absolute;inset:-4px;border-radius:50%;border:2px solid #8D61C8;animation:omnPulseRing 2.4s ease-in-out {{ o.delay }} infinite"></span></sc-if><sc-if value="{{ o.showIco }}" hint-placeholder-val="{{ false }}"><span class="omn-ico omn-ico--{{ o.ico }}" style="width:16px;height:16px;flex-basis:16px" aria-hidden="true"></span></sc-if></span><sc-if value="{{ o.noGloss }}" hint-placeholder-val="{{ true }}">{{ o.text }}</sc-if><sc-if value="{{ o.hasGloss }}" hint-placeholder-val="{{ false }}"><span>{{ o.pre }}<span data-review="glossary" data-review-id="{{ o.gRid }}" data-gloss="{{ o.gDef }}" onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #8D61C8;cursor:help">{{ o.gAbbr }}</span>{{ o.post }}</span></sc-if></button></li>
                 </sc-for>
               </ul>
               <sc-if value="{{ q2ShowSubmit }}" hint-placeholder-val="{{ false }}">
@@ -412,7 +412,7 @@
   </sc-if>
 
   <sc-if value="{{ tipOn }}" hint-placeholder-val="{{ false }}">
-    <div style="position:absolute;z-index:9;max-width:420px;background:#1B1A1A;color:#fff;border-radius:8px;padding:8px 12px;font-size:14px;line-height:1.4;white-space:pre-line;word-break:break-word;box-shadow:0 10px 28px rgba(27,26,26,.25);pointer-events:none;left:{{ tipX }};top:{{ tipY }};animation:omnRoll .3s cubic-bezier(.16,1,.3,1) both">{{ tipText }}</div>
+    <div style="position:absolute;z-index:9;left:{{ tipX }};top:{{ tipY }};transform:{{ tipShift }};pointer-events:none"><div style="max-width:420px;background:#1B1A1A;color:#fff;border-radius:8px;padding:8px 12px;font-size:14px;line-height:1.4;white-space:pre-line;word-break:break-word;box-shadow:0 10px 28px rgba(27,26,26,.25);animation:omnRoll .3s cubic-bezier(.16,1,.3,1) both">{{ tipText }}</div></div>
   </sc-if>
 
   <sc-if value="{{ walkOpen }}" hint-placeholder-val="{{ false }}">
@@ -548,6 +548,7 @@ class Component extends DCLogic {
     12: { setup: "Following investigation, the patient is experiencing hyperglycemia 2 to 3 hours after meals due to under bolusing",
       stem: "What action do you take?", multi: true,
       options: ["Assess bolus timing", "Assess if patient is overriding the calculator and underdosing", "Assess if they are using Custom Foods", "Consider strengthening I:C ratios by 10–20%", "Lower algorithm target glucose"], correct: [0, 1, 2, 3, 4], correctLabel: "Answer",
+      optGloss: { abbr: "I:C", def: "insulin-to-carbohydrate", rid: "s12-gloss-ic" },   /* owner 15 Sep: first appearance gets a hover; wording Proposed, with Touch */
       correctText: "All options may help with reducing post-meal hyperglycemic episodes.\n\nWeakening the correction factor can prevent hypoglycemia post-meal.\n\nThe need for carb counting accuracy can be simplified using the Custom Food feature, which allows for set carb amounts for meals to be pre-specified.\n\nBolus timing should be 10–15 mins before all meals and snacks.\n\nIf a patient is overriding the calculator, they need education to follow the recommended bolus dose.\n\nA lower target glucose will make the Omnipod® 5 algorithm correct highs sooner and with more insulin, reducing time spent above range." },
     13: { setup: "The patient is sometimes experiencing high blood glucose following a low", stem: "What action do you take?",
       options: ["Lower algorithm target glucose", "Re-educate on how to treat mild hypoglycemia", "Strengthen the correction factor"], correct: [1], correctLabel: "Correct Answer",
@@ -715,10 +716,12 @@ class Component extends DCLogic {
     this.setState({ rd: { scene: cur, p: 0 } }, () => { this.rdRaf = requestAnimationFrame(tick); });
   }
   stopRd() { cancelAnimationFrame(this.rdRaf); }
-  tipFor(el, text) {
+  tipFor(el, text, above) {
     if (!this.stageEl) return null;
     const a = el.getBoundingClientRect(), b = this.stageEl.getBoundingClientRect(), k = b.width / 1280 || 1;
-    return { text, x: Math.min((a.left - b.left) / k, 900), y: (a.bottom - b.top) / k + 8 };
+    /* audit 15 Sep: a glossary hover sits ABOVE its term (below, it covered the line it explains); a citation popup stays BELOW its chip
+       (above, it covered the statement it cites). x clamped so a 420 px box stays on the 1280 px stage. */
+    return { text, above: !!above, x: Math.max(8, Math.min((a.left - b.left) / k, 1280 - 436)), y: above ? (a.top - b.top) / k - 8 : (a.bottom - b.top) / k + 8 };
   }
 
   componentDidMount() {
@@ -864,18 +867,20 @@ class Component extends DCLogic {
   reviewStates() {
     const S = []; const add = (id, scene, label, extra) => S.push(Object.assign({ id, scene, label }, extra));
     for (let n = 1; n <= this.LAST; n++) if (n !== 3 && n !== 11) add("s" + n + "-base", n, this.TITLES[n], { patch: {} });
-    add("s7-complete", 7, "Q&A gate - all six answered, revisit numbers enabled", { patch: { answers: this.allRevealed() } });
-    add("s5-counted", 5, "Case demographics - all cards shown, numbers counted up", { patch: { demo: { step: 7, counts: [1, 1, 1, 1, 1, 1, 1] } } });
-    add("s5-hba1c-ranges", 5, "HbA1c target note (ADA) - opened", { patch: { ranges: true }, requires: ["s5-counted"] });
-    [["t1d", "T1D - type 1 diabetes"], ["mdi", "MDI - multiple daily injections"], ["hba1c", "HbA1c - glycated hemoglobin"]].forEach(([k, l]) => add("s5-gloss-" + k, 5, l, { via: "s5-gloss-" + k, action: "hover", requires: ["s5-counted"] }));
+    if (this.SCENE === null) add("s7-complete", 7, "Q&A gate - all six answered, revisit numbers enabled", { patch: { answers: this.allRevealed() } });
+    for (let k = 1; k < this.DEMO.length; k++) add("s5-step-" + k, 5, "Case demographics - " + k + " of " + this.DEMO.length + " cards shown", { patch: { demo: { step: k, counts: this.DEMO.map((_, i) => i < k ? 1 : 0) } }, partial: true });   /* audit 15 Sep: the reveal step by step */
+    add("s5-hba1c-ranges", 5, "HbA1c target note (ADA) - opened", { patch: { ranges: true }, requires: ["s5-base"] });
+    [["t1d", "T1D - type 1 diabetes"], ["mdi", "MDI - multiple daily injections"], ["hba1c", "HbA1c - glycated hemoglobin"]].forEach(([k, l]) => add("s5-gloss-" + k, 5, l, { via: "s5-gloss-" + k, action: "hover", requires: ["s5-base"] }));
     this.CHALLENGES.forEach(c => add("s6-ch-" + c.key, 6, c.label + " - opened", { patch: { ch: { [c.key]: true }, chActive: c.key } }));
     add("s6-complete", 6, "All five challenges opened - initiated line and Next shown", { patch: { ch: { missing: true, needle: true, labour: true, carbs: true, burnout: true }, chActive: "burnout" } });
     add("s6-gloss-cgm", 6, "CGM - continuous glucose monitoring", { via: "s6-gloss-cgm", action: "hover", requires: ["s6-ch-labour"] });
+    add("s12-gloss-ic", 12, "I:C - insulin-to-carbohydrate", { via: "s12-gloss-ic", action: "hover" });
     add("s10-gloss-tir", 10, "TIR - time in range", { via: "s10-gloss-tir", action: "hover", requires: ["s10-revealed-correct"] });
-    add("s15-complete", 15, "Revisit page - all screens completed, every section revisitable", { patch: { visited: Array.from({ length: 15 }, (_, i) => i + 1), answers: this.allRevealed() } });
+    if (this.SCENE === null) add("s15-complete", 15, "Revisit page - all screens completed, every section revisitable", { patch: { visited: Array.from({ length: 15 }, (_, i) => i + 1), answers: this.allRevealed() } });
     for (let n = 8; n <= 13; n++) {
       const q = this.Q[n], scr = n === 11 ? 10 : n;
-      const pre = n === 11 ? { 10: { picked: this.Q[10].correct.slice(), confirm: false, revealed: true } } : {};   /* Q4 shows only once Q3 is answered */
+      const pre = n === 11 ? { 10: { picked: this.Q[10].correct.slice(), confirm: false, revealed: true } }   /* Q4 shows only once Q3 is answered */
+        : n === 13 ? Object.fromEntries([8, 9, 10, 11, 12].map(k => [k, { picked: this.Q[k].correct.slice(), confirm: false, revealed: true }])) : {};   /* Q6: its summary counts questions 1-5 as a learner reaching it would (audit 15 Sep) */
       const ans = x => ({ answers: Object.assign({}, pre, { [n]: x }) });
       q.options.forEach((o, i) => add("s" + n + "-opt-" + i, scr, o + " - selected", { patch: ans({ picked: [i], confirm: false, revealed: false }) }));
       if (q.multi) {
@@ -887,16 +892,14 @@ class Component extends DCLogic {
         q.options.forEach((o, i) => { if (!q.correct.includes(i)) add("s" + n + "-revealed-wrong-" + i, scr, o + " - revealed, correct answer shown", { patch: ans({ picked: [i], confirm: false, revealed: true }) }); });
       }
     }
-    add("s13-summary", 13, "Q&A 6 revealed - questions summary and Finish shown", { patch: { answers: this.allRevealed() } });
     if (this.SCENE === null) add("g-reset-confirm", 8, "Reset progress - confirmation dialog (shown only when an answer exists)", { patch: { resetAsk: true, answers: { 8: { picked: [0], confirm: false, revealed: true } } } });
     if (this.SCENE === null) add("g-tags-on", 4, "Proposed-copy tags shown (review aid, hidden by default)", { patch: { tags: true } });
     add("s5-cite-1", 5, "Citation 1", { via: "s5-cite-1", action: "click", requires: ["s5-hba1c-ranges"] });
     add("s15-references", 15, "References overlay", { patch: { refsOpen: true } });
     add("s15-guide", 15, "Omnipod® 5 User Guide - leaving interstitial (Continue / Stay here)", { patch: { link: { title: "Omnipod® 5 User Guide", text: this.GUIDE_URL, mode: "leave" } } });
     add("s15-guide-blocked", 15, "Omnipod® 5 User Guide - copy-link fallback when a new tab is blocked", { patch: { link: { title: "Omnipod® 5 User Guide", text: this.GUIDE_URL, mode: "copy" } } });
-    add("s14-releasing", 14, "Take home messages - third card releasing, Next not yet shown", { patch: { take: { step: 3 } }, partial: true });
+    for (let k = 1; k < this.TAKE.length; k++) add("s14-step-" + k, 14, "Take home messages - " + k + " of " + this.TAKE.length + " cards shown, Next not yet shown", { patch: { take: { step: k } }, partial: true });   /* audit 15 Sep: every release step (was step 3 only) */
     this.TAKE.filter(k => k.sup).forEach(k => { const cid = k.sup.replace(/[–-]/g, "-"); add("s14-cite-" + cid, 14, "Citation " + k.sup, { via: "s14-cite-" + cid, action: "click", requires: ["s14-base"] }); });
-    add("g-refs-export", 15, "References overlay - Save as PDF button (opens a new tab; not driven in review)", { patch: { refsOpen: true } });
     add("g-refs-export-fallback", 15, "Save as PDF - copy panel shown when a new tab is blocked", { patch: { link: { title: "References", text: this.REFS.map((r, i) => (i + 1) + ". " + r.text).join("\n"), mode: "copy" } } });
     this.WALK.forEach((w, i) => add("g-walk-" + (i + 1), 2, "How to use this - " + w.title, { patch: { walk: i } }));
     return S;
@@ -925,11 +928,12 @@ class Component extends DCLogic {
     const q = this.Q[n], a = this.ans(n), picked = a.picked, revealed = a.revealed;
     const options = q.options.map((text, i) => {
       const on = picked.includes(i), isC = q.correct.includes(i);
+      const og = q.optGloss, ogi = og ? text.indexOf(og.abbr) : -1;
       let cls = q.multi ? "omn-option--multi" : "", ico = "", showIco = false;
       if (revealed) { if (q.multi) { if (on) { cls += " omn-option--correct"; ico = "check"; showIco = true; } } else if (isC) { cls += " omn-option--correct"; ico = "check"; showIco = true; } else if (on) { cls += " omn-option--incorrect"; ico = "x"; showIco = true; } }
       else if (on) { cls += " omn-option--selected"; ico = "check"; showIco = true; }
       const tone = revealed ? (cls.includes("--correct") ? "#00A2AC" : cls.includes("--incorrect") ? "#F75E4C" : "") : (on ? "#8D61C8" : "");
-      return { text, cls, ico, showIco, role: q.multi ? "checkbox" : "radio", checked: on ? "true" : "false", revealedAttr: revealed ? "true" : "false", disabled: revealed, rid: "s" + n + "-opt-" + i,
+      return { text, hasGloss: ogi > -1, noGloss: ogi < 0, pre: ogi > -1 ? text.slice(0, ogi) : "", post: ogi > -1 ? text.slice(ogi + og.abbr.length) : "", gAbbr: ogi > -1 ? og.abbr : "", gDef: ogi > -1 ? og.def : "", gRid: ogi > -1 ? og.rid : "", cls, ico, showIco, role: q.multi ? "checkbox" : "radio", checked: on ? "true" : "false", revealedAttr: revealed ? "true" : "false", disabled: revealed, rid: "s" + n + "-opt-" + i,
         border: tone || "#E6E4DF", markBg: tone || "transparent", markBorder: tone || "#808080",
         idle: !revealed && !on, delay: (0.3 + i * 0.08).toFixed(2) + "s",
         pick: () => { if (this.ans(n).revealed) return; const p = this.ans(n).picked; this.setAns(n, { picked: q.multi ? (p.includes(i) ? p.filter(x => x !== i) : p.concat([i])) : [i] }); } };
@@ -1020,9 +1024,9 @@ class Component extends DCLogic {
           document.addEventListener("pointerdown", off, true); document.addEventListener("keydown", off, true);
         }, 0);
       },
-      glossEnter: e => this.setState({ tip: this.tipFor(e.currentTarget, e.currentTarget.dataset.gloss) }),
+      glossEnter: e => this.setState({ tip: this.tipFor(e.currentTarget, e.currentTarget.dataset.gloss, true) }),
       glossLeave: () => this.setState({ tip: null }),
-      tipOn: !!s.tip, tipText: s.tip ? s.tip.text : "", tipX: s.tip ? s.tip.x + "px" : "0px", tipY: s.tip ? s.tip.y + "px" : "0px",
+      tipOn: !!s.tip, tipText: s.tip ? s.tip.text : "", tipX: s.tip ? s.tip.x + "px" : "0px", tipY: s.tip ? s.tip.y + "px" : "0px", tipShift: s.tip && s.tip.above ? "translateY(-100%)" : "none",
       /* Owner ruling O2 (2026-09-11): the three sections the top bar names are numbered 1-3; demographics and
          challenges sit under section 1 as unnumbered sub-items. The revisit page renders the same list. */
       contents: [[4, 0], [5, 1], [6, 1], [8, 0], [14, 0]].map(([n, sub], i, all) => {
@@ -1096,7 +1100,7 @@ class Component extends DCLogic {
   }
 }
 </script>
-<script id="build-stamp">(function(){var T="Omnipod 5 Decision Making: Optimizing the Omnipod 5: are you ready?",M="Omnipod 5 Decision Making tint8787-omnipod-scenes/05-qa-gate v4 2026-09-15";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<script id="build-stamp">(function(){var T="Omnipod 5 Decision Making: Optimizing the Omnipod 5: are you ready?",M="Omnipod 5 Decision Making tint8787-omnipod-scenes/05-qa-gate v5 2026-09-15";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
 <script id="layer-release">(function(){var SAFE=/^(omnBarBounce|omnFade|omnFeatHead|omnFeatIn|omnFeatInB|omnInA|omnInB|omnPop|omnRoll|omnSoft|omnSoftB|omnSwipe|omnTitleRise|omnUp|omnZoomIn)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
 </body>
 </html>
