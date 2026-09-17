@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- build: Omnipod 5 Decision Making | tint8787-omnipod-scenes/08-revisit | v5 | 2026-09-15 -->
+<!-- build: Omnipod 5 Decision Making | tint8787-omnipod-scenes/08-revisit | v6 | 2026-09-17 -->
 <html>
 <head>
 <meta charset="utf-8">
@@ -10,7 +10,7 @@
 <script src="../support.js"></script>
 
 <title>Omnipod 5 Decision Making: Revisit</title>
-<meta name="build-version" content="Omnipod 5 Decision Making tint8787-omnipod-scenes/08-revisit v5 2026-09-15">
+<meta name="build-version" content="Omnipod 5 Decision Making tint8787-omnipod-scenes/08-revisit v6 2026-09-17">
 </head>
 <body>
 <x-dc>
@@ -381,7 +381,7 @@
           </div>
         </div>
         <ol class="omn-footnote" style="margin:0;padding:20px 24px 22px 44px;display:flex;flex-direction:column;gap:8px;font-size:15px;line-height:1.4">
-          <sc-for list="{{ refs }}" as="r" hint-placeholder-count="7"><li style="word-break:break-word">{{ r.text }}<sc-if value="{{ r.proposed }}" hint-placeholder-val="{{ false }}"> <span class="omn-tag" style="font-size:9px;padding:0 6px"><span class="omn-ico omn-ico--info" aria-hidden="true"></span>Proposed</span></sc-if></li></sc-for>
+          <sc-for list="{{ refs }}" as="r" hint-placeholder-count="7"><li style="word-break:break-word">{{ r.pre }}<i>{{ r.j }}</i>{{ r.post }}<sc-if value="{{ r.proposed }}" hint-placeholder-val="{{ false }}"> <span class="omn-tag" style="font-size:9px;padding:0 6px"><span class="omn-ico omn-ico--info" aria-hidden="true"></span>Proposed</span></sc-if></li></sc-for>
         </ol>
       </div>
     </div>
@@ -396,7 +396,7 @@
         </div>
         <div style="display:flex;flex-direction:column;gap:14px;padding:20px 24px 22px">
           <p class="omn-body" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span data-copy="placeholder">{{ linkHint }}</span></p>
-          <p style="margin:0;font-size:14px;line-height:1.45;color:#1B1A1A;overflow-wrap:anywhere;background:#F6F6F6;border-radius:8px;padding:12px 14px;max-height:220px;overflow:auto;white-space:pre-line">{{ linkText }}</p>
+          <p style="margin:0;font-size:14px;line-height:1.45;color:#1B1A1A;overflow-wrap:anywhere;background:#F6F6F6;border-radius:8px;padding:12px 14px;max-height:220px;overflow:auto;white-space:pre-line"><sc-for list="{{ linkLines }}" as="l" hint-placeholder-count="1"><span style="display:block">{{ l.pre }}<i>{{ l.j }}</i>{{ l.post }}</span></sc-for></p>
           <div class="omn-row" style="gap:12px">
             <sc-if value="{{ linkIsLeave }}" hint-placeholder-val="{{ false }}">
               <button type="button" class="omn-btn omn-btn--primary" data-review="source" data-review-id="g-link-continue" data-review-label="Continue to omnipod.com" onClick="{{ continueLink }}" style="min-height:40px;padding:6px 18px;font-size:16px"><span data-copy="placeholder">Continue to omnipod.com</span><span class="omn-ico omn-ico--chevron" aria-hidden="true"></span></button>
@@ -412,7 +412,7 @@
   </sc-if>
 
   <sc-if value="{{ tipOn }}" hint-placeholder-val="{{ false }}">
-    <div style="position:absolute;z-index:9;left:{{ tipX }};top:{{ tipY }};transform:{{ tipShift }};pointer-events:none"><div style="max-width:420px;background:#1B1A1A;color:#fff;border-radius:8px;padding:8px 12px;font-size:14px;line-height:1.4;white-space:pre-line;word-break:break-word;box-shadow:0 10px 28px rgba(27,26,26,.25);animation:omnRoll .3s cubic-bezier(.16,1,.3,1) both">{{ tipText }}</div></div>
+    <div style="position:absolute;z-index:9;left:{{ tipX }};top:{{ tipY }};transform:{{ tipShift }};pointer-events:none"><div style="max-width:420px;background:#1B1A1A;color:#fff;border-radius:8px;padding:8px 12px;font-size:14px;line-height:1.4;white-space:pre-line;word-break:break-word;box-shadow:0 10px 28px rgba(27,26,26,.25);animation:omnRoll .3s cubic-bezier(.16,1,.3,1) both"><sc-for list="{{ tipLines }}" as="l" hint-placeholder-count="1"><span style="display:block">{{ l.pre }}<i>{{ l.j }}</i>{{ l.post }}</span></sc-for></div></div>
   </sc-if>
 
   <sc-if value="{{ walkOpen }}" hint-placeholder-val="{{ false }}">
@@ -583,17 +583,25 @@ class Component extends DCLogic {
   ];
 
   REFS = [
-    { text: "American Diabetes Association Professional Practice Committee for Diabetes; Diabetes Care. 2026;49(Supplement 1):S132–S149." },
+    /* j = the journal name, set in italics wherever the reference shows (PM EL, 17 Sep); ref 2 is the Insulet user guide, no journal */
+    { text: "American Diabetes Association Professional Practice Committee for Diabetes; Diabetes Care. 2026;49(Supplement 1):S132–S149.", j: "Diabetes Care" },
     { text: "Insulet Corporation. Omnipod® 5 Automated Insulin Delivery System User Guide 2025 (Available from: https://www.omnipod.com/sites/default/files/Omnipod-5_User-Guide-SoC_United-Kindgom_English.pdf)" },
-    { text: "Sawyer A, et al. Diabetes Technol Ther. 2026. doi:10.1177/15209156261456826.", proposed: true },   /* round 01 Q2: AL suggests this for the RWE data, TBC with Sandra; was "Retrospective RWE data on file." */
-    { text: "Renard E, et al. Diabetes Care. 2024;47(12):2248–2257." },
-    { text: "Polonsky WH, et al. Diabetes Res Clin Pract. 2022;190:109998." },
-    { text: "Hood KK, et al. Pediatr Diabetes. 2023;2023:1–12." }
+    { text: "Sawyer A, et al. Diabetes Technol Ther. 2026. doi:10.1177/15209156261456826.", j: "Diabetes Technol Ther", proposed: true },   /* round 01 Q2: AL suggests this for the RWE data, TBC with Sandra; was "Retrospective RWE data on file." */
+    { text: "Renard E, et al. Diabetes Care. 2024;47(12):2248–2257.", j: "Diabetes Care" },
+    { text: "Polonsky WH, et al. Diabetes Res Clin Pract. 2022;190:109998.", j: "Diabetes Res Clin Pract" },
+    { text: "Hood KK, et al. Pediatr Diabetes. 2023;2023:1–12.", j: "Pediatr Diabetes" }
   ];
   /* "4–6" -> refs 4, 5, 6; "1" -> ref 1 */
   citeText(sup) {
     const m = sup.match(/^(\d+)[–-](\d+)$/); const ns = m ? Array.from({ length: +m[2] - +m[1] + 1 }, (_, i) => +m[1] + i) : sup.split(",").map(x => +x.trim());
     return ns.map(n => n + ". " + (this.REFS[n - 1] || { text: "" }).text).join("\n");
+  }
+  /* one reference line -> { pre, j, post } so the journal name renders in <i>; on = false leaves the line plain */
+  jparts(line, on) {
+    const r = on ? this.REFS.find(x => x.j && line.indexOf(x.j) >= 0) : null;
+    if (!r) return { pre: line, j: "", post: "" };
+    const i = line.indexOf(r.j);
+    return { pre: line.slice(0, i), j: r.j, post: line.slice(i + r.j.length) };
   }
   WALK = [
     { kind: "nav", title: "Move through the case", body: "Back sits bottom left and Next bottom right. Next appears once a screen is complete. The dots in the top bar show where you are; numbered dots are the question screens." },
@@ -974,6 +982,7 @@ class Component extends DCLogic {
       scoreLine: "You answered " + [8, 9, 10, 11, 12, 13].filter(n => this.isCorrect(n)).length + " of 6 as recommended",
       summaryQs: [8, 9, 10, 11, 12, 13].map(n => ({ q: n - 7, bg: this.isCorrect(n) ? "#00A2AC" : this.ans(n).revealed ? "#F75E4C" : "#B8B5AE" })),
       linkOn: !!s.link, linkTitle: s.link ? s.link.title : "", linkText: s.link ? s.link.text : "",
+      linkLines: s.link ? s.link.text.split("\n").map(l => this.jparts(l, s.link.title === "References")) : [],
       linkHint: s.link && s.link.mode === "leave" ? "You are about to leave this resource for omnipod.com." : s.link && s.link.title === "References" ? "This page cannot open a new tab here. Copy the references to paste or print them elsewhere." : "This page cannot open a new tab here. Copy the link and open it in your browser.",
       linkIsLeave: !!(s.link && s.link.mode === "leave"), linkIsCopy: !!(s.link && s.link.mode !== "leave"),
       continueLink: e => { e.stopPropagation(); let w = null; try { w = window.open(this.GUIDE_URL, "_blank", "noopener"); } catch (err) {} if (w) this.setState({ link: null }); else this.setState({ link: { title: "Omnipod® 5 User Guide", text: this.GUIDE_URL, mode: "copy" }, copied: false }); }, copyLabel: s.copied ? "Copied" : (s.link && s.link.title === "References" ? "Copy references" : "Copy link"),
@@ -984,7 +993,7 @@ class Component extends DCLogic {
       exportRefs: e => {
         e.stopPropagation();
         const esc = t => t.replace(/&/g, "&amp;").replace(/</g, "&lt;");
-        const html = "<!doctype html><html><head><meta charset=\"utf-8\"><title>References - Interactive Decision-Making with the Omnipod® 5</title><style>body{font-family:Helvetica,Arial,sans-serif;max-width:760px;margin:40px auto;padding:0 24px;color:#1B1A1A;line-height:1.45}h1{font-size:22px;margin:0 0 6px}p{margin:0 0 18px;color:#454545}ol{padding-left:24px;margin:0}li{margin:0 0 10px;word-break:break-word;font-size:14px}@media print{body{margin:0}}</style></head><body><h1>References</h1><p>Interactive Decision-Making with the Omnipod® 5: Real-World T1D Scenarios</p><ol>" + this.REFS.map(r => "<li>" + esc(r.text) + "</li>").join("") + "</ol></body></html>";
+        const html = "<!doctype html><html><head><meta charset=\"utf-8\"><title>References - Interactive Decision-Making with the Omnipod® 5</title><style>body{font-family:Helvetica,Arial,sans-serif;max-width:760px;margin:40px auto;padding:0 24px;color:#1B1A1A;line-height:1.45}h1{font-size:22px;margin:0 0 6px}p{margin:0 0 18px;color:#454545}ol{padding-left:24px;margin:0}li{margin:0 0 10px;word-break:break-word;font-size:14px}@media print{body{margin:0}}</style></head><body><h1>References</h1><p>Interactive Decision-Making with the Omnipod® 5: Real-World T1D Scenarios</p><ol>" + this.REFS.map(r => { const p = this.jparts(r.text, true); return "<li>" + esc(p.pre) + (p.j ? "<i>" + esc(p.j) + "</i>" : "") + esc(p.post) + "</li>"; }).join("") + "</ol></body></html>";
         /* Visme embeds sit in a sandboxed iframe: window.open is the route that works there; a Blob download is the fallback when pop-ups are blocked. */
         const w = window.open("", "_blank");
         if (w && w.document) { w.document.open(); w.document.write(html); w.document.close(); setTimeout(() => { try { w.focus(); w.print(); } catch (err) {} }, 500); return; }
@@ -1026,7 +1035,8 @@ class Component extends DCLogic {
       },
       glossEnter: e => this.setState({ tip: this.tipFor(e.currentTarget, e.currentTarget.dataset.gloss, true) }),
       glossLeave: () => this.setState({ tip: null }),
-      tipOn: !!s.tip, tipText: s.tip ? s.tip.text : "", tipX: s.tip ? s.tip.x + "px" : "0px", tipY: s.tip ? s.tip.y + "px" : "0px", tipShift: s.tip && s.tip.above ? "translateY(-100%)" : "none",
+      tipOn: !!s.tip, tipText: s.tip ? s.tip.text : "",
+      tipLines: s.tip ? s.tip.text.split("\n").map(l => this.jparts(l, !!s.tip.cite)) : [], tipX: s.tip ? s.tip.x + "px" : "0px", tipY: s.tip ? s.tip.y + "px" : "0px", tipShift: s.tip && s.tip.above ? "translateY(-100%)" : "none",
       /* Owner ruling O2 (2026-09-11): the three sections the top bar names are numbered 1-3; demographics and
          challenges sit under section 1 as unnumbered sub-items. The revisit page renders the same list. */
       contents: [[4, 0], [5, 1], [6, 1], [8, 0], [14, 0]].map(([n, sub], i, all) => {
@@ -1049,12 +1059,14 @@ class Component extends DCLogic {
       chActiveHasBullets: !!((this.CHALLENGES.find(c => c.key === s.chActive) || {}).bullets),
       chCols: ((this.CHALLENGES.find(c => c.key === s.chActive) || {}).detail) ? "2fr 3fr" : "1fr",
       takeHome: this.TAKE.map((k, i) => ({ text: this.u(k.text), sup: k.sup, hasSup: !!k.sup, cid: k.sup.replace(/[–-]/g, "-"), on: (s.take ? s.take.step : 0) > i })),
-      refs: this.REFS.map(r => ({ text: r.text, proposed: !!r.proposed })),
+      refs: this.REFS.map(r => Object.assign(this.jparts(r.text, true), { text: r.text, proposed: !!r.proposed })),
       refsOpen: !!s.refsOpen, openRefs: e => { e.stopPropagation(); this.setState({ refsOpen: true, tip: null }); }, closeRefs: () => this.setState({ refsOpen: false }),
       cite: e => {
         e.stopPropagation();
         const el = e.currentTarget, text = this.citeText(el.dataset.cite), same = s.tip && s.tip.text === text;
-        this.setState({ tip: same ? null : this.tipFor(el, text) });
+        const t = same ? null : this.tipFor(el, text);
+        if (t) t.cite = true;   /* citation tips italicise journal names; glossary tips stay plain */
+        this.setState({ tip: t });
         if (same) return;
         clearTimeout(this.citeArm);
         this.citeArm = setTimeout(() => {   /* stays up only until the learner does anything else */
@@ -1100,7 +1112,7 @@ class Component extends DCLogic {
   }
 }
 </script>
-<script id="build-stamp">(function(){var T="Omnipod 5 Decision Making: Revisit",M="Omnipod 5 Decision Making tint8787-omnipod-scenes/08-revisit v5 2026-09-15";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<script id="build-stamp">(function(){var T="Omnipod 5 Decision Making: Revisit",M="Omnipod 5 Decision Making tint8787-omnipod-scenes/08-revisit v6 2026-09-17";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
 <script id="layer-release">(function(){var SAFE=/^(omnBarBounce|omnFade|omnFeatHead|omnFeatIn|omnFeatInB|omnInA|omnInB|omnPop|omnRoll|omnSoft|omnSoftB|omnSwipe|omnTitleRise|omnUp|omnZoomIn)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
 </body>
 </html>
