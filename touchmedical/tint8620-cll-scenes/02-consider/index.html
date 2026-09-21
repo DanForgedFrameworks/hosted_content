@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- build: CLL Decision Making | tint8620-cll-scenes/02-consider | v7 | 2026-09-20 -->
+<!-- build: CLL Decision Making | tint8620-cll-scenes/02-consider | v8 | 2026-09-21 -->
 <html>
 <head>
 <meta charset="utf-8">
@@ -10,8 +10,7 @@
 <script src="../support.js"></script>
 
 <title>CLL Decision Making: Scene 2: Patient background, Disease background, Patient preference</title>
-
-<meta name="build-version" content="CLL Decision Making tint8620-cll-scenes/02-consider v7 2026-09-20">
+<meta name="build-version" content="CLL Decision Making tint8620-cll-scenes/02-consider v8 2026-09-21">
 </head>
 <body>
 <x-dc>
@@ -21,6 +20,11 @@
   body { margin: 0; background: #212121; overflow: hidden; }
   a { color: #E1251B; text-decoration: none; }
   a:hover { color: #212121; }
+  /* The hit area for an abbreviation or footnote marker, extended without touching layout.
+     Same treatment as TINT 8787-2 (.omn-gloss), where it was settled: an overlay, not padding,
+     because padding on an inline element does not reliably grow its box. */
+  .lly-gloss { position: relative; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+  .lly-gloss::after { content: ""; position: absolute; left: -6px; right: -6px; top: -10px; bottom: -10px; }
   @keyframes cllUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
   @keyframes cllExpand { from { opacity: 0; transform: translateY(-7px); } to { opacity: 1; transform: none; } }
   @keyframes cllRoll { from { max-height: 0; opacity: 0; } to { max-height: 420px; opacity: 1; } }
@@ -102,7 +106,7 @@
             <p class="lly-consider__title" style="font-size:24px;color:#212121;font-family:var(--lly-font);font-weight:400">Considerations in elderly patients</p>
           </div>
           <ul class="lly-questions">
-            <li style="margin-bottom:14px;animation:cllUp .5s ease both;animation-delay:.15s">The median age at <span data-review="glossary" data-review-id="s1-gloss-cll" data-gloss="CLL, chronic lymphocytic leukemia." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #E1251B;cursor:help">CLL</span> diagnosis is 70 years, and the age at first treatment is even higher as many patients do not require immediate treatment<span class="lly-sup" data-review="citation" data-review-id="s1-cite-1-2" data-review-label="Citation 1, 2" data-ref="1. Hallek M, et al. Am J Hematol. 2021;96(12):1679-1705.
+            <li style="margin-bottom:14px;animation:cllUp .5s ease both;animation-delay:.15s">The median age at <span data-review="glossary" data-review-id="s1-gloss-cll" data-gloss="CLL, chronic lymphocytic leukemia." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ tipTap }}" onKeyDown="{{ tipKey }}" role="button" tabIndex="0" class="lly-gloss" style="border-bottom:1px dotted #E1251B;cursor:help">CLL</span> diagnosis is 70 years, and the age at first treatment is even higher as many patients do not require immediate treatment<span class="lly-sup" data-review="citation" data-review-id="s1-cite-1-2" data-review-label="Citation 1, 2" data-ref="1. Hallek M, et al. Am J Hematol. 2021;96(12):1679-1705.
 2. Stauder R, et al. Ann Oncol. 2017;28(2):218-227." onClick="{{ refClick }}" role="button" tabIndex="0" style="display:inline-grid;place-items:center;min-width:26px;height:16px;padding:0 4px;margin-left:4px;border-radius:4px;background:#E1251B;color:#fff;font-size:10px;vertical-align:super;cursor:pointer;transition:transform .18s ease" style-hover="transform:scale(1.16)">1, 2</span></li>
             <li style="animation:cllUp .5s ease both;animation-delay:.32s">Elderly patients often present with comorbidities and/or polypharmacy<span class="lly-sup" data-review="citation" data-review-id="s1-cite-1-3" data-review-label="Citation 1-3" data-ref="1. Hallek M, et al. Am J Hematol. 2021;96(12):1679-1705.
 2. Stauder R, et al. Ann Oncol. 2017;28(2):218-227.
@@ -127,8 +131,8 @@
                   <div style="overflow:hidden">
                     <ul class="lly-profile__attrs" style="margin-top:10px">
                       <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.10s both">75 years old</li>
-                      <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.40s both"><span data-review="glossary" data-review-id="s1-gloss-ecog" data-gloss="ECOG PS, Eastern Cooperative Oncology Group performance status." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #E1251B;cursor:help">ECOG PS</span> 2</li>
-                      <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.70s both">Atrial fibrillation (on anticoagulation), <span data-review="glossary" data-review-id="s1-gloss-t2dm" data-gloss="T2DM, type 2 diabetes mellitus." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #E1251B;cursor:help">T2DM</span></li>
+                      <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.40s both"><span data-review="glossary" data-review-id="s1-gloss-ecog" data-gloss="ECOG PS, Eastern Cooperative Oncology Group performance status." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ tipTap }}" onKeyDown="{{ tipKey }}" role="button" tabIndex="0" class="lly-gloss" style="border-bottom:1px dotted #E1251B;cursor:help">ECOG PS</span> 2</li>
+                      <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.70s both">Atrial fibrillation (on anticoagulation), <span data-review="glossary" data-review-id="s1-gloss-t2dm" data-gloss="T2DM, type 2 diabetes mellitus." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ tipTap }}" onKeyDown="{{ tipKey }}" role="button" tabIndex="0" class="lly-gloss" style="border-bottom:1px dotted #E1251B;cursor:help">T2DM</span></li>
                       <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 1.00s both">Polypharmacy</li>
                     </ul>
                   </div>
@@ -150,8 +154,8 @@
                     <ul class="lly-profile__attrs" style="margin-top:10px">
                       <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.10s both">80 years old</li>
                       <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.40s both">ECOG PS 2</li>
-                      <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.70s both">del(17p)/<span data-review="glossary" data-review-id="s1-gloss-tp53" data-gloss="TP53, tumor protein 53." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #E1251B;cursor:help"><em>TP53</em></span> mutation</li>
-                      <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 1.00s both">Hypertension, <span data-review="glossary" data-review-id="s1-gloss-copd" data-gloss="COPD, chronic obstructive pulmonary disease." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #E1251B;cursor:help">COPD</span></li>
+                      <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.70s both">del(17p)/<span data-review="glossary" data-review-id="s1-gloss-tp53" data-gloss="TP53, tumor protein 53." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ tipTap }}" onKeyDown="{{ tipKey }}" role="button" tabIndex="0" class="lly-gloss" style="border-bottom:1px dotted #E1251B;cursor:help"><em>TP53</em></span> mutation</li>
+                      <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 1.00s both">Hypertension, <span data-review="glossary" data-review-id="s1-gloss-copd" data-gloss="COPD, chronic obstructive pulmonary disease." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ tipTap }}" onKeyDown="{{ tipKey }}" role="button" tabIndex="0" class="lly-gloss" style="border-bottom:1px dotted #E1251B;cursor:help">COPD</span></li>
                     </ul>
                   </div>
                 </div>
@@ -205,7 +209,7 @@
                     <div style="overflow:hidden">
                       <ul class="lly-questions">
                         <li style="margin-bottom:13px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.15s both">What symptoms is the patient presenting with, and how would you classify their disease?</li>
-                        <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.60s both">Are high-risk features present (del(17p)/<em>TP53</em> mutation, <span data-review="glossary" data-review-id="s2-gloss-ighv" data-gloss="IGHV, immunoglobulin heavy-chain variable region." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #E1251B;cursor:help"><em>IGHV</em></span> mutational status, cytogenetics), and is the disease behaving indolently or aggressively for the risk group?</li>
+                        <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.60s both">Are high-risk features present (del(17p)/<em>TP53</em> mutation, <span data-review="glossary" data-review-id="s2-gloss-ighv" data-gloss="IGHV, immunoglobulin heavy-chain variable region." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ tipTap }}" onKeyDown="{{ tipKey }}" role="button" tabIndex="0" class="lly-gloss" style="border-bottom:1px dotted #E1251B;cursor:help"><em>IGHV</em></span> mutational status, cytogenetics), and is the disease behaving indolently or aggressively for the risk group?</li>
                       </ul>
                     </div>
                   </div>
@@ -214,9 +218,9 @@
                   <div class="lly-card" style="grid-column:3;border-radius:var(--lly-radius);padding:16px 18px;font-size:var(--lly-size-small);box-shadow:0 4px 14px rgba(33,33,33,.09);overflow:hidden;max-height:420px;opacity:1;animation:cllRoll .55s cubic-bezier(.16,1,.3,1)">
                     <div style="overflow:hidden">
                       <ul class="lly-questions">
-                        <li style="margin-bottom:13px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.15s both">How does the patient define a successful treatment? Improved/sustained <span data-review="glossary" data-review-id="s2-gloss-qol" data-gloss="QOL, quality of life." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #E1251B;cursor:help">QOL</span>? Minimal side effects? Treatment-free periods?</li>
+                        <li style="margin-bottom:13px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.15s both">How does the patient define a successful treatment? Improved/sustained <span data-review="glossary" data-review-id="s2-gloss-qol" data-gloss="QOL, quality of life." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ tipTap }}" onKeyDown="{{ tipKey }}" role="button" tabIndex="0" class="lly-gloss" style="border-bottom:1px dotted #E1251B;cursor:help">QOL</span>? Minimal side effects? Treatment-free periods?</li>
                         <li style="margin-bottom:13px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.60s both">How far away does the patient live from the clinic and do they have easy access to transportation and caregiver support?</li>
-                        <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 1.05s both">What is their preference for drug administration (eg, no <span data-review="glossary" data-review-id="s2-gloss-iv" data-gloss="IV, intravenous." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #E1251B;cursor:help">IV</span>)?</li>
+                        <li style="animation:cllStage .55s cubic-bezier(.16,1,.3,1) 1.05s both">What is their preference for drug administration (eg, no <span data-review="glossary" data-review-id="s2-gloss-iv" data-gloss="IV, intravenous." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ tipTap }}" onKeyDown="{{ tipKey }}" role="button" tabIndex="0" class="lly-gloss" style="border-bottom:1px dotted #E1251B;cursor:help">IV</span>)?</li>
                       </ul>
                     </div>
                   </div>
@@ -228,14 +232,14 @@
       <sc-if value="{{ show3 }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;flex-direction:column;gap:12px;animation:cllUp .45s ease both">
           <div class="lly-card" style="border-radius:var(--lly-radius);padding:14px 24px;text-align:center;box-shadow:0 4px 14px rgba(33,33,33,.09)">
-            <p class="lly-consider__title" style="font-size:24px;color:#212121;font-family:var(--lly-font);font-weight:400">Consider: Key features of <span data-review="glossary" data-review-id="s3-gloss-1l" data-gloss="1L, first-line." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #E1251B;cursor:help">1L</span> treatment options</p>
+            <p class="lly-consider__title" style="font-size:24px;color:#212121;font-family:var(--lly-font);font-weight:400">Consider: Key features of <span data-review="glossary" data-review-id="s3-gloss-1l" data-gloss="1L, first-line." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ tipTap }}" onKeyDown="{{ tipKey }}" role="button" tabIndex="0" class="lly-gloss" style="border-bottom:1px dotted #E1251B;cursor:help">1L</span> treatment options</p>
           </div>
           <p class="lly-footnote" style="margin:0;align-self:flex-end;color:#E1251B" data-copy="placeholder">Select each treatment option to explore its features</p>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:stretch;min-height:296px">
             <div class="lly-feature" data-review="reveal" data-review-id="s3-bcl2i" onClick="{{ openBcl2i }}" role="button" tabIndex="0" style="border-radius:var(--lly-radius);background:linear-gradient(180deg,#fff,var(--lly-panel));border-color:var(--lly-navy);overflow:hidden;cursor:pointer;display:flex;flex-direction:column;transition:box-shadow .2s ease" style-hover="box-shadow:0 5px 16px rgba(15,58,133,.18)">
               <div class="lly-feature__head">
                 <span class="lly-icon lly-icon--bcl2i" aria-hidden="true"></span>
-                <span style="flex:1 1 auto"><span data-review="glossary" data-review-id="s3-gloss-bcl2i" data-gloss="BCL-2i, B-cell lymphoma 2 inhibitor." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #fff;cursor:help">BCL-2i</span> features and considerations<span class="lly-sup" data-review="citation" data-review-id="s3-cite-4-5" data-review-label="Citation 4, 5" data-ref="4. Soumerai JD, et al. Blood Adv. 2025;9(5):1213-1229.
+                <span style="flex:1 1 auto"><span data-review="glossary" data-review-id="s3-gloss-bcl2i" data-gloss="BCL-2i, B-cell lymphoma 2 inhibitor." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ tipTap }}" onKeyDown="{{ tipKey }}" role="button" tabIndex="0" class="lly-gloss" style="border-bottom:1px dotted #fff;cursor:help">BCL-2i</span> features and considerations<span class="lly-sup" data-review="citation" data-review-id="s3-cite-4-5" data-review-label="Citation 4, 5" data-ref="4. Soumerai JD, et al. Blood Adv. 2025;9(5):1213-1229.
 5. Anderson MA, et al. Cancers (Basel). 2024;16(5):980." onClick="{{ refClick }}" role="button" tabIndex="0" style="display:inline-grid;place-items:center;min-width:26px;height:16px;padding:0 4px;margin-left:5px;border-radius:4px;background:#fff;color:#E1251B;font-size:10px;vertical-align:super;cursor:pointer;transition:transform .18s ease" style-hover="transform:scale(1.14)">4, 5</span></span>
                 <sc-if value="{{ bcl2iClosed }}" hint-placeholder-val="{{ true }}">
                   <span aria-hidden="true" style="flex:0 0 20px;color:#fff;animation:{{ pulse }}"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.6"></path><path d="M8.6 10.4 12 13.8l3.4-3.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></span>
@@ -249,7 +253,7 @@
                         <li style="animation:cllStage .6s cubic-bezier(.16,1,.3,1) .15s both">Time-limited therapy (treatment-free periods)</li>
                         <li style="animation:cllStage .6s cubic-bezier(.16,1,.3,1) .55s both">May include intravenous multidrug therapy</li>
                         <li style="animation:cllStage .6s cubic-bezier(.16,1,.3,1) .95s both">Frequent visits/labs in the first 8 weeks</li>
-                        <li style="animation:cllStage .6s cubic-bezier(.16,1,.3,1) 1.35s both">Additional surveillance for <span data-review="glossary" data-review-id="s3-gloss-tls" data-gloss="TLS, tumor lysis syndrome." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted var(--lly-navy);cursor:help">TLS</span> in patients with kidney disease along with TLS prevention (eg, hydration)</li>
+                        <li style="animation:cllStage .6s cubic-bezier(.16,1,.3,1) 1.35s both">Additional surveillance for <span data-review="glossary" data-review-id="s3-gloss-tls" data-gloss="TLS, tumor lysis syndrome." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ tipTap }}" onKeyDown="{{ tipKey }}" role="button" tabIndex="0" class="lly-gloss" style="border-bottom:1px dotted var(--lly-navy);cursor:help">TLS</span> in patients with kidney disease along with TLS prevention (eg, hydration)</li>
                       </ul>
                     </div>
                   </div>
@@ -259,7 +263,7 @@
             <div class="lly-feature" data-review="reveal" data-review-id="s3-btki" onClick="{{ openBtki }}" role="button" tabIndex="0" style="border-radius:var(--lly-radius);background:linear-gradient(180deg,#fff,var(--lly-panel));border-color:var(--lly-navy);overflow:hidden;cursor:pointer;display:flex;flex-direction:column;transition:box-shadow .2s ease" style-hover="box-shadow:0 5px 16px rgba(15,58,133,.18)">
               <div class="lly-feature__head">
                 <span class="lly-icon lly-icon--btki" aria-hidden="true"></span>
-                <span style="flex:1 1 auto"><span data-review="glossary" data-review-id="s3-gloss-btki" data-gloss="BTKi, Bruton’s tyrosine kinase inhibitor." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted #fff;cursor:help">BTKi</span> features and considerations<span class="lly-sup" data-review="citation" data-review-id="s3-cite-4" data-review-label="Citation 4" data-ref="4. Soumerai JD, et al. Blood Adv. 2025;9(5):1213-1229." onClick="{{ refClick }}" role="button" tabIndex="0" style="display:inline-grid;place-items:center;min-width:16px;height:16px;padding:0 4px;margin-left:5px;border-radius:4px;background:#fff;color:#E1251B;font-size:10px;vertical-align:super;cursor:pointer;transition:transform .18s ease" style-hover="transform:scale(1.14)">4</span></span>
+                <span style="flex:1 1 auto"><span data-review="glossary" data-review-id="s3-gloss-btki" data-gloss="BTKi, Bruton’s tyrosine kinase inhibitor." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ tipTap }}" onKeyDown="{{ tipKey }}" role="button" tabIndex="0" class="lly-gloss" style="border-bottom:1px dotted #fff;cursor:help">BTKi</span> features and considerations<span class="lly-sup" data-review="citation" data-review-id="s3-cite-4" data-review-label="Citation 4" data-ref="4. Soumerai JD, et al. Blood Adv. 2025;9(5):1213-1229." onClick="{{ refClick }}" role="button" tabIndex="0" style="display:inline-grid;place-items:center;min-width:16px;height:16px;padding:0 4px;margin-left:5px;border-radius:4px;background:#fff;color:#E1251B;font-size:10px;vertical-align:super;cursor:pointer;transition:transform .18s ease" style-hover="transform:scale(1.14)">4</span></span>
                 <sc-if value="{{ btkiClosed }}" hint-placeholder-val="{{ true }}">
                   <span aria-hidden="true" style="flex:0 0 20px;color:#fff;animation:{{ pulse }}"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.6"></path><path d="M8.6 10.4 12 13.8l3.4-3.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></span>
                 </sc-if>
@@ -271,7 +275,7 @@
                       <ul class="lly-feature__list" style="height:100%;display:flex;flex-direction:column;justify-content:space-around;gap:10px">
                         <li style="animation:cllStage .6s cubic-bezier(.16,1,.3,1) .15s both">Continuous oral therapy</li>
                         <li style="animation:cllStage .6s cubic-bezier(.16,1,.3,1) .55s both">Limited visits/laboratory monitoring</li>
-                        <li style="animation:cllStage .6s cubic-bezier(.16,1,.3,1) .95s both">Additional pretreatment workup recommended for patients with <span data-review="glossary" data-review-id="s3-gloss-cv" data-gloss="CV, cardiovascular." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted var(--lly-navy);cursor:help">CV</span> risk factors</li>
+                        <li style="animation:cllStage .6s cubic-bezier(.16,1,.3,1) .95s both">Additional pretreatment workup recommended for patients with <span data-review="glossary" data-review-id="s3-gloss-cv" data-gloss="CV, cardiovascular." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ tipTap }}" onKeyDown="{{ tipKey }}" role="button" tabIndex="0" class="lly-gloss" style="border-bottom:1px dotted var(--lly-navy);cursor:help">CV</span> risk factors</li>
                       </ul>
                     </div>
                   </div>
@@ -299,18 +303,18 @@
               </button>
               <sc-if value="{{ tlOn }}" hint-placeholder-val="{{ false }}">
                 <div style="position:relative;display:flex;flex-direction:column">
-                  <div style="margin:8px 0;padding:7px 14px;border-radius:var(--lly-radius-sm);border:1.5px solid var(--lly-forest);background:linear-gradient(90deg,#fff,rgba(20,75,45,.10));color:var(--lly-forest);font-family:var(--lly-font-bold);font-weight:700;text-align:center;font-size:var(--lly-size-small);animation:cllExpand .45s ease both">BCL-2i + anti-<span data-review="glossary" data-review-id="s4-gloss-cd20" data-gloss="CD20, cluster of differentiation 20." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted var(--lly-forest);cursor:help">CD20</span> <span data-review="glossary" data-review-id="s4-gloss-mab" data-gloss="mAb, monoclonal antibody." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted var(--lly-forest);cursor:help">mAb</span> or BCL-2i + <span data-review="glossary" data-review-id="s4-gloss-cbtki" data-gloss="cBTKi, covalent Bruton’s tyrosine kinase inhibitor." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted var(--lly-forest);cursor:help">cBTKi</span> + anti-CD20 mAb</div>
+                  <div style="margin:8px 0;padding:7px 14px;border-radius:var(--lly-radius-sm);border:1.5px solid var(--lly-forest);background:linear-gradient(90deg,#fff,rgba(20,75,45,.10));color:var(--lly-forest);font-family:var(--lly-font-bold);font-weight:700;text-align:center;font-size:var(--lly-size-small);animation:cllExpand .45s ease both">BCL-2i + anti-<span data-review="glossary" data-review-id="s4-gloss-cd20" data-gloss="CD20, cluster of differentiation 20." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ tipTap }}" onKeyDown="{{ tipKey }}" role="button" tabIndex="0" class="lly-gloss" style="border-bottom:1px dotted var(--lly-forest);cursor:help">CD20</span> <span data-review="glossary" data-review-id="s4-gloss-mab" data-gloss="mAb, monoclonal antibody." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ tipTap }}" onKeyDown="{{ tipKey }}" role="button" tabIndex="0" class="lly-gloss" style="border-bottom:1px dotted var(--lly-forest);cursor:help">mAb</span> or BCL-2i + <span data-review="glossary" data-review-id="s4-gloss-cbtki" data-gloss="cBTKi, covalent Bruton’s tyrosine kinase inhibitor." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ tipTap }}" onKeyDown="{{ tipKey }}" role="button" tabIndex="0" class="lly-gloss" style="border-bottom:1px dotted var(--lly-forest);cursor:help">cBTKi</span> + anti-CD20 mAb</div>
                   <div style="position:relative;display:flex;flex-direction:column;gap:8px">
                     <div style="position:relative;display:flex;align-items:flex-start;gap:0">
                       <span style="position:absolute;left:13px;top:-10px;height:calc(100% + 10px);border-left:1.4px dashed var(--lly-forest);transform-origin:top;animation:cllTrunk .5s cubic-bezier(.16,1,.3,1) both;animation-delay:.1s" aria-hidden="true"></span>
                       <svg width="30" height="14" viewBox="0 0 30 14" aria-hidden="true" style="flex:0 0 30px;margin-top:11px"><defs><marker id="tlA" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#144B2D"></path></marker></defs><path d="M14 7 H21.4" fill="none" stroke="#144B2D" stroke-width="1.4" stroke-dasharray="3 2" style="stroke-dashoffset:60;animation:cllDrawLine .45s ease both;animation-delay:.2s"></path><path d="M21.4 3.6 L27.6 7 L21.4 10.4 z" fill="#144B2D" style="animation:cllPop .34s cubic-bezier(.16,1,.3,1) both;animation-delay:.62s"></path></svg>
                       <div class="lly-node lly-node--timelimited" data-review="reveal" data-review-id="s4-node-tl-c" onClick="{{ tlCompToggle }}" role="button" tabIndex="0" style="flex:1 1 auto;padding:9px 13px;border-radius:var(--lly-radius);cursor:pointer;transition:box-shadow .2s ease;animation:cllExpand .5s ease both;animation-delay:.25s" style-hover="box-shadow:0 4px 14px rgba(20,75,45,.16)">
                         <span class="lly-node__trigger" style="display:flex;justify-content:space-between;gap:8px">
-                          <span>Completed planned therapy, then progressed<span data-review="footnote" data-review-id="s4-footnote-star" data-review-action="hover" data-review-label="&gt;2 years off of treatment" data-note="&gt;2 years off of treatment." onMouseEnter="{{ noteEnter }}" onMouseLeave="{{ glossLeave }}" style="cursor:help;color:#E1251B;font-size:19px;line-height:0;font-family:var(--lly-font-bold)">*</span></span>
+                          <span>Completed planned therapy, then progressed<span data-review="footnote" data-review-id="s4-footnote-star" data-review-action="hover" data-review-label="&gt;2 years off of treatment" data-note="&gt;2 years off of treatment." onMouseEnter="{{ noteEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ tipTap }}" onKeyDown="{{ tipKey }}" role="button" tabIndex="0" class="lly-gloss" style="cursor:help;color:#E1251B;font-size:19px;line-height:0;font-family:var(--lly-font-bold)">*</span></span>
                           <span aria-hidden="true" style="display:flex;transition:opacity .55s ease;opacity:{{ tlCompChev }};animation:{{ pulse }}"><svg width="17" height="17" viewBox="0 0 24 24"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.6"></path><path d="M8.6 10.4 12 13.8l3.4-3.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></span>
                         </span>
                         <sc-if value="{{ tlCompOpen }}" hint-placeholder-val="{{ false }}">
-                          <div style="display:grid;grid-template-rows:1fr;animation:cllGrow .6s cubic-bezier(.22,1,.36,1) both"><div style="overflow:hidden;min-height:0"><ul class="lly-node__options"><li style="position:relative;padding:2px 0 2px 15px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.08s both" style-before="content:'•';position:absolute;left:2px;top:3px;color:#E1251B">BCL-2i + anti-CD20 mAb</li><li style="position:relative;padding:2px 0 2px 15px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.32s both" style-before="content:'•';position:absolute;left:2px;top:3px;color:#E1251B">cBTKi</li><li style="position:relative;padding:2px 0 2px 15px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.56s both" style-before="content:'•';position:absolute;left:2px;top:3px;color:#E1251B"><span data-review="glossary" data-review-id="s4-gloss-ncbtki" data-gloss="ncBTKi, noncovalent Bruton’s tyrosine kinase inhibitor." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" style="border-bottom:1px dotted var(--lly-forest);cursor:help">ncBTKi</span></li></ul></div></div>
+                          <div style="display:grid;grid-template-rows:1fr;animation:cllGrow .6s cubic-bezier(.22,1,.36,1) both"><div style="overflow:hidden;min-height:0"><ul class="lly-node__options"><li style="position:relative;padding:2px 0 2px 15px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.08s both" style-before="content:'•';position:absolute;left:2px;top:3px;color:#E1251B">BCL-2i + anti-CD20 mAb</li><li style="position:relative;padding:2px 0 2px 15px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.32s both" style-before="content:'•';position:absolute;left:2px;top:3px;color:#E1251B">cBTKi</li><li style="position:relative;padding:2px 0 2px 15px;animation:cllStage .55s cubic-bezier(.16,1,.3,1) 0.56s both" style-before="content:'•';position:absolute;left:2px;top:3px;color:#E1251B"><span data-review="glossary" data-review-id="s4-gloss-ncbtki" data-gloss="ncBTKi, noncovalent Bruton’s tyrosine kinase inhibitor." onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ tipTap }}" onKeyDown="{{ tipKey }}" role="button" tabIndex="0" class="lly-gloss" style="border-bottom:1px dotted var(--lly-forest);cursor:help">ncBTKi</span></li></ul></div></div>
                         </sc-if>
                       </div>
                     </div>
@@ -1168,6 +1172,10 @@ class Component extends DCLogic {
     else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   }
 
+  /* A touch device has no hover, so hover must never be the only way in (owner ruling 2026-09-20).
+     Where there is no real pointer the hover handlers stand down and select does the work. */
+  hoverable() { return !(window.matchMedia && window.matchMedia("(hover: none)").matches); }
+
   tipFor(el, text) {
     if (!this.stageEl) return null;
     const a = el.getBoundingClientRect(), b = this.stageEl.getBoundingClientRect();
@@ -1206,7 +1214,7 @@ class Component extends DCLogic {
         ? "The numbered pips along the bottom mark where you are. Select an earlier one to go back to that scene at any point."
         : "The numbered pips along the bottom cover every scene you have reached. Select one to move back or forward at any point." },
       { kind: "diamond", title: "Open a box", body: "A red diamond marks anything that opens, and it pulses until you open it. Patient examples, treatment options and each branch of the algorithm roll down when you select them." },
-      { kind: "gloss", title: "See a definition", body: "Hover an abbreviation with a dotted underline for what it stands for. Each one is marked the first time it appears." },
+      { kind: "gloss", title: "See a definition", body: "Select an abbreviation with a dotted underline for what it stands for. Each one is marked the first time it appears." },
       { kind: "chip", title: "Check a source", body: "Select a red citation chip next to a statement to see that reference in place. It clears as soon as you do anything else." },
       { kind: "prompt", title: "Follow the prompts", body: "A short red line above each group tells you what to open on that scene." },
       { kind: "refs", title: "References", body: "The full numbered reference list sits on the final scene, with a source link for each and a print option." },
@@ -1290,9 +1298,34 @@ class Component extends DCLogic {
         this.setState({ motion: on });
       },
 
-      glossEnter: e => this.setState({ tip: this.tipFor(e.currentTarget, this.definitionOf(e.currentTarget.dataset.gloss)) }),
-      noteEnter: e => this.setState({ tip: this.tipFor(e.currentTarget, e.currentTarget.dataset.note) }),
-      glossLeave: () => this.setState({ tip: null }),
+      glossEnter: e => { if (!this.hoverable()) return; this.setState({ tip: this.tipFor(e.currentTarget, this.definitionOf(e.currentTarget.dataset.gloss)) }); },
+      noteEnter: e => { if (!this.hoverable()) return; this.setState({ tip: this.tipFor(e.currentTarget, e.currentTarget.dataset.note) }); },
+      glossLeave: () => { if (!this.hoverable()) return; this.setState({ tip: null }); },
+
+      /* Select opens the definition on any device, and the next thing the learner does closes it -
+         the same dismissal refClick uses below, so the asset behaves one way, not two. */
+      tipTap: e => {
+        e.stopPropagation();
+        const el = e.currentTarget;
+        const t = el.dataset.gloss ? this.definitionOf(el.dataset.gloss) : el.dataset.note;
+        const same = s.tip && s.tip.text === t;
+        this.setState({ tip: same ? null : this.tipFor(el, t) });
+        if (same) return;
+        clearTimeout(this.armDismiss);
+        this.armDismiss = setTimeout(() => {
+          const off = () => {
+            document.removeEventListener("pointerdown", off, true);
+            document.removeEventListener("keydown", off, true);
+            this.setState({ tip: null });
+          };
+          document.addEventListener("pointerdown", off, true);
+          document.addEventListener("keydown", off, true);
+        }, 0);
+      },
+      tipKey: e => {
+        if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") { e.preventDefault(); e.currentTarget.click(); }
+        else if (e.key === "Escape") { this.setState({ tip: null }); }
+      },
       refClick: e => {
         e.stopPropagation();
         const t = e.currentTarget.dataset.ref;
@@ -1465,7 +1498,7 @@ class Component extends DCLogic {
   }
 }
 </script>
-<script id="build-stamp">(function(){var T="CLL Decision Making: Scene 2: Patient background, Disease background, Patient preference",M="CLL Decision Making tint8620-cll-scenes/02-consider v7 2026-09-20";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<script id="build-stamp">(function(){var T="CLL Decision Making: Scene 2: Patient background, Disease background, Patient preference",M="CLL Decision Making tint8620-cll-scenes/02-consider v8 2026-09-21";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
 <script id="layer-release">(function(){var SAFE=/^(cllExpand|cllFade|cllLaunchPop|cllPop|cllSceneBack|cllSceneNext|cllScenePrev|cllSettle|cllSign|cllStage|cllTip|cllTrunk|cllUp)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
 </body>
 </html>
