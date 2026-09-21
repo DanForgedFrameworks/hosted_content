@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- build: Omnipod 5 Decision Making | tint8787-omnipod-scenes/03-demographics | v8 | 2026-09-20 -->
+<!-- build: Omnipod 5 Decision Making | tint8787-omnipod-scenes/03-demographics | v9 | 2026-09-21 -->
 <html>
 <head>
 <meta charset="utf-8">
@@ -10,7 +10,7 @@
 <script src="../support.js"></script>
 
 <title>Omnipod 5 Decision Making: Case demographics and clinical characteristics</title>
-<meta name="build-version" content="Omnipod 5 Decision Making tint8787-omnipod-scenes/03-demographics v8 2026-09-20">
+<meta name="build-version" content="Omnipod 5 Decision Making tint8787-omnipod-scenes/03-demographics v9 2026-09-21">
 </head>
 <body>
 <x-dc>
@@ -18,6 +18,16 @@
   <link rel="stylesheet" href="../omnipod/styles.css">
   <style>
     body { margin: 0; background: transparent; overflow: hidden; }
+    /* owner 2026-09-21, from a phone recording: inside a Visme slide the page is wider than the screen and phone
+       browsers then inflate any text they take for a paragraph, so a 13 px line drew larger than an 18 px heading. */
+    html, body { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    /* owner 2026-09-21: Visme keeps three slides alive at once; a scene that is off screen or in a hidden tab does no work. */
+    [data-idle="1"] * { animation-play-state: paused !important; }
+    /* owner 2026-09-21: a touch device starts still and stays still - the switch is not offered there. */
+    @media (hover: none) { [data-review-id="g-motion"] { display: none !important; } }
+    /* owner 2026-09-21: no drop-shadow on a touch device - a soft shadow on the whole scaled stage is re-drawn at zoom
+       on every pinch and pan; tested on TINT 8620-5, strictly less work. Desktop keeps it. */
+    @media (hover: none) { [data-stage="1"] { box-shadow: none !important; } }
     a { color: #8D61C8; } a:hover { color: #743DBC; }
     @keyframes omnInA { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
     @keyframes omnInB { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
@@ -596,6 +606,19 @@ class Component extends DCLogic {
     { text: "Hood KK, et al. Pediatr Diabetes. 2023;2023:1–12.", j: "Pediatr Diabetes" }
   ];
   /* "4–6" -> refs 4, 5, 6; "1" -> ref 1 */
+  /* owner 2026-09-21: on a touch device the Background motion switch is hidden, so the walkthrough entry that
+     describes it is trimmed to its Reset sentence on the whole-activity page and skipped on a scene build,
+     whose version of that entry is only the switch sentence. Approved copy minus one sentence; nothing new. */
+  get WALKD() {
+    if (this._walkd) return this._walkd;
+    const touch = typeof window !== "undefined" && window.matchMedia && window.matchMedia("(hover: none)").matches;
+    this._walkd = !touch ? this.WALK : this.WALK.flatMap(w => {
+      if (w.kind !== "motion") return [w];
+      if (this.SCENE !== null) return [];
+      return [Object.assign({}, w, { body: w.body.replace("The switch pauses the glucose trace in the background. ", "") })];
+    });
+    return this._walkd;
+  }
   citeText(sup) {
     const m = sup.match(/^(\d+)[–-](\d+)$/); const ns = m ? Array.from({ length: +m[2] - +m[1] + 1 }, (_, i) => +m[1] + i) : sup.split(",").map(x => +x.trim());
     return ns.map(n => n + ". " + (this.REFS[n - 1] || { text: "" }).text).join("\n");
@@ -625,7 +648,11 @@ class Component extends DCLogic {
 
   state = Object.assign({
     scene: this.SCENE || 1, visited: [this.SCENE || 1], answers: {}, units: "mg", motion: true, walk: null, dir: 1, revReady: false, chTick: 0, fading: false, tags: (this.props && this.props.showProposedTags) || false, resetAsk: false, held: this.holdUntilSeen()
-  }, this.load());
+  }, this.load(), this.touchDefaults());
+
+  /* owner 2026-09-21: a touch device starts with the background trace still (no pointer to follow, and the
+     phone pays for every animated slide Visme keeps alive). The toggle still turns it on. */
+  touchDefaults() { return (typeof window !== "undefined" && window.matchMedia && window.matchMedia("(hover: none)").matches) ? { motion: false } : {}; }
 
   /* Visme loads every slide's iframe up front, so a scene build would play its entrance off screen. Inside an iframe the
      scene stays unmounted until at least half of it is first on screen, then mounts once (first arrival only, owner 15 Sep 2026).
@@ -661,6 +688,7 @@ class Component extends DCLogic {
     /* 4. a hidden slide being shown resizes its iframe from nothing */
     on(window, "resize", () => { if (window.innerWidth > 0 && window.innerHeight > 0) release(); });
   }
+
 
   load() {
     try { const s = JSON.parse(localStorage.getItem(this.KEY) || "null"); if (s && typeof s.scene === "number") return { scene: this.SCENE || s.scene, visited: this.SCENE ? [this.SCENE] : (s.visited || [1]), answers: s.answers || {}, units: s.units || "mg", motion: s.motion !== false, ch: s.ch || {}, tags: !!s.tags }; } catch (e) {}
@@ -741,7 +769,9 @@ class Component extends DCLogic {
   componentDidMount() {
     this.fit = () => {
       if (this.state.held) return;   /* the stage mounts on release and calls fit itself */
-      const vw = window.innerWidth, vh = window.innerHeight;
+      /* owner 2026-09-21: the LAYOUT viewport - a pinch on iOS changes innerWidth/innerHeight to the visual viewport and
+         every pinch re-fitted the stage (the snap-back and jitter). clientWidth/Height hold still; the browser zooms. */
+      const de = document.documentElement, vw = de.clientWidth || window.innerWidth, vh = de.clientHeight || window.innerHeight;
       if (!this.stageEl || !vw || !vh) { requestAnimationFrame(this.fit); return; }
       const k = Math.min(vw / 1320, vh / 760);
       this.stageEl.style.transform = "translate(-50%,-50%) scale(" + k + ")";
@@ -761,8 +791,23 @@ class Component extends DCLogic {
     window.addEventListener("keydown", this.onKey);
     this.applyMotion();
     this.installReview();
+    this.watchIdle();
   }
-  componentWillUnmount() { if (this.seenIO) this.seenIO.disconnect(); window.removeEventListener("resize", this.fit); window.removeEventListener("keydown", this.onKey); clearInterval(this.readyTimer); }
+
+  /* Off screen (another Visme slide is current) or in a hidden tab: every CSS animation pauses via [data-idle].
+     Never touches the release logic in watchSeen(), and never fires in a review capture, where the page is visible. */
+  watchIdle() {
+    const root = this.rootEl || document.body;
+    if (!root || typeof IntersectionObserver === "undefined") return;
+    this.idleOff = false; this.idleHidden = !!document.hidden;
+    const set = () => { root.setAttribute("data-idle", (this.idleOff || this.idleHidden) ? "1" : "0"); };
+    this.idleIO = new IntersectionObserver(es => { this.idleOff = !es.some(e => e.isIntersecting); set(); }, { threshold: 0 });
+    this.idleIO.observe(root);
+    this.onIdleVis = () => { this.idleHidden = !!document.hidden; set(); };
+    document.addEventListener("visibilitychange", this.onIdleVis);
+    set();
+  }
+  componentWillUnmount() { if (this.idleIO) this.idleIO.disconnect(); document.removeEventListener("visibilitychange", this.onIdleVis); if (this.seenIO) this.seenIO.disconnect(); window.removeEventListener("resize", this.fit); window.removeEventListener("keydown", this.onKey); clearInterval(this.readyTimer); }
 
   /* Background motion toggle pauses the ambient trace (CSS animations on .omn-trace). */
   applyMotion() { if (this.stageEl) this.stageEl.style.setProperty("--omn-motion", this.state.motion ? "running" : "paused"); document.querySelectorAll(".omn-trace *").forEach(el => { el.style.animationPlayState = this.state.motion ? "running" : "paused"; }); }
@@ -915,7 +960,7 @@ class Component extends DCLogic {
     for (let k = 1; k < this.TAKE.length; k++) add("s14-step-" + k, 14, "Take home messages - " + k + " of " + this.TAKE.length + " cards shown, Next not yet shown", { patch: { take: { step: k } }, partial: true });   /* audit 15 Sep: every release step (was step 3 only) */
     this.TAKE.filter(k => k.sup).forEach(k => { const cid = k.sup.replace(/[–-]/g, "-"); add("s14-cite-" + cid, 14, "Citation " + k.sup, { via: "s14-cite-" + cid, action: "click", requires: ["s14-base"] }); });
     add("g-refs-export-fallback", 15, "Save as PDF - copy panel shown when a new tab is blocked", { patch: { link: { title: "References", text: this.REFS.map((r, i) => (i + 1) + ". " + r.text).join("\n"), mode: "copy" } } });
-    this.WALK.forEach((w, i) => add("g-walk-" + (i + 1), 2, "How to use this - " + w.title, { patch: { walk: i } }));
+    this.WALKD.forEach((w, i) => add("g-walk-" + (i + 1), 2, "How to use this - " + w.title, { patch: { walk: i } }));
     return S;
   }
   allRevealed() { const a = {}; for (let n = 8; n <= 13; n++) a[n] = { picked: this.Q[n].correct.slice(), confirm: false, revealed: true }; return a; }
@@ -1045,9 +1090,10 @@ class Component extends DCLogic {
       glossLeave: () => { if (!this.hoverable()) return; this.setState({ tip: null }); },
       glossTap: e => {
         e.stopPropagation();
-        const el = e.currentTarget, text = el.dataset.gloss, same = s.tip && s.tip.text === text;
-        this.setState({ tip: same ? null : this.tipFor(el, text, true) });
-        if (same) return;
+        /* select always OPENS (rule 12); it never toggles closed - a mouse user already hovering would otherwise
+           close it by clicking. Closing: the next interaction anywhere, Escape, or the pointer leaving. */
+        const el = e.currentTarget, text = el.dataset.gloss;
+        this.setState({ tip: this.tipFor(el, text, true) });
         clearTimeout(this.glossArm);
         this.glossArm = setTimeout(() => {   /* stays up only until the learner does anything else */
           const off = () => { document.removeEventListener('pointerdown', off, true); document.removeEventListener('keydown', off, true); this.setState({ tip: null }); };
@@ -1095,14 +1141,14 @@ class Component extends DCLogic {
         }, 0);
       },
       walkOpen: s.walk !== null, openWalk: () => this.setState({ walk: 0 }), closeWalk: () => this.setState({ walk: null }), stopClick: e => e.stopPropagation(),
-      walkTitle: this.WALK[s.walk || 0].title, walkBody: (split && this.WALK[s.walk || 0].splitBody) || this.WALK[s.walk || 0].body,
-      walkIsNav: this.WALK[s.walk || 0].kind === "nav", walkIsOption: this.WALK[s.walk || 0].kind === "option", walkIsConfirm: this.WALK[s.walk || 0].kind === "confirm",
-      walkIsAnswer: this.WALK[s.walk || 0].kind === "answer", walkIsInfo: this.WALK[s.walk || 0].kind === "info", walkIsChallenge: this.WALK[s.walk || 0].kind === "challenge", walkIsCite: this.WALK[s.walk || 0].kind === "cite", walkIsMotion: this.WALK[s.walk || 0].kind === "motion", walkIsRevisit: this.WALK[s.walk || 0].kind === "revisit", walkIsExport: this.WALK[s.walk || 0].kind === "export", walkIsGate: this.WALK[s.walk || 0].kind === "gate", walkIsGloss: this.WALK[s.walk || 0].kind === "gloss", walkIsLink: this.WALK[s.walk || 0].kind === "link",
-      walkDots: this.WALK.map((w, i) => ({ bg: i === (s.walk || 0) ? "#8D61C8" : "#E6E4DF" })),
+      walkTitle: this.WALKD[s.walk || 0].title, walkBody: (split && this.WALKD[s.walk || 0].splitBody) || this.WALKD[s.walk || 0].body,
+      walkIsNav: this.WALKD[s.walk || 0].kind === "nav", walkIsOption: this.WALKD[s.walk || 0].kind === "option", walkIsConfirm: this.WALKD[s.walk || 0].kind === "confirm",
+      walkIsAnswer: this.WALKD[s.walk || 0].kind === "answer", walkIsInfo: this.WALKD[s.walk || 0].kind === "info", walkIsChallenge: this.WALKD[s.walk || 0].kind === "challenge", walkIsCite: this.WALKD[s.walk || 0].kind === "cite", walkIsMotion: this.WALKD[s.walk || 0].kind === "motion", walkIsRevisit: this.WALKD[s.walk || 0].kind === "revisit", walkIsExport: this.WALKD[s.walk || 0].kind === "export", walkIsGate: this.WALKD[s.walk || 0].kind === "gate", walkIsGloss: this.WALKD[s.walk || 0].kind === "gloss", walkIsLink: this.WALKD[s.walk || 0].kind === "link",
+      walkDots: this.WALKD.map((w, i) => ({ bg: i === (s.walk || 0) ? "#8D61C8" : "#E6E4DF" })),
       walkPrev: e => { e.stopPropagation(); this.setState({ walk: Math.max(0, (s.walk || 0) - 1) }); },
-      walkNext: e => { e.stopPropagation(); const w = s.walk || 0; this.setState({ walk: w >= this.WALK.length - 1 ? null : w + 1 }); },
-      walkPrevOpacity: (s.walk || 0) === 0 ? .4 : 1, walkNextLabel: (s.walk || 0) >= this.WALK.length - 1 ? "Done" : "Next step",
-      walkIsLast: (s.walk || 0) >= this.WALK.length - 1, walkNotLast: (s.walk || 0) < this.WALK.length - 1
+      walkNext: e => { e.stopPropagation(); const w = s.walk || 0; this.setState({ walk: w >= this.WALKD.length - 1 ? null : w + 1 }); },
+      walkPrevOpacity: (s.walk || 0) === 0 ? .4 : 1, walkNextLabel: (s.walk || 0) >= this.WALKD.length - 1 ? "Done" : "Next step",
+      walkIsLast: (s.walk || 0) >= this.WALKD.length - 1, walkNotLast: (s.walk || 0) < this.WALKD.length - 1
     };
     for (let i = 1; i <= this.LAST; i++) vals["show" + i] = cur === i;
     const dense = isQ && q.options.length > 4;   /* Q5: five options + long answer; tighter options so nothing clips */
@@ -1132,7 +1178,7 @@ class Component extends DCLogic {
   }
 }
 </script>
-<script id="build-stamp">(function(){var T="Omnipod 5 Decision Making: Case demographics and clinical characteristics",M="Omnipod 5 Decision Making tint8787-omnipod-scenes/03-demographics v8 2026-09-20";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<script id="build-stamp">(function(){var T="Omnipod 5 Decision Making: Case demographics and clinical characteristics",M="Omnipod 5 Decision Making tint8787-omnipod-scenes/03-demographics v9 2026-09-21";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
 <script id="layer-release">(function(){var SAFE=/^(omnBarBounce|omnFade|omnFeatHead|omnFeatIn|omnFeatInB|omnInA|omnInB|omnPop|omnRoll|omnSoft|omnSoftB|omnSwipe|omnTitleRise|omnUp|omnZoomIn)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
 </body>
 </html>
