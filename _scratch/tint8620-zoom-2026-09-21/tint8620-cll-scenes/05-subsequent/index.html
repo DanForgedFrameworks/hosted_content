@@ -1220,7 +1220,8 @@ class Component extends DCLogic {
   tipFor(el, text) {
     if (!this.stageEl) return null;
     const a = el.getBoundingClientRect(), b = this.stageEl.getBoundingClientRect();
-    const k = this.scale || 1;
+    /* the stage's reported width over its design width: engines differ on whether rects include CSS zoom (zoom trial) */
+    const k = (b.width / 1304) || this.scale || 1;
     return { text, x: Math.min((a.left - b.left) / k, 860), y: (a.bottom - b.top) / k + 8 };
   }
 
