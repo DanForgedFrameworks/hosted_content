@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- build: CLL Decision Making | tint8620-cll-scenes/04-algorithm | v9 | 2026-09-21 -->
+<!-- build: CLL Decision Making | tint8620-cll-scenes/04-algorithm | v10 | 2026-09-21 -->
 <html>
 <head>
 <meta charset="utf-8">
@@ -10,7 +10,7 @@
 <script src="../support.js"></script>
 
 <title>CLL Decision Making: Scene 4: Treatment algorithm example</title>
-<meta name="build-version" content="CLL Decision Making tint8620-cll-scenes/04-algorithm v9 2026-09-21">
+<meta name="build-version" content="CLL Decision Making tint8620-cll-scenes/04-algorithm v10 2026-09-21">
 </head>
 <body>
 <x-dc>
@@ -23,6 +23,8 @@
   html, body { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   /* owner 2026-09-21: Visme keeps three slides alive at once; a scene that is off screen or in a hidden tab does no work. */
   [data-idle="1"] * { animation-play-state: paused !important; }
+  /* owner 2026-09-21: a touch device starts still and stays still - the switch is not offered there. */
+  @media (hover: none) { [data-review-id="g-motion"] { display: none !important; } }
   a { color: #E1251B; text-decoration: none; }
   a:hover { color: #212121; }
   /* The hit area for an abbreviation or footnote marker, extended without touching layout.
@@ -770,7 +772,9 @@ class Component extends DCLogic {
 
   componentDidMount() {
     this.fit = () => {
-      const vw = window.innerWidth, vh = window.innerHeight;
+      /* owner 2026-09-21: the LAYOUT viewport - a pinch on iOS changes innerWidth/innerHeight to the visual viewport and
+         every pinch re-fitted the stage (the snap-back and jitter). clientWidth/Height hold still; the browser zooms. */
+      const de = document.documentElement, vw = de.clientWidth || window.innerWidth, vh = de.clientHeight || window.innerHeight;
       if (!this.stageEl || !vw || !vh) { requestAnimationFrame(this.fit); return; }
       const k = Math.min(vw / 1280, vh / 720);
       this.stageEl.style.transform = "translate(-50%,-50%) scale(" + k + ")";
@@ -783,7 +787,9 @@ class Component extends DCLogic {
       try {
         document.body.style.background = "transparent";
         if (this.rootEl) this.rootEl.style.background = "transparent";
-        if (this.stageEl) this.stageEl.style.boxShadow = "0 10px 30px rgba(33,33,33,.18)";
+        /* owner 2026-09-21: no drop-shadow on a touch device - a soft shadow on the whole scaled stage is re-drawn at
+           zoom on every pinch and pan; tested on the phone, strictly less work. Desktop keeps it. */
+        if (this.stageEl && this.hoverable()) this.stageEl.style.boxShadow = "0 10px 30px rgba(33,33,33,.18)";
       } catch (e) {}
     }
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1524,7 +1530,7 @@ class Component extends DCLogic {
   }
 }
 </script>
-<script id="build-stamp">(function(){var T="CLL Decision Making: Scene 4: Treatment algorithm example",M="CLL Decision Making tint8620-cll-scenes/04-algorithm v9 2026-09-21";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<script id="build-stamp">(function(){var T="CLL Decision Making: Scene 4: Treatment algorithm example",M="CLL Decision Making tint8620-cll-scenes/04-algorithm v10 2026-09-21";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
 <script id="layer-release">(function(){var SAFE=/^(cllExpand|cllFade|cllLaunchPop|cllPop|cllSceneBack|cllSceneNext|cllScenePrev|cllSettle|cllSign|cllStage|cllTip|cllTrunk|cllUp)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
 </body>
 </html>
