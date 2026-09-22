@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[DIAGNOSTIC 2] What does an embed see in this deck?</title>
+<style>
+  :root { --bg: #14161a; --panel: #1e2128; --ink: #f2f2f2; --dim: #9aa0a8; --ok: #2ec27e; --bad: #f75e4c; --warn: #f5a623; --accent: #00A2AC; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); font: 15px/1.4 ui-monospace, Consolas, monospace; }
+  body { padding: 18px 22px; overflow: hidden; }
+  .top { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 10px; }
+  .top h1 { font-size: 26px; margin: 0; color: var(--accent); letter-spacing: .02em; }
+  .top .clock { font-size: 22px; color: var(--dim); }
+  .top .clock b { color: var(--ink); font-size: 28px; }
+  .arrive { font-size: 20px; padding: 10px 14px; border-radius: 8px; background: #2a2d35; margin-bottom: 12px; border-left: 6px solid var(--dim); }
+  .arrive.on { background: #123d2a; border-left-color: var(--ok); }
+  .arrive b { font-size: 24px; }
+  .bars { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 12px; }
+  .bar { background: var(--panel); border-radius: 8px; padding: 10px 12px; }
+  .bar .lbl { color: var(--dim); font-size: 13px; margin-bottom: 6px; }
+  .bar .lbl b { color: var(--ink); font-size: 15px; }
+  .track { height: 26px; background: #0d0f12; border-radius: 6px; overflow: hidden; position: relative; }
+  .fill { height: 100%; width: 0; background: var(--accent); animation: grow 10s linear both; }
+  .fill.b { animation-name: growB; }
+  @keyframes grow  { from { width: 0 } to { width: 100% } }
+  @keyframes growB { from { width: 0 } to { width: 100% } }
+  [data-idle="1"] .fill.b { animation-play-state: paused; }
+  .bar .st { margin-top: 6px; font-size: 14px; }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px; }
+  .cell { background: var(--panel); border-radius: 8px; padding: 9px 11px; }
+  .cell .k { color: var(--dim); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+  .cell .v { font-size: 20px; margin-top: 3px; }
+  .v.ok { color: var(--ok); } .v.bad { color: var(--bad); } .v.warn { color: var(--warn); }
+  .log { background: var(--panel); border-radius: 8px; padding: 10px 12px; height: 232px; overflow: hidden; }
+  .log .k { color: var(--dim); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+  .log ol { list-style: none; margin: 0; padding: 0; font-size: 14px; }
+  .log li { padding: 2px 0; border-bottom: 1px solid #262a33; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .log li .t { color: var(--dim); display: inline-block; width: 78px; }
+  .log li.hi { color: var(--ok); }
+  .log li.warn { color: var(--warn); }
+  .foot { margin-top: 8px; color: var(--dim); font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>DIAGNOSTIC SLIDE 2</h1>
+  <div class="clock">deck open for <b id="clock">0.0</b> s</div>
+</div>
+
+<div class="arrive" id="arrive">
+  <b>Not yet touched.</b> Move the mouse or tap anywhere on this slide - that is the one signal a hidden slide cannot fake.
+</div>
+
+<div class="bars">
+  <div class="bar">
+    <div class="lbl"><b>Bar A</b> - runs from load, never paused</div>
+    <div class="track"><div class="fill a" id="fa"></div></div>
+    <div class="st" id="sa">-</div>
+  </div>
+  <div class="bar">
+    <div class="lbl"><b>Bar B</b> - paused when the plain observer says "not on screen" (what live v12 does)</div>
+    <div class="track"><div class="fill b" id="fb"></div></div>
+    <div class="st" id="sb">-</div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="cell"><div class="k">plain observer</div><div class="v" id="io">-</div></div>
+  <div class="cell"><div class="k">trackVisibility</div><div class="v" id="tv">-</div></div>
+  <div class="cell"><div class="k">frames / sec</div><div class="v" id="fps">-</div></div>
+  <div class="cell"><div class="k">page visibility</div><div class="v" id="pv">-</div></div>
+  <div class="cell"><div class="k">iframe size</div><div class="v" id="sz">-</div></div>
+  <div class="cell"><div class="k">has focus</div><div class="v" id="fo">-</div></div>
+  <div class="cell"><div class="k">pointer events</div><div class="v" id="pe">0</div></div>
+  <div class="cell"><div class="k">arrivals detected</div><div class="v" id="ar">0</div></div>
+</div>
+
+<div class="log">
+  <div class="k">event log - newest first</div>
+  <ol id="log"></ol>
+</div>
+<div class="foot">Read Bar A on arrival: full = the entrance spent itself while parked. Bar B full too = the pause never engaged. Bar B held = the pause works in this deck.</div>
+
+<script>
+(function () {
+  var t0 = performance.now();
+  var $ = function (id) { return document.getElementById(id); };
+  var since = function () { return ((performance.now() - t0) / 1000).toFixed(1); };
+  var logEl = $('log'), entries = 0;
+  function log(msg, cls) {
+    var li = document.createElement('li');
+    if (cls) li.className = cls;
+    li.innerHTML = '<span class="t">' + since() + 's</span>' + msg;
+    logEl.insertBefore(li, logEl.firstChild);
+    if (++entries > 14) logEl.removeChild(logEl.lastChild);
+  }
+  function set(id, txt, cls) { var e = $(id); e.textContent = txt; e.className = 'v' + (cls ? ' ' + cls : ''); }
+
+  log('loaded - iframe ' + innerWidth + 'x' + innerHeight + ', page ' + document.visibilityState);
+
+  /* clock */
+  setInterval(function () { $('clock').textContent = since(); }, 100);
+
+  /* bars: read the real animation clocks */
+  function barState(el) {
+    try {
+      var a = el.getAnimations()[0]; if (!a) return '-';
+      var t = Math.min(10, (a.currentTime || 0) / 1000).toFixed(1);
+      return a.playState + ' - ' + t + ' s of 10' + (a.playState === 'finished' ? '  (SPENT)' : '');
+    } catch (e) { return 'n/a'; }
+  }
+  setInterval(function () { $('sa').textContent = barState($('fa')); $('sb').textContent = barState($('fb')); }, 200);
+
+  /* plain observer - exactly what live v12 uses for [data-idle] */
+  var ioState = null;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        var on = e.isIntersecting;
+        if (on === ioState) return;
+        ioState = on;
+        document.body.setAttribute('data-idle', on ? '0' : '1');
+        set('io', on ? 'ON SCREEN' : 'off screen', on ? 'ok' : 'warn');
+        log('plain observer says ' + (on ? 'ON SCREEN' : 'OFF SCREEN') + ' -> Bar B ' + (on ? 'runs' : 'PAUSED'), on ? '' : 'warn');
+      });
+    }, { threshold: 0 }).observe(document.body);
+  } else { set('io', 'unsupported', 'bad'); }
+
+  /* trackVisibility, polled by re-observe (it never fires on change by itself) */
+  var tvState = null, tvSupported = null;
+  try {
+    var probe = document.createElement('div');
+    probe.style.cssText = 'position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:2147483646';
+    document.body.appendChild(probe);
+    var tv = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (tvSupported === null) { tvSupported = ('isVisible' in e); if (!tvSupported) set('tv', 'unsupported', 'bad'); }
+        if (!tvSupported) return;
+        var v = !!e.isVisible;
+        if (v === tvState) return;
+        tvState = v;
+        set('tv', v ? 'VISIBLE' : 'not visible', v ? 'ok' : 'warn');
+        log('trackVisibility says ' + (v ? 'VISIBLE' : 'NOT VISIBLE'));
+      });
+    }, { threshold: [0, 0.01], trackVisibility: true, delay: 100 });
+    tv.observe(probe);
+    setInterval(function () { tv.unobserve(probe); tv.observe(probe); }, 250);
+  } catch (e) { set('tv', 'error', 'bad'); }
+
+  /* frames per second - are animation frames being serviced? */
+  var frames = 0;
+  (function tick() { frames++; requestAnimationFrame(tick); })();
+  setInterval(function () { set('fps', String(frames), frames > 20 ? 'ok' : (frames ? 'warn' : 'bad')); frames = 0; }, 1000);
+
+  /* page visibility, size, focus */
+  set('pv', document.visibilityState, document.hidden ? 'warn' : 'ok');
+  document.addEventListener('visibilitychange', function () {
+    set('pv', document.visibilityState, document.hidden ? 'warn' : 'ok');
+    log('page visibility -> ' + document.visibilityState);
+  });
+  set('sz', innerWidth + 'x' + innerHeight);
+  addEventListener('resize', function () { set('sz', innerWidth + 'x' + innerHeight); log('RESIZE -> ' + innerWidth + 'x' + innerHeight, 'hi'); });
+  setInterval(function () { var f = document.hasFocus(); set('fo', f ? 'yes' : 'no', f ? 'ok' : ''); }, 300);
+  addEventListener('focus', function () { log('window focus', 'hi'); });
+  addEventListener('blur', function () { log('window blur'); });
+  addEventListener('pageshow', function () { log('pageshow', 'hi'); });
+
+  /* pointer / touch / key - the candidate arrival signal, with a quiet-gap rule */
+  var pcount = 0, lastPointer = 0, arrivals = 0, QUIET = 2000;
+  function onInput(kind) {
+    var now = performance.now();
+    pcount++;
+    set('pe', String(pcount), 'ok');
+    var gap = now - lastPointer;
+    if (!lastPointer || gap > QUIET) {
+      arrivals++;
+      set('ar', String(arrivals), 'ok');
+      var a = $('arrive');
+      a.className = 'arrive on';
+      a.innerHTML = '<b>ARRIVAL ' + arrivals + '</b> at ' + since() + 's via ' + kind +
+        (lastPointer ? ' after ' + (gap / 1000).toFixed(1) + 's quiet' : ' (first ever)') +
+        ' - Bar A: ' + barState($('fa')) + ' - Bar B: ' + barState($('fb'));
+      log('ARRIVAL ' + arrivals + ' (' + kind + (lastPointer ? ', ' + (gap / 1000).toFixed(1) + 's quiet' : ', first') + ')  A=' + barState($('fa')).split(' - ')[1] + '  B=' + barState($('fb')).split(' - ')[1], 'hi');
+    } else if (pcount === 2 || pcount % 50 === 0) {
+      log(kind + ' x' + pcount);
+    }
+    lastPointer = now;
+  }
+  ['pointermove', 'pointerdown', 'touchstart', 'wheel', 'keydown'].forEach(function (ev) {
+    addEventListener(ev, function () { onInput(ev); }, { passive: true });
+  });
+})();
+</script>
+</body>
+</html>
