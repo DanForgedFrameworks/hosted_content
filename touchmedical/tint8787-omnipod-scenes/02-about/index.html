@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- build: Omnipod 5 Decision Making | tint8787-omnipod-scenes/02-about | v11 | 2026-09-22 -->
+<!-- build: Omnipod 5 Decision Making | tint8787-omnipod-scenes/02-about | v12 | 2026-09-22 -->
 <html>
 <head>
 <meta charset="utf-8">
@@ -10,7 +10,7 @@
 <script src="../support.js"></script>
 
 <title>Omnipod 5 Decision Making: About the case</title>
-<meta name="build-version" content="Omnipod 5 Decision Making tint8787-omnipod-scenes/02-about v11 2026-09-22">
+<meta name="build-version" content="Omnipod 5 Decision Making tint8787-omnipod-scenes/02-about v12 2026-09-22">
 </head>
 <body>
 <x-dc>
@@ -654,12 +654,23 @@ class Component extends DCLogic {
      phone pays for every animated slide Visme keeps alive). The toggle still turns it on. */
   touchDefaults() { return (typeof window !== "undefined" && window.matchMedia && window.matchMedia("(hover: none)").matches) ? { motion: false } : {}; }
 
-  /* Visme loads every slide's iframe up front, so a scene build would play its entrance off screen. Inside an iframe the
-     scene stays unmounted until at least half of it is first on screen, then mounts once (first arrival only, owner 15 Sep 2026).
-     The whole-activity page, a scene opened directly, and review captures are never held. */
+  /* NOTHING IS HELD ANY MORE - owner ruling 2026-09-22, after testing two candidates in a real Visme deck.
+     The hold was added on 15 Sep to stop a scene playing its entrance off screen. It never worked, because
+     nothing inside a cross-origin iframe can tell "the deck is showing me" from "the deck has me loaded and
+     parked": an IntersectionObserver in an iframe measures its OWN viewport, and animation frames keep being
+     serviced for a parked iframe, so both release signals fired within about a second of the deck opening -
+     a hidden slide released at the same millisecond as the visible one.
+     trackVisibility was tried and rejected: it does not fire when visibility CHANGES (only on intersection
+     change, which never happens here), and from inside the iframe it reports false permanently whatever it
+     observes. Built as variant A and tested in the owner's Visme deck: it never learns it has arrived.
+     What DOES work, and is what TINT 8620-5 has always done: render at once and let
+     [data-idle="1"] { animation-play-state: paused } hold the entrance at its first frame while the slide is
+     parked, so it plays out when the learner arrives. Confirmed in Visme by the owner as variant B.
+     Kept as a function returning false rather than deleted, so `held` and watchSeen() stay inert and the
+     diff against what was live is one line. Full measurements: the findings file on branch
+     omnipod-entrance-visibility. */
   holdUntilSeen() {
-    if (this.SCENE === null || typeof window === "undefined") return false;
-    try { return window.self !== window.top; } catch (e) { return true; }
+    return false;
   }
   watchSeen() {
     if (!this.state.held) return;
@@ -1182,7 +1193,7 @@ class Component extends DCLogic {
   }
 }
 </script>
-<script id="build-stamp">(function(){var T="Omnipod 5 Decision Making: About the case",M="Omnipod 5 Decision Making tint8787-omnipod-scenes/02-about v11 2026-09-22";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<script id="build-stamp">(function(){var T="Omnipod 5 Decision Making: About the case",M="Omnipod 5 Decision Making tint8787-omnipod-scenes/02-about v12 2026-09-22";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
 <script id="layer-release">(function(){var SAFE=/^(omnBarBounce|omnFade|omnFeatHead|omnFeatIn|omnFeatInB|omnInA|omnInB|omnPop|omnRoll|omnSoft|omnSoftB|omnSwipe|omnTitleRise|omnUp|omnZoomIn)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
 </body>
 </html>
