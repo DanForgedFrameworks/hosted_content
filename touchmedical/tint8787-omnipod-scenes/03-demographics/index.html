@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- build: Omnipod 5 Decision Making | tint8787-omnipod-scenes/03-demographics | v14 | 2026-09-22 -->
+<!-- build: Omnipod 5 Decision Making | tint8787-omnipod-scenes/03-demographics | v15 | 2026-09-22 -->
 <html>
 <head>
 <meta charset="utf-8">
@@ -10,8 +10,7 @@
 <script src="../support.js"></script>
 
 <title>Omnipod 5 Decision Making: Case demographics and clinical characteristics</title>
-
-<meta name="build-version" content="Omnipod 5 Decision Making tint8787-omnipod-scenes/03-demographics v14 2026-09-22">
+<meta name="build-version" content="Omnipod 5 Decision Making tint8787-omnipod-scenes/03-demographics v15 2026-09-22">
 </head>
 <body>
 <x-dc>
@@ -24,9 +23,6 @@
     html, body { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     /* owner 2026-09-21: Visme keeps three slides alive at once; a scene that is off screen or in a hidden tab does no work. */
     [data-idle="1"] * { animation-play-state: paused !important; }
-    /* owner 2026-09-22: replay of an entrance. "off" drops every animation underneath, one reflow later "on"
-       puts them back, and each restarts from its first frame. Nothing is remounted, so nothing in state moves. */
-    [data-enter="off"] * { animation-name: none !important; }
     /* owner 2026-09-21: a touch device starts still and stays still - the switch is not offered there. */
     @media (hover: none) { [data-review-id="g-motion"] { display: none !important; } }
     /* owner 2026-09-21: no drop-shadow on a touch device - a soft shadow on the whole scaled stage is re-drawn at zoom
@@ -525,7 +521,7 @@ class Component extends DCLogic {
   LAST = 15;
   /* Split pack: a scene build sets window.CLL_SCENE before support.js loads. The build is then locked to that screen,
      cross-build navigation SHOWS but go() ignores other screens (Visme hotspots sit over the buttons and do the moving), the review aids
-     (P tag toggle, Reset progress) render in the master only, progress is stored per build, and the review contract is scoped to the scene. */
+     (P tag toggle, Reset progress) render in the master only, progress is kept per build for the sitting, and the review contract is scoped to the scene. */
   SCENE = (typeof window !== "undefined" && Number.isInteger(window.CLL_SCENE)) ? window.CLL_SCENE : null;
   KEY = "omn8787-tint-v2" + (this.SCENE ? "-s" + this.SCENE : "");
   /* Owner 15 Sep 2026: one scene build can cover several screens. Questions 1-6 are one Visme embed (screen 8 spans 8-13, 11 being
@@ -651,78 +647,39 @@ class Component extends DCLogic {
   ];
 
   state = Object.assign({
-    scene: this.SCENE || 1, visited: [this.SCENE || 1], answers: {}, units: "mg", motion: true, walk: null, dir: 1, revReady: false, chTick: 0, fading: false, tags: (this.props && this.props.showProposedTags) || false, resetAsk: false, held: this.holdUntilSeen()
+    scene: this.SCENE || 1, visited: [this.SCENE || 1], answers: {}, units: "mg", motion: true, walk: null, dir: 1, revReady: false, chTick: 0, fading: false, tags: (this.props && this.props.showProposedTags) || false, resetAsk: false
   }, this.load(), this.touchDefaults());
 
   /* owner 2026-09-21: a touch device starts with the background trace still (no pointer to follow, and the
      phone pays for every animated slide Visme keeps alive). The toggle still turns it on. */
   touchDefaults() { return (typeof window !== "undefined" && window.matchMedia && window.matchMedia("(hover: none)").matches) ? { motion: false } : {}; }
 
-  /* NOTHING IS HELD ANY MORE - owner ruling 2026-09-22, after testing two candidates in a real Visme deck.
-     The hold was added on 15 Sep to stop a scene playing its entrance off screen. It never worked, because
-     nothing inside a cross-origin iframe can tell "the deck is showing me" from "the deck has me loaded and
-     parked": an IntersectionObserver in an iframe measures its OWN viewport, and animation frames keep being
-     serviced for a parked iframe, so both release signals fired within about a second of the deck opening -
-     a hidden slide released at the same millisecond as the visible one.
-     trackVisibility was tried and rejected: it does not fire when visibility CHANGES (only on intersection
-     change, which never happens here), and from inside the iframe it reports false permanently whatever it
-     observes. Built as variant A and tested in the owner's Visme deck: it never learns it has arrived.
-     What DOES work, and is what TINT 8620-5 has always done: render at once and let
-     [data-idle="1"] { animation-play-state: paused } hold the entrance at its first frame while the slide is
-     parked, so it plays out when the learner arrives. Confirmed in Visme by the owner as variant B.
-     Kept as a function returning false rather than deleted, so `held` and watchSeen() stay inert and the
-     diff against what was live is one line. Full measurements: the findings file on branch
-     omnipod-entrance-visibility. */
-  holdUntilSeen() {
-    return false;
-  }
-  watchSeen() {
-    if (!this.state.held) return;
-    /* Released by the FIRST of several independent signals (15 Sep 2026: in Visme the viewport observer alone never fired,
-       so every held scene stayed blank). A blank embed is worse than an entrance that has already played. */
-    const offs = [];
-    const release = () => {
-      if (!this.state.held) return;
-      offs.splice(0).forEach(f => { try { f(); } catch (e) {} });
-      this.setState({ held: false }, () => { if (this.reviewDriving) return; if (this.state.scene === 5) this.startCount(); if (this.state.scene === 14) this.startTake(); });
-    };
-    this.releaseHold = release;
-    const on = (t, ev, fn, opt) => { t.addEventListener(ev, fn, opt); offs.push(() => t.removeEventListener(ev, fn, opt)); };
-    /* 1. on screen: any part of the full-size root in view */
-    if (typeof IntersectionObserver !== "undefined") {
-      const target = this.rootEl || document.body || document.documentElement;
-      const io = new IntersectionObserver(entries => { if (entries.some(e => e.isIntersecting && e.intersectionRatio > 0)) release(); }, { threshold: [0, 0.01, 0.25] });
-      io.observe(target); offs.push(() => io.disconnect());
-    } else { release(); return; }
-    /* 2. being drawn: browsers stop animation frames for hidden and off-screen cross-origin iframes; 45 frames inside ~1.5 s means it is rendering */
-    let frames = 0, t0 = 0, raf = 0;
-    const tick = t => { if (!this.state.held) return; if (!t0 || t - t0 > 1500) { t0 = t; frames = 0; } if (++frames >= 45) { release(); return; } raf = requestAnimationFrame(tick); };
-    raf = requestAnimationFrame(tick); offs.push(() => cancelAnimationFrame(raf));
-    /* 3. the learner is on it */
-    ["pointermove", "pointerdown", "touchstart", "keydown", "wheel", "focus"].forEach(ev => on(window, ev, release, { passive: true }));
-    /* 4. a hidden slide being shown resizes its iframe from nothing */
-    on(window, "resize", () => { if (window.innerWidth > 0 && window.innerHeight > 0) release(); });
-  }
+  /* Owner ruling 2026-09-22 (evening): this build follows TINT 8620-5's behaviour and nothing more. Entrances
+     play when the scene loads; [data-idle="1"] pauses every animation while the slide is off screen or the
+     page is hidden (watchIdle below); nothing is held, announced, rewound or replayed, and nothing reloads
+     itself. The hold (15 Sep), the replay-on-arrival machinery and the reload-on-reset (both 22 Sep) came out
+     in one change - the record is the job's ASSET-INDEX.md. */
 
-
+  /* Memory is per TAB and per sitting (sessionStorage - owner option 2, 2026-09-22): answers and opened cards
+     survive a slide being rebuilt within one visit; a new tab starts clean; nothing is shared between tabs,
+     so no other open copy can write this one's progress back, and QA is "open a new tab". */
   load() {
-    try { const s = JSON.parse(localStorage.getItem(this.KEY) || "null"); if (s && typeof s.scene === "number") return { scene: this.SCENE || s.scene, visited: this.SCENE ? [this.SCENE] : (s.visited || [1]), answers: s.answers || {}, units: s.units || "mg", motion: s.motion !== false, ch: s.ch || {}, tags: !!s.tags }; } catch (e) {}
+    try { const s = JSON.parse(sessionStorage.getItem(this.KEY) || "null"); if (s && typeof s.scene === "number") return { scene: this.SCENE || s.scene, visited: this.SCENE ? [this.SCENE] : (s.visited || [1]), answers: s.answers || {}, units: s.units || "mg", motion: s.motion !== false, ch: s.ch || {}, tags: !!s.tags }; } catch (e) {}
     return {};
   }
   persist() {
     if (this.noPersist) return;
     const s = this.state;
-    try { localStorage.setItem(this.KEY, JSON.stringify({ scene: s.scene, visited: s.visited, answers: s.answers, units: s.units, motion: s.motion, ch: s.ch || {}, tags: !!s.tags })); } catch (e) {}
+    try { sessionStorage.setItem(this.KEY, JSON.stringify({ scene: s.scene, visited: s.visited, answers: s.answers, units: s.units, motion: s.motion, ch: s.ch || {}, tags: !!s.tags })); } catch (e) {}
   }
   componentDidUpdate() { const prev = this._lastScene; this._lastScene = this.state.scene; this.persist(); if (this.state.scene === 5 && prev !== 5 && !this.reviewDriving) this.startCount(); if (this.state.scene === 14 && prev !== 14 && !this.reviewDriving) this.startTake(); this.rdCheck(); }
 
-  /* Take home messages release one at a time: 0.9 s ease-in + 0.7 s hold each. Reduced motion shows all six at once. */
-  startTake(force) {
+  /* Take home messages release one at a time: 0.9 s ease-in + 0.7 s hold each. Reduced motion shows all six at once.
+     A finished reveal stays finished on a revisit within the page. */
+  startTake() {
     this.stopTake();
     const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    /* a finished reveal stays finished on a revisit within the page - but `force` (an arrival at the Visme
-       slide, owner 2026-09-22) runs the staggered sequence again from the top: that stagger IS the entrance */
-    if (reduce || (!force && this.state.take && this.state.take.step >= this.TAKE.length)) { this.setState({ take: { step: this.TAKE.length } }); return; }
+    if (reduce || (this.state.take && this.state.take.step >= this.TAKE.length)) { this.setState({ take: { step: this.TAKE.length } }); return; }
     const run = i => { if (this.state.scene !== 14) return; this.setState({ take: { step: i } }); if (i < this.TAKE.length) this.takeTimer = setTimeout(() => run(i + 1), i === 0 ? 700 : 1600); };
     run(0);
   }
@@ -786,7 +743,6 @@ class Component extends DCLogic {
 
   componentDidMount() {
     this.fit = () => {
-      if (this.state.held) return;   /* the stage mounts on release and calls fit itself */
       /* owner 2026-09-21: the LAYOUT viewport - a pinch on iOS changes innerWidth/innerHeight to the visual viewport and
          every pinch re-fitted the stage (the snap-back and jitter). clientWidth/Height hold still; the browser zooms. */
       const de = document.documentElement, vw = de.clientWidth || window.innerWidth, vh = de.clientHeight || window.innerHeight;
@@ -796,10 +752,9 @@ class Component extends DCLogic {
     };
     this.fit(); window.addEventListener("resize", this.fit);
     this._lastScene = this.state.scene;
-    if (this.state.scene === 5 && !this.state.held) this.startCount();
-    if (this.state.scene === 14 && !this.state.held) this.startTake();
+    if (this.state.scene === 5) this.startCount();
+    if (this.state.scene === 14) this.startTake();
     this.rdCheck();
-    this.watchSeen();
     this.onKey = e => {
       if (e.key === "Escape") this.setState({ walk: null, refsOpen: false, tip: null, ranges: false, link: null, resetAsk: false });
       else if (this.state.walk !== null) return;
@@ -810,135 +765,23 @@ class Component extends DCLogic {
     this.applyMotion();
     this.installReview();
     this.watchIdle();
-    this.watchArrival();
-    this.watchReset();
   }
 
-  /* Owner 2026-09-22: clearing the stored progress from one tab was undone within seconds by any other open
-     copy of the activity - the Visme editor and its play window both hold live frames - because a scene
-     saves its whole in-memory state under the same key the moment anything in it re-renders. So a scene
-     whose OWN key is deleted reloads itself: it comes back fresh and writes a fresh key, and every open copy
-     ends up agreeing. Only a removal of this build's key counts (the shared "active" key and other scenes'
-     keys are ignored), and never during a review capture. */
-  watchReset() {
-    if (typeof window === "undefined") return;
-    this.onReset = e => {
-      if (this.reviewDriving) return;
-      if (e.key !== this.KEY || e.newValue !== null) return;
-      try { location.reload(); } catch (err) {}
-    };
-    window.addEventListener("storage", this.onReset);
-  }
-
-  /* Owner ruling 2026-09-22, built on his own diagnostic run in the real Visme deck. Nothing inside a cross-origin
-     iframe can see whether the deck is showing it - but the learner's first mouse movement, touch or key on a slide
-     is a signal a hidden slide cannot receive, and it caught four arrivals cleanly in his deck, one after 111 s
-     idle. So: replay the entrance on the FIRST input after the learner has been AWAY. Away is set by either of
-     two signals, because his two decks park slides differently:
-       - the plain observer or a hidden page (watchIdle) - a slide parked with display:none, his blank deck;
-       - another scene announcing itself through the store all nine share - a neighbour merely kept alive
-         (visibility:hidden), which no observer in here can see, his real deck. The `storage` event fires only in
-         the OTHER frames, which is exactly what is wanted.
-     Decorative scenes only. Screens 5 (demographics), 6 (challenges) and 8-13 (the questions) never replay, so
-     nothing the learner revealed, opened or answered is disturbed - option A, and the timed reveals are never
-     restarted. Not on the whole-activity page (it moves between screens itself) and never in a review capture.
-     Known limit, said once: a learner who navigates by keyboard with focus on the deck's own page sends no input
-     into the frame, so their slides do not announce themselves and do not replay - no worse than today. */
-  watchArrival() {
-    if (this.SCENE === null || typeof window === "undefined") return;
-    let inFrame = false; try { inFrame = window.self !== window.top; } catch (e) { inFrame = true; }
-    if (!inFrame) return;
-    const KEY = "omn8787-active", me = String(this.SCENE), s = this.SCENE;
-    const decorative = !(s === 5 || (s >= 8 && s <= 13));
-    this.away = false;
-    let lastSaid = 0;
-    this.onActive = e => { if (e.key === KEY && e.newValue && e.newValue.split(":")[0] !== me) this.markAway(); };
-    window.addEventListener("storage", this.onActive);
-    this.onArrive = () => {
-      const wasAway = this.away;
-      this.away = false;
-      if (this.armTimer) { clearInterval(this.armTimer); this.armTimer = 0; }
-      const now = Date.now();
-      if (wasAway || now - lastSaid > 1000) { lastSaid = now; try { localStorage.setItem(KEY, me + ":" + now); } catch (e) {} }
-      if (wasAway && decorative) this.playEntrance();
-    };
-    this.arriveEvents = ["pointermove", "pointerdown", "touchstart", "wheel", "keydown"];
-    this.arriveEvents.forEach(ev => window.addEventListener(ev, this.onArrive, { passive: true }));
-  }
-  /* Owner ruling 2026-09-22, after test copy C: the learner must never see the reset. The moment a decorative
-     scene learns it is away, its content is wound back to the first frame and HELD there (paused at 0); the
-     frame chrome - title bar, footer, buttons, the body wrapper - stays as it is so a held slide reads as a
-     loaded page that has not started, not a blank one. Re-armed every half second while away, because an
-     entrance still mid-flight when the scene left is only stashed by the release once it finishes. */
-  CHROME_SKIP = ".omn-titlebar, .omn-titlebar *, .omn-footer, .omn-footer *, .omn-btn, .omn-screen__body";
-  markAway() {
-    this.away = true;
-    const s = this.SCENE, decorative = !(s === 5 || (s >= 8 && s <= 13));
-    if (!decorative || this.reviewDriving || typeof window.__omnArm !== "function") return;
-    /* owner 2026-09-22, second Visme round: the take home cards are NOT held and played like the rest - the
-       reveal owns them. Holding them and then re-running the reveal overlapped (cards fading in while being
-       unmounted: the stutter), and a card whose entrance had not finished when the learner left was never
-       held at all, so it sat there fully visible before the sequence began. While away the reveal is wound
-       to zero, so no card exists to be seen; on arrival startTake(true) brings them in one at a time. */
-    if (s === 14 && this.state.take && this.state.take.step !== 0) { this.stopTake(); this.setState({ take: { step: 0 } }); }
-    const arm = () => { if (this.rootEl) window.__omnArm(this.rootEl, this.CHROME_SKIP); };
-    arm();
-    if (!this.armTimer) this.armTimer = setInterval(arm, 500);
-  }
-  playEntrance() {
-    const root = this.rootEl;
-    if (!root || this.reviewDriving) return;
-    if (typeof window.__omnPlay === "function" && root.querySelector("[data-omn-armed]")) {
-      window.__omnPlay(root);
-      /* owner 2026-09-22, on test copy C: the take home cards must arrive in their staggered sequence, and
-         that stagger is the timed reveal, not the CSS - so on arrival the reveal runs again from the top.
-         Nothing on that screen is the learner's to lose. Challenges (6) now arms like the rest: arming
-         rewinds only the look, so opened cards stay open and ease in with everything else. */
-      if (this.state.scene === 14 && !this.reviewDriving) this.startTake(true);
-      return;
-    }
-    /* nothing was armed (an older stamp, or the entrance had not finished when the scene left): leave it -
-       a visible reset is the one thing the owner ruled out */
-  }
-  replayEntrance() {
-    const root = this.rootEl;
-    if (!root || this.reviewDriving) return;
-    /* A stamped build has had its finished entrances DESTROYED by the layer release (animation:none
-       !important, so the layer un-pins and text stays sharp) - there is nothing left for a CSS toggle to
-       restart. The stamp therefore stashes each entrance as it clears it and provides __omnReplay, which
-       puts it back and re-arms the release. The toggle below is only for an unstamped page. */
-    if (typeof window.__omnReplay === "function") { window.__omnReplay(root); return; }
-    root.setAttribute("data-enter", "off");
-    void root.offsetHeight;
-    root.setAttribute("data-enter", "on");
-  }
-
-  /* Off screen (another Visme slide is current) or in a hidden tab: every CSS animation pauses via [data-idle].
-     Never touches the release logic in watchSeen(), and never fires in a review capture, where the page is visible. */
+  /* Off screen (another Visme slide is current) or in a hidden tab: every CSS animation pauses via [data-idle]
+     and resumes when the scene is shown again - what TINT 8620-5 does. Never fires in a review capture, where
+     the page is visible. */
   watchIdle() {
     const root = this.rootEl || document.body;
     if (!root || typeof IntersectionObserver === "undefined") return;
     this.idleOff = false; this.idleHidden = !!document.hidden;
     const set = () => { root.setAttribute("data-idle", (this.idleOff || this.idleHidden) ? "1" : "0"); };
-    /* off screen or a hidden page also means the learner has LEFT - watchArrival() replays the entrance on the
-       next input after either. Measured in the owner's deck 2026-09-22: both fire there when a slide is parked
-       with display:none; neither fires when a neighbouring slide is merely kept alive, which is what the
-       shared-store broadcast in watchArrival() covers. */
-    /* the observer coming back ON screen is an arrival in a deck that parks with display:none - play at once
-       rather than waiting for the mouse, so nothing sits held after the browser has restarted the rest */
-    this.idleIO = new IntersectionObserver(es => {
-      const wasOff = this.idleOff;
-      this.idleOff = !es.some(e => e.isIntersecting);
-      if (this.idleOff) this.markAway();
-      else if (wasOff && this.away && this.onArrive) this.onArrive();
-      set();
-    }, { threshold: 0 });
+    this.idleIO = new IntersectionObserver(es => { this.idleOff = !es.some(e => e.isIntersecting); set(); }, { threshold: 0 });
     this.idleIO.observe(root);
-    this.onIdleVis = () => { this.idleHidden = !!document.hidden; if (this.idleHidden) this.markAway(); set(); };
+    this.onIdleVis = () => { this.idleHidden = !!document.hidden; set(); };
     document.addEventListener("visibilitychange", this.onIdleVis);
     set();
   }
-  componentWillUnmount() { if (this.idleIO) this.idleIO.disconnect(); document.removeEventListener("visibilitychange", this.onIdleVis); if (this.onActive) window.removeEventListener("storage", this.onActive); if (this.onReset) window.removeEventListener("storage", this.onReset); if (this.onArrive) (this.arriveEvents || []).forEach(ev => window.removeEventListener(ev, this.onArrive)); clearInterval(this.armTimer); if (this.seenIO) this.seenIO.disconnect(); window.removeEventListener("resize", this.fit); window.removeEventListener("keydown", this.onKey); clearInterval(this.readyTimer); }
+  componentWillUnmount() { if (this.idleIO) this.idleIO.disconnect(); document.removeEventListener("visibilitychange", this.onIdleVis); window.removeEventListener("resize", this.fit); window.removeEventListener("keydown", this.onKey); clearInterval(this.readyTimer); }
 
   /* Background motion toggle pauses the ambient trace (CSS animations on .omn-trace). */
   applyMotion() { if (this.stageEl) this.stageEl.style.setProperty("--omn-motion", this.state.motion ? "running" : "paused"); document.querySelectorAll(".omn-trace *").forEach(el => { el.style.animationPlayState = this.state.motion ? "running" : "paused"; }); }
@@ -964,7 +807,7 @@ class Component extends DCLogic {
   /* Round 01 (Touch, 14 Sep 2026): question 4 is part of question 3 - it appears on screen 10 once question 3 is answered. Screen 11 is gone. */
   PAIR = { 10: 11 };
   hardReset() {
-    try { localStorage.removeItem(this.KEY); } catch (e) {} this.stopCount(); this.stopTake();
+    try { sessionStorage.removeItem(this.KEY); } catch (e) {} this.stopCount(); this.stopTake();
     this.setState({ fading: true, tip: null, refsOpen: false, walk: null, ranges: false, resetAsk: false });   /* fade out, reset, fade back in */
     setTimeout(() => this.setState({ scene: 1, visited: [1], answers: {}, ch: {}, chActive: null, chTick: 0, demo: null, take: null, fading: false }), 320);
   }
@@ -1011,7 +854,7 @@ class Component extends DCLogic {
   installReview() {
     this.readyTimer = setInterval(() => { const r = this.sceneReady(); if (r !== this.state.revReady) this.setState({ revReady: r }); }, 120);
     const self = this;
-    const baseline = n => ({ held: false, scene: n, dir: 1, walk: null, tip: null, ranges: false, refsOpen: false, link: null, ch: {}, chActive: null, chTick: 0, fading: false, take: { step: 6 }, demo: { step: 7, counts: [1, 1, 1, 1, 1, 1, 1] }, units: "mg", motion: false, tags: false, resetAsk: false, visited: Array.from({ length: n }, (_, i) => i + 1), answers: {} });
+    const baseline = n => ({ scene: n, dir: 1, walk: null, tip: null, ranges: false, refsOpen: false, link: null, ch: {}, chActive: null, chTick: 0, fading: false, take: { step: 6 }, demo: { step: 7, counts: [1, 1, 1, 1, 1, 1, 1] }, units: "mg", motion: false, tags: false, resetAsk: false, visited: Array.from({ length: n }, (_, i) => i + 1), answers: {} });
     const merge = (st, patch) => { const out = {}; for (const k of Object.keys(patch)) { const v = patch[k], cur = st[k]; out[k] = (v && typeof v === "object" && !Array.isArray(v) && cur && typeof cur === "object" && !Array.isArray(cur)) ? Object.assign({}, cur, v) : v; } return out; };
     const set = p => new Promise(res => self.setState(st => merge(st, p), res));
     const reset = n => new Promise(res => self.setState(baseline(n), res));
@@ -1151,7 +994,7 @@ class Component extends DCLogic {
     const s = this.state, cur = s.scene, isQ = this.isQ(cur), q = isQ ? this.Q[cur] : null, a = isQ ? this.ans(cur) : null;
     const explored = this.explored(cur), split = this.SCENE !== null, qSpan = split && !!this.SPAN[this.SCENE];
     const vals = {
-      crossNav: true, reviewTools: !split, live: !s.held, rootBg: split ? "transparent" : "#ECEBE8",
+      crossNav: true, reviewTools: !split, live: true, rootBg: split ? "transparent" : "#ECEBE8",
       rootRef: el => { this.rootEl = el; }, stageRef: el => { this.stageEl = el; if (el && this.fit) this.fit(); }, sceneRef: el => { if (el) this.sceneEl = el; },
       canvasRef: () => {},
       sceneRid: "s" + cur, readyAttr: s.revReady ? "true" : "false",
@@ -1312,7 +1155,7 @@ class Component extends DCLogic {
   }
 }
 </script>
-<script id="build-stamp">(function(){var T="Omnipod 5 Decision Making: Case demographics and clinical characteristics",M="Omnipod 5 Decision Making tint8787-omnipod-scenes/03-demographics v14 2026-09-22";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
-<script id="layer-release">(function(){var SAFE=/^(omnBarBounce|omnFade|omnFeatHead|omnFeatIn|omnFeatInB|omnInA|omnInB|omnPop|omnRoll|omnSoft|omnSoftB|omnSwipe|omnTitleRise|omnUp|omnZoomIn)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;if(names.length===1)el.dataset.omnEntrance=el.style.getPropertyValue("animation")||[s.animationName,s.animationDuration,s.animationTimingFunction,s.animationDelay,s.animationFillMode].join(" ");el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}window.__omnReplay=function(root){try{(root||document).querySelectorAll("[data-omn-entrance]").forEach(function(el){var v=el.dataset.omnEntrance;if(!v)return;["animation","transform","opacity","clip-path"].forEach(function(p){el.style.removeProperty(p);});void el.offsetHeight;el.style.animation=v;seen.set(el,Date.now());});}catch(e){}};window.__omnArm=function(root,skip){try{(root||document).querySelectorAll("[data-omn-entrance]").forEach(function(el){var v=el.dataset.omnEntrance;if(!v)return;if(skip&&el.matches(skip))return;if(el.hasAttribute("data-omn-armed"))return;["animation","transform","opacity","clip-path"].forEach(function(p){el.style.removeProperty(p);});void el.offsetHeight;el.style.animation=v;void el.offsetHeight;el.getAnimations().forEach(function(a){try{a.pause();a.currentTime=0;}catch(e){}});el.setAttribute("data-omn-armed","1");seen.set(el,9e15);});}catch(e){}};window.__omnPlay=function(root){try{(root||document).querySelectorAll("[data-omn-armed]").forEach(function(el){el.getAnimations().forEach(function(a){try{a.play();}catch(e){}});el.removeAttribute("data-omn-armed");seen.set(el,Date.now());});}catch(e){}};setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
+<script id="build-stamp">(function(){var T="Omnipod 5 Decision Making: Case demographics and clinical characteristics",M="Omnipod 5 Decision Making tint8787-omnipod-scenes/03-demographics v15 2026-09-22";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<script id="layer-release">(function(){var SAFE=/^(omnBarBounce|omnFade|omnFeatHead|omnFeatIn|omnFeatInB|omnInA|omnInB|omnPop|omnRoll|omnSoft|omnSoftB|omnSwipe|omnTitleRise|omnUp|omnZoomIn)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
 </body>
 </html>
