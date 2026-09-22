@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- build: Omnipod 5 Decision Making | tint8787-omnipod-scenes/04-challenges | v15 | 2026-09-22 -->
+<!-- build: Omnipod 5 Decision Making | tint8787-omnipod-scenes/04-challenges | v16 | 2026-09-22 -->
 <html>
 <head>
 <meta charset="utf-8">
@@ -10,7 +10,8 @@
 <script src="../support.js"></script>
 
 <title>Omnipod 5 Decision Making: Challenges in the management of this case</title>
-<meta name="build-version" content="Omnipod 5 Decision Making tint8787-omnipod-scenes/04-challenges v15 2026-09-22">
+
+<meta name="build-version" content="Omnipod 5 Decision Making tint8787-omnipod-scenes/04-challenges v16 2026-09-22">
 </head>
 <body>
 <x-dc>
@@ -23,6 +24,11 @@
     html, body { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     /* owner 2026-09-21: Visme keeps three slides alive at once; a scene that is off screen or in a hidden tab does no work. */
     [data-idle="1"] * { animation-play-state: paused !important; }
+    /* owner 2026-09-22 (late), TEST: the player loads the next slides hidden, so an entrance can play before the
+       learner arrives. A scene build on a hover-capable device holds its CONTENT at the first frame until the
+       first mouse movement, touch or key inside the slide; the title bar and footer play on load so the frame
+       reads as loaded. A hidden pre-loaded slide never receives an input, so it stays parked. */
+    [data-wait="1"] .omn-screen__body, [data-wait="1"] .omn-screen__body * { animation-play-state: paused !important; }
     /* owner 2026-09-21: a touch device starts still and stays still - the switch is not offered there. */
     @media (hover: none) { [data-review-id="g-motion"] { display: none !important; } }
     /* owner 2026-09-21: no drop-shadow on a touch device - a soft shadow on the whole scaled stage is re-drawn at zoom
@@ -752,8 +758,12 @@ class Component extends DCLogic {
     };
     this.fit(); window.addEventListener("resize", this.fit);
     this._lastScene = this.state.scene;
-    if (this.state.scene === 5) this.startCount();
-    if (this.state.scene === 14) this.startTake();
+    this.waiting = this.holdForInput();
+    if (this.waiting && this.rootEl) this.rootEl.setAttribute("data-wait", "1");
+    if (!this.waiting) {
+      if (this.state.scene === 5) this.startCount();
+      if (this.state.scene === 14) this.startTake();
+    }
     this.rdCheck();
     this.onKey = e => {
       if (e.key === "Escape") this.setState({ walk: null, refsOpen: false, tip: null, ranges: false, link: null, resetAsk: false });
@@ -765,6 +775,30 @@ class Component extends DCLogic {
     this.applyMotion();
     this.installReview();
     this.watchIdle();
+    this.watchFirstInput();
+  }
+
+  /* TEST (owner 2026-09-22, late): hold the content until the learner's first input on the slide. Scene builds
+     inside an iframe on a hover-capable device only - the whole-activity page, a direct tab, a review capture
+     and a phone (where the player's overlay can swallow the first tap) all play on load as before. */
+  holdForInput() {
+    if (this.SCENE === null || typeof window === "undefined") return false;
+    let inFrame = false; try { inFrame = window.self !== window.top; } catch (e) { inFrame = true; }
+    return inFrame && this.hoverable();
+  }
+  watchFirstInput() {
+    if (!this.waiting) return;
+    this.firstInputEvents = ["pointermove", "pointerdown", "touchstart", "wheel", "keydown"];
+    this.onFirstInput = () => {
+      if (!this.waiting) return;
+      this.waiting = false;
+      this.firstInputEvents.forEach(ev => window.removeEventListener(ev, this.onFirstInput));
+      if (this.rootEl) this.rootEl.removeAttribute("data-wait");
+      if (this.reviewDriving) return;
+      if (this.state.scene === 5) this.startCount();
+      if (this.state.scene === 14) this.startTake();
+    };
+    this.firstInputEvents.forEach(ev => window.addEventListener(ev, this.onFirstInput, { passive: true }));
   }
 
   /* Off screen (another Visme slide is current) or in a hidden tab: every CSS animation pauses via [data-idle]
@@ -781,7 +815,7 @@ class Component extends DCLogic {
     document.addEventListener("visibilitychange", this.onIdleVis);
     set();
   }
-  componentWillUnmount() { if (this.idleIO) this.idleIO.disconnect(); document.removeEventListener("visibilitychange", this.onIdleVis); window.removeEventListener("resize", this.fit); window.removeEventListener("keydown", this.onKey); clearInterval(this.readyTimer); }
+  componentWillUnmount() { if (this.onFirstInput) (this.firstInputEvents || []).forEach(ev => window.removeEventListener(ev, this.onFirstInput)); if (this.idleIO) this.idleIO.disconnect(); document.removeEventListener("visibilitychange", this.onIdleVis); window.removeEventListener("resize", this.fit); window.removeEventListener("keydown", this.onKey); clearInterval(this.readyTimer); }
 
   /* Background motion toggle pauses the ambient trace (CSS animations on .omn-trace). */
   applyMotion() { if (this.stageEl) this.stageEl.style.setProperty("--omn-motion", this.state.motion ? "running" : "paused"); document.querySelectorAll(".omn-trace *").forEach(el => { el.style.animationPlayState = this.state.motion ? "running" : "paused"; }); }
@@ -1155,7 +1189,7 @@ class Component extends DCLogic {
   }
 }
 </script>
-<script id="build-stamp">(function(){var T="Omnipod 5 Decision Making: Challenges in the management of this case",M="Omnipod 5 Decision Making tint8787-omnipod-scenes/04-challenges v15 2026-09-22";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
-<script id="layer-release">(function(){var SAFE=/^(omnBarBounce|omnFade|omnFeatHead|omnFeatIn|omnFeatInB|omnInA|omnInB|omnPop|omnRoll|omnSoft|omnSoftB|omnSwipe|omnTitleRise|omnUp|omnZoomIn)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
+<script id="build-stamp">(function(){var T="Omnipod 5 Decision Making: Challenges in the management of this case",M="Omnipod 5 Decision Making tint8787-omnipod-scenes/04-challenges v16 2026-09-22";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<script id="layer-release">(function(){var SAFE=/^(omnBarBounce|omnFade|omnFeatHead|omnFeatIn|omnFeatInB|omnInA|omnInB|omnPop|omnRoll|omnSoft|omnSoftB|omnSwipe|omnTitleRise|omnUp|omnZoomIn)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;if(el.getAnimations&&el.getAnimations().some(function(a){return a.playState==="paused";})){seen.set(el,now);return;}var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
 </body>
 </html>
