@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[TEST] Omnipod 5 entrance behaviour - two candidates</title>
+<style>
+  :root { --ink: #1B1A1A; --line: #E6E4DF; --a: #8D61C8; --b: #00A2AC; }
+  body { font: 15px/1.55 system-ui, sans-serif; color: var(--ink); margin: 0; padding: 32px 22px 56px; }
+  main { max-width: 44em; margin: 0 auto; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .sub { color: #6b6b6b; margin: 0 0 26px; }
+  h2 { font-size: 16px; margin: 30px 0 8px; padding-left: 10px; border-left: 4px solid var(--line); }
+  h2.a { border-color: var(--a); }
+  h2.b { border-color: var(--b); }
+  ul { padding-left: 20px; }
+  li { margin: 4px 0; }
+  code { background: #F1EFE9; padding: 1px 5px; border-radius: 3px; font-size: 13px; }
+  .note { background: #F1EFE9; border-radius: 8px; padding: 14px 16px; margin: 22px 0; }
+  a { color: #6E3FB0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Entrance behaviour - two candidates, 22 September 2026</h1>
+  <p class="sub">A test copy only. The live activity is unchanged at
+  <code>tint8787-omnipod-scenes</code>, scenes v11.</p>
+
+  <div class="note">
+    <strong>What is being tested.</strong> In the Visme player a scene's entrance animations have
+    already played by the time you arrive at the slide. Two different fixes are published here.
+    Put each on its own slide in a blank Visme project, then move back and forth and see which one
+    animates on arrival.
+  </div>
+
+  <h2 class="a">A - held until shown, replays on return</h2>
+  <ul>
+    <li><a href="A-visibility/03-demographics/">03-demographics</a> - seven cards and counting numbers</li>
+    <li><a href="A-visibility/04-challenges/">04-challenges</a> - five cards you open yourself</li>
+  </ul>
+  <p>Waits to be told it is actually on screen before animating, and animates again each time you
+  come back. Measured off the real player this trigger never fires, so this one may show
+  <em>no</em> animation at all - that result is just as useful as a pass.</p>
+
+  <h2 class="b">B - no hold, animations paused while parked</h2>
+  <ul>
+    <li><a href="B-like-cll/03-demographics/">03-demographics</a></li>
+    <li><a href="B-like-cll/04-challenges/">04-challenges</a></li>
+  </ul>
+  <p>What the Lilly CLL activity does, and that one animates correctly on arrival. The scene draws
+  straight away and its entrance is held at the first frame while the slide is parked.</p>
+
+  <h2>What to look for, on each of the four</h2>
+  <ul>
+    <li>Arrive at the slide - does the content ease in, or is it already settled?</li>
+    <li>Move away and come back - does it ease in again?</li>
+    <li>On 04-challenges, open two or three cards, leave, come back - are they still open?
+      They should be. Losing them is a failure.</li>
+    <li>On 03-demographics, the numbers must not count up again from zero on a return.</li>
+  </ul>
+
+  <p class="sub">Each page carries a coloured label in its top-left corner naming the variant and
+  the scene, so a slide pointing at the wrong copy is obvious.</p>
+</main>
+</body>
+</html>
