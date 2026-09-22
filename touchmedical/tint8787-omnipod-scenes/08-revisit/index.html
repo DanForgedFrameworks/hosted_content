@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- build: Omnipod 5 Decision Making | tint8787-omnipod-scenes/08-revisit | v9 | 2026-09-21 -->
+<!-- build: Omnipod 5 Decision Making | tint8787-omnipod-scenes/08-revisit | v10 | 2026-09-22 -->
 <html>
 <head>
 <meta charset="utf-8">
@@ -10,7 +10,7 @@
 <script src="../support.js"></script>
 
 <title>Omnipod 5 Decision Making: Revisit</title>
-<meta name="build-version" content="Omnipod 5 Decision Making tint8787-omnipod-scenes/08-revisit v9 2026-09-21">
+<meta name="build-version" content="Omnipod 5 Decision Making tint8787-omnipod-scenes/08-revisit v10 2026-09-22">
 </head>
 <body>
 <x-dc>
@@ -203,7 +203,7 @@
               <button type="button" class="omn-card" data-review="reveal" data-review-id="s6-ch-{{ c.key }}" onClick="{{ c.open }}" aria-expanded="{{ c.expanded }}" style="display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:12px;min-height:176px;width:100%;font:inherit;text-align:left;cursor:pointer;border-color:{{ c.border }};background:{{ c.bg }};transition:border-color .3s ease,background .3s ease,box-shadow .3s ease;box-shadow:{{ c.shadow }}">
                 <span class="omn-ico-tile" style="width:52px;height:52px;flex-basis:52px"><span class="omn-ico omn-ico--{{ c.icon }}" aria-hidden="true" style="width:30px;height:30px;flex-basis:30px"></span></span>
                 <span style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;width:100%"><span style="font-weight:600;font-size:18px;color:#1B1A1A;line-height:1.25">{{ c.label }}</span><sc-if value="{{ c.closed }}" hint-placeholder-val="{{ true }}"><span class="omn-ico omn-ico--chevron" aria-hidden="true" style="color:#8D61C8;transform:rotate(90deg);width:20px;height:20px;flex-basis:20px;animation:omnBob 1.8s ease-in-out infinite"></span></sc-if><sc-if value="{{ c.on }}" hint-placeholder-val="{{ false }}"><span class="omn-ico omn-ico--check" aria-hidden="true" style="color:#00A2AC;width:18px;height:18px;flex-basis:18px"></span></sc-if></span>
-                <sc-if value="{{ c.on }}" hint-placeholder-val="{{ false }}"><span style="display:flex;flex-direction:column;gap:6px;font-size:16px;line-height:1.35;color:#454545;animation:omnSoft 1.1s ease both"><sc-if value="{{ c.hasGloss }}" hint-placeholder-val="{{ false }}"><span data-copy="placeholder">{{ c.pre }}<span data-review="glossary" data-review-id="s6-gloss-cgm" data-gloss="continuous glucose monitoring" onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ glossTap }}" onKeyDown="{{ glossKey }}" role="button" tabIndex="0" class="omn-gloss" style="border-bottom:1px dotted #8D61C8;cursor:help">CGM</span>{{ c.post }}</span></sc-if><sc-if value="{{ c.noGloss }}" hint-placeholder-val="{{ true }}"><span>{{ c.detail }}</span></sc-if></span></sc-if>
+                <sc-if value="{{ c.on }}" hint-placeholder-val="{{ false }}"><span style="display:flex;flex-direction:column;gap:6px;font-size:16px;line-height:1.35;color:#454545;animation:omnSoft 1.1s ease both"><sc-if value="{{ c.hasGloss }}" hint-placeholder-val="{{ false }}"><span data-copy="placeholder">{{ c.pre }}<span data-review="glossary" data-review-id="s6-gloss-cgm" data-gloss="Continuous glucose monitoring" onMouseEnter="{{ glossEnter }}" onMouseLeave="{{ glossLeave }}" onClick="{{ glossTap }}" onKeyDown="{{ glossKey }}" role="button" tabIndex="0" class="omn-gloss" style="border-bottom:1px dotted #8D61C8;cursor:help">CGM</span>{{ c.post }}</span></sc-if><sc-if value="{{ c.noGloss }}" hint-placeholder-val="{{ true }}"><span>{{ c.detail }}</span></sc-if></span></sc-if>
               </button>
             </div>
           </sc-for>
@@ -484,7 +484,7 @@
               </div>
             </sc-if>
             <sc-if value="{{ walkIsGloss }}" hint-placeholder-val="{{ false }}">
-              <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start"><span style="font-size:16px;color:#1B1A1A">Managing <span style="border-bottom:1px dotted #8D61C8">CGM</span> in a physical role</span><span style="background:#1B1A1A;color:#fff;border-radius:8px;padding:6px 10px;font-size:13px">continuous glucose monitoring</span></div>
+              <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start"><span style="font-size:16px;color:#1B1A1A">Managing <span style="border-bottom:1px dotted #8D61C8">CGM</span> in a physical role</span><span style="background:#1B1A1A;color:#fff;border-radius:8px;padding:6px 10px;font-size:13px">Continuous glucose monitoring</span></div>
             </sc-if>
             <sc-if value="{{ walkIsLink }}" hint-placeholder-val="{{ false }}">
               <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start"><span style="font-size:14px;color:#1B1A1A">You are about to leave this resource for omnipod.com</span><div style="display:flex;gap:10px"><span class="omn-btn omn-btn--primary" style="min-height:34px;padding:4px 12px;font-size:14px">Continue to omnipod.com<span class="omn-ico omn-ico--chevron"></span></span><span class="omn-btn omn-btn--secondary" style="min-height:34px;padding:4px 12px;font-size:14px">Stay here</span></div></div>
@@ -553,7 +553,7 @@ class Component extends DCLogic {
     10: { setup: { mg: "The patient is spending 35% of the time with a blood glucose of >180 mg/dL (>10.0 mmol/L)", mmol: "The patient is spending 35% of the time with a blood glucose of >10.0 mmol/L (>180 mg/dL)" },
       stem: "Would the patient be considered as meeting their glycemic targets?",
       options: ["No - the patient is spending too much time in hyperglycemia", "Yes – the patient is meeting target ranges"], correct: [0], correctLabel: "Answer",
-      gloss: { abbr: "TIR", def: "time in range", rid: "s10-gloss-tir" },   /* owner 2026-09-11: TIR is defined nowhere earlier */
+      gloss: { abbr: "TIR", def: "Time in range", rid: "s10-gloss-tir" },   /* owner 2026-09-11: TIR is defined nowhere earlier. AL 21 Sep (I7): every definition opens with a capital */
       correctText: { mg: "the target TIR is (70–180 mg/dL; 3.9–10.0 mmol/L) and <25% of time >180 mg/dL (>10.0 mmol/L)", mmol: "the target TIR is (3.9–10.0 mmol/L; 70–180 mg/dL) and <25% of time >10.0 mmol/L (>180 mg/dL)" },
       readouts: [{ label: { mg: "Time >180 mg/dL", mmol: "Time >10.0 mmol/L" }, value: "35%", fill: 35, target: 25, alert: true, targetText: "<25%" }] },
     11: { setup: "", stem: "If the patient was also spending too much time in hypoglycemia, what would the priority be for adjustment?",
@@ -562,7 +562,7 @@ class Component extends DCLogic {
     12: { setup: "Following investigation, the patient is experiencing hyperglycemia 2 to 3 hours after meals due to under bolusing",
       stem: "What action do you take?", multi: true,
       options: ["Assess bolus timing", "Assess if patient is overriding the calculator and underdosing", "Assess if they are using Custom Foods", "Consider strengthening I:C ratios by 10–20%", "Lower algorithm target glucose"], correct: [0, 1, 2, 3, 4], correctLabel: "Answer",
-      optGloss: { abbr: "I:C", def: "insulin-to-carbohydrate", rid: "s12-gloss-ic" },   /* owner 15 Sep: first appearance gets a hover; wording Proposed, with Touch */
+      optGloss: { abbr: "I:C", def: "Insulin-to-carbohydrate", rid: "s12-gloss-ic" },   /* owner 15 Sep: first appearance carries the definition. AL 21 Sep (Q13) confirmed the wording - no longer Proposed; capitalised per I7 */
       correctText: "All options may help with reducing post-meal hyperglycemic episodes.\n\nWeakening the correction factor can prevent hypoglycemia post-meal.\n\nThe need for carb counting accuracy can be simplified using the Custom Food feature, which allows for set carb amounts for meals to be pre-specified.\n\nBolus timing should be 10–15 mins before all meals and snacks.\n\nIf a patient is overriding the calculator, they need education to follow the recommended bolus dose.\n\nA lower target glucose will make the Omnipod® 5 algorithm correct highs sooner and with more insulin, reducing time spent above range." },
     13: { setup: "The patient is sometimes experiencing high blood glucose following a low", stem: "What action do you take?",
       options: ["Lower algorithm target glucose", "Re-educate on how to treat mild hypoglycemia", "Strengthen the correction factor"], correct: [1], correctLabel: "Correct Answer",
@@ -715,9 +715,10 @@ class Component extends DCLogic {
   DEMO = [
     { icon: "age", num: 22, post: "years of age", span: 2 },
     { icon: "male", post: "Male", big: true, span: 2 },
-    { icon: "duration", abbr: "T1D", def: "type 1 diabetes", mid: " for", num: 20, post: "years", rid: "s5-gloss-t1d", span: 2 },
-    { icon: "mdi", pre: "Treatment with ", abbr: "MDI", def: "multiple daily injections", mid: " for", num: 20, post: "years", rid: "s5-gloss-mdi", span: 3 },
-    { icon: "hba1c", abbr: "HbA1c", def: "glycated hemoglobin", num: 9.4, unit: "%", post: "", rid: "s5-gloss-hba1c", span: 3 },
+    /* AL 21 Sep (I7): every abbreviation definition opens with a capital */
+    { icon: "duration", abbr: "T1D", def: "Type 1 diabetes", mid: " for", num: 20, post: "years", rid: "s5-gloss-t1d", span: 2 },
+    { icon: "mdi", pre: "Treatment with ", abbr: "MDI", def: "Multiple daily injections", mid: " for", num: 20, post: "years", rid: "s5-gloss-mdi", span: 3 },
+    { icon: "hba1c", abbr: "HbA1c", def: "Glycated hemoglobin", num: 9.4, unit: "%", post: "", rid: "s5-gloss-hba1c", span: 3 },
     { icon: "testing", post: "Inconsistent use of blood glucose testing", big: true, span: 3 },
     { icon: "labour", post: "Manual labor job", big: true, span: 3 }
   ];
@@ -929,12 +930,12 @@ class Component extends DCLogic {
     if (this.SCENE === null) add("s7-complete", 7, "Q&A gate - all six answered, revisit numbers enabled", { patch: { answers: this.allRevealed() } });
     for (let k = 1; k < this.DEMO.length; k++) add("s5-step-" + k, 5, "Case demographics - " + k + " of " + this.DEMO.length + " cards shown", { patch: { demo: { step: k, counts: this.DEMO.map((_, i) => i < k ? 1 : 0) } }, partial: true });   /* audit 15 Sep: the reveal step by step */
     add("s5-hba1c-ranges", 5, "HbA1c target note (ADA) - opened", { patch: { ranges: true }, requires: ["s5-base"] });
-    [["t1d", "T1D - type 1 diabetes"], ["mdi", "MDI - multiple daily injections"], ["hba1c", "HbA1c - glycated hemoglobin"]].forEach(([k, l]) => add("s5-gloss-" + k, 5, l, { via: "s5-gloss-" + k, action: "hover", requires: ["s5-base"] }));
+    [["t1d", "T1D - Type 1 diabetes"], ["mdi", "MDI - Multiple daily injections"], ["hba1c", "HbA1c - Glycated hemoglobin"]].forEach(([k, l]) => add("s5-gloss-" + k, 5, l, { via: "s5-gloss-" + k, action: "hover", requires: ["s5-base"] }));
     this.CHALLENGES.forEach(c => add("s6-ch-" + c.key, 6, c.label + " - opened", { patch: { ch: { [c.key]: true }, chActive: c.key } }));
     add("s6-complete", 6, "All five challenges opened - initiated line and Next shown", { patch: { ch: { missing: true, needle: true, labour: true, carbs: true, burnout: true }, chActive: "burnout" } });
-    add("s6-gloss-cgm", 6, "CGM - continuous glucose monitoring", { via: "s6-gloss-cgm", action: "hover", requires: ["s6-ch-labour"] });
-    add("s12-gloss-ic", 12, "I:C - insulin-to-carbohydrate", { via: "s12-gloss-ic", action: "hover" });
-    add("s10-gloss-tir", 10, "TIR - time in range", { via: "s10-gloss-tir", action: "hover", requires: ["s10-revealed-correct"] });
+    add("s6-gloss-cgm", 6, "CGM - Continuous glucose monitoring", { via: "s6-gloss-cgm", action: "hover", requires: ["s6-ch-labour"] });
+    add("s12-gloss-ic", 12, "I:C - Insulin-to-carbohydrate", { via: "s12-gloss-ic", action: "hover" });
+    add("s10-gloss-tir", 10, "TIR - Time in range", { via: "s10-gloss-tir", action: "hover", requires: ["s10-revealed-correct"] });
     if (this.SCENE === null) add("s15-complete", 15, "Revisit page - all screens completed, every section revisitable", { patch: { visited: Array.from({ length: 15 }, (_, i) => i + 1), answers: this.allRevealed() } });
     for (let n = 8; n <= 13; n++) {
       const q = this.Q[n], scr = n === 11 ? 10 : n;
@@ -1178,7 +1179,7 @@ class Component extends DCLogic {
   }
 }
 </script>
-<script id="build-stamp">(function(){var T="Omnipod 5 Decision Making: Revisit",M="Omnipod 5 Decision Making tint8787-omnipod-scenes/08-revisit v9 2026-09-21";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<script id="build-stamp">(function(){var T="Omnipod 5 Decision Making: Revisit",M="Omnipod 5 Decision Making tint8787-omnipod-scenes/08-revisit v10 2026-09-22";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
 <script id="layer-release">(function(){var SAFE=/^(omnBarBounce|omnFade|omnFeatHead|omnFeatIn|omnFeatInB|omnInA|omnInB|omnPop|omnRoll|omnSoft|omnSoftB|omnSwipe|omnTitleRise|omnUp|omnZoomIn)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
 </body>
 </html>
