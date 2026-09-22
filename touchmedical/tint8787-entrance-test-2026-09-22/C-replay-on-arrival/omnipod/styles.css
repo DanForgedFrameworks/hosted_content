@@ -1,0 +1,4 @@
+/* Omnipod® design kit - entry point.
+   A rendered design receives ONLY this file's transitive @import closure. */
+@import "./tokens/index.css";
+@import "./_ds_bundle.css";
