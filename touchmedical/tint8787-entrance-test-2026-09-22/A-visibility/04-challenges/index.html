@@ -10,7 +10,6 @@
 <script src="../support.js"></script>
 
 <title>[TEST A] Omnipod 5: Challenges in the management of this case</title>
-
 <meta name="build-version" content="Omnipod 5 Decision Making tint8787-omnipod-scenes/04-challenges v11 2026-09-22">
 </head>
 <body>
@@ -890,7 +889,11 @@ class Component extends DCLogic {
 
   componentDidMount() {
     this.fit = () => {
-      if (this.state.held) return;   /* the stage mounts on release and calls fit itself */
+      /* owner 2026-09-22: this used to bail out while `held`, because the stage did not exist until
+         release and mounted calling fit itself. The screen now always renders, so bailing out left a
+         held scene UNSCALED and off-centre - the stage sat at its natural 1320x720 with no
+         translate(-50%,-50%), which reads as a thumbnail shoved down and right. Fit whenever there is
+         a stage to fit. */
       /* owner 2026-09-21: the LAYOUT viewport - a pinch on iOS changes innerWidth/innerHeight to the visual viewport and
          every pinch re-fitted the stage (the snap-back and jitter). clientWidth/Height hold still; the browser zooms. */
       const de = document.documentElement, vw = de.clientWidth || window.innerWidth, vh = de.clientHeight || window.innerHeight;
