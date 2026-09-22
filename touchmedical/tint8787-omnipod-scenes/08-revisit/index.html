@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- build: Omnipod 5 Decision Making | tint8787-omnipod-scenes/08-revisit | v10 | 2026-09-22 -->
+<!-- build: Omnipod 5 Decision Making | tint8787-omnipod-scenes/08-revisit | v11 | 2026-09-22 -->
 <html>
 <head>
 <meta charset="utf-8">
@@ -10,7 +10,7 @@
 <script src="../support.js"></script>
 
 <title>Omnipod 5 Decision Making: Revisit</title>
-<meta name="build-version" content="Omnipod 5 Decision Making tint8787-omnipod-scenes/08-revisit v10 2026-09-22">
+<meta name="build-version" content="Omnipod 5 Decision Making tint8787-omnipod-scenes/08-revisit v11 2026-09-22">
 </head>
 <body>
 <x-dc>
@@ -538,7 +538,7 @@ class Component extends DCLogic {
     8: { setup: "The patient is experiencing >5% time in hypoglycemia and using the automated mode only 75% of the time",
       stem: "Based on the information above, what might help reduce the hypoglycemia?",
       options: ["Increase use of automated mode", "Investigate bolus doses", "Investigate carb intake", "Reduce the use of automated mode"], correct: [0],
-      correctLabel: "Correct answer",
+      correctLabel: "Answer", tone: "correct",   /* owner 2026-09-22: was "Correct answer", which read "CORRECT / CORRECT ANSWER" under the outcome line. Tone unchanged. */
       correctText: "The target is to use the automated mode at least 90% of the time to prevent hypoglycemia. When in automated mode, the Omnipod® 5 system will pause insulin delivery for predicted or actual hypoglycemia, reducing the time spent below range.",
       perOption: { 1: "Investigating bolus doses does not address the cause of hypoglycemia - lows are arising from recovery patterns and counter‑regulation rather than from incorrect meal bolusing.",
         3: "The target is to use the automated mode at least 90% of the time to prevent hypoglycemia. When in automated mode, the Omnipod® 5 system will pause insulin delivery for predicted or actual hypoglycemia, reducing the time spent below range.",
@@ -565,7 +565,7 @@ class Component extends DCLogic {
       optGloss: { abbr: "I:C", def: "Insulin-to-carbohydrate", rid: "s12-gloss-ic" },   /* owner 15 Sep: first appearance carries the definition. AL 21 Sep (Q13) confirmed the wording - no longer Proposed; capitalised per I7 */
       correctText: "All options may help with reducing post-meal hyperglycemic episodes.\n\nWeakening the correction factor can prevent hypoglycemia post-meal.\n\nThe need for carb counting accuracy can be simplified using the Custom Food feature, which allows for set carb amounts for meals to be pre-specified.\n\nBolus timing should be 10–15 mins before all meals and snacks.\n\nIf a patient is overriding the calculator, they need education to follow the recommended bolus dose.\n\nA lower target glucose will make the Omnipod® 5 algorithm correct highs sooner and with more insulin, reducing time spent above range." },
     13: { setup: "The patient is sometimes experiencing high blood glucose following a low", stem: "What action do you take?",
-      options: ["Lower algorithm target glucose", "Re-educate on how to treat mild hypoglycemia", "Strengthen the correction factor"], correct: [1], correctLabel: "Correct Answer",
+      options: ["Lower algorithm target glucose", "Re-educate on how to treat mild hypoglycemia", "Strengthen the correction factor"], correct: [1], correctLabel: "Answer", tone: "correct",   /* owner 2026-09-22: was "Correct Answer" - same duplication as question 1. Tone unchanged. */
       correctText: "Hyperglycemia can follow hypoglycemia if lows are treated with too many grams of carbohydrate",
       perOption: { 0: "Lowering the algorithm target glucose will not address highs after a low, because rebound hyperglycemia is not driven by the target glucose.",
         2: "Strengthening the correction factor will not address highs after a low, because rebound hyperglycemia is not driven by how aggressively the system corrects highs." } }
@@ -1003,7 +1003,10 @@ class Component extends DCLogic {
       const wrong = q.multi ? [] : picked.filter(i => !q.correct.includes(i));
       const gotIt = !q.multi && wrong.length === 0;
       const ct = this.u(q.correctText), gi = q.gloss ? ct.indexOf(q.gloss.abbr) : -1;   /* an abbreviation in the answer gets its hover */
-      fb.push({ cls: q.correctLabel === "Answer" ? "omn-feedback--info" : "omn-feedback--correct", ico: q.correctLabel === "Answer" ? "info" : "check", hasLabel: true, label: q.correctLabel, text: ct,
+      /* owner 2026-09-22: the panel's tone is declared per question (`tone: "correct"`), not inferred from the
+         label text. It used to key off correctLabel === "Answer", so evening up the wording would have silently
+         restyled questions 1 and 6 from the teal check panel to the info panel. Tone and wording are separate. */
+      fb.push({ cls: q.tone === "correct" ? "omn-feedback--correct" : "omn-feedback--info", ico: q.tone === "correct" ? "check" : "info", hasLabel: true, label: q.correctLabel, text: ct,
         hasGloss: gi > -1, pre: gi > -1 ? ct.slice(0, gi) : "", post: gi > -1 ? ct.slice(gi + q.gloss.abbr.length) : "", gAbbr: gi > -1 ? q.gloss.abbr : "", gDef: gi > -1 ? q.gloss.def : "", gRid: gi > -1 ? q.gloss.rid : "",
         hasOutcome: !q.multi, outcome: gotIt ? "Correct" : "Incorrect", outcomeInk: gotIt ? "#00A2AC" : "#F75E4C" });
       /* Owner 10 Sep: show only the learner's own answer and, if wrong, the correct one. The learner's own rationale goes first. */
@@ -1179,7 +1182,7 @@ class Component extends DCLogic {
   }
 }
 </script>
-<script id="build-stamp">(function(){var T="Omnipod 5 Decision Making: Revisit",M="Omnipod 5 Decision Making tint8787-omnipod-scenes/08-revisit v10 2026-09-22";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<script id="build-stamp">(function(){var T="Omnipod 5 Decision Making: Revisit",M="Omnipod 5 Decision Making tint8787-omnipod-scenes/08-revisit v11 2026-09-22";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
 <script id="layer-release">(function(){var SAFE=/^(omnBarBounce|omnFade|omnFeatHead|omnFeatIn|omnFeatInB|omnInA|omnInB|omnPop|omnRoll|omnSoft|omnSoftB|omnSwipe|omnTitleRise|omnUp|omnZoomIn)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
 </body>
 </html>
