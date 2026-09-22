@@ -716,10 +716,12 @@ class Component extends DCLogic {
   componentDidUpdate() { const prev = this._lastScene; this._lastScene = this.state.scene; this.persist(); if (this.state.scene === 5 && prev !== 5 && !this.reviewDriving) this.startCount(); if (this.state.scene === 14 && prev !== 14 && !this.reviewDriving) this.startTake(); this.rdCheck(); }
 
   /* Take home messages release one at a time: 0.9 s ease-in + 0.7 s hold each. Reduced motion shows all six at once. */
-  startTake() {
+  startTake(force) {
     this.stopTake();
     const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce || (this.state.take && this.state.take.step >= this.TAKE.length)) { this.setState({ take: { step: this.TAKE.length } }); return; }
+    /* a finished reveal stays finished on a revisit within the page - but `force` (an arrival at the Visme
+       slide, owner 2026-09-22) runs the staggered sequence again from the top: that stagger IS the entrance */
+    if (reduce || (!force && this.state.take && this.state.take.step >= this.TAKE.length)) { this.setState({ take: { step: this.TAKE.length } }); return; }
     const run = i => { if (this.state.scene !== 14) return; this.setState({ take: { step: i } }); if (i < this.TAKE.length) this.takeTimer = setTimeout(() => run(i + 1), i === 0 ? 700 : 1600); };
     run(0);
   }
@@ -829,7 +831,7 @@ class Component extends DCLogic {
     let inFrame = false; try { inFrame = window.self !== window.top; } catch (e) { inFrame = true; }
     if (!inFrame) return;
     const KEY = "omn8787-active", me = String(this.SCENE), s = this.SCENE;
-    const decorative = !(s === 5 || s === 6 || (s >= 8 && s <= 13));
+    const decorative = !(s === 5 || (s >= 8 && s <= 13));
     this.away = false;
     let lastSaid = 0;
     this.onActive = e => { if (e.key === KEY && e.newValue && e.newValue.split(":")[0] !== me) this.markAway(); };
@@ -853,8 +855,14 @@ class Component extends DCLogic {
   CHROME_SKIP = ".omn-titlebar, .omn-titlebar *, .omn-footer, .omn-footer *, .omn-btn, .omn-screen__body";
   markAway() {
     this.away = true;
-    const s = this.SCENE, decorative = !(s === 5 || s === 6 || (s >= 8 && s <= 13));
+    const s = this.SCENE, decorative = !(s === 5 || (s >= 8 && s <= 13));
     if (!decorative || this.reviewDriving || typeof window.__omnArm !== "function") return;
+    /* owner 2026-09-22, second Visme round: the take home cards are NOT held and played like the rest - the
+       reveal owns them. Holding them and then re-running the reveal overlapped (cards fading in while being
+       unmounted: the stutter), and a card whose entrance had not finished when the learner left was never
+       held at all, so it sat there fully visible before the sequence began. While away the reveal is wound
+       to zero, so no card exists to be seen; on arrival startTake(true) brings them in one at a time. */
+    if (s === 14 && this.state.take && this.state.take.step !== 0) { this.stopTake(); this.setState({ take: { step: 0 } }); }
     const arm = () => { if (this.rootEl) window.__omnArm(this.rootEl, this.CHROME_SKIP); };
     arm();
     if (!this.armTimer) this.armTimer = setInterval(arm, 500);
@@ -862,7 +870,15 @@ class Component extends DCLogic {
   playEntrance() {
     const root = this.rootEl;
     if (!root || this.reviewDriving) return;
-    if (typeof window.__omnPlay === "function" && root.querySelector("[data-omn-armed]")) { window.__omnPlay(root); return; }
+    if (typeof window.__omnPlay === "function" && root.querySelector("[data-omn-armed]")) {
+      window.__omnPlay(root);
+      /* owner 2026-09-22, on test copy C: the take home cards must arrive in their staggered sequence, and
+         that stagger is the timed reveal, not the CSS - so on arrival the reveal runs again from the top.
+         Nothing on that screen is the learner's to lose. Challenges (6) now arms like the rest: arming
+         rewinds only the look, so opened cards stay open and ease in with everything else. */
+      if (this.state.scene === 14 && !this.reviewDriving) this.startTake(true);
+      return;
+    }
     /* nothing was armed (an older stamp, or the entrance had not finished when the scene left): leave it -
        a visible reset is the one thing the owner ruled out */
   }
