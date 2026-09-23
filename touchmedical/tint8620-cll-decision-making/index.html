@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- build: CLL Decision Making | tint8620-cll-decision-making | v11 | 2026-09-21 -->
+<!-- build: CLL Decision Making | tint8620-cll-decision-making | v12 | 2026-09-23 -->
 <html>
 <head>
 <meta charset="utf-8">
@@ -9,7 +9,7 @@
 <script src="./support.js"></script>
 
 <title>CLL Decision Making: Patient focused (single page)</title>
-<meta name="build-version" content="CLL Decision Making tint8620-cll-decision-making v11 2026-09-21">
+<meta name="build-version" content="CLL Decision Making tint8620-cll-decision-making v12 2026-09-23">
 </head>
 <body>
 <x-dc>
@@ -22,6 +22,11 @@
   html, body { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   /* owner 2026-09-21: Visme keeps three slides alive at once; a scene that is off screen or in a hidden tab does no work. */
   [data-idle="1"] * { animation-play-state: paused !important; }
+  /* owner 2026-09-23, the embed behaviour standard (touchmedical-html contract.md section 4): a scene build in a
+     frame on a hover-capable device holds its CONTENT at the first frame until the learner's first input on the
+     slide - the Visme player pre-loads the next slides hidden, so an entrance would otherwise play unseen. The
+     title bar plays on load so the frame reads as loaded. */
+  [data-wait="1"] [data-review="scene"], [data-wait="1"] [data-review="scene"] * { animation-play-state: paused !important; }
   /* owner 2026-09-21: a touch device starts still and stays still - the switch is not offered there. */
   @media (hover: none) { [data-review-id="g-motion"] { display: none !important; } }
   a { color: #E1251B; text-decoration: none; }
@@ -653,7 +658,7 @@
   </sc-if>
 
   <sc-if value="{{ tipOn }}" hint-placeholder-val="{{ false }}">
-    <div class="lly-footnote" style="position:absolute;z-index:9;max-width:380px;white-space:pre-line;background:#fff;border:1.5px solid #212121;border-radius:var(--lly-radius-sm);padding:9px 12px;box-shadow:0 10px 28px rgba(33,33,33,.2);pointer-events:none;left:{{ tipX }};top:{{ tipY }};animation:cllTip .28s cubic-bezier(.16,1,.3,1) both">{{ tipText }}</div>
+    <div class="lly-footnote" style="position:absolute;z-index:9;max-width:380px;white-space:pre-line;background:#fff;border:1.5px solid #212121;border-radius:var(--lly-radius-sm);padding:9px 12px;box-shadow:0 10px 28px rgba(33,33,33,.2);pointer-events:none;left:{{ tipX }};top:{{ tipY }};animation:cllTip .28s cubic-bezier(.16,1,.3,1) both"><sc-for list="{{ tipSegs }}" as="g" hint-placeholder-count="1"><sc-if value="{{ g.plain }}" hint-placeholder-val="{{ true }}">{{ g.t }}</sc-if><sc-if value="{{ g.em }}" hint-placeholder-val="{{ false }}"><em>{{ g.t }}</em></sc-if><sc-if value="{{ g.br }}" hint-placeholder-val="{{ false }}"><br></sc-if></sc-for></div>
   </sc-if>
 
 </div>
@@ -722,6 +727,26 @@ class Component extends DCLogic {
      print dialog on load, so the learner saves as PDF from there. Hosted players
      block window.print() in the embed itself. If the tab is blocked, the list
      goes to the clipboard and a toast says so. */
+  /* Rule 10 (owner 2026-09-17), fixed at CLL's next release (2026-09-23): a citation pop-up renders each journal
+     name as <em>, only the name. The data stays plain; the text is split into segments at render, one line
+     break between references. */
+  CITE_JOURNALS = ["Am J Hematol", "Ann Oncol", "HemaSphere", "Hemasphere", "Blood Adv", "Cancers (Basel)", "Lancet Healthy Longev"];
+  citeSegs(text) {
+    const out = [];
+    text.split("\n").forEach((line, li) => {
+      if (li) out.push({ t: "", plain: false, em: false, br: true });
+      let rest = line;
+      for (;;) {
+        let at = -1, hit = "";
+        for (const j of this.CITE_JOURNALS) { const i = rest.indexOf(j); if (i >= 0 && (at < 0 || i < at)) { at = i; hit = j; } }
+        if (at < 0) { if (rest) out.push({ t: rest, plain: true, em: false, br: false }); break; }
+        if (at > 0) out.push({ t: rest.slice(0, at), plain: true, em: false, br: false });
+        out.push({ t: hit, plain: false, em: true, br: false });
+        rest = rest.slice(at + hit.length);
+      }
+    });
+    return out;
+  }
   exportRefs() {
     const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
     const J = ["Am J Hematol.", "Ann Oncol.", "HemaSphere.", "Blood Adv.", "Cancers (Basel).", "Lancet Healthy Longev."];
@@ -797,6 +822,7 @@ class Component extends DCLogic {
     if (reduce || !this.hoverable()) { this.setState({ motion: false }); this.paintOnce(); }
     else this.startField();
     this.watchIdle();
+    this.watchFirstInput();
     this.onKey = e => {
       if (e.key === "Escape") { clearTimeout(this.srcTimer); this.setState({ refsOpen: false, walk: null, tip: null, src: null }); }
       else if (this.state.src) return;
@@ -838,7 +864,24 @@ class Component extends DCLogic {
     document.addEventListener("visibilitychange", this.onIdleVis);
   }
 
+  /* The embed behaviour standard (owner 2026-09-23, ported from TINT 8787-2): a scene build inside an iframe on a
+     hover-capable device holds its content until the learner's first input on the slide. Never on the single page,
+     a direct tab, a review capture or a touch device (the player's overlay can swallow the first tap). */
+  watchFirstInput() {
+    if (this.single < 0 || typeof window === "undefined" || !this.hoverable()) return;
+    let inFrame = false; try { inFrame = window.self !== window.top; } catch (e) { inFrame = true; }
+    if (!inFrame || !this.rootEl) return;
+    this.rootEl.setAttribute("data-wait", "1");
+    this.firstInputEvents = ["pointermove", "pointerdown", "touchstart", "wheel", "keydown"];
+    this.onFirstInput = () => {
+      this.firstInputEvents.forEach(ev => window.removeEventListener(ev, this.onFirstInput));
+      if (this.rootEl) this.rootEl.removeAttribute("data-wait");
+    };
+    this.firstInputEvents.forEach(ev => window.addEventListener(ev, this.onFirstInput, { passive: true }));
+  }
+
   componentWillUnmount() {
+    if (this.onFirstInput) (this.firstInputEvents || []).forEach(ev => window.removeEventListener(ev, this.onFirstInput));
     clearInterval(this.readyTimer);
     if (this.idleIO) this.idleIO.disconnect(); document.removeEventListener("visibilitychange", this.onIdleVis);
     window.removeEventListener("resize", this.fit);
@@ -1361,7 +1404,9 @@ class Component extends DCLogic {
         e.stopPropagation();
         const t = e.currentTarget.dataset.ref;
         const same = s.tip && s.tip.text === t;
-        this.setState({ tip: same ? null : this.tipFor(e.currentTarget, t) });
+        const tp = same ? null : this.tipFor(e.currentTarget, t);
+        if (tp) tp.cite = true;   /* citation pop-ups italicise the journal name (rule 10); definitions stay plain */
+        this.setState({ tip: tp });
         if (same) return;
         /* A citation stays up only until the learner does anything else. */
         clearTimeout(this.armDismiss);
@@ -1377,6 +1422,7 @@ class Component extends DCLogic {
       },
       tipOn: !!tip,
       tipText: tip ? tip.text : "",
+      tipSegs: tip ? (tip.cite ? this.citeSegs(tip.text) : [{ t: tip.text, plain: true, em: false, br: false }]) : [],
       tipX: tip ? tip.x + "px" : "0px",
       tipY: tip ? tip.y + "px" : "0px",
 
@@ -1529,7 +1575,7 @@ class Component extends DCLogic {
   }
 }
 </script>
-<script id="build-stamp">(function(){var T="CLL Decision Making: Patient focused (single page)",M="CLL Decision Making tint8620-cll-decision-making v11 2026-09-21";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
-<script id="layer-release">(function(){var SAFE=/^(cllExpand|cllFade|cllLaunchPop|cllPop|cllSceneBack|cllSceneNext|cllScenePrev|cllSettle|cllSign|cllStage|cllTip|cllTrunk|cllUp)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
+<script id="build-stamp">(function(){var T="CLL Decision Making: Patient focused (single page)",M="CLL Decision Making tint8620-cll-decision-making v12 2026-09-23";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<script id="layer-release">(function(){var SAFE=/^(cllExpand|cllFade|cllLaunchPop|cllPop|cllSceneBack|cllSceneNext|cllScenePrev|cllSettle|cllSign|cllStage|cllTip|cllTrunk|cllUp)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;if(el.getAnimations&&el.getAnimations().some(function(a){return a.playState==="paused";})){seen.set(el,now);return;}var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
 </body>
 </html>
