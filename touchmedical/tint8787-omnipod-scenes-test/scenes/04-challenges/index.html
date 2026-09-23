@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- build: Omnipod 5 Decision Making | tint8787-omnipod-scenes/04-challenges | v17 | 2026-09-23 -->
+<!-- build: Omnipod 5 Decision Making | tint8787-omnipod-scenes/04-challenges | v18 | 2026-09-23 -->
 <html>
 <head>
 <meta charset="utf-8">
@@ -10,7 +10,7 @@
 <script src="../support.js"></script>
 
 <title>[TEST] Omnipod 5 Decision Making: Challenges in the management of this case</title>
-<meta name="build-version" content="Omnipod 5 Decision Making tint8787-omnipod-scenes/04-challenges v17 2026-09-23">
+<meta name="build-version" content="Omnipod 5 Decision Making tint8787-omnipod-scenes/04-challenges v18 2026-09-23">
 </head>
 <body>
 <x-dc>
@@ -30,6 +30,8 @@
     [data-wait="1"] .omn-screen__body, [data-wait="1"] .omn-screen__body * { animation-play-state: paused !important; }
     /* owner 2026-09-21: a touch device starts still and stays still - the switch is not offered there. */
     @media (hover: none) { [data-review-id="g-motion"] { display: none !important; } }
+    /* owner 2026-09-23: nor does How to use this picture it there. */
+    @media (hover: none) { [data-walk-switch] { display: none !important; } }
     /* owner 2026-09-21: no drop-shadow on a touch device - a soft shadow on the whole scaled stage is re-drawn at zoom
        on every pinch and pan; tested on TINT 8620-5, strictly less work. Desktop keeps it. */
     @media (hover: none) { [data-stage="1"] { box-shadow: none !important; } }
@@ -59,6 +61,24 @@
        invisible overlay, which takes no space in the line and so cannot push copy around. */
     .omn-gloss { position: relative; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
     .omn-gloss::after { content: ""; position: absolute; left: -6px; right: -6px; top: -10px; bottom: -10px; }
+    /* owner 2026-09-23, the in-activity zoom (embed behaviour standard, pinch row; the script at the end of this
+       file). Inside a frame on a touch device the phone's own pinch zoom is switched off over the activity - it zoomed
+       the whole host page, and that crashed the tab - and the activity zooms inside its own box instead. Only that
+       script sets html.zi-on, so a direct link and a desktop keep the browser's zoom. The Full view chip sits outside
+       the stage and is sized in screen pixels through --zi-g. Never a layer hint on the stage (see the script). */
+    html.zi-on, html.zi-on * { touch-action: pan-x pan-y; }
+    html.zi-zoomed, html.zi-zoomed * { touch-action: none !important; }
+    #zi-full { display: none; position: absolute; z-index: 2147483646; left: calc(10 * var(--zi-g)); top: calc(10 * var(--zi-g)); height: calc(36 * var(--zi-g)); margin: 0;
+      padding: 0 calc(3 * var(--zi-g)) 0 calc(12 * var(--zi-g)); gap: calc(8 * var(--zi-g)); box-sizing: border-box; align-items: center; border: calc(1 * var(--zi-g)) solid #E6E4DF; border-radius: calc(18 * var(--zi-g));
+      background: #F1EFE9; color: #1B1A1A; box-shadow: 0 calc(3 * var(--zi-g)) calc(10 * var(--zi-g)) rgba(27,26,26,.22);
+      font-family: var(--omn-font); font-weight: 600; font-size: calc(15 * var(--zi-g)); font-variant-numeric: tabular-nums;
+      cursor: pointer; -webkit-tap-highlight-color: transparent; -webkit-appearance: none; appearance: none; }
+    html.zi-zoomed #zi-full { display: flex; }
+    #zi-full::after { content: ""; position: absolute; left: calc(-5 * var(--zi-g)); right: calc(-5 * var(--zi-g)); top: calc(-5 * var(--zi-g)); bottom: calc(-5 * var(--zi-g)); }
+    #zi-full:focus-visible { outline: calc(2.5 * var(--zi-g)) solid #8D61C8; outline-offset: calc(2 * var(--zi-g)); }
+    #zi-full .zi-num { min-width: calc(30 * var(--zi-g)); text-align: right; }
+    #zi-full .zi-dot { width: calc(30 * var(--zi-g)); height: calc(30 * var(--zi-g)); padding: calc(7.5 * var(--zi-g)); box-sizing: border-box; border-radius: 50%; background: #8D61C8; color: #fff; }
+    #zi-full svg { display: block; width: 100%; height: 100%; }
     @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
   </style>
 </helmet>
@@ -495,7 +515,10 @@
               <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start"><span style="font-size:14px;color:#1B1A1A">You are about to leave this resource for omnipod.com</span><div style="display:flex;gap:10px"><span class="omn-btn omn-btn--primary" style="min-height:34px;padding:4px 12px;font-size:14px">Continue to omnipod.com<span class="omn-ico omn-ico--chevron"></span></span><span class="omn-btn omn-btn--secondary" style="min-height:34px;padding:4px 12px;font-size:14px">Stay here</span></div></div>
             </sc-if>
             <sc-if value="{{ walkIsMotion }}" hint-placeholder-val="{{ false }}">
-              <span style="display:flex;align-items:center;gap:16px;color:#454545;font-size:14px;flex-wrap:wrap;justify-content:center"><span style="display:flex;align-items:center;gap:8px"><span style="display:flex;align-items:center;width:34px;height:18px;border-radius:999px;padding:2px;background:#8D61C8"><span style="width:14px;height:14px;border-radius:50%;background:#fff;margin-left:auto"></span></span>Background motion</span><sc-if value="{{ reviewTools }}" hint-placeholder-val="{{ true }}"><span class="omn-btn omn-btn--secondary" style="min-height:36px;padding:4px 14px;font-size:15px"><span class="omn-ico omn-ico--x"></span>Reset progress</span></sc-if></span>
+              <span style="display:flex;align-items:center;gap:16px;color:#454545;font-size:14px;flex-wrap:wrap;justify-content:center"><span data-walk-switch="1" style="display:flex;align-items:center;gap:8px"><span style="display:flex;align-items:center;width:34px;height:18px;border-radius:999px;padding:2px;background:#8D61C8"><span style="width:14px;height:14px;border-radius:50%;background:#fff;margin-left:auto"></span></span>Background motion</span><sc-if value="{{ reviewTools }}" hint-placeholder-val="{{ true }}"><span class="omn-btn omn-btn--secondary" style="min-height:36px;padding:4px 14px;font-size:15px"><span class="omn-ico omn-ico--x"></span>Reset progress</span></sc-if></span>
+            </sc-if>
+            <sc-if value="{{ walkIsZoom }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:22px;color:#8D61C8"><svg width="46" height="46" viewBox="0 0 48 48" aria-hidden="true"><rect x="3" y="3" width="42" height="42" rx="6" fill="none" stroke="#8D61C8" stroke-width="1.4" stroke-dasharray="3 3" opacity=".55"></rect><circle cx="19" cy="29" r="4.2" fill="#8D61C8"></circle><circle cx="29" cy="19" r="4.2" fill="#8D61C8"></circle><path d="M15.5 32.5 9 39M9 33v6h6M32.5 15.5 39 9M33 9h6v6" fill="none" stroke="#8D61C8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span style="display:flex;align-items:center;gap:10px"><span style="display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 3px 0 12px;box-sizing:border-box;border-radius:18px;border:1px solid #E6E4DF;background:#F1EFE9;color:#1B1A1A;font-family:var(--omn-font);font-weight:600;font-size:15px;font-variant-numeric:tabular-nums;box-shadow:0 3px 10px rgba(27,26,26,.22)"><span style="min-width:30px;text-align:right">2.0×</span><span style="display:block;width:30px;height:30px;padding:7.5px;box-sizing:border-box;border-radius:50%;background:#8D61C8;color:#fff"><svg viewBox="0 0 24 24" style="display:block;width:100%;height:100%"><path d="M9 3v6H3M15 3v6h6M9 21v-6H3M15 21v-6h6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></span><span style="display:flex;align-items:center;gap:6px;color:#8D61C8;font-family:var(--omn-font);font-weight:600;font-size:14px"><svg width="18" height="12" viewBox="0 0 18 12"><path d="M17 6H2M6.5 1.5 2 6l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>Full view</span></span></div>
             </sc-if>
             <sc-if value="{{ walkIsRevisit }}" hint-placeholder-val="{{ false }}">
               <span style="display:flex;align-items:center;gap:14px;padding:8px 16px;border:1.5px solid #8D61C8;border-radius:12px;background:#fff;color:#1B1A1A;font-size:16px;width:100%"><span style="display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#8D61C8;color:#fff;font-weight:600;font-size:13px">2</span><span style="flex:1 1 auto">Optimizing the Omnipod® 5 (Q&amp;A)</span><span class="omn-btn omn-btn--secondary" style="min-height:34px;padding:4px 12px;font-size:14px">Revisit<span class="omn-ico omn-ico--chevron"></span></span></span>
@@ -617,7 +640,8 @@ class Component extends DCLogic {
   get WALKD() {
     if (this._walkd) return this._walkd;
     const touch = typeof window !== "undefined" && window.matchMedia && window.matchMedia("(hover: none)").matches;
-    this._walkd = !touch ? this.WALK : this.WALK.flatMap(w => {
+    const W = this.WALK.filter(w => !w.zoomOnly || this.zoomable());
+    this._walkd = !touch ? W : W.flatMap(w => {
       if (w.kind !== "motion") return [w];
       if (this.SCENE !== null) return [];
       return [Object.assign({}, w, { body: w.body.replace("The switch pauses the glucose trace in the background. ", "") })];
@@ -636,12 +660,15 @@ class Component extends DCLogic {
     const i = line.indexOf(r.j);
     return { pre: line.slice(0, i), j: r.j, post: line.slice(i + r.j.length) };
   }
+  /* owner 2026-09-23: "Zoom in" is the first step only where the zoom runs (zoomOnly). It names the gesture -
+     the one exception to device-agnostic copy (rule 12), because no desktop ever shows it. */
   WALK = [
+    { kind: "zoom", title: "Zoom in", body: "Pinch the screen to zoom in on any detail, and pinch the other way to zoom back out. While zoomed in, drag to move around; Full view returns to the whole screen.", zoomOnly: true },
     { kind: "nav", title: "Move through the case", body: "Back sits bottom left and Next bottom right. Next appears once a screen is complete. The dots in the top bar show where you are; numbered dots are the question screens." },
     { kind: "motion", title: "Top bar controls", body: "The switch pauses the glucose trace in the background. Reset progress clears your answers and returns to the start; it asks first if anything has been answered.", splitBody: "The switch pauses the glucose trace in the background." },
     { kind: "gloss", title: "Abbreviations", body: "A term with a dotted underline shows its full form. Select the term to see it, and select anywhere else to close it." },
     { kind: "info", title: "More information", body: "An information button on a card opens a reference note inside that card, such as the HbA1c target. Select it again to close." },
-    { kind: "cite", title: "Check a source", body: "Select a numbered chip next to a statement to see that reference in place; it clears as soon as you do anything else. The full numbered list opens from the References button on the final Revisit page." },
+    { kind: "cite", title: "Check a source", body: "Select a numbered chip next to a statement to see that reference in place; it clears as soon as you select anything else. The full numbered list opens from the References button on the final Revisit page." },
     { kind: "challenge", title: "Open a challenge", body: "A card with a bobbing chevron opens when selected: first the challenge, then the Omnipod® 5 feature that addresses it. Open all five to move on." },
     { kind: "gate", title: "Six questions ahead", body: "Before the first question, a page asks if you are ready. Return to previous sections goes back to the case; Start the questions moves on." },
     { kind: "option", title: "Select and submit", body: "Select an option, then Submit. One question allows more than one option to be selected." },
@@ -738,6 +765,12 @@ class Component extends DCLogic {
   }
   stopRd() { cancelAnimationFrame(this.rdRaf); }
   hoverable() { return !(window.matchMedia && window.matchMedia('(hover: none)').matches); }
+  /* owner 2026-09-23: where the in-activity zoom runs - inside a frame on a touch device (the script at the end
+     of this file uses the same test). */
+  zoomable() { let f = true; try { f = window.self !== window.top; } catch (e) {} return f && !this.hoverable(); }
+  /* owner 2026-09-23: a mouse closes a pop-up on its next press; a touch device on the next select, so a learner
+     can open a definition or a citation and then pinch to read it (a pinch starts with a press). */
+  dismissOn() { return this.hoverable() ? "pointerdown" : "click"; }
   tipFor(el, text, above) {
     if (!this.stageEl) return null;
     const a = el.getBoundingClientRect(), b = this.stageEl.getBoundingClientRect(), k = b.width / 1280 || 1;
@@ -1090,8 +1123,9 @@ class Component extends DCLogic {
         this.setState({ ranges: open });
         clearTimeout(this.rangesArm);
         if (open) this.rangesArm = setTimeout(() => {   /* any next interaction dismisses it (Lilly citation-chip pattern) */
-          const off = ev => { if (ev.type === "pointerdown" && ev.target && ev.target.closest && ev.target.closest("[data-ranges-panel]")) return; document.removeEventListener("pointerdown", off, true); document.removeEventListener("keydown", off, true); this.setState({ ranges: false }); };
-          document.addEventListener("pointerdown", off, true); document.addEventListener("keydown", off, true);
+          const on = this.dismissOn();
+          const off = ev => { if (ev.type === on && ev.target && ev.target.closest && ev.target.closest("[data-ranges-panel]")) return; document.removeEventListener(on, off, true); document.removeEventListener("keydown", off, true); this.setState({ ranges: false }); };
+          document.addEventListener(on, off, true); document.addEventListener("keydown", off, true);
         }, 0);
       },
       /* owner ruling 2026-09-20 (PM saw it on a phone): a touch device has no hover, so the definition is
@@ -1106,8 +1140,9 @@ class Component extends DCLogic {
         this.setState({ tip: this.tipFor(el, text, true) });
         clearTimeout(this.glossArm);
         this.glossArm = setTimeout(() => {   /* stays up only until the learner does anything else */
-          const off = () => { document.removeEventListener('pointerdown', off, true); document.removeEventListener('keydown', off, true); this.setState({ tip: null }); };
-          document.addEventListener('pointerdown', off, true); document.addEventListener('keydown', off, true);
+          const on = this.dismissOn();
+          const off = () => { document.removeEventListener(on, off, true); document.removeEventListener('keydown', off, true); this.setState({ tip: null }); };
+          document.addEventListener(on, off, true); document.addEventListener('keydown', off, true);
         }, 0);
       },
       glossKey: e => { if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); e.currentTarget.click(); } else if (e.key === 'Escape') { this.setState({ tip: null }); } },
@@ -1150,14 +1185,15 @@ class Component extends DCLogic {
         if (same) return;
         clearTimeout(this.citeArm);
         this.citeArm = setTimeout(() => {   /* stays up only until the learner does anything else */
-          const off = () => { document.removeEventListener("pointerdown", off, true); document.removeEventListener("keydown", off, true); this.setState({ tip: null }); };
-          document.addEventListener("pointerdown", off, true); document.addEventListener("keydown", off, true);
+          const on = this.dismissOn();
+          const off = () => { document.removeEventListener(on, off, true); document.removeEventListener("keydown", off, true); this.setState({ tip: null }); };
+          document.addEventListener(on, off, true); document.addEventListener("keydown", off, true);
         }, 0);
       },
       walkOpen: s.walk !== null, openWalk: () => this.setState({ walk: 0 }), closeWalk: () => this.setState({ walk: null }), stopClick: e => e.stopPropagation(),
       walkTitle: this.WALKD[s.walk || 0].title, walkBody: (split && this.WALKD[s.walk || 0].splitBody) || this.WALKD[s.walk || 0].body,
       walkIsNav: this.WALKD[s.walk || 0].kind === "nav", walkIsOption: this.WALKD[s.walk || 0].kind === "option", walkIsConfirm: this.WALKD[s.walk || 0].kind === "confirm",
-      walkIsAnswer: this.WALKD[s.walk || 0].kind === "answer", walkIsInfo: this.WALKD[s.walk || 0].kind === "info", walkIsChallenge: this.WALKD[s.walk || 0].kind === "challenge", walkIsCite: this.WALKD[s.walk || 0].kind === "cite", walkIsMotion: this.WALKD[s.walk || 0].kind === "motion", walkIsRevisit: this.WALKD[s.walk || 0].kind === "revisit", walkIsExport: this.WALKD[s.walk || 0].kind === "export", walkIsGate: this.WALKD[s.walk || 0].kind === "gate", walkIsGloss: this.WALKD[s.walk || 0].kind === "gloss", walkIsLink: this.WALKD[s.walk || 0].kind === "link",
+      walkIsAnswer: this.WALKD[s.walk || 0].kind === "answer", walkIsInfo: this.WALKD[s.walk || 0].kind === "info", walkIsChallenge: this.WALKD[s.walk || 0].kind === "challenge", walkIsCite: this.WALKD[s.walk || 0].kind === "cite", walkIsMotion: this.WALKD[s.walk || 0].kind === "motion", walkIsRevisit: this.WALKD[s.walk || 0].kind === "revisit", walkIsExport: this.WALKD[s.walk || 0].kind === "export", walkIsGate: this.WALKD[s.walk || 0].kind === "gate", walkIsGloss: this.WALKD[s.walk || 0].kind === "gloss", walkIsLink: this.WALKD[s.walk || 0].kind === "link", walkIsZoom: this.WALKD[s.walk || 0].kind === "zoom",
       walkDots: this.WALKD.map((w, i) => ({ bg: i === (s.walk || 0) ? "#8D61C8" : "#E6E4DF" })),
       walkPrev: e => { e.stopPropagation(); this.setState({ walk: Math.max(0, (s.walk || 0) - 1) }); },
       walkNext: e => { e.stopPropagation(); const w = s.walk || 0; this.setState({ walk: w >= this.WALKD.length - 1 ? null : w + 1 }); },
@@ -1192,7 +1228,250 @@ class Component extends DCLogic {
   }
 }
 </script>
-<script id="build-stamp">(function(){var T="[TEST] Omnipod 5 Decision Making: Challenges in the management of this case",M="Omnipod 5 Decision Making tint8787-omnipod-scenes/04-challenges v17 2026-09-23";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<script>
+/* In-activity zoom (owner rulings 2026-09-23; proven on a phone as test copy (c) the same day).
+   Inside a host player on a phone, a pinch that starts on this frame zooms the whole host page, and redrawing that
+   page is what crashed the tab. So, inside a frame on a touch device only, the activity zooms inside its own box:
+   - two fingers zoom it from 1x to 3x under the fingers; pinch the other way to zoom back out
+   - one finger moves around while zoomed; at 1x a one-finger drag is left to the host page, which scrolls
+   - the Full view chip (top left: the zoom level and a fit-to-screen symbol) shows while zoomed and returns to 1x
+   - it goes back to 1x by itself when the screen changes, a Next or Back control is selected (the host's hidden
+     links do not move with the zoom), the slide is left or hidden, or the frame is resized; a dialog that opens
+     while zoomed is moved into view, zoomed out just enough to fit if it is bigger than the screen
+   The touch-action rules in the style block are keyed on html.zi-on, which only this script sets, so a direct link
+   and a desktop keep exactly what they had.
+   NEVER give the stage a layer hint (the CSS property that asks for an element's own compositing layer; the
+   behaviour gate bans it by name): iOS reads touch-action from the layer under the finger, and a stage on a layer
+   of its own let the phone zoom the page again (test copy (b), 2026-09-23).
+   The zoom is the stage's own CSS scale and translate, which compose with the fit transform, so fit() is untouched. */
+(function () {
+  var inFrame = true;
+  try { inFrame = window.self !== window.top; } catch (e) { inFrame = true; }
+  var touch = !!(window.matchMedia && window.matchMedia("(hover: none)").matches);
+  if (!inFrame || !touch) return;
+
+  var MAX = 3, root = document.documentElement, stage = null, z = 1, tx = 0, ty = 0, g = null;
+  var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  root.classList.add("zi-on");
+
+  /* ---- the Full view chip ---- */
+  var FIT = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 3v6H3M15 3v6h6M9 21v-6H3M15 21v-6h6" ' +
+    'fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var chip = document.createElement("button");
+  chip.id = "zi-full";
+  chip.type = "button";
+  chip.setAttribute("aria-label", "Back to full view");
+  chip.setAttribute("data-review", "chrome");
+  chip.setAttribute("data-review-id", "g-zoom-full");
+  chip.innerHTML = '<span class="zi-num" aria-hidden="true">1.0×</span><span class="zi-dot">' + FIT + "</span>";
+  var num = chip.querySelector(".zi-num");
+  document.body.appendChild(chip);
+
+  /* ---- the chip is sized in glass pixels: --zi-g is frame px per screen px ---- */
+  /* The host shrinks this frame by an amount the frame cannot read. A pinch measures it (the fingers' distance on
+     the screen over their distance in the page); until then, and where a browser reports the two as equal, it is
+     estimated from the screen: the slide fills the width upright and most of the height sideways. */
+  var measured = 0;
+  function estimate() {
+    var a = screen.width, b = screen.height, short = Math.min(a, b), long = Math.max(a, b);
+    var type = (screen.orientation && screen.orientation.type) || "";
+    var land = /landscape/.test(type) || window.orientation === 90 || window.orientation === -90;
+    var vw = land ? long : short, vh = land ? short : long;
+    var s = Math.min((vw - 40) / (innerWidth || 1368), (vh - 120) / (innerHeight || 770));
+    return Math.max(0.15, Math.min(1, s));
+  }
+  function setUnit() { root.style.setProperty("--zi-g", (1 / (measured || estimate())).toFixed(4) + "px"); }
+  function measure(a, b) {
+    var dc = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+    var ds = Math.hypot(a.screenX - b.screenX, a.screenY - b.screenY);
+    if (dc < 20 || !ds) return;
+    var s = ds / dc;
+    if (s > 0.1 && s < 1.25 && Math.abs(s - 1) > 0.001) { measured = s; setUnit(); }
+  }
+  setUnit();
+
+  /* ---- applying the zoom ---- */
+  var wrote = { s: null, t: null }, prevTransition = null, restoreT = 0;
+  function animateOnce() {
+    if (reduce || !stage) return;
+    var s = stage;
+    if (prevTransition === null) prevTransition = s.style.transition;
+    s.style.transition = (prevTransition ? prevTransition + ", " : "") + "scale .2s ease, translate .2s ease";
+    clearTimeout(restoreT);
+    restoreT = setTimeout(function () { s.style.transition = prevTransition; prevTransition = null; }, 260);
+  }
+  function commit(animate) {
+    if (!stage) return;
+    if (animate) animateOnce();
+    stage.style.translate = tx + "px " + ty + "px";
+    stage.style.scale = String(z);
+    wrote.s = stage.style.scale; wrote.t = stage.style.translate;    /* as the browser reads them back */
+    root.classList.toggle("zi-zoomed", z > 1.001);
+    num.textContent = z.toFixed(1) + "×";
+    unscroll();
+  }
+  function toFull(animate) {
+    g = null;
+    if (!stage || (z === 1 && !tx && !ty)) return;
+    z = 1; tx = 0; ty = 0;
+    commit(animate);
+  }
+  /* focus can scroll a clipped ancestor of the zoomed stage, which would throw the view off its limits */
+  function unscroll() {
+    for (var p = stage && stage.parentElement; p; p = p.parentElement) {
+      if (p.scrollTop || p.scrollLeft) { p.scrollTop = 0; p.scrollLeft = 0; }
+    }
+  }
+  document.addEventListener("scroll", function (e) {
+    var t = e.target;
+    if (stage && z > 1.001 && (t === document || (t.contains && t !== stage && t.contains(stage)))) unscroll();
+  }, true);
+
+  /* ---- the stage: the [data-stage] element that fit() has scaled (the page template also carries a copy) ---- */
+  function pickStage() {
+    var all = document.querySelectorAll('[data-stage="1"]');
+    for (var i = 0; i < all.length; i++) {
+      var s = all[i];
+      if (s.isConnected && /scale\(/.test(s.style.transform || "") && s.getBoundingClientRect().width > 0) return s;
+    }
+    return null;
+  }
+  var mo = null;
+  function findStage() {
+    var s = pickStage();
+    if (!s) { stage = null; requestAnimationFrame(findStage); return; }
+    if (s === stage) return;
+    stage = s;
+    lastScene = sceneId();
+    if (mo) mo.disconnect();
+    mo = new MutationObserver(function () {         /* the page rewrote the stage's style: put the zoom back */
+      if (stage.style.scale !== wrote.s || stage.style.translate !== wrote.t) commit(false);
+    });
+    mo.observe(stage, { attributes: true, attributeFilter: ["style"] });
+    commit(false);
+  }
+  function ensureStage() { if (!stage || !stage.isConnected) findStage(); return !!stage && stage.isConnected; }
+
+  function origin() { return { x: stage.offsetLeft + stage.offsetWidth / 2, y: stage.offsetTop + stage.offsetHeight / 2 }; }
+  function fitted() {
+    var O = origin(), r = stage.getBoundingClientRect();
+    return { O: O,
+      l: O.x + (r.left - O.x - tx) / z, r: O.x + (r.right - O.x - tx) / z,
+      t: O.y + (r.top - O.y - ty) / z, b: O.y + (r.bottom - O.y - ty) / z };
+  }
+  /* the zoomed stage always covers the area the fitted stage covered: no gaps, never lost off screen */
+  function clamp(F) {
+    tx = Math.min((1 - z) * (F.l - F.O.x), Math.max((1 - z) * (F.r - F.O.x), tx));
+    ty = Math.min((1 - z) * (F.t - F.O.y), Math.max((1 - z) * (F.b - F.O.y), ty));
+  }
+  function dist(a, b) { return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY); }
+  function mid(a, b) { return { x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 }; }
+
+  /* ---- gestures: the proven (c) code ---- */
+  function startPinch(e) {
+    var a = e.touches[0], b = e.touches[1], F = fitted(), m = mid(a, b);
+    measure(a, b);
+    g = { mode: "pinch", d0: Math.max(10, dist(a, b)), z0: z, F: F,
+      qx: F.O.x + (m.x - F.O.x - tx) / z, qy: F.O.y + (m.y - F.O.y - ty) / z };
+  }
+  function startPan(t) { g = { mode: "pan-pending", x0: t.clientX, y0: t.clientY, tx0: tx, ty0: ty, F: fitted() }; }
+  function onChip(t) { return !!t && (t === chip || chip.contains(t)); }
+
+  window.addEventListener("touchstart", function (e) {
+    if (!ensureStage() || onChip(e.target)) { g = null; return; }
+    if (e.touches.length === 2) startPinch(e);
+    else if (e.touches.length === 1 && z > 1.001) startPan(e.touches[0]);
+    else g = null;
+  }, { passive: true, capture: true });
+
+  window.addEventListener("touchmove", function (e) {
+    if (!stage || !g) return;
+    if (e.touches.length >= 2) {
+      if (g.mode !== "pinch") startPinch(e);
+      e.preventDefault();
+      var a = e.touches[0], b = e.touches[1], m = mid(a, b);
+      z = Math.min(MAX, Math.max(1, g.z0 * dist(a, b) / g.d0));
+      tx = m.x - g.F.O.x - z * (g.qx - g.F.O.x);
+      ty = m.y - g.F.O.y - z * (g.qy - g.F.O.y);
+      clamp(g.F); commit(false);
+    } else if (e.touches.length === 1 && (g.mode === "pan-pending" || g.mode === "pan")) {
+      var t = e.touches[0], dx = t.clientX - g.x0, dy = t.clientY - g.y0;
+      if (g.mode === "pan-pending" && Math.hypot(dx, dy) < 8) return;      /* a small movement stays a tap */
+      g.mode = "pan";
+      e.preventDefault();
+      tx = g.tx0 + dx; ty = g.ty0 + dy;
+      clamp(g.F); commit(false);
+    }
+  }, { passive: false, capture: true });
+
+  function end(e) {
+    if (!g) return;
+    if (e.touches.length === 1 && z > 1.001) startPan(e.touches[0]);    /* one finger of a pinch lifted: keep moving */
+    else if (e.touches.length === 0) { g = null; if (z < 1.02) { z = 1; tx = 0; ty = 0; commit(false); } }
+  }
+  window.addEventListener("touchend", end, { passive: true, capture: true });
+  window.addEventListener("touchcancel", end, { passive: true, capture: true });
+
+  chip.addEventListener("click", function () { toFull(true); });
+
+  /* ---- back to full view by itself ---- */
+  /* a Next or Back control (not the walkthrough's own steps): the host's hidden links sit where it is at 1x */
+  document.addEventListener("click", function (e) {
+    var t = e.target;
+    if (z > 1.001 && t && t.closest && t.closest('[data-review="nav"]') && !t.closest('[data-review-id$="-backdrop"]')) toFull(true);
+  }, true);
+  function sceneId() {
+    var s = stage && stage.querySelector('[data-review="scene"]');
+    return s ? s.getAttribute("data-review-id") : null;
+  }
+  /* a dialog opened while zoomed: move the view to its card, centred; a card bigger than the screen at this zoom is
+     zoomed out just enough to fit, so its Close and Next are always in reach (owner 2026-09-23) */
+  function cardOf(bd) {
+    var r = bd.getBoundingClientRect(), best = null, area = 0, kids = bd.children;
+    for (var i = 0; i < kids.length; i++) {
+      var q = kids[i].getBoundingClientRect(), a = q.width * q.height;
+      if (a > area && a < 0.9 * r.width * r.height) { area = a; best = kids[i]; }
+    }
+    return best || bd;
+  }
+  function bringIntoView(el) {
+    if (!stage || z <= 1.001 || !el.isConnected) return;
+    var r = el.getBoundingClientRect(), W = root.clientWidth, H = root.clientHeight;
+    if (!r.width || !r.height) return;
+    var F = fitted();
+    var qx = F.O.x + (r.left + r.width / 2 - F.O.x - tx) / z, qy = F.O.y + (r.top + r.height / 2 - F.O.y - ty) / z;
+    var fit = Math.min(0.94 * W / r.width, 0.94 * H / r.height);
+    if (fit < 1) z = Math.max(1, z * fit);
+    tx = W / 2 - F.O.x - z * (qx - F.O.x);
+    ty = H / 2 - F.O.y - z * (qy - F.O.y);
+    clamp(F); commit(true);
+  }
+  var lastScene = null;
+  new MutationObserver(function (list) {
+    if (!stage) return;
+    var id = sceneId();
+    if (id !== lastScene) { lastScene = id; if (z > 1.001) toFull(true); }       /* the screen changed */
+    for (var i = 0; i < list.length; i++) {
+      var m = list[i];
+      if (m.type === "attributes" && m.attributeName === "data-idle" && m.target.getAttribute("data-idle") === "1") toFull(false);
+      if (m.type !== "childList" || z <= 1.001) continue;
+      for (var j = 0; j < m.addedNodes.length; j++) {
+        var n = m.addedNodes[j];
+        if (n.nodeType !== 1) continue;
+        var bd = n.matches('[data-review-id$="-backdrop"]') ? n : n.querySelector('[data-review-id$="-backdrop"]');
+        if (bd) setTimeout(function (el) { return function () { bringIntoView(cardOf(el)); }; }(bd), 80);
+      }
+    }
+  }).observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ["data-review-id", "data-idle"] });
+  document.addEventListener("visibilitychange", function () { if (document.hidden) toFull(false); });
+  window.addEventListener("resize", function () { setUnit(); toFull(false); });
+  if (screen.orientation && screen.orientation.addEventListener) {
+    screen.orientation.addEventListener("change", function () { measured = 0; setUnit(); });
+  }
+  findStage();
+})();
+</script>
+<script id="build-stamp">(function(){var T="[TEST] Omnipod 5 Decision Making: Challenges in the management of this case",M="Omnipod 5 Decision Making tint8787-omnipod-scenes/04-challenges v18 2026-09-23";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
 <script id="layer-release">(function(){var SAFE=/^(omnBarBounce|omnFade|omnFeatHead|omnFeatIn|omnFeatInB|omnInA|omnInB|omnPop|omnRoll|omnSoft|omnSoftB|omnSwipe|omnTitleRise|omnUp|omnZoomIn)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;if(el.getAnimations&&el.getAnimations().some(function(a){return a.playState==="paused";})){seen.set(el,now);return;}var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
 </body>
 </html>
