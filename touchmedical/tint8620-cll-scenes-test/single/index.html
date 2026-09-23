@@ -1646,8 +1646,7 @@ class Component extends DCLogic {
   chip.setAttribute("data-review", "chrome");
   chip.setAttribute("data-review-id", "g-zoom-full");
   chip.innerHTML = '<span class="zi-num" aria-hidden="true">1.0×</span><span class="zi-dot">' + FIT + "</span>";
-  var num = chip.querySelector(".zi-num");
-  document.body.appendChild(chip);
+  var num = chip.querySelector(".zi-num");   /* added to the page with the stage (findStage), after its style is in */
 
   /* ---- the chip is sized in glass pixels: --zi-g is frame px per screen px ---- */
   /* The host shrinks this frame by an amount the frame cannot read. A pinch measures it (the fingers' distance on
@@ -1724,6 +1723,7 @@ class Component extends DCLogic {
     if (!s) { stage = null; requestAnimationFrame(findStage); return; }
     if (s === stage) return;
     stage = s;
+    if (!chip.isConnected) document.body.appendChild(chip);
     lastScene = sceneId();
     if (mo) mo.disconnect();
     mo = new MutationObserver(function () {         /* the page rewrote the stage's style: put the zoom back */
@@ -1778,7 +1778,9 @@ class Component extends DCLogic {
       clamp(g.F); commit(false);
     } else if (e.touches.length === 1 && (g.mode === "pan-pending" || g.mode === "pan")) {
       var t = e.touches[0], dx = t.clientX - g.x0, dy = t.clientY - g.y0;
-      if (g.mode === "pan-pending" && Math.hypot(dx, dy) < 8) return;      /* a small movement stays a tap */
+      /* under 10 screen points stays a tap - the phone's own tap allowance; the frame is drawn at a fraction of its
+         own pixels, so this is measured through the same scale the chip uses (release review 2026-09-23) */
+      if (g.mode === "pan-pending" && Math.hypot(dx, dy) * (measured || estimate()) < 10) return;
       g.mode = "pan";
       e.preventDefault();
       tx = g.tx0 + dx; ty = g.ty0 + dy;
