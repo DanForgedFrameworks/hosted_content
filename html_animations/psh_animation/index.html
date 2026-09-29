@@ -227,6 +227,23 @@
     .chipTag{ font-size: 11px; font-weight: 800; letter-spacing: 0.4px; color: rgba(var(--accentA),0.95); }
     .chipTitle{ margin: 3px 0 0 0; font-size: 13.5px; font-weight: 700; line-height: 1.22; color: #fff; }
 
+    /* ===== Ring layout (PROGRAMME.layout === "ring"), added 2026-09-29 for psh =====
+       Opt-in only: no other programme sets `layout`, so nothing below reaches them. */
+    .headerCard.ringCentre{ top: var(--ringCy); left: var(--ringCx); width: var(--ringW);
+      transform: translate(-50%, -50%) scale(0.98); padding: 12px 16px; }
+    .headerCard.ringCentre.show{ transform: translate(-50%, -50%) scale(1); }
+    .headerCard.ringCentre .headerTitle{ font-size: clamp(17px, 1.9vw, 22px); }
+    .headerCard.ringCentre .headerSub{ display: block; font-size: 13.5px; }
+    .miniCard.ringMini{ width: 156px; padding: 8px 12px; text-align: left; }
+    .miniCard.ringMini .miniTitle{ font-size: 13px; }
+    .miniCard.ringMini .miniTag{ margin: 0 0 2px; font-size: 11px; font-weight: 800; letter-spacing: 0.4px; color: rgba(var(--accentA),0.95); }
+    .summaryPanel.ringNarrow{ left: 12px; right: 12px; justify-content: flex-start; }
+    .summaryPanel.ringNarrow{ gap: 8px; }
+    .summaryPanel.ringNarrow .sumChips{ gap: 8px; }
+    .summaryPanel.ringNarrow .chip{ padding: 6px 10px; flex-basis: 140px; }
+    .summaryPanel.ringNarrow .chipTag{ font-size: 10.5px; }
+    @media (max-width: 480px){ .summaryPanel.ringNarrow .chipTag{ display: none; } .summaryPanel.ringNarrow .chipTitle{ margin: 0; } }
+
     @media (max-width: 980px){
       .miniCard{ width: 180px; padding: 10px; } .miniTitle{ font-size: 13px; }
       .controls-left{ left: 10px; } .summaryPanel{ left: 158px; }
@@ -287,6 +304,9 @@
   allSub: "From getting help and finding support to reporting a concern.",
   backdrop: "network",
   structure: "flat",
+  /* Full circle, owner request 2026-09-29: stops sit round a ring, the tour follows the arc
+     and closes back at the start. Engine opt-in; no other programme uses it. */
+  layout: "ring",
   /* Backdrop parallax, as tlm_commercial_v2: the field pans against the camera. */
   parallax: 0.18,
   /* ============================================================================
@@ -318,6 +338,10 @@
       const modules = PROGRAMME.modules;
       const LAST = modules.length - 1;
       const isFlat = PROGRAMME.structure === 'flat';
+      /* RING: a flat programme laid out as a full circle. The tour travels round the arc and
+         closes the loop back to the first stop before the overview. Opt-in, psh only. */
+      const isRing = isFlat && PROGRAMME.layout === 'ring';
+      let ring = { cx: 0, cy: 0, r: 1 };
       const levels = PROGRAMME.levels || [];
 
       document.title = PROGRAMME.docTitle || ('Learning Pathway | ' + PROGRAMME.name);
@@ -425,7 +449,8 @@
       const minis = [];
       modules.forEach((m, i) => {
         const d = document.createElement('div'); d.className = 'miniCard'; d.id = 'm' + i;
-        d.innerHTML = `<p class="miniTitle">${m.title}</p>`;
+        d.innerHTML = isRing ? `<p class="miniTag">${m.tag}</p><p class="miniTitle">${m.title}</p>` : `<p class="miniTitle">${m.title}</p>`;
+        if(isRing) d.classList.add('ringMini');
         miniContainer.appendChild(d); minis.push(d);
       });
 
@@ -660,6 +685,12 @@
       /* ===== Pathway layout ===== */
       function pathwayLayout(){
         const layout = [];
+        if(isRing){
+          const n=modules.length, r=Math.max(120, Math.min(w, h)*0.40);
+          ring = { cx: w*0.5, cy: h*0.5, r };
+          for(let i=0;i<n;i++){ const a=-Math.PI/2 + 2*Math.PI*i/n; layout.push({ x: ring.cx + r*Math.cos(a), y: ring.cy + r*Math.sin(a), a }); }
+          return layout;
+        }
         if(isFlat){
           const left=w*0.09, right=w*0.91, span=right-left, by=h*0.50, amp=Math.min(h,900)*0.22, n=modules.length;
           const pattern=[-0.75,0.55,-0.20,0.82,-0.58,0.18,0.62];
@@ -714,6 +745,71 @@
       function applyCamera(){ ctx.setTransform(dpr,0,0,dpr,0,0); ctx.translate(w*0.5,h*0.5); ctx.scale(cam.z,cam.z); ctx.translate(-cam.x,-cam.y); }
       function toScreen(pt){ return { x:(pt.x-cam.x)*cam.z + w*0.5, y:(pt.y-cam.y)*cam.z + h*0.5 }; }
 
+      /* ===== Ring helpers ===== */
+      function arcAngles(seg){ const a0=nodes[seg.from].a; let a1=nodes[seg.i].a; if(a1<=a0) a1+=Math.PI*2; return [a0,a1]; }
+      function arcPoint(a){ return { x: ring.cx + ring.r*Math.cos(a), y: ring.cy + ring.r*Math.sin(a) }; }
+      /* The overview has to fit the circle AND the labels round it into the space the
+         controls leave, or the Summarise and Resume buttons sit on top of the pathway. */
+      function ringView(){
+        const pad = 14, cl = document.querySelector('.controls-left'), cr = document.querySelector('.controls-right');
+        const L = cl ? cl.getBoundingClientRect() : null, Rr = cr ? cr.getBoundingClientRect() : null;
+        const railLeft = (L && L.width > 0 && L.width < w*0.45) ? L.right + pad : pad;   /* desktop left rail */
+        const barBottom = (L && L.width >= w*0.45) ? h - L.top + pad : pad;             /* phone bottom bar */
+        /* The top-right controls only occupy a corner; placeRingMinis() moves any label that
+           would sit under them, so the circle itself can use the full height. */
+        const safe = { l: railLeft, r: w - pad, t: pad, b: h - barBottom };
+        const mw = 156, mh = 60;
+        /* a label sits outside its stop: about its own width to the side, its full height above or below */
+        const rs = Math.min((safe.r - safe.l) / 2 - mw - 18, (safe.b - safe.t) / 2 - mh - 22);
+        const wide = rs >= 100;
+        const z = clamp(Math.max(rs, 60) / ring.r, 0.25, 1.2);
+        const sx = (safe.l + safe.r) / 2, sy = (safe.t + safe.b) / 2;
+        return { wide, z, sx, sy, rs, safe, target: { x: ring.cx - (sx - w*0.5)/z, y: ring.cy - (sy - h*0.5)/z } };
+      }
+      function placeRingMinis(){
+        const c = toScreen({ x: ring.cx, y: ring.cy });
+        for(let i=0;i<=LAST;i++){
+          const p = toScreen(nodes[i]), dx = p.x - c.x, dy = p.y - c.y, d = Math.hypot(dx, dy) || 1;
+          const m = minis[i], mw = (m.offsetWidth || 176)/2 + 16, mh = (m.offsetHeight || 54)/2 + 16;
+          let x = p.x + dx/d*mw, y = p.y + dy/d*mh;
+          /* never under a control: a label that would meet the top-right group drops below it */
+          const cr = document.querySelector('.controls-right'), R = cr && cr.getBoundingClientRect();
+          if(R && R.width > 0 && x + mw - 16 > R.left && y - mh + 16 < R.bottom && x - mw + 16 < R.right){
+            const toLeft = R.left - mw + 8;                 /* slide left of the controls if there is room */
+            if(toLeft - mw + 16 > c.x - ring.r*cam.z*0.2) x = toLeft; else y = R.bottom + mh - 8;
+          }
+          m.style.left = x + 'px'; m.style.top = y + 'px';
+        }
+      }
+      function ringSummary(on){
+        if(!on){
+          if(headerCard.classList.contains('ringCentre')){ headerCard.classList.remove('show','ringCentre'); setMiniState("off"); }
+          if(summaryPanel.classList.contains('ringNarrow')){ hideSummary(); summaryPanel.classList.remove('ringNarrow'); summaryPanel.style.top=''; summaryPanel.style.bottom=''; summaryPanel.style.left=''; summaryPanel.style.right=''; }
+          return;
+        }
+        const v = ringView();
+        if(v.wide){
+          hideSummary(); summaryPanel.classList.remove('ringNarrow');
+          /* the title sits inside the circle only when the circle is big enough to hold it */
+          if(v.rs >= 160){
+            headerCard.classList.add('ringCentre');
+            rs.setProperty('--ringCx', v.sx + 'px'); rs.setProperty('--ringCy', v.sy + 'px');
+            rs.setProperty('--ringW', Math.min(360, v.rs*1.5) + 'px');
+            headerCard.classList.add('show');
+          } else { headerCard.classList.remove('show','ringCentre'); }
+          placeRingMinis(); setMiniState("in", 0, LAST);
+        } else {
+          /* too small for labels round a circle: the chip list, kept clear of every control */
+          setMiniState("off"); headerCard.classList.remove('show','ringCentre');
+          summaryPanel.classList.add('ringNarrow');
+          const cr = document.querySelector('.controls-right'), R = cr && cr.getBoundingClientRect();
+          summaryPanel.style.top = ((R && R.height > 0) ? R.bottom + 12 : 12) + 'px';
+          summaryPanel.style.bottom = (h - v.safe.b) + 'px';
+          summaryPanel.style.left = v.safe.l + 'px'; summaryPanel.style.right = v.safe.l + 'px';
+          showSummary();
+        }
+      }
+
       /* ===== Timeline ===== */
       const timeline = []; let tTotal = 0;
       function addPhase(kind, duration, props={}){ timeline.push({ kind, t0:tTotal, t1:tTotal+duration, ...props }); tTotal += duration; }
@@ -741,6 +837,7 @@
             if(i>0) addPhase("travel",T.travel,{i,from:i-1});
             addPhase("hold",T.hold,{i}); addPhase("fadeOut",T.fadeOut,{i}); addPhase("gap",T.gap,{i});
           }
+          if(isRing) addPhase("travel",T.travel,{i:0,from:LAST,closing:true});   /* back to the start: a full circle */
           addPhase("camMoveAll",T.camMoveAll); addPhase("overviewAll",T.overviewAll); addPhase("overviewFadeOutAll",T.overviewFadeOutAll); addPhase("pause",T.pause);
           return;
         }
@@ -763,8 +860,17 @@
       /* ===== Pathway draw ===== */
       function drawPathway(seg, t, focusIndex, overview){
         ctx.lineWidth = 2.5;
-        for(let i=0;i<nodes.length-1;i++){ const a=nodes[i], b=nodes[i+1]; ctx.strokeStyle=`rgba(${C.n},${overview?0.35:0.14})`; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); }
-        if(seg.kind==="travel"){
+        if(isRing){
+          ctx.strokeStyle=`rgba(${C.n},${overview?0.40:0.16})`; ctx.beginPath(); ctx.arc(ring.cx,ring.cy,ring.r,0,Math.PI*2); ctx.stroke();
+          if(seg.kind==="travel"){
+            const [a0,a1]=arcAngles(seg), tr=easeInOutCubic((t-seg.t0)/(seg.t1-seg.t0)), a=lerp(a0,a1,tr), p=arcPoint(a);
+            ctx.strokeStyle=`rgba(${C.a},0.55)`; ctx.lineWidth=3.5; ctx.beginPath(); ctx.arc(ring.cx,ring.cy,ring.r,a0,a1); ctx.stroke();
+            ctx.fillStyle=`rgba(${C.a},0.95)`; ctx.beginPath(); ctx.arc(p.x,p.y,4,0,Math.PI*2); ctx.fill();
+            ctx.fillStyle=`rgba(${C.n},0.3)`; ctx.beginPath(); ctx.arc(p.x,p.y,24,0,Math.PI*2); ctx.fill();
+          }
+        }
+        for(let i=0;i<nodes.length-1 && !isRing;i++){ const a=nodes[i], b=nodes[i+1]; ctx.strokeStyle=`rgba(${C.n},${overview?0.35:0.14})`; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); }
+        if(seg.kind==="travel" && !isRing){
           const from=nodes[seg.from], to=nodes[seg.i], tr=easeInOutCubic((t-seg.t0)/(seg.t1-seg.t0));
           ctx.strokeStyle=`rgba(${C.a},0.5)`; ctx.lineWidth=3.5; ctx.beginPath(); ctx.moveTo(from.x,from.y); ctx.lineTo(to.x,to.y); ctx.stroke();
           const x=lerp(from.x,to.x,tr), y=lerp(from.y,to.y,tr);
@@ -880,18 +986,22 @@
         let seg = timeline.find(s => t>=s.t0 && t<s.t1) || timeline[timeline.length-1];
 
         if(mode === 'auto'){
-          if(seg.kind==="travel"){ focusIndex=seg.i; const from=nodes[seg.from], to=nodes[seg.i], tt=easeInOutCubic((t-seg.t0)/(seg.t1-seg.t0)); target={ x:lerp(from.x,to.x,tt), y:lerp(from.y,to.y,tt) }; }
+          if(seg.kind==="travel"){ focusIndex=seg.i; const from=nodes[seg.from], to=nodes[seg.i], tt=easeInOutCubic((t-seg.t0)/(seg.t1-seg.t0));
+            if(isRing){ const [a0,a1]=arcAngles(seg); target=arcPoint(lerp(a0,a1,tt)); } else { target={ x:lerp(from.x,to.x,tt), y:lerp(from.y,to.y,tt) }; } }
           else if(seg.kind==="hold"||seg.kind==="fadeOut"||seg.kind==="gap"){ focusIndex=seg.i; target=nodes[seg.i]; }
           else if(seg.kind==="camMoveLevel"){ const b=calcBounds(seg.startIdx,seg.endIdx), tt=easeInOutCubic((t-seg.t0)/(seg.t1-seg.t0)), prev=nodes[seg.endIdx]; target={ x:lerp(prev.x,b.cx,tt), y:lerp(prev.y,b.cy,tt) }; targetZ=lerp(ZOOM_IN, clamp((w*0.75)/b.spanX,0.6,1.2), tt); }
           else if(seg.kind==="overviewLevel"||seg.kind==="overviewFadeOut"){ const b=calcBounds(seg.startIdx,seg.endIdx); target={ x:b.cx, y:b.cy }; targetZ=clamp((w*0.75)/b.spanX,0.6,1.2); overview=true; }
+          else if(isRing && seg.kind==="camMoveAll"){ const v=ringView(), tt=easeInOutCubic((t-seg.t0)/(seg.t1-seg.t0)); target={ x:lerp(nodes[0].x,v.target.x,tt), y:lerp(nodes[0].y,v.target.y,tt) }; targetZ=lerp(ZOOM_IN, v.z, tt); }
+          else if(isRing && (seg.kind==="overviewAll"||seg.kind==="overviewFadeOutAll"||seg.kind==="pause")){ const v=ringView(); target=v.target; targetZ=v.z; overview=true; }
           else if(seg.kind==="camMoveAll"){ const b=calcBounds(0,LAST), pb=calcBounds(lastStart,LAST), tt=easeInOutCubic((t-seg.t0)/(seg.t1-seg.t0)); target={ x:lerp(pb.cx,b.cx,tt), y:lerp(pb.cy,b.cy,tt) }; const pz=clamp((w*0.75)/pb.spanX,0.6,1.2), az=clamp(Math.min((w*0.85)/b.spanX,(h*0.72)/b.spanY),0.3,0.95); targetZ=lerp(pz,az,tt); }
           else if(seg.kind==="overviewAll"||seg.kind==="overviewFadeOutAll"||seg.kind==="pause"){ const b=calcBounds(0,LAST); target={ x:b.cx, y:b.cy }; targetZ=clamp(Math.min((w*0.85)/b.spanX,(h*0.72)/b.spanY),0.3,0.95); overview=true; }
         } else {
           overview=true; let b;
-          if(mode==='ALL'){ b=calcBounds(0,LAST); targetZ=clamp(Math.min((w*0.85)/b.spanX,(h*0.72)/b.spanY),0.3,0.95); setMiniState("off"); showSummary(); hTitle.textContent=allTitle(); hSub.textContent=allSub(); }
+          if(mode==='ALL' && isRing){ const v=ringView(); b={ cx:v.target.x, cy:v.target.y }; targetZ=v.z; hTitle.textContent=allTitle(); hSub.textContent=allSub(); }
+          else if(mode==='ALL'){ b=calcBounds(0,LAST); targetZ=clamp(Math.min((w*0.85)/b.spanX,(h*0.72)/b.spanY),0.3,0.95); setMiniState("off"); showSummary(); hTitle.textContent=allTitle(); hSub.textContent=allSub(); }
           else if(mode.indexOf('LV')===0){ const k=+mode.slice(2); const L=levels[k]; b=calcBounds(L.start,L.end); targetZ=clamp((w*0.75)/b.spanX,0.6,1.2); placeMiniCards(L.start,L.end); setMiniState("in",L.start,L.end); hideSummary(); hTitle.textContent=`${PROGRAMME.name}: ${L.label} Summary`; hSub.textContent=levelSub(); }
           else { b=calcBounds(0,LAST); }
-          target={ x:b.cx, y:b.cy }; headerCard.classList.add('show');
+          target={ x:b.cx, y:b.cy }; if(!(isRing && mode==='ALL')) headerCard.classList.add('show');
         }
 
         let smoothing = prefersReducedMotion ? 1 : 0.12;
@@ -904,6 +1014,12 @@
         drawPathway(seg, t, focusIndex, overview);
 
         const nodeScreen = (focusIndex>=0) ? toScreen(nodes[focusIndex]) : {x:0,y:0};
+        if(isRing){
+          const ringOn = (mode==='ALL') || (mode==='auto' && seg.kind==="overviewAll");
+          if(ringOn) ringSummary(true);
+          else if(mode==='auto' && seg.kind==="overviewFadeOutAll"){ setMiniState("out", 0, LAST); }
+          else if(mode==='auto' && seg.kind!=="overviewFadeOutAll"){ ringSummary(false); }
+        }
 
         if(mode==='auto'){
           if(seg.kind==="hold"){ showActiveCard(seg.i, nodeScreen); }
@@ -913,7 +1029,8 @@
           if(seg.kind==="overviewLevel"){ const k=levelOfIndex(seg.startIdx); hTitle.textContent=`${PROGRAMME.name}: ${levels[k].label} Summary`; hSub.textContent=levelSub(); headerCard.classList.add('show'); placeMiniCards(seg.startIdx,seg.endIdx); setMiniState("in",seg.startIdx,seg.endIdx); }
           else if(seg.kind==="overviewFadeOut"){ headerCard.classList.remove('show'); placeMiniCards(seg.startIdx,seg.endIdx); setMiniState("out",seg.startIdx,seg.endIdx); }
 
-          if(seg.kind==="overviewAll"){ hTitle.textContent=allTitle(); hSub.textContent=allSub(); headerCard.classList.add('show'); setMiniState("off"); showSummary(); }
+          if(seg.kind==="overviewAll" && isRing){ hTitle.textContent=allTitle(); hSub.textContent=allSub(); }
+          else if(seg.kind==="overviewAll"){ hTitle.textContent=allTitle(); hSub.textContent=allSub(); headerCard.classList.add('show'); setMiniState("off"); showSummary(); }
           else if(seg.kind==="overviewFadeOutAll"){ headerCard.classList.remove('show'); hideSummary(); }
           else if(seg.kind==="pause"){ setMiniState("off"); hideSummary(); }
         }
