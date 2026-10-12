@@ -1,9 +1,10 @@
 <!DOCTYPE html>
+<!-- build: TM 9035 | vision-references-hub | r4 | 2026-10-11 -->
 <html lang="en-GB">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>References</title>
+<title>TM 9035: References hub (folder-nav + search)</title>
 <style>
 /* Bundled Poppins — self-contained, no external font CDN (embed-safe) */
 @font-face { font-family:"Poppins"; src:url("assets/poppins-400.ttf") format("truetype"); font-weight:400; font-style:normal; font-display:swap; }
@@ -160,6 +161,29 @@ body{
   .tmh-prep i{ animation:none; }
 }
 </style>
+<!-- r4-embed:start -->
+<style id="r4-embed-css">
+  /* owner 2026-09-22: a slide that is off screen or in a hidden tab does no work */
+  [data-idle="1"], [data-idle="1"] * { animation-play-state: paused !important; }
+  /* owner 2026-09-23 / 2026-10-11: the in-activity zoom (script at the end of the page). Only that script sets
+     html.zi-on, and only inside a frame on a touch device, so a direct link and a desktop keep what they had. */
+  html.zi-on, html.zi-on * { touch-action: pan-x pan-y; }
+  html.zi-zoomed, html.zi-zoomed * { touch-action: none !important; }
+  #zi-full { display: none; position: fixed; z-index: 2147483646; left: calc(10 * var(--zi-g)); top: calc(10 * var(--zi-g)); height: calc(36 * var(--zi-g)); margin: 0;
+    padding: 0 calc(3 * var(--zi-g)) 0 calc(12 * var(--zi-g)); gap: calc(8 * var(--zi-g)); box-sizing: border-box; align-items: center; border: 0; border-radius: calc(18 * var(--zi-g));
+    background: var(--navy, #222f55); color: #fff; box-shadow: 0 calc(3 * var(--zi-g)) calc(10 * var(--zi-g)) rgba(34,47,85,.3);
+    font-family: inherit; font-weight: 700; font-size: calc(14 * var(--zi-g)); font-variant-numeric: tabular-nums;
+    cursor: pointer; -webkit-tap-highlight-color: transparent; -webkit-appearance: none; appearance: none; }
+  html.zi-zoomed #zi-full { display: flex; }
+  #zi-full::after { content: ""; position: absolute; left: calc(-5 * var(--zi-g)); right: calc(-5 * var(--zi-g)); top: calc(-5 * var(--zi-g)); bottom: calc(-5 * var(--zi-g)); }
+  #zi-full:focus-visible { outline: calc(2.5 * var(--zi-g)) solid var(--teal, #0096be); outline-offset: calc(2 * var(--zi-g)); }
+  #zi-full .zi-num { min-width: calc(30 * var(--zi-g)); text-align: right; }
+  #zi-full .zi-dot { width: calc(30 * var(--zi-g)); height: calc(30 * var(--zi-g)); padding: calc(7.5 * var(--zi-g)); box-sizing: border-box; border-radius: 50%; background: var(--teal, #0096be); color: #fff; }
+  #zi-full svg { display: block; width: 100%; height: 100%; }
+</style>
+<!-- r4-embed:end -->
+
+<meta name="build-version" content="TM 9035 vision-references-hub r4 2026-10-11">
 </head>
 <body>
 
@@ -211,12 +235,12 @@ body{
 
 <script>
 /* ============================================================
-   CONTENT — the 19-item full scene deck reference list (deck numbering). Edit here only.
-   Numbers 1–19 are fixed (master order); categories regroup them.
+   CONTENT — the 21-item full scene deck reference list (deck numbering). Edit here only.
+   Numbers 1–21 are fixed (master order); categories regroup them.
    ============================================================ */
 const CAT1 = "MET biology & the METex14 driver";
-const CAT2 = "Approvals, guidelines & pivotal VISION";
-const CAT3 = "VISION ≥3-year posters";
+const CAT2 = "Approvals, guidelines & pivotal VISION trial";
+const CAT3 = "VISION long-term follow-up";
 
 const REFERENCES = [
   { n:1,  cat:CAT1, type:"Journal article", cite:"Russo A, Javey M, Huang RSP, Yaung SJ, Kaplan B, Hiemenz MC, et al. Molecular Profiling Across 80,000 Patients With Lung Cancer. J Thorac Oncol. 2026;21(8):103695.", short:"Russo A, et al. J Thorac Oncol. 2026;21(8):103695.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2026.103695" },
@@ -226,18 +250,20 @@ const REFERENCES = [
   { n:5,  cat:CAT1, type:"Journal article", cite:"Remon J, Hendriks LEL, Mountzios G, García-Campelo R, Saw SPL, et al. MET alterations in NSCLC-Current Perspectives and Future Challenges. J Thorac Oncol. 2023;18(4):419–435.", short:"Remon J, et al. J Thorac Oncol. 2023;18(4):419–435.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2022.10.015" },
   { n:6,  cat:CAT1, type:"Journal article", cite:"Tong JH, Yeung SF, Chan AW, Chung LY, Chau SL, Lung RW, et al. MET Amplification and Exon 14 Splice Site Mutation Define Unique Molecular Subgroups of Non-Small Cell Lung Carcinoma with Poor Prognosis. Clin Cancer Res. 2016;22(12):3048–3056.", short:"Tong JH, et al. Clin Cancer Res. 2016;22(12):3048–3056.", journal:"Clin Cancer Res.", url:"https://doi.org/10.1158/1078-0432.CCR-15-2061" },
   { n:7,  cat:CAT2, type:"Prescribing information", cite:"US FDA. TEPMETKO (tepotinib) Prescribing Information. 2024.", avail:"emdserono.com/…/tepmetko-pi.pdf", accessed:"June 2026", url:"https://www.emdserono.com/us-en/pi/tepmetko-pi.pdf" },
-  { n:8,  cat:CAT2, type:"News release", cite:"TEPMETKO (Tepotinib) Approved in Japan for Advanced NSCLC with METex14 Skipping Alterations. 2020.", avail:"merckgroup.com/en/news/tepotinib-25-03-2020.html", accessed:"June 2026", url:"https://www.merckgroup.com/en/news/tepotinib-25-03-2020.html" },
+  { n:8,  cat:CAT2, type:"Regulatory review report", cite:"Pharmaceuticals and Medical Devices Agency. 2020. Report on the Deliberation Results - Tepmetko Tablets 250 mg.", avail:"pmda.go.jp/files/000236338.pdf", accessed:"October 2026", url:"https://www.pmda.go.jp/files/000236338.pdf" },
   { n:9,  cat:CAT2, type:"SmPC", cite:"European Medicines Agency. TEPMETKO (tepotinib) Summary of Product Characteristics. 2026.", avail:"ema.europa.eu/…/tepmetko-epar-product-information_en.pdf", accessed:"June 2026", url:"https://www.ema.europa.eu/en/documents/product-information/tepmetko-epar-product-information_en.pdf" },
   { n:10, cat:CAT2, type:"Prescribing information", cite:"US FDA. Tabrecta (capmatinib) Prescribing Information. 2024.", avail:"novartis.com/…/tabrecta.pdf", accessed:"June 2026", url:"https://www.novartis.com/us-en/sites/novartis_us/files/tabrecta.pdf" },
   { n:11, cat:CAT2, type:"SmPC", cite:"European Medicines Agency. Tabrecta (capmatinib) Summary of Product Characteristics. 2025.", avail:"ema.europa.eu/…/tabrecta-epar-product-information_en.pdf", accessed:"June 2026", url:"https://www.ema.europa.eu/en/documents/product-information/tabrecta-epar-product-information_en.pdf" },
   { n:12, cat:CAT2, type:"Journal article", cite:"Hendriks LE, Kerr KM, Menis J, Mok TS, Nestle U, Passaro A, et al. Oncogene-addicted metastatic non-small-cell lung cancer: ESMO Clinical Practice Guideline for diagnosis, treatment and follow-up. Ann Oncol. 2023;34(4):339–357.", short:"Hendriks LE, et al. Ann Oncol. 2023;34(4):339–357.", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2022.12.009" },
-  { n:13, cat:CAT2, type:"Clinical guideline", cite:"ESMO Oncogene-Addicted Metastatic Non-Small-Cell Lung Cancer Living Guideline, v1.3 – February 2026.", avail:"esmo.org/guidelines/living-guidelines/…", accessed:"June 2026", url:"https://www.esmo.org/guidelines/living-guidelines/esmo-living-guideline-oncogene-addicted-metastatic-non-small-cell-lung-cancer/management-of-advanced-and-metastatic-disease" },
+  { n:13, cat:CAT2, type:"Clinical guideline", cite:"Hendriks LE, et al. ESMO Oncogene-Addicted Non-Small Cell Lung Cancer Living Guideline v1.3. 2026.", avail:"esmo.org/guidelines/living-guidelines/…", accessed:"June 2026", url:"https://www.esmo.org/guidelines/living-guidelines/esmo-living-guideline-oncogene-addicted-metastatic-non-small-cell-lung-cancer/management-of-advanced-and-metastatic-disease" },
   { n:14, cat:CAT2, type:"Journal article", cite:"Mazieres J, Paik PK, Garassino MC, Le X, Sakai H, Veillon R, et al. Tepotinib Treatment in Patients With MET Exon 14-Skipping Non-Small Cell Lung Cancer: Long-term Follow-up of the VISION Phase 2 Nonrandomized Clinical Trial. JAMA Oncol. 2023;9(9):1260–1266.", short:"Mazieres J, et al. JAMA Oncol. 2023;9(9):1260–1266.", journal:"JAMA Oncol.", url:"https://doi.org/10.1001/jamaoncol.2023.1962" },
-  { n:15, cat:CAT3, type:"Conference abstract", cite:"Mazieres J, Veillon R, Cortot AB, Ferrara R, Felip E, Garassino MC, Le X, et al. Tepotinib in patients with METex14 skipping NSCLC from the VISION study: ≥3-year follow-up outcomes. J Thorac Oncol. 2025;20(3 Suppl 1):S59–S60. (81P)", short:"Mazieres J, et al. 81P. J Thorac Oncol. 2025;20(3 Suppl 1):S59–S60.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/S1556-0864(25)00276-X" },
-  { n:16, cat:CAT3, type:"Conference abstract", cite:"Felip E, Ferrara R, Veillon R, Le X, Smit EF, Mazieres J, et al. Safety and Patient-Reported Outcomes With Tepotinib in Patients With METex14 Skipping NSCLC: ≥3-Years Follow-Up of VISION. J Thorac Oncol. 2025;20(10 Suppl 1):S483–S484. (P3.12.40)", short:"Felip E, et al. P3.12.40. J Thorac Oncol. 2025;20(10 Suppl 1):S483–S484.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2025.09.902" },
-  { n:17, cat:CAT3, type:"Conference abstract", cite:"Griesinger F, Ferrara R, Felip E, Smit EF, Veillon R, Le X, et al. Long-term outcomes with tepotinib for clinically relevant subgroups of patients with METex14 skipping NSCLC in the VISION study: A ≥3-year follow-up. Ann Oncol. 2025;36:S1061–S1062. (1996P)", short:"Griesinger F, et al. 1996P. Ann Oncol. 2025;36:S1061–S1062.", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2025.08.2620" },
-  { n:18, cat:CAT3, type:"Conference abstract", cite:"Viteri S, Felip E, Smit E, Veillon R, Le X, Raskin J, et al. Treatment sequencing of tepotinib in patients with METex14 skipping NSCLC: Outcomes from ≥3 years follow-up of the VISION study. Ann Oncol. 2025;36:S1060–S1061. (1995P)", short:"Viteri S, et al. 1995P. Ann Oncol. 2025;36:S1060–S1061.", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2025.08.2619" },
-  { n:19, cat:CAT3, type:"Conference abstract", cite:"Yang JC-H, Morise M, Ahn M, Kato T, Zhao J, Chen YM, et al. Long-term outcomes in Asian patients with MET exon 14 skipping NSCLC receiving tepotinib in the VISION study: ≥3-year follow-up data. Ann Oncol. 2025;36:S2062–S2063. (992P)", short:"Yang JC-H, et al. 992P. Ann Oncol. 2025;36:S2062–S2063.", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2025.10.703" }
+  { n:15, cat:CAT2, type:"Journal article", cite:"Le X, Paz-Ares LG, Van Meerbeeck J, Viteri S, Galvez CC, Smit EF, et al. Tepotinib in patients with non-small cell lung cancer with high-level MET amplification detected by liquid biopsy: VISION Cohort B. Cell Rep Med. 2023;4(11):101280.", short:"Le X, et al. Cell Rep Med. 2023;4(11):101280.", journal:"Cell Rep Med.", url:"https://doi.org/10.1016/j.xcrm.2023.101280" },
+  { n:16, cat:CAT3, type:"Conference abstract", cite:"Mazieres J, Veillon R, Cortot AB, Ferrara R, Felip E, Garassino MC, Le X, et al. Tepotinib in patients with METex14 skipping NSCLC from the VISION study: ≥3-year follow-up outcomes. J Thorac Oncol. 2025;20(3 Suppl 1):S59–S60. (81P)", short:"Mazieres J, et al. 81P. J Thorac Oncol. 2025;20(3 Suppl 1):S59–S60.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/S1556-0864(25)00276-X" },
+  { n:17, cat:CAT3, type:"Conference abstract", cite:"Felip E, Ferrara R, Veillon R, Le X, Smit EF, Mazieres J, et al. Safety and Patient-Reported Outcomes With Tepotinib in Patients With METex14 Skipping NSCLC: ≥3-Years Follow-Up of VISION. J Thorac Oncol. 2025;20(10 Suppl 1):S483–S484. (P3.12.40)", short:"Felip E, et al. P3.12.40. J Thorac Oncol. 2025;20(10 Suppl 1):S483–S484.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2025.09.902" },
+  { n:18, cat:CAT3, type:"Conference abstract", cite:"Griesinger F, Ferrara R, Felip E, Smit EF, Veillon R, Le X, et al. Long-term outcomes with tepotinib for clinically relevant subgroups of patients with METex14 skipping NSCLC in the VISION study: A ≥3-year follow-up. Ann Oncol. 2025;36:S1061–S1062. (1996P)", short:"Griesinger F, et al. 1996P. Ann Oncol. 2025;36:S1061–S1062.", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2025.08.2620" },
+  { n:19, cat:CAT2, type:"Journal article", cite:"Rolfo C, O'Brate A, Menzel C, Bruns R, Juraeva D, Stroh C, et al. Liquid and Tissue Biopsies for Identifying MET Exon 14 Skipping NSCLC: Analyses from the Phase II VISION Study of Tepotinib. Clin Cancer Res. 2025;31(13):2675–2684.", short:"Rolfo C, et al. Clin Cancer Res. 2025;31(13):2675–2684.", journal:"Clin Cancer Res.", url:"https://doi.org/10.1158/1078-0432.CCR-24-4097" },
+  { n:20, cat:CAT3, type:"Conference abstract", cite:"Viteri S, Felip E, Smit E, Veillon R, Le X, Raskin J, et al. Treatment sequencing of tepotinib in patients with METex14 skipping NSCLC: Outcomes from ≥3 years follow-up of the VISION study. Ann Oncol. 2025;36:S1060–S1061. (1995P)", short:"Viteri S, et al. 1995P. Ann Oncol. 2025;36:S1060–S1061.", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2025.08.2619" },
+  { n:21, cat:CAT3, type:"Conference abstract", cite:"Yang JC-H, Morise M, Ahn M, Kato T, Zhao J, Chen YM, et al. Long-term outcomes in Asian patients with MET exon 14 skipping NSCLC receiving tepotinib in the VISION study: ≥3-year follow-up data. Ann Oncol. 2025;36:S2062–S2063. (992P)", short:"Yang JC-H, et al. 992P. Ann Oncol. 2025;36:S2062–S2063.", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2025.10.703" }
 ];
 
 /* ============================================================
@@ -262,6 +288,9 @@ const REFERENCES = [
   const OPEN_ICON = '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>';
 
   function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  // R4: gene stem italic at render time only (contract section 10); data, search and copy stay plain.
+  // "MET biology" is left roman - an ambiguous form that needs a per-case ruling (E12, with Alex).
+  function italGene(s){ return String(s).replace(/\bMET(?=ex14)/g, '<em>MET</em>'); }
   // Italicise the journal token inside the (already-escaped) citation, per house style.
   function citeHTML(r,useShort){
     /* useShort renders the abridged list form; every other caller - the
@@ -313,7 +342,7 @@ const REFERENCES = [
     const refs = REFERENCES.filter(r=>r.cat===cat);
     return '<div class="tmh-cat" tabindex="0" role="button" data-cat="'+esc(cat)+'" style="--theme:'+THEME[cat]+'">'+
       '<div class="tmh-cat__icon">'+ICON[cat]+'</div>'+
-      '<h2 class="tmh-cat__title">'+esc(cat)+'</h2>'+
+      '<h2 class="tmh-cat__title">'+italGene(esc(cat))+'</h2>'+
       '<div class="tmh-cat__meta"><span class="tmh-cat__count">'+refs.length+' reference'+(refs.length>1?'s':'')+'</span>'+
       '<span class="tmh-cat__range">Refs '+refRange(refs.map(r=>r.n))+'</span></div></div>';
   }
@@ -325,7 +354,7 @@ const REFERENCES = [
     home.onclick=()=>{ inCat=null; search.value=''; render(); };
     crumbs.appendChild(home);
     if(inCat){ const s=document.createElement('span'); s.className='tmh-sep'; s.textContent='›'; crumbs.appendChild(s);
-      const c=document.createElement('span'); c.className='tmh-crumb tmh-crumb--static'; c.textContent=inCat; crumbs.appendChild(c); }
+      const c=document.createElement('span'); c.className='tmh-crumb tmh-crumb--static'; c.innerHTML=italGene(esc(inCat)); crumbs.appendChild(c); }
   }
 
   function render(){
@@ -434,5 +463,216 @@ const REFERENCES = [
 })();
 </script>
 <div class="tmh-toast" id="tmhToast" role="status" aria-live="polite"></div>
+<!-- r4-embed:start -->
+<script id="r4-embed-js">
+/* The embed behaviour standard for a flexible TM9035 page (touchmedical-html contract section 4; owner rulings
+   2026-09-22/23, adapted for flexible pages 2026-10-11). The main box is the page's first visible top-level
+   element (main.frame, main.slide, .stage, #tmh-root); it is marked data-stage="1" data-fluid="1". */
+(function () {
+  function pickRoot() {
+    var s = document.querySelector('[data-stage="1"]');
+    if (s && s.isConnected) return s;
+    var best = null, area = 0, kids = document.body ? document.body.children : [];
+    for (var i = 0; i < kids.length; i++) {
+      var k = kids[i];
+      if (/^(SCRIPT|STYLE|TEMPLATE|NOSCRIPT|LINK)$/.test(k.tagName) || k.id === "zi-full") continue;
+      var r = k.getBoundingClientRect(), a = r.width * r.height;
+      if (a > area) { area = a; best = k; }
+    }
+    if (best) { best.setAttribute("data-stage", "1"); best.setAttribute("data-fluid", "1"); }
+    return best;
+  }
+
+  /* ---- idle: paused while off screen or hidden ---- */
+  var idleOff = false;
+  function idleSet() {
+    var r = pickRoot(); if (!r) return;
+    r.setAttribute("data-idle", (idleOff || document.hidden) ? "1" : "0");
+  }
+  function idleStart() {
+    var r = pickRoot(); if (!r) return;
+    idleSet();
+    if (typeof IntersectionObserver !== "undefined") {
+      new IntersectionObserver(function (es) { idleOff = !es.some(function (e) { return e.isIntersecting; }); idleSet(); },
+        { threshold: 0 }).observe(r);
+    }
+    document.addEventListener("visibilitychange", idleSet);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", idleStart); else idleStart();
+
+  /* ---- in-activity zoom: inside a frame, on a touch device only ---- */
+  var inFrame = true;
+  try { inFrame = window.self !== window.top; } catch (e) { inFrame = true; }
+  var touch = !!(window.matchMedia && window.matchMedia("(hover: none)").matches);
+  if (!inFrame || !touch) return;
+
+  var MAX = 3, root = document.documentElement, stage = null, z = 1, tx = 0, ty = 0, g = null;
+  var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  root.classList.add("zi-on");
+
+  var FIT = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 3v6H3M15 3v6h6M9 21v-6H3M15 21v-6h6" ' +
+    'fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var chip = document.createElement("button");
+  chip.id = "zi-full"; chip.type = "button";
+  chip.setAttribute("aria-label", "Back to full view");
+  chip.setAttribute("data-review", "chrome");
+  chip.setAttribute("data-review-id", "g-zoom-full");
+  chip.innerHTML = '<span class="zi-num" aria-hidden="true">1.0×</span><span class="zi-dot">' + FIT + "</span>";
+  var num = chip.querySelector(".zi-num");
+
+  /* the chip is sized in screen pixels: --zi-g is frame px per screen px, measured from a pinch */
+  var measured = 0;
+  function estimate() {
+    var a = screen.width, b = screen.height, short = Math.min(a, b), long = Math.max(a, b);
+    var type = (screen.orientation && screen.orientation.type) || "";
+    var land = /landscape/.test(type) || window.orientation === 90 || window.orientation === -90;
+    var vw = land ? long : short, vh = land ? short : long;
+    var s = Math.min((vw - 40) / (innerWidth || 1370), (vh - 120) / (innerHeight || 700));
+    return Math.max(0.15, Math.min(1, s));
+  }
+  function setUnit() { root.style.setProperty("--zi-g", (1 / (measured || estimate())).toFixed(4) + "px"); }
+  function measure(a, b) {
+    var dc = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+    var ds = Math.hypot(a.screenX - b.screenX, a.screenY - b.screenY);
+    if (dc < 20 || !ds) return;
+    var s = ds / dc;
+    if (s > 0.1 && s < 1.25 && Math.abs(s - 1) > 0.001) { measured = s; setUnit(); }
+  }
+  setUnit();
+
+  var wrote = { s: null, t: null }, prevTransition = null, restoreT = 0;
+  function animateOnce() {
+    if (reduce || !stage) return;
+    var s = stage;
+    if (prevTransition === null) prevTransition = s.style.transition;
+    s.style.transition = (prevTransition ? prevTransition + ", " : "") + "scale .2s ease, translate .2s ease";
+    clearTimeout(restoreT);
+    restoreT = setTimeout(function () { s.style.transition = prevTransition; prevTransition = null; }, 260);
+  }
+  function commit(animate) {
+    if (!stage) return;
+    if (animate) animateOnce();
+    if (z <= 1.001 && !tx && !ty) {
+      /* at rest a flexible page carries no transform at all */
+      stage.style.removeProperty("scale"); stage.style.removeProperty("translate");
+    } else {
+      stage.style.translate = tx + "px " + ty + "px";
+      stage.style.scale = String(z);
+    }
+    wrote.s = stage.style.scale; wrote.t = stage.style.translate;
+    root.classList.toggle("zi-zoomed", z > 1.001);
+    num.textContent = z.toFixed(1) + "×";
+    unscroll();
+  }
+  function toFull(animate) {
+    g = null;
+    if (!stage || (z === 1 && !tx && !ty)) return;
+    z = 1; tx = 0; ty = 0;
+    commit(animate);
+  }
+  function unscroll() {
+    for (var p = stage && stage.parentElement; p; p = p.parentElement) {
+      if (p.scrollTop || p.scrollLeft) { p.scrollTop = 0; p.scrollLeft = 0; }
+    }
+  }
+  document.addEventListener("scroll", function (e) {
+    var t = e.target;
+    if (stage && z > 1.001 && (t === document || (t.contains && t !== stage && t.contains(stage)))) unscroll();
+  }, true);
+
+  var mo = null;
+  function findStage() {
+    var s = pickRoot();
+    if (!s || !s.isConnected || !s.getBoundingClientRect().width) { stage = null; requestAnimationFrame(findStage); return; }
+    if (s === stage) return;
+    stage = s;
+    if (!chip.isConnected) document.body.appendChild(chip);
+    if (mo) mo.disconnect();
+    mo = new MutationObserver(function () {
+      if (stage.style.scale !== wrote.s || stage.style.translate !== wrote.t) commit(false);
+    });
+    mo.observe(stage, { attributes: true, attributeFilter: ["style"] });
+    commit(false);
+  }
+  function ensureStage() { if (!stage || !stage.isConnected) findStage(); return !!stage && stage.isConnected; }
+
+  function origin() { return { x: stage.offsetLeft + stage.offsetWidth / 2, y: stage.offsetTop + stage.offsetHeight / 2 }; }
+  function fitted() {
+    var O = origin(), r = stage.getBoundingClientRect();
+    return { O: O,
+      l: O.x + (r.left - O.x - tx) / z, r: O.x + (r.right - O.x - tx) / z,
+      t: O.y + (r.top - O.y - ty) / z, b: O.y + (r.bottom - O.y - ty) / z };
+  }
+  function clamp(F) {
+    tx = Math.min((1 - z) * (F.l - F.O.x), Math.max((1 - z) * (F.r - F.O.x), tx));
+    ty = Math.min((1 - z) * (F.t - F.O.y), Math.max((1 - z) * (F.b - F.O.y), ty));
+  }
+  function dist(a, b) { return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY); }
+  function mid(a, b) { return { x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 }; }
+
+  function startPinch(e) {
+    var a = e.touches[0], b = e.touches[1], F = fitted(), m = mid(a, b);
+    measure(a, b);
+    g = { mode: "pinch", d0: Math.max(10, dist(a, b)), z0: z, F: F,
+      qx: F.O.x + (m.x - F.O.x - tx) / z, qy: F.O.y + (m.y - F.O.y - ty) / z };
+  }
+  function startPan(t) { g = { mode: "pan-pending", x0: t.clientX, y0: t.clientY, tx0: tx, ty0: ty, F: fitted() }; }
+  function onChip(t) { return !!t && (t === chip || chip.contains(t)); }
+
+  window.addEventListener("touchstart", function (e) {
+    if (!ensureStage() || onChip(e.target)) { g = null; return; }
+    if (e.touches.length === 2) startPinch(e);
+    else if (e.touches.length === 1 && z > 1.001) startPan(e.touches[0]);
+    else g = null;
+  }, { passive: true, capture: true });
+
+  window.addEventListener("touchmove", function (e) {
+    if (!stage || !g) return;
+    if (e.touches.length >= 2) {
+      if (g.mode !== "pinch") startPinch(e);
+      e.preventDefault();
+      var a = e.touches[0], b = e.touches[1], m = mid(a, b);
+      z = Math.min(MAX, Math.max(1, g.z0 * dist(a, b) / g.d0));
+      tx = m.x - g.F.O.x - z * (g.qx - g.F.O.x);
+      ty = m.y - g.F.O.y - z * (g.qy - g.F.O.y);
+      clamp(g.F); commit(false);
+    } else if (e.touches.length === 1 && (g.mode === "pan-pending" || g.mode === "pan")) {
+      var t = e.touches[0], dx = t.clientX - g.x0, dy = t.clientY - g.y0;
+      /* under 10 screen points stays a tap (measured through the same scale as the chip) */
+      if (g.mode === "pan-pending" && Math.hypot(dx, dy) * (measured || estimate()) < 10) return;
+      g.mode = "pan";
+      e.preventDefault();
+      tx = g.tx0 + dx; ty = g.ty0 + dy;
+      clamp(g.F); commit(false);
+    }
+  }, { passive: false, capture: true });
+
+  function end(e) {
+    if (!g) return;
+    if (e.touches.length === 1 && z > 1.001) startPan(e.touches[0]);
+    else if (e.touches.length === 0) { g = null; if (z < 1.02) { z = 1; tx = 0; ty = 0; commit(false); } }
+  }
+  window.addEventListener("touchend", end, { passive: true, capture: true });
+  window.addEventListener("touchcancel", end, { passive: true, capture: true });
+  chip.addEventListener("click", function () { toFull(true); });
+
+  /* back to full view by itself: slide hidden or left, tab hidden, frame resized */
+  new MutationObserver(function (list) {
+    for (var i = 0; i < list.length; i++) {
+      var m = list[i];
+      if (m.attributeName === "data-idle" && m.target.getAttribute("data-idle") === "1") toFull(false);
+    }
+  }).observe(document.documentElement, { subtree: true, attributes: true, attributeFilter: ["data-idle"] });
+  document.addEventListener("visibilitychange", function () { if (document.hidden) toFull(false); });
+  window.addEventListener("resize", function () { setUnit(); toFull(false); });
+  if (screen.orientation && screen.orientation.addEventListener) {
+    screen.orientation.addEventListener("change", function () { measured = 0; setUnit(); });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", findStage); else findStage();
+})();
+</script>
+<!-- r4-embed:end -->
+<script id="build-stamp">(function(){var T="TM 9035: References hub (folder-nav + search)",M="TM 9035 vision-references-hub r4 2026-10-11";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<script id="layer-release">(function(){var SAFE=/^(tmh-rise)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;if(el.getAnimations&&el.getAnimations().some(function(a){return a.playState==="paused";})){seen.set(el,now);return;}var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
 </body>
 </html>

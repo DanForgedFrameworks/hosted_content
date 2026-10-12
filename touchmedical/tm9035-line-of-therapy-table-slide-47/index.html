@@ -1,15 +1,16 @@
 <!DOCTYPE html>
+<!-- build: TM 9035 | tm9035-line-of-therapy-table-slide-47-2026-06-24-v1 | r4 | 2026-10-11 -->
 <html lang="en-GB">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Efficacy with tepotinib according to line of therapy (VISION)</title>
+<title>TM 9035: Line-of-therapy efficacy table</title>
 <style>
 /* ============================================================
    TOUCH MEDICAL — TM9035 SLIDE 47  (fit-to-embed-box, 680 ceiling)
    Efficacy with tepotinib according to line of therapy (VISION METex14).
    Scaffolded table: ORR % + mDOR months by default; "Show 95% CI / IQR"
-   toggle adds intervals; 2L+ prior-treatment breakdown expandable; the
+   toggle adds intervals (R4-72: kept, FL request declined 8 Oct); 2L+ prior-treatment breakdown expandable; the
    * / dagger / double-dagger footnotes are hover/focus/tap hotspots.
    Self-contained. No external runtime dependencies. Poppins (bundled).
    Brand: teal #0098be, navy #222f55.
@@ -48,6 +49,7 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 .toolbar__box{ display:inline-flex; align-items:center; gap:clamp(10px,1.8vw,18px); flex-wrap:wrap; justify-content:center; max-width:1120px; padding:8px 18px; border:2px solid var(--teal); border-radius:14px; background:rgba(0,152,190,.06); }
 .toolbar__hint{ font-size:clamp(.8rem,1.35vw,.96rem); font-weight:600; color:var(--teal-strong); line-height:1.3; }
 .toolbar__hint b{ color:var(--navy); font-weight:700; }
+.toolbar__fn{ font-size:clamp(.78rem,1.3vw,.9rem); font-weight:600; color:var(--navy); line-height:1.3; }
 
 /* ---------- body ---------- */
 .body{ flex:0 1 auto; min-height:0; overflow:auto; position:relative; z-index:1; display:flex; flex-direction:column; padding:clamp(8px,1.5vh,16px) clamp(16px,3vw,40px) clamp(4px,0.8vh,9px); gap:clamp(7px,1.3vh,12px); }
@@ -74,6 +76,9 @@ table.eff{ width:100%; border-collapse:collapse; table-layout:fixed; }
 .eff .val{ font-weight:700; }
 .eff .ci{ display:none; color:var(--muted); font-weight:600; white-space:nowrap; }
 [data-ci="on"] .eff .ci{ display:inline; }
+/* With intervals on, the open 2L+ breakdown must still fit 1370x620 with no scroll (it scrolled before, 8 Oct).
+   Scoped to the open state, so the closed table keeps its approved spacing. */
+.frame.is-expanded .eff th,.frame.is-expanded .eff td{ padding-top:clamp(3px,.6vh,7px); padding-bottom:clamp(3px,.6vh,7px); }
 [data-ci="on"] .eff .ci.block{ display:block; font-size:.84em; margin-top:1px; }
 
 /* ORR data-bar cell */
@@ -213,11 +218,65 @@ body.is-fullscreen{ padding-top:56px; }
   .nudge{ font-size:13px; left:12px; right:12px; transform:none; max-width:none; justify-content:center; }
   .nudge.is-on{ animation:none; }
   .frame.nudge-shown{ padding-bottom:0; }
+  /* R4 12 Oct (H13): with the CIs on, the intervals ran over the next column and off the edge.
+     On a phone each interval sits on its own line under its value, and the table is a touch tighter. */
+  [data-ci="on"] .eff .ci, [data-ci="on"] .eff .ci.block{ display:block; white-space:normal; font-size:.86em; line-height:1.25; margin-top:1px; }
+  .eff th,.eff td{ padding:6px 4px; }
+  .eff td.out{ font-size:.72rem; line-height:1.25; hyphens:auto; }
+  .eff col.c-out{ width:31%; } .eff col.c-n{ width:11%; } .eff col.c-orr{ width:20%; } .eff col.c-dor{ width:19%; } .eff col.c-pfs{ width:19%; }
+  .eff td.orr .bar{ top:4%; bottom:4%; }
+  .eff tr.sub td.out{ padding-left:14px; }
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
 }
 </style>
+<!-- r4-embed:start -->
+<style id="r4-embed-css">
+  /* owner 2026-09-22: a slide that is off screen or in a hidden tab does no work */
+  [data-idle="1"], [data-idle="1"] * { animation-play-state: paused !important; }
+  /* owner 2026-09-23 / 2026-10-11: the in-activity zoom (script at the end of the page). Only that script sets
+     html.zi-on, and only inside a frame on a touch device, so a direct link and a desktop keep what they had. */
+  html.zi-on, html.zi-on * { touch-action: pan-x pan-y; }
+  html.zi-zoomed, html.zi-zoomed * { touch-action: none !important; }
+  #zi-full { display: none; position: fixed; z-index: 2147483646; left: calc(10 * var(--zi-g)); top: calc(10 * var(--zi-g)); height: calc(36 * var(--zi-g)); margin: 0;
+    padding: 0 calc(3 * var(--zi-g)) 0 calc(12 * var(--zi-g)); gap: calc(8 * var(--zi-g)); box-sizing: border-box; align-items: center; border: 0; border-radius: calc(18 * var(--zi-g));
+    background: var(--navy, #222f55); color: #fff; box-shadow: 0 calc(3 * var(--zi-g)) calc(10 * var(--zi-g)) rgba(34,47,85,.3);
+    font-family: inherit; font-weight: 700; font-size: calc(14 * var(--zi-g)); font-variant-numeric: tabular-nums;
+    cursor: pointer; -webkit-tap-highlight-color: transparent; -webkit-appearance: none; appearance: none; }
+  html.zi-zoomed #zi-full { display: flex; }
+  #zi-full::after { content: ""; position: absolute; left: calc(-5 * var(--zi-g)); right: calc(-5 * var(--zi-g)); top: calc(-5 * var(--zi-g)); bottom: calc(-5 * var(--zi-g)); }
+  #zi-full:focus-visible { outline: calc(2.5 * var(--zi-g)) solid var(--teal, #0096be); outline-offset: calc(2 * var(--zi-g)); }
+  #zi-full .zi-num { min-width: calc(30 * var(--zi-g)); text-align: right; }
+  #zi-full .zi-dot { width: calc(30 * var(--zi-g)); height: calc(30 * var(--zi-g)); padding: calc(7.5 * var(--zi-g)); box-sizing: border-box; border-radius: 50%; background: var(--teal, #0096be); color: #fff; }
+  #zi-full svg { display: block; width: 100%; height: 100%; }
+</style>
+<!-- r4-embed:end -->
+
+<meta name="build-version" content="TM 9035 tm9035-line-of-therapy-table-slide-47-2026-06-24-v1 r4 2026-10-11">
+<!-- r4-strip:start -->
+<style id="r4-strip-css">
+  /* owner 2026-10-12 (fix A): full-screen phone view only - the chrome gets its own strip, never sits on content */
+  body.is-fullscreen { padding-top: 64px !important; }
+  body.is-fullscreen::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 64px; z-index: 55;
+    background: #fff; box-shadow: 0 1px 0 rgba(34,47,85,.12); pointer-events: none; }
+  body.is-fullscreen .returnbar { top: 10px !important; left: 10px !important; z-index: 61 !important; }
+  body.is-fullscreen:has(.nudge.is-on) { padding-top: 116px !important; }
+  body.is-fullscreen:has(.nudge.is-on)::before { height: 116px; }
+  body.is-fullscreen .nudge { top: 62px !important; bottom: auto !important; left: 10px !important; right: 10px !important;
+    transform: none !important; max-width: none !important; justify-content: center; z-index: 61 !important; }
+  body.is-fullscreen .nudge.is-on { animation: none !important; }
+  /* pop-ups (Source, data tables, leave-site notice) open above the strip */
+  body.is-fullscreen .modal, body.is-fullscreen .srcmodal, body.is-fullscreen .src-modal, body.is-fullscreen #citeModal,
+  body.is-fullscreen .cite-modal, body.is-fullscreen .inter { z-index: 70 !important; }
+  /* wide screens (phone landscape): the Finished bar shares the one strip, to the right of Return to course */
+  @media (min-width: 640px) {
+    body.is-fullscreen:has(.nudge.is-on) { padding-top: 64px !important; }
+    body.is-fullscreen:has(.nudge.is-on)::before { height: 64px; }
+    body.is-fullscreen .nudge { top: 10px !important; left: 230px !important; height: 44px; box-sizing: border-box; }
+  }
+</style>
+<!-- r4-strip:end -->
 </head>
 <body>
 <main class="frame" aria-label="Efficacy with tepotinib according to line of therapy in VISION">
@@ -245,7 +304,8 @@ body.is-fullscreen{ padding-top:56px; }
   <div class="toolbar">
     <div class="toolbar__box">
       <button class="ci-toggle" id="ciToggle" type="button" aria-pressed="false"><span class="sw" aria-hidden="true"></span>Show 95% CI / IQR</button>
-      <span class="toolbar__hint">Expand the <b>2L+</b> breakdown, then select the <b>*&nbsp;&dagger;&nbsp;&Dagger;</b> markers for notes.</span>
+      <span class="toolbar__fn">*95% confidence intervals for efficacy outcomes with tepotinib and IQR for other treatments.</span>
+      <span class="toolbar__hint">Expand the <b>2L+</b> breakdown, then select the <b>&dagger;&nbsp;&Dagger;</b> markers for notes.</span>
     </div>
   </div>
 
@@ -289,8 +349,8 @@ body.is-fullscreen{ padding-top:56px; }
   <div class="cite-card" role="document">
     <p class="cite-card__eyebrow">Source</p>
     <h2 class="cite-card__title" id="citeTitle">VISION trial &mdash; tepotinib in <em>MET</em>ex14 skipping NSCLC</h2>
-    <p class="cite-card__body">Data are for the 313 patients with <em>MET</em>ex14 skipping NSCLC in the Phase&nbsp;2 VISION trial. ORR is objective response rate; mDOR is median duration of response. 95%&nbsp;CIs are shown for tepotinib efficacy outcomes; IQR is shown for prior treatments.
-      <span class="cite-card__ref">Viteri S, Felip E, Smit E, Veillon R, Le X, Raskin J, et al. 1995P Treatment (Tx) sequencing of tepotinib in patients (pts) with <em>MET</em> exon&nbsp;14 (<em>MET</em>ex14) skipping non-small cell lung cancer (NSCLC): Outcomes from &ge;3 years follow-up of the VISION study. <em>Ann Oncol.</em> 2025;36:S1060&ndash;S1061.<sup>&nbsp;18</sup></span>
+    <p class="cite-card__body">
+      <span class="cite-card__ref">Viteri S, Felip E, Smit E, Veillon R, Le X, Raskin J, et al. Treatment sequencing of tepotinib in patients with <em>MET</em>ex14 skipping NSCLC: Outcomes from &ge;3 years follow-up of the VISION study. <em>Ann Oncol.</em> 2025;36:S1060&ndash;S1061. (1995P)<sup>&nbsp;20</sup></span>
     </p>
     <div class="cite-card__actions">
       <button class="cite-dismiss" id="citeDismiss" type="button">Close</button>
@@ -420,7 +480,7 @@ body.is-fullscreen{ padding-top:56px; }
   /* ---------- expandable subrows (robust, no animation-gating) ---------- */
   let expanded=false, collapseTimer=null;
   function setExpanded(on){
-    expanded=on; parent.setAttribute('aria-expanded',on?'true':'false');
+    expanded=on; parent.setAttribute('aria-expanded',on?'true':'false'); frame.classList.toggle('is-expanded',on);
     if(collapseTimer){ clearTimeout(collapseTimer); collapseTimer=null; }
     if(on){
       subEls.forEach((tr,i)=>{ tr.hidden=false; tr.classList.remove('is-anim'); void tr.offsetWidth;
@@ -465,7 +525,7 @@ body.is-fullscreen{ padding-top:56px; }
 
   /* ---------- citation modal ---------- */
   const citeModal=document.getElementById('citeModal'); let citeLastFocus=null;
-  function openCite(){ citeLastFocus=document.activeElement; citeModal.hidden=false; citeModal.classList.add('is-open'); setTimeout(()=>document.getElementById('citeDismiss').focus(),30); }
+  function openCite(){ citeLastFocus=document.activeElement; citeModal.hidden=false; citeModal.classList.add('is-open'); setTimeout(()=>document.getElementById('citeDismiss').focus({preventScroll:true}),30); }
   function closeCite(){ citeModal.classList.remove('is-open'); citeModal.hidden=true; if(citeLastFocus&&citeLastFocus.focus){ try{ citeLastFocus.focus(); }catch(e){} } }
 
   document.getElementById('citeSrc').addEventListener('click',openCite);
@@ -488,7 +548,8 @@ body.is-fullscreen{ padding-top:56px; }
     launchTimer=setTimeout(()=>{ if(iDots) iDots.style.display='none'; iStatus.textContent='Ready to open.'; iOpen.disabled=false; iOpen.focus(); }, reduceMotion?250:1300);
   }
   function closeInter(){ if(launchTimer) clearTimeout(launchTimer); inter.classList.remove('is-open'); inter.hidden=true; if(interTrigger&&interTrigger.focus){ try{ interTrigger.focus(); }catch(e){} } }
-  document.getElementById('citeView').addEventListener('click',function(){ openInter(this.dataset.url,this.dataset.ref,this); });
+  // The View source control was removed on 6 Aug (source links live only in the hubs); its wiring
+  // stayed and threw, which stopped the footnote and keyboard handlers below from running. R4.
   iOpen.addEventListener('click',()=>{ if(!pendingURL) return; window.open(pendingURL,'_blank','noopener,noreferrer'); iStatus.textContent='Link opened in a new tab. Nothing opened? Copy the link and open it manually.'; });
   iCopy.addEventListener('click',()=>{ if(!pendingURL) return; const ta=document.createElement('textarea'); ta.value=pendingURL; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select(); let ok=false; try{ ok=document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); iStatus.textContent=ok?'Link copied. Paste it into a fresh browser tab.':'Copying is unavailable. Select and copy the visible URL manually.'; });
   iStay.addEventListener('click',closeInter);
@@ -541,5 +602,216 @@ body.is-fullscreen{ padding-top:56px; }
   if (fullscreen) { document.body.classList.add('is-fullscreen'); }
 }());
 </script>
+<!-- r4-embed:start -->
+<script id="r4-embed-js">
+/* The embed behaviour standard for a flexible TM9035 page (touchmedical-html contract section 4; owner rulings
+   2026-09-22/23, adapted for flexible pages 2026-10-11). The main box is the page's first visible top-level
+   element (main.frame, main.slide, .stage, #tmh-root); it is marked data-stage="1" data-fluid="1". */
+(function () {
+  function pickRoot() {
+    var s = document.querySelector('[data-stage="1"]');
+    if (s && s.isConnected) return s;
+    var best = null, area = 0, kids = document.body ? document.body.children : [];
+    for (var i = 0; i < kids.length; i++) {
+      var k = kids[i];
+      if (/^(SCRIPT|STYLE|TEMPLATE|NOSCRIPT|LINK)$/.test(k.tagName) || k.id === "zi-full") continue;
+      var r = k.getBoundingClientRect(), a = r.width * r.height;
+      if (a > area) { area = a; best = k; }
+    }
+    if (best) { best.setAttribute("data-stage", "1"); best.setAttribute("data-fluid", "1"); }
+    return best;
+  }
+
+  /* ---- idle: paused while off screen or hidden ---- */
+  var idleOff = false;
+  function idleSet() {
+    var r = pickRoot(); if (!r) return;
+    r.setAttribute("data-idle", (idleOff || document.hidden) ? "1" : "0");
+  }
+  function idleStart() {
+    var r = pickRoot(); if (!r) return;
+    idleSet();
+    if (typeof IntersectionObserver !== "undefined") {
+      new IntersectionObserver(function (es) { idleOff = !es.some(function (e) { return e.isIntersecting; }); idleSet(); },
+        { threshold: 0 }).observe(r);
+    }
+    document.addEventListener("visibilitychange", idleSet);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", idleStart); else idleStart();
+
+  /* ---- in-activity zoom: inside a frame, on a touch device only ---- */
+  var inFrame = true;
+  try { inFrame = window.self !== window.top; } catch (e) { inFrame = true; }
+  var touch = !!(window.matchMedia && window.matchMedia("(hover: none)").matches);
+  if (!inFrame || !touch) return;
+
+  var MAX = 3, root = document.documentElement, stage = null, z = 1, tx = 0, ty = 0, g = null;
+  var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  root.classList.add("zi-on");
+
+  var FIT = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 3v6H3M15 3v6h6M9 21v-6H3M15 21v-6h6" ' +
+    'fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var chip = document.createElement("button");
+  chip.id = "zi-full"; chip.type = "button";
+  chip.setAttribute("aria-label", "Back to full view");
+  chip.setAttribute("data-review", "chrome");
+  chip.setAttribute("data-review-id", "g-zoom-full");
+  chip.innerHTML = '<span class="zi-num" aria-hidden="true">1.0×</span><span class="zi-dot">' + FIT + "</span>";
+  var num = chip.querySelector(".zi-num");
+
+  /* the chip is sized in screen pixels: --zi-g is frame px per screen px, measured from a pinch */
+  var measured = 0;
+  function estimate() {
+    var a = screen.width, b = screen.height, short = Math.min(a, b), long = Math.max(a, b);
+    var type = (screen.orientation && screen.orientation.type) || "";
+    var land = /landscape/.test(type) || window.orientation === 90 || window.orientation === -90;
+    var vw = land ? long : short, vh = land ? short : long;
+    var s = Math.min((vw - 40) / (innerWidth || 1370), (vh - 120) / (innerHeight || 700));
+    return Math.max(0.15, Math.min(1, s));
+  }
+  function setUnit() { root.style.setProperty("--zi-g", (1 / (measured || estimate())).toFixed(4) + "px"); }
+  function measure(a, b) {
+    var dc = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+    var ds = Math.hypot(a.screenX - b.screenX, a.screenY - b.screenY);
+    if (dc < 20 || !ds) return;
+    var s = ds / dc;
+    if (s > 0.1 && s < 1.25 && Math.abs(s - 1) > 0.001) { measured = s; setUnit(); }
+  }
+  setUnit();
+
+  var wrote = { s: null, t: null }, prevTransition = null, restoreT = 0;
+  function animateOnce() {
+    if (reduce || !stage) return;
+    var s = stage;
+    if (prevTransition === null) prevTransition = s.style.transition;
+    s.style.transition = (prevTransition ? prevTransition + ", " : "") + "scale .2s ease, translate .2s ease";
+    clearTimeout(restoreT);
+    restoreT = setTimeout(function () { s.style.transition = prevTransition; prevTransition = null; }, 260);
+  }
+  function commit(animate) {
+    if (!stage) return;
+    if (animate) animateOnce();
+    if (z <= 1.001 && !tx && !ty) {
+      /* at rest a flexible page carries no transform at all */
+      stage.style.removeProperty("scale"); stage.style.removeProperty("translate");
+    } else {
+      stage.style.translate = tx + "px " + ty + "px";
+      stage.style.scale = String(z);
+    }
+    wrote.s = stage.style.scale; wrote.t = stage.style.translate;
+    root.classList.toggle("zi-zoomed", z > 1.001);
+    num.textContent = z.toFixed(1) + "×";
+    unscroll();
+  }
+  function toFull(animate) {
+    g = null;
+    if (!stage || (z === 1 && !tx && !ty)) return;
+    z = 1; tx = 0; ty = 0;
+    commit(animate);
+  }
+  function unscroll() {
+    for (var p = stage && stage.parentElement; p; p = p.parentElement) {
+      if (p.scrollTop || p.scrollLeft) { p.scrollTop = 0; p.scrollLeft = 0; }
+    }
+  }
+  document.addEventListener("scroll", function (e) {
+    var t = e.target;
+    if (stage && z > 1.001 && (t === document || (t.contains && t !== stage && t.contains(stage)))) unscroll();
+  }, true);
+
+  var mo = null;
+  function findStage() {
+    var s = pickRoot();
+    if (!s || !s.isConnected || !s.getBoundingClientRect().width) { stage = null; requestAnimationFrame(findStage); return; }
+    if (s === stage) return;
+    stage = s;
+    if (!chip.isConnected) document.body.appendChild(chip);
+    if (mo) mo.disconnect();
+    mo = new MutationObserver(function () {
+      if (stage.style.scale !== wrote.s || stage.style.translate !== wrote.t) commit(false);
+    });
+    mo.observe(stage, { attributes: true, attributeFilter: ["style"] });
+    commit(false);
+  }
+  function ensureStage() { if (!stage || !stage.isConnected) findStage(); return !!stage && stage.isConnected; }
+
+  function origin() { return { x: stage.offsetLeft + stage.offsetWidth / 2, y: stage.offsetTop + stage.offsetHeight / 2 }; }
+  function fitted() {
+    var O = origin(), r = stage.getBoundingClientRect();
+    return { O: O,
+      l: O.x + (r.left - O.x - tx) / z, r: O.x + (r.right - O.x - tx) / z,
+      t: O.y + (r.top - O.y - ty) / z, b: O.y + (r.bottom - O.y - ty) / z };
+  }
+  function clamp(F) {
+    tx = Math.min((1 - z) * (F.l - F.O.x), Math.max((1 - z) * (F.r - F.O.x), tx));
+    ty = Math.min((1 - z) * (F.t - F.O.y), Math.max((1 - z) * (F.b - F.O.y), ty));
+  }
+  function dist(a, b) { return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY); }
+  function mid(a, b) { return { x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 }; }
+
+  function startPinch(e) {
+    var a = e.touches[0], b = e.touches[1], F = fitted(), m = mid(a, b);
+    measure(a, b);
+    g = { mode: "pinch", d0: Math.max(10, dist(a, b)), z0: z, F: F,
+      qx: F.O.x + (m.x - F.O.x - tx) / z, qy: F.O.y + (m.y - F.O.y - ty) / z };
+  }
+  function startPan(t) { g = { mode: "pan-pending", x0: t.clientX, y0: t.clientY, tx0: tx, ty0: ty, F: fitted() }; }
+  function onChip(t) { return !!t && (t === chip || chip.contains(t)); }
+
+  window.addEventListener("touchstart", function (e) {
+    if (!ensureStage() || onChip(e.target)) { g = null; return; }
+    if (e.touches.length === 2) startPinch(e);
+    else if (e.touches.length === 1 && z > 1.001) startPan(e.touches[0]);
+    else g = null;
+  }, { passive: true, capture: true });
+
+  window.addEventListener("touchmove", function (e) {
+    if (!stage || !g) return;
+    if (e.touches.length >= 2) {
+      if (g.mode !== "pinch") startPinch(e);
+      e.preventDefault();
+      var a = e.touches[0], b = e.touches[1], m = mid(a, b);
+      z = Math.min(MAX, Math.max(1, g.z0 * dist(a, b) / g.d0));
+      tx = m.x - g.F.O.x - z * (g.qx - g.F.O.x);
+      ty = m.y - g.F.O.y - z * (g.qy - g.F.O.y);
+      clamp(g.F); commit(false);
+    } else if (e.touches.length === 1 && (g.mode === "pan-pending" || g.mode === "pan")) {
+      var t = e.touches[0], dx = t.clientX - g.x0, dy = t.clientY - g.y0;
+      /* under 10 screen points stays a tap (measured through the same scale as the chip) */
+      if (g.mode === "pan-pending" && Math.hypot(dx, dy) * (measured || estimate()) < 10) return;
+      g.mode = "pan";
+      e.preventDefault();
+      tx = g.tx0 + dx; ty = g.ty0 + dy;
+      clamp(g.F); commit(false);
+    }
+  }, { passive: false, capture: true });
+
+  function end(e) {
+    if (!g) return;
+    if (e.touches.length === 1 && z > 1.001) startPan(e.touches[0]);
+    else if (e.touches.length === 0) { g = null; if (z < 1.02) { z = 1; tx = 0; ty = 0; commit(false); } }
+  }
+  window.addEventListener("touchend", end, { passive: true, capture: true });
+  window.addEventListener("touchcancel", end, { passive: true, capture: true });
+  chip.addEventListener("click", function () { toFull(true); });
+
+  /* back to full view by itself: slide hidden or left, tab hidden, frame resized */
+  new MutationObserver(function (list) {
+    for (var i = 0; i < list.length; i++) {
+      var m = list[i];
+      if (m.attributeName === "data-idle" && m.target.getAttribute("data-idle") === "1") toFull(false);
+    }
+  }).observe(document.documentElement, { subtree: true, attributes: true, attributeFilter: ["data-idle"] });
+  document.addEventListener("visibilitychange", function () { if (document.hidden) toFull(false); });
+  window.addEventListener("resize", function () { setUnit(); toFull(false); });
+  if (screen.orientation && screen.orientation.addEventListener) {
+    screen.orientation.addEventListener("change", function () { measured = 0; setUnit(); });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", findStage); else findStage();
+})();
+</script>
+<!-- r4-embed:end -->
+<script id="build-stamp">(function(){var T="TM 9035: Line-of-therapy efficacy table",M="TM 9035 tm9035-line-of-therapy-table-slide-47-2026-06-24-v1 r4 2026-10-11";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<script id="layer-release">(function(){var SAFE=/^(rise|rowIn)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;if(el.getAnimations&&el.getAnimations().some(function(a){return a.playState==="paused";})){seen.set(el,now);return;}var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
 </body>
 </html>

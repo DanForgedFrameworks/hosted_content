@@ -1,9 +1,10 @@
 <!DOCTYPE html>
+<!-- build: TM 9035 | tm9035-meti-rechallenge-slide-49-2026-06-30-v1 | r4 | 2026-10-11 -->
 <html lang="en-GB">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Outcomes with METi rechallenge — VISION study</title>
+  <title>TM 9035: METi rechallenge</title>
   <style>
     @font-face { font-family: "Poppins"; src: url("assets/poppins-400.ttf") format("truetype"); font-weight: 400; font-display: swap; }
     @font-face { font-family: "Poppins"; src: url("assets/poppins-600.ttf") format("truetype"); font-weight: 600; font-display: swap; }
@@ -59,7 +60,7 @@
     .donut__sub { margin-top: 4px; font-size: clamp(.7rem,1.25vw,.86rem); font-weight: 600; color: var(--muted); line-height: 1.22; }
     .donut__lab { margin-top: 3px; font-size: clamp(.74rem,1.3vw,.92rem); font-weight: 700; color: var(--teal-strong); line-height: 1.15; min-height: 1.1em; }
 
-    .legend { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 6px clamp(14px,2vw,28px); align-content: center; }
+    .legend { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); grid-template-rows: repeat(5, auto); grid-auto-flow: column; gap: 6px clamp(14px,2vw,28px); align-content: center; }   /* R4-83: highest to lowest reading down each column */
     .legend__item { display: grid; grid-template-columns: 16px minmax(0,1fr) auto; align-items: center; gap: 10px; padding: 6px 10px; border-radius: 9px; background: rgba(255,255,255,.55); border: 1px solid transparent; cursor: pointer; text-align: left; font: inherit; transition: background .14s ease, border-color .14s ease, transform .14s ease; }
     .legend__item:hover, .legend__item.is-active { background: #fff; border-color: var(--teal); transform: translateX(2px); }
     .legend__item:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
@@ -96,23 +97,23 @@
     .tepo-note__body { font-size: clamp(.82rem,1.25vw,1rem); line-height: 1.4; color: var(--navy); font-weight: 500; }
     .tepo-note__body b { font-weight: 700; }
     .tepo-note__body .ast { display: block; margin-top: 5px; font-size: .86em; color: var(--muted); font-weight: 600; }
-    .tepo-note.flash, .tepo-note[data-enter].flash { animation: noteFlash 1.4s ease both; }
+    .tepo-note.flash, .tepo-note[data-rise].flash { animation: noteFlash 1.4s ease both; }
     @keyframes noteFlash { 0%,100% { box-shadow: 0 0 0 0 rgba(31,157,107,0); } 30% { box-shadow: 0 0 0 6px rgba(31,157,107,.28); } }
 
     /* ===== Staged entrance (§5B): transform-only, opacity:1 at rest (§6); reduced-motion = no motion ===== */
     @media (prefers-reduced-motion: no-preference) {
       @keyframes riseIn { from { transform: translateY(10px); } to { transform: translateY(0); } }
       @keyframes popIn  { from { transform: scale(.965); }      to { transform: scale(1); } }
-      .legend__item, .stat[data-enter], .tepo-note[data-enter] { animation: riseIn .44s cubic-bezier(.34,1.4,.5,1) backwards; }
+      .legend__item, .stat[data-rise], .tepo-note[data-rise] { animation: riseIn .44s cubic-bezier(.34,1.4,.5,1) backwards; }
       .legend__item:nth-child(1){ animation-delay:.03s } .legend__item:nth-child(2){ animation-delay:.09s }
       .legend__item:nth-child(3){ animation-delay:.15s } .legend__item:nth-child(4){ animation-delay:.21s }
       .legend__item:nth-child(5){ animation-delay:.27s } .legend__item:nth-child(6){ animation-delay:.33s }
       .legend__item:nth-child(7){ animation-delay:.39s } .legend__item:nth-child(8){ animation-delay:.45s }
       .legend__item:nth-child(9){ animation-delay:.51s }
       .donut-stack { animation: popIn .5s cubic-bezier(.34,1.4,.5,1) backwards; }
-      .stat[data-enter]:nth-child(1){ animation-delay:.05s } .stat[data-enter]:nth-child(2){ animation-delay:.12s }
-      .stat[data-enter]:nth-child(3){ animation-delay:.19s } .stat[data-enter]:nth-child(4){ animation-delay:.26s }
-      .tepo-note[data-enter]{ animation-delay:.32s }
+      .stat[data-rise]:nth-child(1){ animation-delay:.05s } .stat[data-rise]:nth-child(2){ animation-delay:.12s }
+      .stat[data-rise]:nth-child(3){ animation-delay:.19s } .stat[data-rise]:nth-child(4){ animation-delay:.26s }
+      .tepo-note[data-rise]{ animation-delay:.32s }
     }
 
     /* ===== Footer (progress + source) ===== */
@@ -219,14 +220,76 @@
       .xpanel.active { display: block; }
       .donut-grid { grid-template-columns: minmax(0,1fr); }
       .donut-stack { max-width: 260px; }
-      .legend { grid-template-columns: minmax(0,1fr); }
+      .legend { grid-template-columns: minmax(0,1fr); grid-template-rows: none; grid-auto-flow: row; }
       .stat-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      /* R4 12 Oct (H15): the tab number circles squashed against the two-line labels and the tick sat on the text */
+      .xtab { justify-content: flex-start; gap: 8px; padding: 8px 30px 8px 10px; font-size: .9rem; text-align: left; }
+      .xtab .num { flex: 0 0 22px; width: 22px; height: 22px; font-size: .74rem; }
+      .xtab .tick { top: 6px; right: 7px; }
       .nudge { font-size: 13px; left: 12px; right: 12px; transform: none; max-width: none; justify-content: center; }
       .nudge.is-on { animation: none; }
       .slide.nudge-shown .xfoot { padding-bottom: 12px; }
     }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
   </style>
+<!-- r4-embed:start -->
+<style id="r4-embed-css">
+  /* owner 2026-09-22: a slide that is off screen or in a hidden tab does no work */
+  [data-idle="1"], [data-idle="1"] * { animation-play-state: paused !important; }
+  /* owner 2026-09-23 / 2026-10-11: the in-activity zoom (script at the end of the page). Only that script sets
+     html.zi-on, and only inside a frame on a touch device, so a direct link and a desktop keep what they had. */
+  html.zi-on, html.zi-on * { touch-action: pan-x pan-y; }
+  html.zi-zoomed, html.zi-zoomed * { touch-action: none !important; }
+  #zi-full { display: none; position: fixed; z-index: 2147483646; left: calc(10 * var(--zi-g)); top: calc(10 * var(--zi-g)); height: calc(36 * var(--zi-g)); margin: 0;
+    padding: 0 calc(3 * var(--zi-g)) 0 calc(12 * var(--zi-g)); gap: calc(8 * var(--zi-g)); box-sizing: border-box; align-items: center; border: 0; border-radius: calc(18 * var(--zi-g));
+    background: var(--navy, #222f55); color: #fff; box-shadow: 0 calc(3 * var(--zi-g)) calc(10 * var(--zi-g)) rgba(34,47,85,.3);
+    font-family: inherit; font-weight: 700; font-size: calc(14 * var(--zi-g)); font-variant-numeric: tabular-nums;
+    cursor: pointer; -webkit-tap-highlight-color: transparent; -webkit-appearance: none; appearance: none; }
+  html.zi-zoomed #zi-full { display: flex; }
+  #zi-full::after { content: ""; position: absolute; left: calc(-5 * var(--zi-g)); right: calc(-5 * var(--zi-g)); top: calc(-5 * var(--zi-g)); bottom: calc(-5 * var(--zi-g)); }
+  #zi-full:focus-visible { outline: calc(2.5 * var(--zi-g)) solid var(--teal, #0096be); outline-offset: calc(2 * var(--zi-g)); }
+  #zi-full .zi-num { min-width: calc(30 * var(--zi-g)); text-align: right; }
+  #zi-full .zi-dot { width: calc(30 * var(--zi-g)); height: calc(30 * var(--zi-g)); padding: calc(7.5 * var(--zi-g)); box-sizing: border-box; border-radius: 50%; background: var(--teal, #0096be); color: #fff; }
+  #zi-full svg { display: block; width: 100%; height: 100%; }
+</style>
+<!-- r4-embed:end -->
+
+<meta name="build-version" content="TM 9035 tm9035-meti-rechallenge-slide-49-2026-06-30-v1 r4 2026-10-11">
+<!-- r4-sources:start -->
+<style id="r4-sources-css">
+  /* owner 2026-10-12 (fix G): every Source pop-up in the slide 47 style */
+  .modal-card .src-eyebrow { margin: 0 0 4px; font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--teal, #0098be); }
+  .modal-card .src-title { margin: 0 0 8px; font-size: clamp(1.05rem,2vw,1.25rem); font-weight: 700; color: var(--navy, #222f55); line-height: 1.3; }
+  .modal-card .modal-cite { display: block; margin: 10px 0 0; padding-top: 10px; border-top: 1px solid var(--line, #e3e8ee); font-size: .85rem; line-height: 1.5; color: var(--muted, #56608a); }
+  .modal-card .modal-cite sup { color: var(--teal, #0098be); font-weight: 700; }
+  .modal-card .src-close { flex: 0 0 auto; min-height: 44px; padding: 10px 18px; border: 2px solid var(--teal, #0098be); border-radius: 10px; background: #fff; color: var(--teal, #0098be); font: inherit; font-weight: 700; font-size: .88rem; cursor: pointer; }
+  .modal-card .src-close:focus-visible { outline: 3px solid var(--navy, #222f55); outline-offset: 3px; }
+  .modal-card .modal-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+</style>
+<!-- r4-sources:end -->
+<!-- r4-strip:start -->
+<style id="r4-strip-css">
+  /* owner 2026-10-12 (fix A): full-screen phone view only - the chrome gets its own strip, never sits on content */
+  body.is-fullscreen { padding-top: 64px !important; }
+  body.is-fullscreen::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 64px; z-index: 55;
+    background: #fff; box-shadow: 0 1px 0 rgba(34,47,85,.12); pointer-events: none; }
+  body.is-fullscreen .returnbar { top: 10px !important; left: 10px !important; z-index: 61 !important; }
+  body.is-fullscreen:has(.nudge.is-on) { padding-top: 116px !important; }
+  body.is-fullscreen:has(.nudge.is-on)::before { height: 116px; }
+  body.is-fullscreen .nudge { top: 62px !important; bottom: auto !important; left: 10px !important; right: 10px !important;
+    transform: none !important; max-width: none !important; justify-content: center; z-index: 61 !important; }
+  body.is-fullscreen .nudge.is-on { animation: none !important; }
+  /* pop-ups (Source, data tables, leave-site notice) open above the strip */
+  body.is-fullscreen .modal, body.is-fullscreen .srcmodal, body.is-fullscreen .src-modal, body.is-fullscreen #citeModal,
+  body.is-fullscreen .cite-modal, body.is-fullscreen .inter { z-index: 70 !important; }
+  /* wide screens (phone landscape): the Finished bar shares the one strip, to the right of Return to course */
+  @media (min-width: 640px) {
+    body.is-fullscreen:has(.nudge.is-on) { padding-top: 64px !important; }
+    body.is-fullscreen:has(.nudge.is-on)::before { height: 64px; }
+    body.is-fullscreen .nudge { top: 10px !important; left: 230px !important; height: 44px; box-sizing: border-box; }
+  }
+</style>
+<!-- r4-strip:end -->
 </head>
 <body>
   <main class="slide" id="slide" aria-label="Outcomes with METi rechallenge — explorer">
@@ -266,15 +329,15 @@
             </div>
 
             <div class="legend" id="legend" role="list" aria-label="Subsequent MET inhibitors by patient number">
-              <button class="legend__item" role="listitem" data-k="crizotinib"><span class="legend__sw" style="background:#222f55"></span><span class="legend__name">Crizotinib</span><span class="legend__n">21 <span class="pct">(33.3 %)</span></span></button>
-              <button class="legend__item" role="listitem" data-k="capmatinib"><span class="legend__sw" style="background:#34518a"></span><span class="legend__name">Capmatinib</span><span class="legend__n">21 <span class="pct">(33.3 %)</span></span></button>
-              <button class="legend__item is-focus" role="listitem" data-k="tepotinib"><span class="legend__sw" style="background:#0098be"></span><span class="legend__name">Tepotinib</span><span class="legend__n">7 <span class="pct">(11.1 %)</span></span></button>
-              <button class="legend__item" role="listitem" data-k="amivantamab"><span class="legend__sw" style="background:#2f7fa6"></span><span class="legend__name">Amivantamab</span><span class="legend__n">4 <span class="pct">(6.3 %)</span></span></button>
-              <button class="legend__item" role="listitem" data-k="cabozantinib"><span class="legend__sw" style="background:#4f9fc4"></span><span class="legend__name">Cabozantinib</span><span class="legend__n">3 <span class="pct">(4.8 %)</span></span></button>
-              <button class="legend__item" role="listitem" data-k="savolitinib"><span class="legend__sw" style="background:#74b4d3"></span><span class="legend__name">Savolitinib</span><span class="legend__n">3 <span class="pct">(4.8 %)</span></span></button>
-              <button class="legend__item" role="listitem" data-k="sym015"><span class="legend__sw" style="background:#93c7df"></span><span class="legend__name">Sym015</span><span class="legend__n">2 <span class="pct">(3.2 %)</span></span></button>
-              <button class="legend__item" role="listitem" data-k="elzovantinib"><span class="legend__sw" style="background:#b4d8e8"></span><span class="legend__name">Elzovantinib</span><span class="legend__n">1 <span class="pct">(1.6 %)</span></span></button>
-              <button class="legend__item" role="listitem" data-k="telisotuzumab"><span class="legend__sw" style="background:#d3e9f2"></span><span class="legend__name">Telisotuzumab vedotin</span><span class="legend__n">1 <span class="pct">(1.6 %)</span></span></button>
+              <button class="legend__item" role="listitem" data-k="crizotinib"><span class="legend__sw" style="background:#222f55"></span><span class="legend__name">Crizotinib</span><span class="legend__n">21 <span class="pct">(33.3%)</span></span></button>
+              <button class="legend__item" role="listitem" data-k="capmatinib"><span class="legend__sw" style="background:#34518a"></span><span class="legend__name">Capmatinib</span><span class="legend__n">21 <span class="pct">(33.3%)</span></span></button>
+              <button class="legend__item is-focus" role="listitem" data-k="tepotinib"><span class="legend__sw" style="background:#0098be"></span><span class="legend__name">Tepotinib</span><span class="legend__n">7 <span class="pct">(11.1%)</span></span></button>
+              <button class="legend__item" role="listitem" data-k="amivantamab"><span class="legend__sw" style="background:#2f7fa6"></span><span class="legend__name">Amivantamab</span><span class="legend__n">4 <span class="pct">(6.3%)</span></span></button>
+              <button class="legend__item" role="listitem" data-k="cabozantinib"><span class="legend__sw" style="background:#4f9fc4"></span><span class="legend__name">Cabozantinib</span><span class="legend__n">3 <span class="pct">(4.8%)</span></span></button>
+              <button class="legend__item" role="listitem" data-k="savolitinib"><span class="legend__sw" style="background:#74b4d3"></span><span class="legend__name">Savolitinib</span><span class="legend__n">3 <span class="pct">(4.8%)</span></span></button>
+              <button class="legend__item" role="listitem" data-k="sym015"><span class="legend__sw" style="background:#93c7df"></span><span class="legend__name">Sym015</span><span class="legend__n">2 <span class="pct">(3.2%)</span></span></button>
+              <button class="legend__item" role="listitem" data-k="elzovantinib"><span class="legend__sw" style="background:#b4d8e8"></span><span class="legend__name">Elzovantinib</span><span class="legend__n">1 <span class="pct">(1.6%)</span></span></button>
+              <button class="legend__item" role="listitem" data-k="telisotuzumab"><span class="legend__sw" style="background:#d3e9f2"></span><span class="legend__name">Telisotuzumab vedotin</span><span class="legend__n">1 <span class="pct">(1.6%)</span></span></button>
               <button class="legend__item legend__item--na" role="listitem" type="button" data-k="na" aria-label="Data not available: data for two patients who received subsequent MET inhibitors was not available"><span class="legend__sw legend__sw--na"></span><span class="legend__name">Data not available</span><span class="legend__n">2</span><span class="legend__na-note" role="note">Data for two patients who received subsequent MET inhibitors was not available.</span></button>
               <p class="donut-foot" id="donutFoot">Tepotinib was the subsequent agent in 7 patients &mdash; <button class="tepo-link" type="button" id="toTepo">see best response&nbsp;&rsaquo;</button></p>            </div>
           </div>
@@ -285,12 +348,12 @@
           <div class="resp-wrap">
             <p class="resp-cohort">Best response with subsequent MET inhibitor &mdash; patients with METi rechallenge (n=65)</p>
             <div class="stat-grid">
-              <div class="stat" data-enter><span class="stat__lab">Partial response</span><span class="stat__val">6 <span class="stat__unit">patients</span></span><span class="stat__sub">9.2 % of patients</span></div>
-              <div class="stat" data-enter><span class="stat__lab">Stable disease</span><span class="stat__val">15 <span class="stat__unit">patients</span></span><span class="stat__sub">23.1 % of patients</span></div>
-              <div class="stat" data-enter><span class="stat__lab">Longest PFS</span><span class="stat__val">5.0 <span class="stat__unit">months</span></span><span class="stat__sub"><span class="iqr">(median&nbsp;[IQR]&nbsp;2.0&ndash;7.0)</span></span></div>
-              <div class="stat" data-enter><span class="stat__lab">Longest DOR</span><span class="stat__val na">n/a</span><span class="stat__sub">months</span></div>
+              <div class="stat" data-rise><span class="stat__lab">Partial response</span><span class="stat__val">6 <span class="stat__unit">patients</span></span><span class="stat__sub">9.2% of patients</span></div>
+              <div class="stat" data-rise><span class="stat__lab">Stable disease</span><span class="stat__val">15 <span class="stat__unit">patients</span></span><span class="stat__sub">23.1% of patients</span></div>
+              <div class="stat" data-rise><span class="stat__lab">Longest PFS</span><span class="stat__val">5.0 <span class="stat__unit">months</span></span><span class="stat__sub"><span class="iqr">(median&nbsp;[IQR]&nbsp;2.0&ndash;7.0)</span></span></div>
+              <div class="stat" data-rise><span class="stat__lab">Longest DOR</span><span class="stat__val na">n/a</span><span class="stat__sub">months</span></div>
             </div>
-            <div class="tepo-note" id="tepoNote" data-enter>
+            <div class="tepo-note" id="tepoNote" data-rise>
               <span class="tepo-note__ic" aria-hidden="true">i</span>
               <p class="tepo-note__body">Among the <b>seven patients</b> who received subsequent <b>tepotinib</b>, best response was a partial response in one patient and stable disease in two patients; the longest duration of response (median) was <b>4.0 months (3.0&ndash;5.0)</b> and the longest progression-free survival (median) was <b>6.5 months (5.5&ndash;10.0)</b>.<span class="ast">*Assessed by investigator; mDOR and mPFS were based on descriptive analyses.</span></p>
             </div>
@@ -331,11 +394,11 @@
   <!-- citation modal -->
   <div class="modal" id="source-modal" aria-hidden="true">
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="source-title">
-      <button class="modal-close" type="button" id="source-close" aria-label="Close">&times;</button>
-      <h2 id="source-title">Source</h2>
-      <p><strong>VISION study &mdash; efficacy across treatment lines; subsequent MET inhibitor rechallenge.</strong></p>
-      <p class="modal-cite">Viteri S, Felip E, Smit E, et al. Treatment sequencing of tepotinib in patients with <em>MET</em>ex14 skipping NSCLC: outcomes from &#8805;3 years&rsquo; follow-up of the VISION study. <em>Ann Oncol.</em> 2025;36(suppl 1):S1060&ndash;S1061.<sup>&nbsp;18</sup></p>
+      <p class="src-eyebrow">Source</p>
+      <h2 class="src-title" id="source-title">VISION study &mdash; efficacy across treatment lines; subsequent MET inhibitor rechallenge</h2>
+      <p class="modal-cite">Viteri S, Felip E, Smit E, Veillon R, Le X, Raskin J, et al. Treatment sequencing of tepotinib in patients with <em>MET</em>ex14 skipping NSCLC: Outcomes from &ge;3 years follow-up of the VISION study. <em>Ann Oncol.</em> 2025;36:S1060&ndash;S1061. (1995P)<sup>&nbsp;20</sup></p>
       <div class="modal-actions">
+        <button class="src-close" type="button" id="source-close">Close</button>
       </div>
     </div>
   </div>
@@ -382,10 +445,8 @@
           if (nudge) nudge.classList.add('is-on');
         }
       }
-      function playEntrance(i) {
-        var els = panels[i].querySelectorAll('.legend__item, .donut-stack, [data-enter]');
-        Array.prototype.forEach.call(els, function (el) { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = ''; });
-      }
+      /* R4 retrofit 2026-10-11: the JS that restarted a panel's entrance on every tab change is removed
+         (embed behaviour standard: no script restarts a mounted screen); a panel now fades in with .xpanel. */
       function selectTab(i, focusPanel) {
         tabs.forEach(function (t, k) {
           var on = k === i;
@@ -393,7 +454,6 @@
           t.tabIndex = on ? 0 : -1;
         });
         panels.forEach(function (p, k) { p.classList.toggle('active', k === i); p.setAttribute('aria-hidden', String(k !== i)); });
-        playEntrance(i);
         if (i === 0) playTab1Tally(); else if (i === 1) playTab2Tally();
         markSeen(i);
         if (focusPanel) panels[i].focus();
@@ -417,15 +477,15 @@
       var sub = document.getElementById('donutSub');
       var lab = document.getElementById('donutLab');
       var DATA = {
-        crizotinib:   { name: 'Crizotinib',            n: 21, pct: '33.3 %' },
-        capmatinib:   { name: 'Capmatinib',            n: 21, pct: '33.3 %' },
-        tepotinib:    { name: 'Tepotinib',             n: 7,  pct: '11.1 %' },
-        amivantamab:  { name: 'Amivantamab',           n: 4,  pct: '6.3 %' },
-        cabozantinib: { name: 'Cabozantinib',          n: 3,  pct: '4.8 %' },
-        savolitinib:  { name: 'Savolitinib',           n: 3,  pct: '4.8 %' },
-        sym015:       { name: 'Sym015',                n: 2,  pct: '3.2 %' },
-        elzovantinib: { name: 'Elzovantinib',          n: 1,  pct: '1.6 %' },
-        telisotuzumab:{ name: 'Telisotuzumab vedotin', n: 1,  pct: '1.6 %' }
+        crizotinib:   { name: 'Crizotinib',            n: 21, pct: '33.3%' },
+        capmatinib:   { name: 'Capmatinib',            n: 21, pct: '33.3%' },
+        tepotinib:    { name: 'Tepotinib',             n: 7,  pct: '11.1%' },
+        amivantamab:  { name: 'Amivantamab',           n: 4,  pct: '6.3%' },
+        cabozantinib: { name: 'Cabozantinib',          n: 3,  pct: '4.8%' },
+        savolitinib:  { name: 'Savolitinib',           n: 3,  pct: '4.8%' },
+        sym015:       { name: 'Sym015',                n: 2,  pct: '3.2%' },
+        elzovantinib: { name: 'Elzovantinib',          n: 1,  pct: '1.6%' },
+        telisotuzumab:{ name: 'Telisotuzumab vedotin', n: 1,  pct: '1.6%' }
       };
       var DEFAULT_BIG = '65';
       var DEFAULT_SUB = 'patients received<br>subsequent METi';
@@ -469,7 +529,7 @@
       TALLY.forEach(function (k) { FIN[k] = { n: DATA[k].n, pct: parseFloat(DATA[k].pct), len: parseFloat(segByKey[k].getAttribute('stroke-dasharray')) }; });
       function easeOutCubic(p) { return 1 - Math.pow(1 - p, 3); }
       function paintSeg(k, f) { var L = FIN[k].len * f; segByKey[k].setAttribute('stroke-dasharray', L.toFixed(2) + ' ' + (100 - L).toFixed(2)); }
-      function paintLeg(k, nv, pv) { var b = lnByKey[k]; b.childNodes[0].nodeValue = Math.round(nv) + ' '; b.querySelector('.pct').textContent = '(' + pv.toFixed(1) + ' %)'; }
+      function paintLeg(k, nv, pv) { var b = lnByKey[k]; b.childNodes[0].nodeValue = Math.round(nv) + ' '; b.querySelector('.pct').textContent = '(' + pv.toFixed(1) + '%)'; }
       var raf1 = null, t1on = false;
       function cancelTab1() { if (raf1) { cancelAnimationFrame(raf1); raf1 = null; } t1on = false; }
       function finalTab1() { cancelTab1(); TALLY.forEach(function (k) { paintSeg(k, 1); paintLeg(k, FIN[k].n, FIN[k].pct); }); if (!document.querySelector('.legend__item.is-active')) big.textContent = DEFAULT_BIG; }
@@ -528,7 +588,7 @@
       /* ----- source modal ----- */
       var sourceModal = document.getElementById('source-modal');
       var sourceClose = document.getElementById('source-close');
-      function openSource() { if (sourceChip.disabled) return; sourceModal.classList.add('visible'); sourceModal.setAttribute('aria-hidden', 'false'); sourceClose.focus(); }
+      function openSource() { if (sourceChip.disabled) return; sourceModal.classList.add('visible'); sourceModal.setAttribute('aria-hidden', 'false'); sourceClose.focus({preventScroll:true}); }
       function closeSource() { sourceModal.classList.remove('visible'); sourceModal.setAttribute('aria-hidden', 'true'); sourceChip.focus(); }
       sourceChip.addEventListener('click', openSource);
       sourceClose.addEventListener('click', closeSource);
@@ -604,5 +664,216 @@
       if (fullscreen) { document.body.classList.add('is-fullscreen'); }
     }());
   </script>
+<!-- r4-embed:start -->
+<script id="r4-embed-js">
+/* The embed behaviour standard for a flexible TM9035 page (touchmedical-html contract section 4; owner rulings
+   2026-09-22/23, adapted for flexible pages 2026-10-11). The main box is the page's first visible top-level
+   element (main.frame, main.slide, .stage, #tmh-root); it is marked data-stage="1" data-fluid="1". */
+(function () {
+  function pickRoot() {
+    var s = document.querySelector('[data-stage="1"]');
+    if (s && s.isConnected) return s;
+    var best = null, area = 0, kids = document.body ? document.body.children : [];
+    for (var i = 0; i < kids.length; i++) {
+      var k = kids[i];
+      if (/^(SCRIPT|STYLE|TEMPLATE|NOSCRIPT|LINK)$/.test(k.tagName) || k.id === "zi-full") continue;
+      var r = k.getBoundingClientRect(), a = r.width * r.height;
+      if (a > area) { area = a; best = k; }
+    }
+    if (best) { best.setAttribute("data-stage", "1"); best.setAttribute("data-fluid", "1"); }
+    return best;
+  }
+
+  /* ---- idle: paused while off screen or hidden ---- */
+  var idleOff = false;
+  function idleSet() {
+    var r = pickRoot(); if (!r) return;
+    r.setAttribute("data-idle", (idleOff || document.hidden) ? "1" : "0");
+  }
+  function idleStart() {
+    var r = pickRoot(); if (!r) return;
+    idleSet();
+    if (typeof IntersectionObserver !== "undefined") {
+      new IntersectionObserver(function (es) { idleOff = !es.some(function (e) { return e.isIntersecting; }); idleSet(); },
+        { threshold: 0 }).observe(r);
+    }
+    document.addEventListener("visibilitychange", idleSet);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", idleStart); else idleStart();
+
+  /* ---- in-activity zoom: inside a frame, on a touch device only ---- */
+  var inFrame = true;
+  try { inFrame = window.self !== window.top; } catch (e) { inFrame = true; }
+  var touch = !!(window.matchMedia && window.matchMedia("(hover: none)").matches);
+  if (!inFrame || !touch) return;
+
+  var MAX = 3, root = document.documentElement, stage = null, z = 1, tx = 0, ty = 0, g = null;
+  var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  root.classList.add("zi-on");
+
+  var FIT = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 3v6H3M15 3v6h6M9 21v-6H3M15 21v-6h6" ' +
+    'fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var chip = document.createElement("button");
+  chip.id = "zi-full"; chip.type = "button";
+  chip.setAttribute("aria-label", "Back to full view");
+  chip.setAttribute("data-review", "chrome");
+  chip.setAttribute("data-review-id", "g-zoom-full");
+  chip.innerHTML = '<span class="zi-num" aria-hidden="true">1.0×</span><span class="zi-dot">' + FIT + "</span>";
+  var num = chip.querySelector(".zi-num");
+
+  /* the chip is sized in screen pixels: --zi-g is frame px per screen px, measured from a pinch */
+  var measured = 0;
+  function estimate() {
+    var a = screen.width, b = screen.height, short = Math.min(a, b), long = Math.max(a, b);
+    var type = (screen.orientation && screen.orientation.type) || "";
+    var land = /landscape/.test(type) || window.orientation === 90 || window.orientation === -90;
+    var vw = land ? long : short, vh = land ? short : long;
+    var s = Math.min((vw - 40) / (innerWidth || 1370), (vh - 120) / (innerHeight || 700));
+    return Math.max(0.15, Math.min(1, s));
+  }
+  function setUnit() { root.style.setProperty("--zi-g", (1 / (measured || estimate())).toFixed(4) + "px"); }
+  function measure(a, b) {
+    var dc = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+    var ds = Math.hypot(a.screenX - b.screenX, a.screenY - b.screenY);
+    if (dc < 20 || !ds) return;
+    var s = ds / dc;
+    if (s > 0.1 && s < 1.25 && Math.abs(s - 1) > 0.001) { measured = s; setUnit(); }
+  }
+  setUnit();
+
+  var wrote = { s: null, t: null }, prevTransition = null, restoreT = 0;
+  function animateOnce() {
+    if (reduce || !stage) return;
+    var s = stage;
+    if (prevTransition === null) prevTransition = s.style.transition;
+    s.style.transition = (prevTransition ? prevTransition + ", " : "") + "scale .2s ease, translate .2s ease";
+    clearTimeout(restoreT);
+    restoreT = setTimeout(function () { s.style.transition = prevTransition; prevTransition = null; }, 260);
+  }
+  function commit(animate) {
+    if (!stage) return;
+    if (animate) animateOnce();
+    if (z <= 1.001 && !tx && !ty) {
+      /* at rest a flexible page carries no transform at all */
+      stage.style.removeProperty("scale"); stage.style.removeProperty("translate");
+    } else {
+      stage.style.translate = tx + "px " + ty + "px";
+      stage.style.scale = String(z);
+    }
+    wrote.s = stage.style.scale; wrote.t = stage.style.translate;
+    root.classList.toggle("zi-zoomed", z > 1.001);
+    num.textContent = z.toFixed(1) + "×";
+    unscroll();
+  }
+  function toFull(animate) {
+    g = null;
+    if (!stage || (z === 1 && !tx && !ty)) return;
+    z = 1; tx = 0; ty = 0;
+    commit(animate);
+  }
+  function unscroll() {
+    for (var p = stage && stage.parentElement; p; p = p.parentElement) {
+      if (p.scrollTop || p.scrollLeft) { p.scrollTop = 0; p.scrollLeft = 0; }
+    }
+  }
+  document.addEventListener("scroll", function (e) {
+    var t = e.target;
+    if (stage && z > 1.001 && (t === document || (t.contains && t !== stage && t.contains(stage)))) unscroll();
+  }, true);
+
+  var mo = null;
+  function findStage() {
+    var s = pickRoot();
+    if (!s || !s.isConnected || !s.getBoundingClientRect().width) { stage = null; requestAnimationFrame(findStage); return; }
+    if (s === stage) return;
+    stage = s;
+    if (!chip.isConnected) document.body.appendChild(chip);
+    if (mo) mo.disconnect();
+    mo = new MutationObserver(function () {
+      if (stage.style.scale !== wrote.s || stage.style.translate !== wrote.t) commit(false);
+    });
+    mo.observe(stage, { attributes: true, attributeFilter: ["style"] });
+    commit(false);
+  }
+  function ensureStage() { if (!stage || !stage.isConnected) findStage(); return !!stage && stage.isConnected; }
+
+  function origin() { return { x: stage.offsetLeft + stage.offsetWidth / 2, y: stage.offsetTop + stage.offsetHeight / 2 }; }
+  function fitted() {
+    var O = origin(), r = stage.getBoundingClientRect();
+    return { O: O,
+      l: O.x + (r.left - O.x - tx) / z, r: O.x + (r.right - O.x - tx) / z,
+      t: O.y + (r.top - O.y - ty) / z, b: O.y + (r.bottom - O.y - ty) / z };
+  }
+  function clamp(F) {
+    tx = Math.min((1 - z) * (F.l - F.O.x), Math.max((1 - z) * (F.r - F.O.x), tx));
+    ty = Math.min((1 - z) * (F.t - F.O.y), Math.max((1 - z) * (F.b - F.O.y), ty));
+  }
+  function dist(a, b) { return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY); }
+  function mid(a, b) { return { x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 }; }
+
+  function startPinch(e) {
+    var a = e.touches[0], b = e.touches[1], F = fitted(), m = mid(a, b);
+    measure(a, b);
+    g = { mode: "pinch", d0: Math.max(10, dist(a, b)), z0: z, F: F,
+      qx: F.O.x + (m.x - F.O.x - tx) / z, qy: F.O.y + (m.y - F.O.y - ty) / z };
+  }
+  function startPan(t) { g = { mode: "pan-pending", x0: t.clientX, y0: t.clientY, tx0: tx, ty0: ty, F: fitted() }; }
+  function onChip(t) { return !!t && (t === chip || chip.contains(t)); }
+
+  window.addEventListener("touchstart", function (e) {
+    if (!ensureStage() || onChip(e.target)) { g = null; return; }
+    if (e.touches.length === 2) startPinch(e);
+    else if (e.touches.length === 1 && z > 1.001) startPan(e.touches[0]);
+    else g = null;
+  }, { passive: true, capture: true });
+
+  window.addEventListener("touchmove", function (e) {
+    if (!stage || !g) return;
+    if (e.touches.length >= 2) {
+      if (g.mode !== "pinch") startPinch(e);
+      e.preventDefault();
+      var a = e.touches[0], b = e.touches[1], m = mid(a, b);
+      z = Math.min(MAX, Math.max(1, g.z0 * dist(a, b) / g.d0));
+      tx = m.x - g.F.O.x - z * (g.qx - g.F.O.x);
+      ty = m.y - g.F.O.y - z * (g.qy - g.F.O.y);
+      clamp(g.F); commit(false);
+    } else if (e.touches.length === 1 && (g.mode === "pan-pending" || g.mode === "pan")) {
+      var t = e.touches[0], dx = t.clientX - g.x0, dy = t.clientY - g.y0;
+      /* under 10 screen points stays a tap (measured through the same scale as the chip) */
+      if (g.mode === "pan-pending" && Math.hypot(dx, dy) * (measured || estimate()) < 10) return;
+      g.mode = "pan";
+      e.preventDefault();
+      tx = g.tx0 + dx; ty = g.ty0 + dy;
+      clamp(g.F); commit(false);
+    }
+  }, { passive: false, capture: true });
+
+  function end(e) {
+    if (!g) return;
+    if (e.touches.length === 1 && z > 1.001) startPan(e.touches[0]);
+    else if (e.touches.length === 0) { g = null; if (z < 1.02) { z = 1; tx = 0; ty = 0; commit(false); } }
+  }
+  window.addEventListener("touchend", end, { passive: true, capture: true });
+  window.addEventListener("touchcancel", end, { passive: true, capture: true });
+  chip.addEventListener("click", function () { toFull(true); });
+
+  /* back to full view by itself: slide hidden or left, tab hidden, frame resized */
+  new MutationObserver(function (list) {
+    for (var i = 0; i < list.length; i++) {
+      var m = list[i];
+      if (m.attributeName === "data-idle" && m.target.getAttribute("data-idle") === "1") toFull(false);
+    }
+  }).observe(document.documentElement, { subtree: true, attributes: true, attributeFilter: ["data-idle"] });
+  document.addEventListener("visibilitychange", function () { if (document.hidden) toFull(false); });
+  window.addEventListener("resize", function () { setUnit(); toFull(false); });
+  if (screen.orientation && screen.orientation.addEventListener) {
+    screen.orientation.addEventListener("change", function () { measured = 0; setUnit(); });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", findStage); else findStage();
+})();
+</script>
+<!-- r4-embed:end -->
+<script id="build-stamp">(function(){var T="TM 9035: METi rechallenge",M="TM 9035 tm9035-meti-rechallenge-slide-49-2026-06-30-v1 r4 2026-10-11";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<script id="layer-release">(function(){var SAFE=/^(popIn|riseIn)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;if(el.getAnimations&&el.getAnimations().some(function(a){return a.playState==="paused";})){seen.set(el,now);return;}var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
 </body>
 </html>
