@@ -96,7 +96,11 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 .hcard__icon{ flex:0 0 auto; width:clamp(21px,2.1vw,26px); height:clamp(21px,2.1vw,26px); color:var(--teal); }
 .hcard__icon svg{ width:100%; height:100%; }
 .hcard__name{ font-size:clamp(.95rem,1.55vw,1.14rem); font-weight:700; line-height:1.16; }
-.hcard__strip{ position:relative; flex:0 0 auto; height:clamp(23px,3.2vh,28px); }
+.hcard__strip{ position:relative; flex:0 0 auto; height:clamp(23px,3.2vh,28px); margin-top:8px; }
+/* R4 13 Oct: the upper letter badges rise above the strip and sat on the card name at 1370x700
+   (Smoking history N, Histology S, Brain metastases N, Line of therapy 2L+). The strip gets 8px of
+   room above it, paid for by a slimmer card padding so the 3x3 grid still fits its rows. */
+.cards .hcard{ padding-top:clamp(12px,2vh,17px); padding-bottom:clamp(12px,2vh,17px); }
 /* Short-viewport compaction (contract 0.11 pattern). At 1370x620 the three rows
    only get 99px each and the card content did not fit - every card overflowed.
    Compact ONLY that case so the 700 layout keeps its approved size. */
@@ -110,7 +114,9 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
      700 layout keeps the full name on two lines. */
   #cards .hcard__name{ font-size:.8rem; line-height:1.06; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   #cards .hcard__top{ min-width:0; }
-  #cards .hcard__strip{ height:17px; }
+  /* R4 13 Oct: the upper letter badges rise ~12px above the strip and sat on the name (Histology S,
+     Brain metastases N). Room above the strip; the gap and the ends absorb it so the card still fits. */
+  #cards .hcard__strip{ height:17px; margin-top:10px; }
   #cards .hcard__ends{ font-size:.58rem; margin-top:1px; }
   .hero{ margin-bottom:4px; }
   .hero__big{ font-size:1.4rem; }
@@ -288,8 +294,11 @@ body.is-fullscreen .returnbar__lab{ font:inherit; font-weight:700; font-size:15p
 body.is-fullscreen .returnbar:focus-visible{ outline:3px solid var(--teal); outline-offset:3px; }
 body.is-fullscreen{ padding-top:56px; }
 
-/* ---------- phone (<760px) ---------- */
-@media (max-width:760px){
+/* ---------- phone (<760px, or a phone on its side: under 500px tall) ---------- */
+/* R4 13 Oct (phone gate): a phone on its side is 844 wide, so it got the desktop 3x3 grid squeezed into
+   ~330px of height and every card overlapped. Under 500px tall it now scrolls like the upright phone.
+   The desktop fit sizes are 620px tall or more, so they never reach this block. */
+@media (max-width:760px), (max-height:500px){
   html,body{ height:auto; }
   body{ overflow:auto; display:block; }
   .frame{ height:auto; min-height:100%; max-height:none; }
@@ -310,6 +319,20 @@ body.is-fullscreen{ padding-top:56px; }
   .exhead .dots{ gap:5px; }
   .exhead .navbtn{ width:44px; height:44px; }
   .backbtn{ min-height:44px; }
+  /* R4 13 Oct (phone gate): the letter badges sit 15px above and below the track. On a phone the card
+     name wraps to two lines and the badges landed on it (Age, Smoking history, Histology). Cards now
+     size to their content, with room above and below the strip; the short-screen ellipsis is undone. */
+  .cards{ grid-auto-rows:auto; }
+  #cards .hcard{ justify-content:flex-start; padding:14px 12px; gap:4px; }
+  #cards .hcard__icon{ width:21px; height:21px; }
+  #cards .hcard__name{ font-size:.95rem; line-height:1.16; white-space:normal; overflow:visible; }
+  #cards .hcard__strip{ height:28px; margin:18px 0 16px; }
+  #cards .hcard__ends{ font-size:.66rem; margin-top:4px; }
+  .hcard--launch{ min-height:150px; }
+}
+@media (max-height:500px) and (min-width:761px){
+  .cards{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .hero{ flex-direction:row; }
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
