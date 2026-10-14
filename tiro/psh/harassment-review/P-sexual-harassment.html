@@ -1,0 +1,1910 @@
+<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1"><title>New page: sexual harassment</title><style>html,body{background:#fff;margin:0}main{padding:16px}</style></head><body><div style="font:600 14px/1.4 system-ui,sans-serif;background:#fbf0dd;color:#5c3500;padding:10px 16px;border-bottom:2px solid #a15c00;position:sticky;top:0;z-index:50"><a href="index.html" style="color:#370c65">&larr; All draft pages</a> &nbsp;·&nbsp; DRAFT for team review: New page: sexual harassment</div><main>
+<style>
+/* ---- Tiro canon, scoped for Moodle. Token VALUES are canon (tokens-tiro.css);
+   recipes are components.css renamed tsh-* and scoped to .tsh so Moodle's Bootstrap
+   .card/.btn/.badge neither restyle us nor get restyled by us. ---- */
+.tsh {
+  --color-surface:#ffffff; --color-surface-selected:#f2effc;
+  --color-primary:#370c65; --color-primary-hover:#45156f; --color-primary-active:#2a0950;
+  --color-on-primary:#f0edf8; --color-accent:#f08838; --color-on-accent:#172033;
+  --color-text:#172033; --color-text-muted:#4b5563;
+  --color-border:#e2e8f0; --color-border-strong:#cbd5e1; --color-border-control:#748296;
+  --color-success:#166534; --color-success-bg:#e8f5ee;
+  --color-warning:#a15c00; --color-warning-bg:#fbf0dd;
+  --color-error:#991b1b; --color-error-bg:#fbeae8;
+  --focus-ring-color:var(--color-primary); --focus-ring-width:3px; --focus-ring-offset:2px;
+  --font-ui:"Atkinson Hyperlegible","Segoe UI",Tahoma,Verdana,sans-serif;
+  --text-xs:12px; --text-sm:14px; --text-body:17px; --text-h3:18px; --text-h2:22px; --text-h1:28px;
+  --leading-heading:1.3; --leading-body:1.55; --weight-bold:700;
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-6:24px; --space-8:32px; --space-12:48px;
+  --radius-sm:8px; --radius-control:10px; --radius-card:14px; --radius-modal:16px; --radius-pill:999px;
+  --shadow-rest:0 8px 24px rgba(42,9,80,.12); --shadow-raised:0 16px 36px rgba(42,9,80,.18);
+  --dur-press:120ms; --dur-hover:200ms; --dur-move:300ms; --dur-reveal:500ms;
+  --ease-entrance:cubic-bezier(.2,.7,.2,1); --ease-exit:cubic-bezier(.4,0,1,1); --ease-standard:cubic-bezier(.4,0,.2,1);
+  --color-accent-ink:#a15c00; /* tokens-tiro --tiro-orange-700, dark orange: the accent as TEXT (accent #f08838 fails as text) */
+  font-family:var(--font-ui); font-size:var(--text-body); line-height:var(--leading-body);
+  color:var(--color-text); max-width:1000px; margin:0 auto;
+}
+.tsh *, .tsh *::before, .tsh *::after { box-sizing:border-box; }
+.tsh-ovhost { font-family:"Atkinson Hyperlegible","Segoe UI",Tahoma,Verdana,sans-serif; color:#172033; line-height:1.55; }
+.tsh p, .tsh ul, .tsh ol { margin:0 0 var(--space-4); }
+.tsh h3, .tsh h4, .tsh h5, .tsh h6 { font-family:var(--font-ui); font-weight:var(--weight-bold); line-height:var(--leading-heading); color:var(--color-primary); margin:0 0 var(--space-3); }
+.tsh h3, .tsh h4 { font-size:var(--text-h2); text-align:center; }
+.tsh h4.tsh-cat { font-size:var(--text-h3); text-align:left; }
+.tsh .tsh-card h4, .tsh .tsh-note h4 { font-size:var(--text-h3); text-align:left; }
+.tsh .tsh-card.tsh-center h4 { text-align:center; }
+.tsh h5 { font-size:var(--text-h3); }
+.tsh h3, .tsh h4, .tsh h5, .tsh h6 { text-wrap:balance; }
+.tsh .tsh-lead, .tsh .tsh-org-what { text-wrap:pretty; }
+.tsh h6 { font-size:var(--text-body); }
+.tsh a { color:var(--color-primary); font-weight:var(--weight-bold); text-decoration:underline; text-underline-offset:3px; }
+.tsh a:hover { color:var(--color-primary-hover); }
+.tsh :focus-visible { outline:var(--focus-ring-width) solid var(--focus-ring-color); outline-offset:var(--focus-ring-offset); }
+.tsh .vh { position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+.tsh .tsh-muted { color:var(--color-text-muted); }
+.tsh .tsh-small { font-size:var(--text-sm); }
+.tsh .tsh-center { text-align:center; }
+
+/* structure */
+.tsh .tsh-divider { height:1px; background:var(--color-border-strong); margin:var(--space-8) 0; border:0; }
+.tsh .tsh-bar { width:48px; height:4px; background:var(--color-accent); border-radius:2px; margin:0 auto var(--space-3); }
+.tsh .tsh-lead { max-width:68ch; margin-left:auto; margin-right:auto; text-align:center; }
+.tsh .tsh-eyebrow { display:block; font-size:var(--text-sm); font-weight:var(--weight-bold); color:var(--color-accent-ink); margin:0 0 var(--space-1); }
+.tsh .tsh-grid { list-style:none; margin:0 0 var(--space-4); padding:0; display:flex; flex-wrap:wrap; gap:var(--space-4); }
+.tsh .tsh-grid > li { margin:0; }
+.tsh .tsh-g150 > li { flex:1 1 150px; } .tsh .tsh-g210 > li { flex:1 1 210px; } .tsh .tsh-g300 > li { flex:1 1 300px; }
+.tsh .tsh-list { list-style:none; padding:0; }
+.tsh .tsh-list > li { margin:0 0 var(--space-2); }
+
+/* card (components.css .card, no hover lift: content panels are not buttons) */
+.tsh .tsh-card { background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-card); padding:var(--space-6); box-shadow:var(--shadow-rest); margin:0 0 var(--space-4); }
+.tsh .tsh-card > :last-child { margin-bottom:0; }
+.tsh .tsh-card.tsh-soft { background:var(--color-surface-selected); box-shadow:none; }
+.tsh .tsh-card-rule { border-top:1px solid var(--color-border); padding-top:var(--space-4); margin-top:var(--space-4); }
+
+/* note (components.css .note: 4px left bar, currentColor) */
+.tsh .tsh-note { border-left:4px solid; border-radius:var(--radius-control); padding:var(--space-4) var(--space-6); margin:0 0 var(--space-4); }
+.tsh .tsh-note > :last-child { margin-bottom:0; }
+.tsh .tsh-note.error { background:var(--color-error-bg); border-color:var(--color-error); }
+.tsh .tsh-note.warning { background:var(--color-warning-bg); border-color:var(--color-warning); }
+.tsh .tsh-note.info { background:var(--color-surface-selected); border-color:var(--color-primary); }
+.tsh .tsh-note.success { background:var(--color-success-bg); border-color:var(--color-success); }
+.tsh .tsh-note-title { font-weight:var(--weight-bold); margin:0 0 var(--space-2); }
+.tsh .tsh-note.error .tsh-note-title { color:var(--color-error); }
+.tsh .tsh-note.warning .tsh-note-title { color:var(--color-warning); }
+.tsh .tsh-note.success .tsh-note-title { color:var(--color-success); }
+
+/* buttons (components.css .btn / .btn-primary / .btn-secondary) */
+.tsh .tsh-btn { font:var(--weight-bold) var(--text-body)/1.2 var(--font-ui); min-height:44px; padding:var(--space-2) var(--space-6);
+  border-radius:var(--radius-control); border:1px solid transparent; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:var(--space-2);
+  text-decoration:none; text-align:center;
+  transition:background var(--dur-press) var(--ease-standard), transform var(--dur-press) var(--ease-standard), box-shadow var(--dur-hover) var(--ease-standard), border-color var(--dur-hover) var(--ease-standard); }
+.tsh .tsh-btn:active { transform:translateY(2px) scale(.99); }
+.tsh .tsh-btn-primary, .tsh a.tsh-btn-primary { background:var(--color-primary); color:var(--color-on-primary); }
+.tsh .tsh-btn-primary:hover, .tsh a.tsh-btn-primary:hover { background:var(--color-primary-hover); color:var(--color-on-primary); box-shadow:inset 0 -3px 0 var(--color-accent); }
+.tsh .tsh-btn-primary:active { background:var(--color-primary-active); box-shadow:none; }
+.tsh .tsh-btn-secondary, .tsh a.tsh-btn-secondary { background:var(--color-surface); color:var(--color-primary); border-color:var(--color-border-control); }
+.tsh .tsh-btn-secondary:hover { border-color:var(--color-primary); transform:translateY(-1px); }
+.tsh .tsh-btn-secondary:active { transform:translateY(2px) scale(.99); }
+@media (hover:none) { .tsh .tsh-btn-secondary:hover { transform:none; } }
+
+/* chip (components.css .chip, 44px target) */
+.tsh .tsh-chip { font:var(--weight-bold) var(--text-sm)/1.2 var(--font-ui); min-height:44px; width:100%; padding:var(--space-2) var(--space-4);
+  border-radius:var(--radius-control); background:var(--color-surface-selected); color:var(--color-primary); border:1px solid transparent; cursor:pointer; text-align:left;
+  transition:background var(--dur-hover) var(--ease-standard), border-color var(--dur-hover) var(--ease-standard), transform var(--dur-press) var(--ease-standard); }
+.tsh .tsh-chip:not([aria-pressed="true"]):hover, .tsh .tsh-chip.is-hot:not([aria-pressed="true"]) { border-color:var(--color-primary); background:var(--color-surface); }
+.tsh .tsh-chip:active { transform:translateY(1px) scale(.985); }
+.tsh .tsh-chip[aria-pressed="true"] { background:var(--color-primary); color:var(--color-on-primary); }
+.tsh .tsh-jumps { gap:var(--space-2); }
+.tsh a.tsh-jump { display:flex; align-items:center; gap:var(--space-2); text-decoration:none; }
+.tsh .tsh-cat { scroll-margin-top:80px; }
+
+/* metadata label (contract 5: Resource Hub label shape, 8px radius, weight 700, sentence case) */
+.tsh .tsh-tag { display:inline-block; font-size:var(--text-xs); font-weight:var(--weight-bold); line-height:1.4; padding:2px var(--space-2);
+  border-radius:var(--radius-sm); background:var(--color-surface-selected); color:var(--color-primary); vertical-align:middle; }
+
+/* input (components.css .input) */
+.tsh .tsh-field > label { display:block; margin:0 0 var(--space-2); font-weight:var(--weight-bold); }
+.tsh .tsh-input { font:var(--text-body)/1.5 var(--font-ui); color:var(--color-text); background:var(--color-surface); min-height:44px;
+  border:2px solid var(--color-border-control); border-radius:var(--radius-control); padding:var(--space-2) var(--space-3); transition:border-color var(--dur-hover) var(--ease-standard); }
+.tsh .tsh-input:hover { border-color:var(--color-border-strong); }
+.tsh .tsh-input:focus-visible { border-color:var(--color-primary); }
+.tsh .tsh-input::placeholder { color:var(--color-text-muted); opacity:1; }
+
+/* expanders: native <details>. Owner-approved; FF rule: emoji headers, emoji bullets */
+.tsh .tsh-acc { background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-card); box-shadow:var(--shadow-rest); height:100%; }
+.tsh .tsh-acc > summary { list-style:none; cursor:pointer; padding:var(--space-4) var(--space-6); border-radius:var(--radius-card); display:block; min-height:44px;
+  transition:background var(--dur-hover) var(--ease-standard); }
+.tsh .tsh-acc > summary::-webkit-details-marker { display:none; }
+.tsh .tsh-acc > summary:hover { background:var(--color-surface-selected); }
+.tsh .tsh-acc .tsh-chev { display:inline-block; margin-left:var(--space-2); color:var(--color-primary); transition:transform var(--dur-hover) var(--ease-standard); }
+.tsh .tsh-acc[open] .tsh-chev { transform:rotate(90deg); }
+.tsh .tsh-acc-body { padding:0 var(--space-6) var(--space-4); }
+.tsh .tsh-acc[open] .tsh-acc-body { animation:tshReveal var(--dur-move) var(--ease-entrance) both; }
+@keyframes tshReveal { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:none; } }
+.tsh .tsh-acc { interpolate-size:allow-keywords; }
+.tsh .tsh-acc::details-content { block-size:0; overflow:hidden; transition:block-size var(--dur-move) var(--ease-standard), content-visibility var(--dur-move) var(--ease-standard) allow-discrete; }
+.tsh .tsh-acc[open]::details-content { block-size:auto; }
+
+/* 5 Rs */
+.tsh .tsh-r-step { display:block; font-size:var(--text-sm); font-weight:var(--weight-bold); color:var(--color-accent-ink); }
+.tsh .tsh-r-word { font-size:var(--text-h3); font-weight:var(--weight-bold); color:var(--color-primary); }
+.tsh .tsh-r-word b { font-size:var(--text-h1); }
+
+/* organisation card */
+.tsh .tsh-org { background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-card); padding:var(--space-4) var(--space-6); box-shadow:var(--shadow-rest); height:100%; }
+.tsh .tsh-org h5, .tsh .tsh-org h6 { margin:0 0 var(--space-1); color:var(--color-text); font-size:var(--text-h3); }
+.tsh .tsh-org .tsh-tag { margin:0 0 var(--space-2); }
+.tsh .tsh-org p { margin:0 0 var(--space-2); font-size:var(--text-sm); }
+.tsh .tsh-org .tsh-org-what { color:var(--color-text-muted); font-size:var(--text-body); }
+.tsh .tsh-org .tsh-org-line { display:flex; gap:var(--space-2); }
+.tsh .tsh-org .tsh-org-line > span:first-child { font-weight:var(--weight-bold); min-width:4.5em; }
+.tsh .tsh-org a { word-break:break-word; }
+.tsh .tsh-org .tsh-call { font-size:var(--text-body); }
+.tsh .tsh-org .tsh-org-line { align-items:center; margin:0; min-height:44px; }
+
+/* link as a control: every standalone link meets the 44px house floor (contract 2, a11y-runtime-audit).
+   Links are kept OUT of running prose, so no line box is stretched by one. */
+.tsh a.tsh-go, .tsh .tsh-org-line a { display:inline-flex; align-items:center; min-height:44px; min-width:44px; overflow-wrap:anywhere; }
+.tsh .tsh-actions { display:flex; flex-wrap:wrap; gap:var(--space-3); justify-content:center; margin:0 0 var(--space-4); }
+
+/* icons */
+.tsh .tsh-ico { width:1.15em; height:1.15em; vertical-align:-0.2em; flex:none; display:inline-block; }
+.tsh h3 > .tsh-ico, .tsh h4 > .tsh-ico, .tsh h5 > .tsh-ico, .tsh h6 > .tsh-ico, .tsh .tsh-note-title > .tsh-ico,
+.tsh .tsh-btn > .tsh-ico, .tsh .tsh-jump > .tsh-ico { margin-inline-end:.4em; }
+.tsh .tsh-btn > .tsh-ico, .tsh .tsh-jump > .tsh-ico { margin-inline-end:0; }
+.tsh .tsh-list > li { display:flex; gap:var(--space-3); align-items:flex-start; }
+.tsh .tsh-list > li > .tsh-ico { color:var(--color-primary); margin-top:.2em; }
+
+/* critical: carried by an icon, a WORD and an outlined shape, never by colour alone */
+.tsh .tsh-flag { display:inline-flex; align-items:center; gap:6px; font-size:var(--text-sm); font-weight:var(--weight-bold); line-height:1.2;
+  padding:3px 10px; border:2px solid currentColor; border-radius:var(--radius-sm); background:var(--color-surface); vertical-align:middle; }
+.tsh .tsh-flag .tsh-ico { width:1.05em; height:1.05em; }
+.tsh .tsh-note-title { display:flex; align-items:center; flex-wrap:wrap; gap:var(--space-2); }
+.tsh .tsh-note.tsh-critical { border:2px solid var(--color-error); border-left-width:8px; }
+.tsh .tsh-note.tsh-critical .tsh-flag { color:var(--color-error); }
+.tsh .tsh-note.tsh-important { border:2px solid var(--color-warning); border-left-width:8px; }
+.tsh .tsh-note.tsh-important .tsh-flag, .tsh .tsh-note.tsh-important .tsh-note-title { color:var(--color-warning); }
+.tsh li.tsh-crit-item { font-weight:var(--weight-bold); }
+.tsh li.tsh-crit-item .tsh-flag { color:var(--color-error); margin-inline-end:var(--space-2); }
+
+/* cards in a row: headings stay at the top, lists sit in the vertical middle of the space left */
+.tsh .tsh-grid > li > .tsh-card { display:flex; flex-direction:column; }
+.tsh .tsh-grid > li > .tsh-card > ul, .tsh .tsh-grid > li > .tsh-card > ol { margin-block:auto; }
+
+/* organisation cards: collapsed, open on select; the description shows on hover and focus */
+.tsh .tsh-orgs { align-items:flex-start; }
+.tsh details.tsh-org { padding:0; }
+.tsh details.tsh-org > summary { list-style:none; cursor:pointer; position:relative; display:flex; align-items:center; gap:var(--space-3);
+  min-height:44px; padding:var(--space-4) var(--space-6); border-radius:var(--radius-card); transition:background var(--dur-hover) var(--ease-standard); }
+.tsh details.tsh-org > summary::-webkit-details-marker { display:none; }
+.tsh details.tsh-org > summary:hover { background:var(--color-surface-selected); }
+.tsh .tsh-org-head { flex:1 1 auto; min-width:0; }
+.tsh .tsh-org-head > h5, .tsh .tsh-org-head > h6 { margin:0; }
+.tsh .tsh-org-head .tsh-tag { margin:var(--space-1) 0 0; }
+.tsh .tsh-org-more { color:var(--color-primary); display:inline-flex; transition:transform var(--dur-hover) var(--ease-standard); }
+.tsh details.tsh-org[open] .tsh-org-more { transform:rotate(180deg); }
+.tsh .tsh-org-body { padding:0 var(--space-6) var(--space-4); }
+.tsh details.tsh-org:not([open]) > .tsh-org-body { display:none; }
+.tsh details.tsh-org[open] .tsh-org-body { animation:tshReveal var(--dur-move) var(--ease-entrance) both; }
+.tsh .tsh-tip { position:absolute; left:var(--space-4); right:var(--space-4); bottom:calc(100% + 6px); z-index:20;
+  background:var(--color-text); color:#ffffff; font-size:var(--text-sm); font-weight:400; line-height:1.45;
+  padding:var(--space-2) var(--space-3); border-radius:var(--radius-sm); box-shadow:var(--shadow-raised);
+  opacity:0; visibility:hidden; transition:opacity var(--dur-hover) var(--ease-standard), visibility 0s linear var(--dur-hover); }
+.tsh .tsh-tip::after { content:""; position:absolute; left:24px; top:100%; border:6px solid transparent; border-top-color:var(--color-text); }
+.tsh details.tsh-org:not([open]):not(.tip-off) > summary:hover > .tsh-tip,
+.tsh details.tsh-org:not([open]):not(.tip-off) > summary:focus-visible > .tsh-tip { opacity:1; visibility:visible; transition-delay:0s; }
+@media (hover: none) { .tsh .tsh-tip { display:none; } }
+
+/* media */
+.tsh .tsh-figure { margin:0 auto var(--space-6); max-width:760px; text-align:center; }
+.tsh .tsh-figure img { display:block; max-width:100%; height:auto; margin:0 auto; border-radius:var(--radius-card); }
+.tsh .tsh-figure.tsh-small-fig { max-width:320px; }
+.tsh .tsh-figure.tsh-poster { max-width:480px; }
+.tsh .tsh-figure.tsh-logo img { border-radius:0; }
+.tsh .tsh-minimap { display:block; width:120px; height:auto; margin:0 auto var(--space-3); }
+.tsh .tsh-minimap path { fill:var(--color-surface-selected); stroke:var(--color-primary); stroke-width:2; stroke-linejoin:round; }
+.tsh .tsh-minimap path.is-here { fill:var(--color-accent); stroke-width:3; }
+.tsh .tsh-figure figcaption, .tsh .tsh-video figcaption { font-size:var(--text-sm); color:var(--color-text-muted); margin-top:var(--space-2); text-align:center; }
+.tsh .tsh-video { margin:0 auto var(--space-6); max-width:760px; width:100%; }
+.tsh .tsh-video-frame { position:relative; aspect-ratio:16/9; width:100%; border-radius:var(--radius-card); overflow:hidden;
+  background:linear-gradient(135deg, #2a0950, #370c65 60%, #45156f); box-shadow:var(--shadow-rest); }
+.tsh .tsh-video-frame > img, .tsh .tsh-video-frame > iframe { position:absolute; inset:0; width:100%; height:100%; border:0; object-fit:cover; }
+.tsh .tsh-video-thumb { opacity:.85; }
+.tsh .tsh-video-play { position:absolute; inset:0; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:var(--space-2);
+  background:rgba(23,32,51,.35); color:#ffffff; border:0; cursor:pointer; font:var(--weight-bold) var(--text-body)/1.2 var(--font-ui); }
+.tsh .tsh-video-btn { width:72px; height:72px; border-radius:50%; background:var(--color-primary); display:flex; align-items:center; justify-content:center;
+  box-shadow:0 0 0 4px rgba(255,255,255,.9); transition:transform var(--dur-press) var(--ease-standard), box-shadow var(--dur-hover) var(--ease-standard); }
+.tsh .tsh-video-btn .tsh-ico { width:32px; height:32px; margin-left:4px; }
+.tsh .tsh-video-play:hover .tsh-video-btn { box-shadow:0 0 0 4px rgba(255,255,255,.9), inset 0 -3px 0 var(--color-accent); }
+.tsh .tsh-video-play:active .tsh-video-btn { transform:translateY(2px) scale(.99); }
+.tsh .tsh-video-label { background:rgba(23,32,51,.8); padding:4px 12px; border-radius:var(--radius-sm); }
+.tsh .tsh-video-play:focus-visible { outline:3px solid #ffffff; outline-offset:-6px; }
+.tsh video.tsh-clip { display:block; width:100%; height:auto; border-radius:var(--radius-card); background:#12061f; }
+.tsh .tsh-steps { list-style:none; padding:0; margin:0 0 var(--space-6); display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:var(--space-3); counter-reset:step; }
+.tsh .tsh-steps > li { display:flex; gap:var(--space-3); align-items:center; background:var(--color-surface); border:1px solid var(--color-border);
+  border-radius:var(--radius-control); padding:var(--space-3) var(--space-4); counter-increment:step; }
+.tsh .tsh-steps > li::before { content:counter(step); flex:none; width:32px; height:32px; border-radius:50%; background:var(--color-surface-selected);
+  color:var(--color-primary); font-weight:var(--weight-bold); display:flex; align-items:center; justify-content:center; }
+.tsh .tsh-steps > li > .tsh-ico { color:var(--color-primary); width:1.4em; height:1.4em; }
+
+/* process flowchart (policy v5.1) */
+.tsh .tsh-flow { list-style:none; padding:0; margin:0 auto var(--space-4); max-width:760px; }
+.tsh .tsh-flow-step { position:relative; display:flex; gap:var(--space-4); align-items:flex-start; background:var(--color-surface);
+  border:1px solid var(--color-border); border-radius:var(--radius-card); padding:var(--space-4) var(--space-6); box-shadow:var(--shadow-rest); margin:0 0 var(--space-8); }
+.tsh .tsh-flow-step:not(:last-child)::after { content:""; position:absolute; left:48px; top:100%; height:var(--space-8); border-left:2px solid var(--color-primary); }
+.tsh .tsh-flow-step:not(:last-child)::before { content:""; position:absolute; left:43px; top:calc(100% + var(--space-8) - 8px); border:6px solid transparent; border-top-color:var(--color-primary); }
+.tsh .tsh-flow-step.is-decision { border:2px dashed var(--color-accent-ink); }
+.tsh .tsh-flow-ico { flex:none; width:48px; height:48px; border-radius:50%; background:var(--color-primary); color:var(--color-on-primary); display:flex; align-items:center; justify-content:center; }
+.tsh .tsh-flow-step.is-decision .tsh-flow-ico { background:var(--color-accent-ink); color:#ffffff; }
+.tsh .tsh-flow-ico .tsh-ico { width:26px; height:26px; }
+.tsh .tsh-flow-text { flex:1 1 auto; min-width:0; }
+.tsh .tsh-flow-text h5 { font-size:var(--text-h3); margin:0 0 var(--space-1); }
+.tsh .tsh-flow-text > p { margin:0; }
+.tsh .tsh-flow-kind { display:inline-block; font-size:var(--text-xs); font-weight:var(--weight-bold); color:var(--color-accent-ink); border:2px dashed currentColor; border-radius:var(--radius-sm); padding:1px 8px; margin:0 0 var(--space-2); }
+.tsh .tsh-flow-if { display:flex; align-items:center; gap:var(--space-2); font-weight:var(--weight-bold); margin:var(--space-3) 0 var(--space-2); color:var(--color-text); }
+.tsh .tsh-flow-if .tsh-ico { color:var(--color-primary); }
+.tsh .tsh-flow-out { border-radius:var(--radius-control); padding:var(--space-3) var(--space-4); background:var(--color-surface-selected); border:2px solid var(--color-primary); }
+.tsh .tsh-flow-branch.is-critical .tsh-flow-out { background:var(--color-error-bg); border-color:var(--color-error); border-left-width:8px; }
+.tsh .tsh-flow-branch.is-critical .tsh-flag { color:var(--color-error); margin-inline-end:var(--space-2); }
+.tsh .tsh-flow-out-title { font-weight:var(--weight-bold); margin:0 0 var(--space-1); display:flex; flex-wrap:wrap; align-items:center; }
+.tsh .tsh-flow-out > p:last-child { margin:0; }
+.tsh .tsh-flow-note { max-width:760px; margin-inline:auto; }
+@media (max-width: 480px) { .tsh .tsh-flow-step { padding:var(--space-4); gap:var(--space-3); } .tsh .tsh-flow-step:not(:last-child)::after { left:40px; } .tsh .tsh-flow-step:not(:last-child)::before { left:35px; } }
+
+/* reading width: running text stops at a comfortable measure; centred leads and button rows are unaffected */
+.tsh p:not(.tsh-actions):not(.tsh-lead):not(.tsh-center):not(.tsh-org-line), .tsh li:not(.tsh-grid > li):not(.tsh-steps > li):not(.tsh-flow > li) { max-width:68ch; }
+/* two columns of chips on phones */
+@media (max-width: 479px) {
+  .tsh .tsh-jumps > li, .tsh .tsh-regions > li { flex:1 1 calc(50% - var(--space-2)); min-width:0; }
+}
+.tsh .tsh-figure.tsh-banner { max-width:360px; }
+.tsh .tsh-newtab { font-weight:400; font-size:var(--text-sm); }
+
+/* dynamic icons: the icon redraws itself when its card or item is hovered or focused */
+@keyframes tshDraw { from { stroke-dashoffset:1; } to { stroke-dashoffset:0; } }
+.tsh .tsh-ico { transition:transform var(--dur-hover) var(--ease-standard); }
+@media (prefers-reduced-motion: no-preference) {
+  .tsh .tsh-card:hover > :is(h4,h5) > .tsh-ico, .tsh .tsh-card:focus-within > :is(h4,h5) > .tsh-ico,
+  .tsh .tsh-list > li:hover > .tsh-ico, .tsh .tsh-steps > li:hover > .tsh-ico,
+  .tsh .tsh-flow-step:hover .tsh-flow-ico > .tsh-ico, .tsh .tsh-note:hover > .tsh-note-title > .tsh-ico,
+  .tsh .tsh-jump:hover > .tsh-ico, .tsh .tsh-jump:focus-visible > .tsh-ico, .tsh .tsh-btn:hover > .tsh-ico { transform:scale(1.12); }
+  .tsh .tsh-card:hover > :is(h4,h5) > .tsh-ico *, .tsh .tsh-card:focus-within > :is(h4,h5) > .tsh-ico *,
+  .tsh .tsh-list > li:hover > .tsh-ico *, .tsh .tsh-steps > li:hover > .tsh-ico *,
+  .tsh .tsh-flow-step:hover .tsh-flow-ico > .tsh-ico *, .tsh .tsh-note:hover > .tsh-note-title > .tsh-ico *,
+  .tsh .tsh-jump:hover > .tsh-ico *, .tsh .tsh-jump:focus-visible > .tsh-ico *, .tsh .tsh-btn:hover > .tsh-ico *,
+  .tsh .tsh-cat:hover > .tsh-ico * { stroke-dasharray:1; animation:tshDraw 400ms var(--ease-entrance) both; }
+}
+
+/* sequential reveal: only ever added by script, so without JS (or with reduced motion) everything is simply there */
+.tsh .tsh-rv-wait { opacity:0; transform:translateY(14px); transition:opacity var(--dur-reveal) var(--ease-entrance), transform var(--dur-reveal) var(--ease-entrance); }
+.tsh .tsh-rv-wait.tsh-rv-in { opacity:1; transform:none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tsh .tsh-rv-wait { opacity:1; transform:none; }
+  .tsh *, .tsh *::before, .tsh *::after { animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important; }
+}
+@media (forced-colors: active) {
+  .tsh .tsh-chip[aria-pressed="true"] { outline:2px solid CanvasText; }
+  .tsh .tsh-bar, .tsh .tsh-divider { background:CanvasText; }
+  .tsh .tsh-flag, .tsh .tsh-note.tsh-critical, .tsh .tsh-note.tsh-important { border-color:CanvasText; }
+  .tsh .tsh-tip { border:1px solid CanvasText; }
+}
+
+/* ===== external-link-interstitial.css, inlined VERBATIM ===== */
+/* ============================================================================
+   External-link interstitial - CANON (contract section 6, D23), Tiro / FFW
+   Touch Medical uses its own (D16). Do not cross them.
+
+   Extracted 2026-07-30 from tlt3211-careers-explorer-s02-2026-07-28-v1, the route
+   the owner blessed. Selectors are class-only here - the source scoped everything
+   under `#ce-root`, which made the whole thing uncopyable into any other family.
+
+   Two fixes applied on extraction, both named in contract section 6:
+     1. backdrop click now closes (the source had no backdrop-click-close)
+     2. a matching EXIT. The source animated in and then hard-cut out on
+        `display:none`. section 6: "gentle entrance and a matching exit, never a hard cut."
+        That needs opacity/visibility rather than display, so the open/closed
+        mechanism changed - see the JS, which no longer toggles `display`.
+
+   PORTABLE BY CONSTRUCTION. Every var() carries a literal fallback and prefers the
+   CANONICAL Tiro token name. The first cut used the careers vocabulary (--deep-purple,
+   --white, --text-main); inlined into layered-hub, where those names do not exist, the
+   whole declaration was invalid and radius, colours and fonts computed to their initial
+   values - invisibly. A shared partial that assumes one family's tokens is not shared.
+   ============================================================================ */
+
+/* POSITIONING - read this before changing it back to `fixed`.
+
+   D78 rules that `position: fixed` is wrong inside Rise, and extends here: Rise sizes
+   the asset's iframe to its CONTENT, so `fixed` pins to the whole asset rather than to
+   the learner's screen and `vh` measures the asset. On a tall build a centred fixed
+   overlay opens hundreds or thousands of pixels from the control that was activated -
+   measured at 4,916px of asset on the TAB6102 portal, so roughly 2,458px away.
+
+   `absolute` alone is a different wrong answer: with no positioned ancestor it resolves
+   against the initial containing block. The host MUST give the overlay a positioned
+   ancestor and place it INSIDE that, which is the placement contract the JS enforces and
+   the HTML header states. Placing it immediately before </body> is now wrong.
+
+   `align-items: flex-start` rather than `center`, so a host-set offset is honoured.
+   The panel's own vertical placement comes from the JS. Note the selector is scoped to
+   `.interstitial` alone: a loose `align-items` substitution also matches `.ce-prep-row`
+   and silently flattens the preparing-dots row, which needs its centring. */
+.interstitial {
+  position: absolute;
+  inset: 0;
+  z-index: 4000;
+  display: flex;                      /* was toggled display:none/flex; see below */
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(30, 18, 48, .68);
+
+  /* The exit fix. `display` cannot be transitioned, so a display-toggled overlay
+     always hard-cuts on close no matter what easing is on the panel. Holding it
+     in the layout and hiding it with opacity+visibility gives a real exit, and
+     `visibility` (not just opacity) keeps it out of the tab order when closed.
+
+     The `visibility 0s linear .22s` is the load-bearing part, not a flourish:
+       * CLOSING - visibility waits the full fade, then flips to hidden, so the
+         dialog is still painted while it fades out.
+       * OPENING - the .is-open rule below zeroes that delay, so visibility flips
+         to visible IMMEDIATELY.
+     Transitioning visibility naively (`visibility .22s`) breaks the dialog: a
+     `visibility: hidden` element cannot take focus, so the JS `.focus()` call in
+     the same tick silently does nothing and the learner is left with focus on
+     <body>, outside the trap. Measured on this demo before it was fixed. */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .22s ease, visibility 0s linear .22s;
+}
+
+.interstitial.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity .22s ease, visibility 0s linear 0s;
+}
+
+.interstitial-panel {
+  width: min(520px, 100%);
+
+  /* `vh` is part of the same D78 defect as `position: fixed`, and it is easy to miss
+     when only the positioning is fixed: in a content-sized iframe the viewport IS the
+     document, so `100vh` measures the whole asset and this cap never binds - a long
+     destination URL then makes the panel taller than the screen with no way to scroll
+     it. The JS sets `--interstitial-vh` from the real visible height and this falls
+     back to `100vh` where no host has set it (an ordinary page, where vh is correct). */
+  max-height: calc(var(--interstitial-vh, 100vh) - 40px);
+  overflow: auto;
+  padding: 24px;
+  border-radius: var(--radius-modal, var(--radius-lg, 14px));
+  background: var(--color-surface, #fff);
+  box-shadow: var(--shadow-modal, 0 18px 48px rgba(24,12,44,.28));
+
+  /* section 8: 4px accent top-stripe on every overlay */
+  border-top: 4px solid var(--color-primary, #370c65);
+
+  transform: translateY(10px);
+  transition: transform .26s cubic-bezier(.2, .7, .3, 1);
+}
+
+.interstitial.is-open .interstitial-panel { transform: none; }
+
+/* The panel's own focus ring - it takes a tab stop only while it scrolls (see the JS), and
+   had no ring rule at all until 2026-09-23, so the a11y harness failed it outright.
+   INSET, deliberately: outside the panel the ring would sit on the dark backdrop, where
+   #370c65 measures 2.43:1 against the backdrop over a white page, below the 3:1 a focus
+   indicator needs. Inset, it sits on the panel's white surface at 14.97:1. */
+.interstitial-panel:focus-visible {
+  outline: var(--focus-ring-width, 3px) solid var(--focus-ring-color, #370c65);
+  outline-offset: calc(-1 * var(--focus-ring-width, 3px));
+}
+
+.interstitial-panel h2 {
+  margin-top: 0;
+  color: var(--color-primary, #370c65);
+}
+
+/* The destination, written out. This is the point of the pattern (D23): the
+   learner sees the actual URL before anything opens, so a link whose text and
+   destination disagree cannot get past them. Never truncate it. */
+.url-mini-box {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 8px;
+  border: 1px solid var(--color-border, #d5cae6);
+  border-radius: 4px;
+  background: var(--color-surface, #fff);
+  color: var(--color-text, #221a2e);
+  font-family: var(--font-mono, ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace);
+  font-size: .8rem;
+  text-align: left;
+  word-break: break-all;
+}
+
+.destination-domain {
+  font-family: var(--font-mono, ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace);
+  overflow-wrap: anywhere;
+}
+
+.link-hint {
+  margin-top: 8px;
+  color: var(--color-text-muted, #5c5470);
+  font-size: .75rem;
+  font-style: italic;
+}
+
+.ce-prep-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.ce-prep-row .link-hint { margin-top: 0; }
+
+/* The loading beat. It is deliberate, not decoration: it puts a pause between
+   "I clicked a link" and "a tab opened", which is the moment the learner reads
+   the URL. Honour reduced motion by shortening it, not by removing the pause. */
+.ce-dots { display: inline-flex; gap: 5px; }
+
+.ce-dots i {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent, #8b6fb8);
+  animation: ce-dot-pulse 1s infinite ease-in-out;
+}
+
+.ce-dots i:nth-child(2) { animation-delay: .15s; }
+.ce-dots i:nth-child(3) { animation-delay: .30s; }
+
+@keyframes ce-dot-pulse {
+  0%, 80%, 100% { opacity: .35; transform: scale(.8); }
+  40%           { opacity: 1;   transform: none; }
+}
+
+.interstitial-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.interstitial-button {
+  min-height: 44px;                   /* house floor, WCAG 2.5.5 AAA */
+  padding: 10px 18px;
+  border: 2px solid var(--color-primary, #370c65);
+  border-radius: var(--radius-control, var(--radius-sm, 8px));
+  background: var(--color-primary, #370c65);
+  color: var(--color-surface, #fff);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+}
+
+.interstitial-button.secondary {
+  background: var(--color-surface, #fff);
+  color: var(--color-primary, #370c65);
+}
+
+/* Hover lift only where the device can hover (2026-09-23). On a touch screen a tapped button
+   otherwise keeps its lifted, brightened state after the finger leaves, so it reads as still
+   pressed. Adds a condition, changes nothing on a pointer device. */
+@media (hover: hover) {
+  .interstitial-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-raised, 0 6px 16px rgba(24,12,44,.18));
+    filter: brightness(1.06);
+  }
+}
+
+.interstitial-button:active { transform: translateY(1px) scale(.99); }
+
+.interstitial-button:disabled {
+  border-color: #bdc3c7;
+  background: #bdc3c7;
+  color: #fff;
+  cursor: not-allowed;
+}
+
+/* The focus ring is an OUTLINE (D69), so the hover rule - which sets box-shadow,
+   transform and filter - cannot take it away. Corrected 2026-09-23: this comment still
+   described the box-shadow ring D69 retired, when the hover rule's (0,4,0) beat
+   `:focus-visible`'s (0,2,0) and a keyboard user who moved the pointer over the focused
+   button lost the ring. The combined guard below dates from then; it is kept because it is
+   harmless. */
+.interstitial-button:focus-visible {
+  outline: var(--focus-ring-width, 3px) solid var(--focus-ring-color, #370c65); outline-offset: var(--focus-ring-offset, 2px);
+}
+
+.interstitial-button:hover:not(:disabled):focus-visible,
+.interstitial-button:active:focus-visible {
+  outline: var(--focus-ring-width, 3px) solid var(--focus-ring-color, #370c65); outline-offset: var(--focus-ring-offset, 2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interstitial,
+  .interstitial-panel { transition: none; }
+  .ce-dots i { animation: none; opacity: .7; }
+}
+
+</style>
+<!--TSH-CSS
+
+/* ---- Tiro canon, scoped for Moodle. Token VALUES are canon (tokens-tiro.css);
+   recipes are components.css renamed tsh-* and scoped to .tsh so Moodle's Bootstrap
+   .card/.btn/.badge neither restyle us nor get restyled by us. ---- */
+.tsh {
+  --color-surface:#ffffff; --color-surface-selected:#f2effc;
+  --color-primary:#370c65; --color-primary-hover:#45156f; --color-primary-active:#2a0950;
+  --color-on-primary:#f0edf8; --color-accent:#f08838; --color-on-accent:#172033;
+  --color-text:#172033; --color-text-muted:#4b5563;
+  --color-border:#e2e8f0; --color-border-strong:#cbd5e1; --color-border-control:#748296;
+  --color-success:#166534; --color-success-bg:#e8f5ee;
+  --color-warning:#a15c00; --color-warning-bg:#fbf0dd;
+  --color-error:#991b1b; --color-error-bg:#fbeae8;
+  --focus-ring-color:var(--color-primary); --focus-ring-width:3px; --focus-ring-offset:2px;
+  --font-ui:"Atkinson Hyperlegible","Segoe UI",Tahoma,Verdana,sans-serif;
+  --text-xs:12px; --text-sm:14px; --text-body:17px; --text-h3:18px; --text-h2:22px; --text-h1:28px;
+  --leading-heading:1.3; --leading-body:1.55; --weight-bold:700;
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-6:24px; --space-8:32px; --space-12:48px;
+  --radius-sm:8px; --radius-control:10px; --radius-card:14px; --radius-modal:16px; --radius-pill:999px;
+  --shadow-rest:0 8px 24px rgba(42,9,80,.12); --shadow-raised:0 16px 36px rgba(42,9,80,.18);
+  --dur-press:120ms; --dur-hover:200ms; --dur-move:300ms; --dur-reveal:500ms;
+  --ease-entrance:cubic-bezier(.2,.7,.2,1); --ease-exit:cubic-bezier(.4,0,1,1); --ease-standard:cubic-bezier(.4,0,.2,1);
+  --color-accent-ink:#a15c00; /* tokens-tiro --tiro-orange-700, dark orange: the accent as TEXT (accent #f08838 fails as text) */
+  font-family:var(--font-ui); font-size:var(--text-body); line-height:var(--leading-body);
+  color:var(--color-text); max-width:1000px; margin:0 auto;
+}
+.tsh *, .tsh *::before, .tsh *::after { box-sizing:border-box; }
+.tsh-ovhost { font-family:"Atkinson Hyperlegible","Segoe UI",Tahoma,Verdana,sans-serif; color:#172033; line-height:1.55; }
+.tsh p, .tsh ul, .tsh ol { margin:0 0 var(--space-4); }
+.tsh h3, .tsh h4, .tsh h5, .tsh h6 { font-family:var(--font-ui); font-weight:var(--weight-bold); line-height:var(--leading-heading); color:var(--color-primary); margin:0 0 var(--space-3); }
+.tsh h3, .tsh h4 { font-size:var(--text-h2); text-align:center; }
+.tsh h4.tsh-cat { font-size:var(--text-h3); text-align:left; }
+.tsh .tsh-card h4, .tsh .tsh-note h4 { font-size:var(--text-h3); text-align:left; }
+.tsh .tsh-card.tsh-center h4 { text-align:center; }
+.tsh h5 { font-size:var(--text-h3); }
+.tsh h3, .tsh h4, .tsh h5, .tsh h6 { text-wrap:balance; }
+.tsh .tsh-lead, .tsh .tsh-org-what { text-wrap:pretty; }
+.tsh h6 { font-size:var(--text-body); }
+.tsh a { color:var(--color-primary); font-weight:var(--weight-bold); text-decoration:underline; text-underline-offset:3px; }
+.tsh a:hover { color:var(--color-primary-hover); }
+.tsh :focus-visible { outline:var(--focus-ring-width) solid var(--focus-ring-color); outline-offset:var(--focus-ring-offset); }
+.tsh .vh { position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+.tsh .tsh-muted { color:var(--color-text-muted); }
+.tsh .tsh-small { font-size:var(--text-sm); }
+.tsh .tsh-center { text-align:center; }
+
+/* structure */
+.tsh .tsh-divider { height:1px; background:var(--color-border-strong); margin:var(--space-8) 0; border:0; }
+.tsh .tsh-bar { width:48px; height:4px; background:var(--color-accent); border-radius:2px; margin:0 auto var(--space-3); }
+.tsh .tsh-lead { max-width:68ch; margin-left:auto; margin-right:auto; text-align:center; }
+.tsh .tsh-eyebrow { display:block; font-size:var(--text-sm); font-weight:var(--weight-bold); color:var(--color-accent-ink); margin:0 0 var(--space-1); }
+.tsh .tsh-grid { list-style:none; margin:0 0 var(--space-4); padding:0; display:flex; flex-wrap:wrap; gap:var(--space-4); }
+.tsh .tsh-grid > li { margin:0; }
+.tsh .tsh-g150 > li { flex:1 1 150px; } .tsh .tsh-g210 > li { flex:1 1 210px; } .tsh .tsh-g300 > li { flex:1 1 300px; }
+.tsh .tsh-list { list-style:none; padding:0; }
+.tsh .tsh-list > li { margin:0 0 var(--space-2); }
+
+/* card (components.css .card, no hover lift: content panels are not buttons) */
+.tsh .tsh-card { background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-card); padding:var(--space-6); box-shadow:var(--shadow-rest); margin:0 0 var(--space-4); }
+.tsh .tsh-card > :last-child { margin-bottom:0; }
+.tsh .tsh-card.tsh-soft { background:var(--color-surface-selected); box-shadow:none; }
+.tsh .tsh-card-rule { border-top:1px solid var(--color-border); padding-top:var(--space-4); margin-top:var(--space-4); }
+
+/* note (components.css .note: 4px left bar, currentColor) */
+.tsh .tsh-note { border-left:4px solid; border-radius:var(--radius-control); padding:var(--space-4) var(--space-6); margin:0 0 var(--space-4); }
+.tsh .tsh-note > :last-child { margin-bottom:0; }
+.tsh .tsh-note.error { background:var(--color-error-bg); border-color:var(--color-error); }
+.tsh .tsh-note.warning { background:var(--color-warning-bg); border-color:var(--color-warning); }
+.tsh .tsh-note.info { background:var(--color-surface-selected); border-color:var(--color-primary); }
+.tsh .tsh-note.success { background:var(--color-success-bg); border-color:var(--color-success); }
+.tsh .tsh-note-title { font-weight:var(--weight-bold); margin:0 0 var(--space-2); }
+.tsh .tsh-note.error .tsh-note-title { color:var(--color-error); }
+.tsh .tsh-note.warning .tsh-note-title { color:var(--color-warning); }
+.tsh .tsh-note.success .tsh-note-title { color:var(--color-success); }
+
+/* buttons (components.css .btn / .btn-primary / .btn-secondary) */
+.tsh .tsh-btn { font:var(--weight-bold) var(--text-body)/1.2 var(--font-ui); min-height:44px; padding:var(--space-2) var(--space-6);
+  border-radius:var(--radius-control); border:1px solid transparent; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:var(--space-2);
+  text-decoration:none; text-align:center;
+  transition:background var(--dur-press) var(--ease-standard), transform var(--dur-press) var(--ease-standard), box-shadow var(--dur-hover) var(--ease-standard), border-color var(--dur-hover) var(--ease-standard); }
+.tsh .tsh-btn:active { transform:translateY(2px) scale(.99); }
+.tsh .tsh-btn-primary, .tsh a.tsh-btn-primary { background:var(--color-primary); color:var(--color-on-primary); }
+.tsh .tsh-btn-primary:hover, .tsh a.tsh-btn-primary:hover { background:var(--color-primary-hover); color:var(--color-on-primary); box-shadow:inset 0 -3px 0 var(--color-accent); }
+.tsh .tsh-btn-primary:active { background:var(--color-primary-active); box-shadow:none; }
+.tsh .tsh-btn-secondary, .tsh a.tsh-btn-secondary { background:var(--color-surface); color:var(--color-primary); border-color:var(--color-border-control); }
+.tsh .tsh-btn-secondary:hover { border-color:var(--color-primary); transform:translateY(-1px); }
+.tsh .tsh-btn-secondary:active { transform:translateY(2px) scale(.99); }
+@media (hover:none) { .tsh .tsh-btn-secondary:hover { transform:none; } }
+
+/* chip (components.css .chip, 44px target) */
+.tsh .tsh-chip { font:var(--weight-bold) var(--text-sm)/1.2 var(--font-ui); min-height:44px; width:100%; padding:var(--space-2) var(--space-4);
+  border-radius:var(--radius-control); background:var(--color-surface-selected); color:var(--color-primary); border:1px solid transparent; cursor:pointer; text-align:left;
+  transition:background var(--dur-hover) var(--ease-standard), border-color var(--dur-hover) var(--ease-standard), transform var(--dur-press) var(--ease-standard); }
+.tsh .tsh-chip:not([aria-pressed="true"]):hover, .tsh .tsh-chip.is-hot:not([aria-pressed="true"]) { border-color:var(--color-primary); background:var(--color-surface); }
+.tsh .tsh-chip:active { transform:translateY(1px) scale(.985); }
+.tsh .tsh-chip[aria-pressed="true"] { background:var(--color-primary); color:var(--color-on-primary); }
+.tsh .tsh-jumps { gap:var(--space-2); }
+.tsh a.tsh-jump { display:flex; align-items:center; gap:var(--space-2); text-decoration:none; }
+.tsh .tsh-cat { scroll-margin-top:80px; }
+
+/* metadata label (contract 5: Resource Hub label shape, 8px radius, weight 700, sentence case) */
+.tsh .tsh-tag { display:inline-block; font-size:var(--text-xs); font-weight:var(--weight-bold); line-height:1.4; padding:2px var(--space-2);
+  border-radius:var(--radius-sm); background:var(--color-surface-selected); color:var(--color-primary); vertical-align:middle; }
+
+/* input (components.css .input) */
+.tsh .tsh-field > label { display:block; margin:0 0 var(--space-2); font-weight:var(--weight-bold); }
+.tsh .tsh-input { font:var(--text-body)/1.5 var(--font-ui); color:var(--color-text); background:var(--color-surface); min-height:44px;
+  border:2px solid var(--color-border-control); border-radius:var(--radius-control); padding:var(--space-2) var(--space-3); transition:border-color var(--dur-hover) var(--ease-standard); }
+.tsh .tsh-input:hover { border-color:var(--color-border-strong); }
+.tsh .tsh-input:focus-visible { border-color:var(--color-primary); }
+.tsh .tsh-input::placeholder { color:var(--color-text-muted); opacity:1; }
+
+/* expanders: native <details>. Owner-approved; FF rule: emoji headers, emoji bullets */
+.tsh .tsh-acc { background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-card); box-shadow:var(--shadow-rest); height:100%; }
+.tsh .tsh-acc > summary { list-style:none; cursor:pointer; padding:var(--space-4) var(--space-6); border-radius:var(--radius-card); display:block; min-height:44px;
+  transition:background var(--dur-hover) var(--ease-standard); }
+.tsh .tsh-acc > summary::-webkit-details-marker { display:none; }
+.tsh .tsh-acc > summary:hover { background:var(--color-surface-selected); }
+.tsh .tsh-acc .tsh-chev { display:inline-block; margin-left:var(--space-2); color:var(--color-primary); transition:transform var(--dur-hover) var(--ease-standard); }
+.tsh .tsh-acc[open] .tsh-chev { transform:rotate(90deg); }
+.tsh .tsh-acc-body { padding:0 var(--space-6) var(--space-4); }
+.tsh .tsh-acc[open] .tsh-acc-body { animation:tshReveal var(--dur-move) var(--ease-entrance) both; }
+@keyframes tshReveal { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:none; } }
+.tsh .tsh-acc { interpolate-size:allow-keywords; }
+.tsh .tsh-acc::details-content { block-size:0; overflow:hidden; transition:block-size var(--dur-move) var(--ease-standard), content-visibility var(--dur-move) var(--ease-standard) allow-discrete; }
+.tsh .tsh-acc[open]::details-content { block-size:auto; }
+
+/* 5 Rs */
+.tsh .tsh-r-step { display:block; font-size:var(--text-sm); font-weight:var(--weight-bold); color:var(--color-accent-ink); }
+.tsh .tsh-r-word { font-size:var(--text-h3); font-weight:var(--weight-bold); color:var(--color-primary); }
+.tsh .tsh-r-word b { font-size:var(--text-h1); }
+
+/* organisation card */
+.tsh .tsh-org { background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-card); padding:var(--space-4) var(--space-6); box-shadow:var(--shadow-rest); height:100%; }
+.tsh .tsh-org h5, .tsh .tsh-org h6 { margin:0 0 var(--space-1); color:var(--color-text); font-size:var(--text-h3); }
+.tsh .tsh-org .tsh-tag { margin:0 0 var(--space-2); }
+.tsh .tsh-org p { margin:0 0 var(--space-2); font-size:var(--text-sm); }
+.tsh .tsh-org .tsh-org-what { color:var(--color-text-muted); font-size:var(--text-body); }
+.tsh .tsh-org .tsh-org-line { display:flex; gap:var(--space-2); }
+.tsh .tsh-org .tsh-org-line > span:first-child { font-weight:var(--weight-bold); min-width:4.5em; }
+.tsh .tsh-org a { word-break:break-word; }
+.tsh .tsh-org .tsh-call { font-size:var(--text-body); }
+.tsh .tsh-org .tsh-org-line { align-items:center; margin:0; min-height:44px; }
+
+/* link as a control: every standalone link meets the 44px house floor (contract 2, a11y-runtime-audit).
+   Links are kept OUT of running prose, so no line box is stretched by one. */
+.tsh a.tsh-go, .tsh .tsh-org-line a { display:inline-flex; align-items:center; min-height:44px; min-width:44px; overflow-wrap:anywhere; }
+.tsh .tsh-actions { display:flex; flex-wrap:wrap; gap:var(--space-3); justify-content:center; margin:0 0 var(--space-4); }
+
+/* icons */
+.tsh .tsh-ico { width:1.15em; height:1.15em; vertical-align:-0.2em; flex:none; display:inline-block; }
+.tsh h3 > .tsh-ico, .tsh h4 > .tsh-ico, .tsh h5 > .tsh-ico, .tsh h6 > .tsh-ico, .tsh .tsh-note-title > .tsh-ico,
+.tsh .tsh-btn > .tsh-ico, .tsh .tsh-jump > .tsh-ico { margin-inline-end:.4em; }
+.tsh .tsh-btn > .tsh-ico, .tsh .tsh-jump > .tsh-ico { margin-inline-end:0; }
+.tsh .tsh-list > li { display:flex; gap:var(--space-3); align-items:flex-start; }
+.tsh .tsh-list > li > .tsh-ico { color:var(--color-primary); margin-top:.2em; }
+
+/* critical: carried by an icon, a WORD and an outlined shape, never by colour alone */
+.tsh .tsh-flag { display:inline-flex; align-items:center; gap:6px; font-size:var(--text-sm); font-weight:var(--weight-bold); line-height:1.2;
+  padding:3px 10px; border:2px solid currentColor; border-radius:var(--radius-sm); background:var(--color-surface); vertical-align:middle; }
+.tsh .tsh-flag .tsh-ico { width:1.05em; height:1.05em; }
+.tsh .tsh-note-title { display:flex; align-items:center; flex-wrap:wrap; gap:var(--space-2); }
+.tsh .tsh-note.tsh-critical { border:2px solid var(--color-error); border-left-width:8px; }
+.tsh .tsh-note.tsh-critical .tsh-flag { color:var(--color-error); }
+.tsh .tsh-note.tsh-important { border:2px solid var(--color-warning); border-left-width:8px; }
+.tsh .tsh-note.tsh-important .tsh-flag, .tsh .tsh-note.tsh-important .tsh-note-title { color:var(--color-warning); }
+.tsh li.tsh-crit-item { font-weight:var(--weight-bold); }
+.tsh li.tsh-crit-item .tsh-flag { color:var(--color-error); margin-inline-end:var(--space-2); }
+
+/* cards in a row: headings stay at the top, lists sit in the vertical middle of the space left */
+.tsh .tsh-grid > li > .tsh-card { display:flex; flex-direction:column; }
+.tsh .tsh-grid > li > .tsh-card > ul, .tsh .tsh-grid > li > .tsh-card > ol { margin-block:auto; }
+
+/* organisation cards: collapsed, open on select; the description shows on hover and focus */
+.tsh .tsh-orgs { align-items:flex-start; }
+.tsh details.tsh-org { padding:0; }
+.tsh details.tsh-org > summary { list-style:none; cursor:pointer; position:relative; display:flex; align-items:center; gap:var(--space-3);
+  min-height:44px; padding:var(--space-4) var(--space-6); border-radius:var(--radius-card); transition:background var(--dur-hover) var(--ease-standard); }
+.tsh details.tsh-org > summary::-webkit-details-marker { display:none; }
+.tsh details.tsh-org > summary:hover { background:var(--color-surface-selected); }
+.tsh .tsh-org-head { flex:1 1 auto; min-width:0; }
+.tsh .tsh-org-head > h5, .tsh .tsh-org-head > h6 { margin:0; }
+.tsh .tsh-org-head .tsh-tag { margin:var(--space-1) 0 0; }
+.tsh .tsh-org-more { color:var(--color-primary); display:inline-flex; transition:transform var(--dur-hover) var(--ease-standard); }
+.tsh details.tsh-org[open] .tsh-org-more { transform:rotate(180deg); }
+.tsh .tsh-org-body { padding:0 var(--space-6) var(--space-4); }
+.tsh details.tsh-org:not([open]) > .tsh-org-body { display:none; }
+.tsh details.tsh-org[open] .tsh-org-body { animation:tshReveal var(--dur-move) var(--ease-entrance) both; }
+.tsh .tsh-tip { position:absolute; left:var(--space-4); right:var(--space-4); bottom:calc(100% + 6px); z-index:20;
+  background:var(--color-text); color:#ffffff; font-size:var(--text-sm); font-weight:400; line-height:1.45;
+  padding:var(--space-2) var(--space-3); border-radius:var(--radius-sm); box-shadow:var(--shadow-raised);
+  opacity:0; visibility:hidden; transition:opacity var(--dur-hover) var(--ease-standard), visibility 0s linear var(--dur-hover); }
+.tsh .tsh-tip::after { content:""; position:absolute; left:24px; top:100%; border:6px solid transparent; border-top-color:var(--color-text); }
+.tsh details.tsh-org:not([open]):not(.tip-off) > summary:hover > .tsh-tip,
+.tsh details.tsh-org:not([open]):not(.tip-off) > summary:focus-visible > .tsh-tip { opacity:1; visibility:visible; transition-delay:0s; }
+@media (hover: none) { .tsh .tsh-tip { display:none; } }
+
+/* media */
+.tsh .tsh-figure { margin:0 auto var(--space-6); max-width:760px; text-align:center; }
+.tsh .tsh-figure img { display:block; max-width:100%; height:auto; margin:0 auto; border-radius:var(--radius-card); }
+.tsh .tsh-figure.tsh-small-fig { max-width:320px; }
+.tsh .tsh-figure.tsh-poster { max-width:480px; }
+.tsh .tsh-figure.tsh-logo img { border-radius:0; }
+.tsh .tsh-minimap { display:block; width:120px; height:auto; margin:0 auto var(--space-3); }
+.tsh .tsh-minimap path { fill:var(--color-surface-selected); stroke:var(--color-primary); stroke-width:2; stroke-linejoin:round; }
+.tsh .tsh-minimap path.is-here { fill:var(--color-accent); stroke-width:3; }
+.tsh .tsh-figure figcaption, .tsh .tsh-video figcaption { font-size:var(--text-sm); color:var(--color-text-muted); margin-top:var(--space-2); text-align:center; }
+.tsh .tsh-video { margin:0 auto var(--space-6); max-width:760px; width:100%; }
+.tsh .tsh-video-frame { position:relative; aspect-ratio:16/9; width:100%; border-radius:var(--radius-card); overflow:hidden;
+  background:linear-gradient(135deg, #2a0950, #370c65 60%, #45156f); box-shadow:var(--shadow-rest); }
+.tsh .tsh-video-frame > img, .tsh .tsh-video-frame > iframe { position:absolute; inset:0; width:100%; height:100%; border:0; object-fit:cover; }
+.tsh .tsh-video-thumb { opacity:.85; }
+.tsh .tsh-video-play { position:absolute; inset:0; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:var(--space-2);
+  background:rgba(23,32,51,.35); color:#ffffff; border:0; cursor:pointer; font:var(--weight-bold) var(--text-body)/1.2 var(--font-ui); }
+.tsh .tsh-video-btn { width:72px; height:72px; border-radius:50%; background:var(--color-primary); display:flex; align-items:center; justify-content:center;
+  box-shadow:0 0 0 4px rgba(255,255,255,.9); transition:transform var(--dur-press) var(--ease-standard), box-shadow var(--dur-hover) var(--ease-standard); }
+.tsh .tsh-video-btn .tsh-ico { width:32px; height:32px; margin-left:4px; }
+.tsh .tsh-video-play:hover .tsh-video-btn { box-shadow:0 0 0 4px rgba(255,255,255,.9), inset 0 -3px 0 var(--color-accent); }
+.tsh .tsh-video-play:active .tsh-video-btn { transform:translateY(2px) scale(.99); }
+.tsh .tsh-video-label { background:rgba(23,32,51,.8); padding:4px 12px; border-radius:var(--radius-sm); }
+.tsh .tsh-video-play:focus-visible { outline:3px solid #ffffff; outline-offset:-6px; }
+.tsh video.tsh-clip { display:block; width:100%; height:auto; border-radius:var(--radius-card); background:#12061f; }
+.tsh .tsh-steps { list-style:none; padding:0; margin:0 0 var(--space-6); display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:var(--space-3); counter-reset:step; }
+.tsh .tsh-steps > li { display:flex; gap:var(--space-3); align-items:center; background:var(--color-surface); border:1px solid var(--color-border);
+  border-radius:var(--radius-control); padding:var(--space-3) var(--space-4); counter-increment:step; }
+.tsh .tsh-steps > li::before { content:counter(step); flex:none; width:32px; height:32px; border-radius:50%; background:var(--color-surface-selected);
+  color:var(--color-primary); font-weight:var(--weight-bold); display:flex; align-items:center; justify-content:center; }
+.tsh .tsh-steps > li > .tsh-ico { color:var(--color-primary); width:1.4em; height:1.4em; }
+
+/* process flowchart (policy v5.1) */
+.tsh .tsh-flow { list-style:none; padding:0; margin:0 auto var(--space-4); max-width:760px; }
+.tsh .tsh-flow-step { position:relative; display:flex; gap:var(--space-4); align-items:flex-start; background:var(--color-surface);
+  border:1px solid var(--color-border); border-radius:var(--radius-card); padding:var(--space-4) var(--space-6); box-shadow:var(--shadow-rest); margin:0 0 var(--space-8); }
+.tsh .tsh-flow-step:not(:last-child)::after { content:""; position:absolute; left:48px; top:100%; height:var(--space-8); border-left:2px solid var(--color-primary); }
+.tsh .tsh-flow-step:not(:last-child)::before { content:""; position:absolute; left:43px; top:calc(100% + var(--space-8) - 8px); border:6px solid transparent; border-top-color:var(--color-primary); }
+.tsh .tsh-flow-step.is-decision { border:2px dashed var(--color-accent-ink); }
+.tsh .tsh-flow-ico { flex:none; width:48px; height:48px; border-radius:50%; background:var(--color-primary); color:var(--color-on-primary); display:flex; align-items:center; justify-content:center; }
+.tsh .tsh-flow-step.is-decision .tsh-flow-ico { background:var(--color-accent-ink); color:#ffffff; }
+.tsh .tsh-flow-ico .tsh-ico { width:26px; height:26px; }
+.tsh .tsh-flow-text { flex:1 1 auto; min-width:0; }
+.tsh .tsh-flow-text h5 { font-size:var(--text-h3); margin:0 0 var(--space-1); }
+.tsh .tsh-flow-text > p { margin:0; }
+.tsh .tsh-flow-kind { display:inline-block; font-size:var(--text-xs); font-weight:var(--weight-bold); color:var(--color-accent-ink); border:2px dashed currentColor; border-radius:var(--radius-sm); padding:1px 8px; margin:0 0 var(--space-2); }
+.tsh .tsh-flow-if { display:flex; align-items:center; gap:var(--space-2); font-weight:var(--weight-bold); margin:var(--space-3) 0 var(--space-2); color:var(--color-text); }
+.tsh .tsh-flow-if .tsh-ico { color:var(--color-primary); }
+.tsh .tsh-flow-out { border-radius:var(--radius-control); padding:var(--space-3) var(--space-4); background:var(--color-surface-selected); border:2px solid var(--color-primary); }
+.tsh .tsh-flow-branch.is-critical .tsh-flow-out { background:var(--color-error-bg); border-color:var(--color-error); border-left-width:8px; }
+.tsh .tsh-flow-branch.is-critical .tsh-flag { color:var(--color-error); margin-inline-end:var(--space-2); }
+.tsh .tsh-flow-out-title { font-weight:var(--weight-bold); margin:0 0 var(--space-1); display:flex; flex-wrap:wrap; align-items:center; }
+.tsh .tsh-flow-out > p:last-child { margin:0; }
+.tsh .tsh-flow-note { max-width:760px; margin-inline:auto; }
+@media (max-width: 480px) { .tsh .tsh-flow-step { padding:var(--space-4); gap:var(--space-3); } .tsh .tsh-flow-step:not(:last-child)::after { left:40px; } .tsh .tsh-flow-step:not(:last-child)::before { left:35px; } }
+
+/* reading width: running text stops at a comfortable measure; centred leads and button rows are unaffected */
+.tsh p:not(.tsh-actions):not(.tsh-lead):not(.tsh-center):not(.tsh-org-line), .tsh li:not(.tsh-grid > li):not(.tsh-steps > li):not(.tsh-flow > li) { max-width:68ch; }
+/* two columns of chips on phones */
+@media (max-width: 479px) {
+  .tsh .tsh-jumps > li, .tsh .tsh-regions > li { flex:1 1 calc(50% - var(--space-2)); min-width:0; }
+}
+.tsh .tsh-figure.tsh-banner { max-width:360px; }
+.tsh .tsh-newtab { font-weight:400; font-size:var(--text-sm); }
+
+/* dynamic icons: the icon redraws itself when its card or item is hovered or focused */
+@keyframes tshDraw { from { stroke-dashoffset:1; } to { stroke-dashoffset:0; } }
+.tsh .tsh-ico { transition:transform var(--dur-hover) var(--ease-standard); }
+@media (prefers-reduced-motion: no-preference) {
+  .tsh .tsh-card:hover > :is(h4,h5) > .tsh-ico, .tsh .tsh-card:focus-within > :is(h4,h5) > .tsh-ico,
+  .tsh .tsh-list > li:hover > .tsh-ico, .tsh .tsh-steps > li:hover > .tsh-ico,
+  .tsh .tsh-flow-step:hover .tsh-flow-ico > .tsh-ico, .tsh .tsh-note:hover > .tsh-note-title > .tsh-ico,
+  .tsh .tsh-jump:hover > .tsh-ico, .tsh .tsh-jump:focus-visible > .tsh-ico, .tsh .tsh-btn:hover > .tsh-ico { transform:scale(1.12); }
+  .tsh .tsh-card:hover > :is(h4,h5) > .tsh-ico *, .tsh .tsh-card:focus-within > :is(h4,h5) > .tsh-ico *,
+  .tsh .tsh-list > li:hover > .tsh-ico *, .tsh .tsh-steps > li:hover > .tsh-ico *,
+  .tsh .tsh-flow-step:hover .tsh-flow-ico > .tsh-ico *, .tsh .tsh-note:hover > .tsh-note-title > .tsh-ico *,
+  .tsh .tsh-jump:hover > .tsh-ico *, .tsh .tsh-jump:focus-visible > .tsh-ico *, .tsh .tsh-btn:hover > .tsh-ico *,
+  .tsh .tsh-cat:hover > .tsh-ico * { stroke-dasharray:1; animation:tshDraw 400ms var(--ease-entrance) both; }
+}
+
+/* sequential reveal: only ever added by script, so without JS (or with reduced motion) everything is simply there */
+.tsh .tsh-rv-wait { opacity:0; transform:translateY(14px); transition:opacity var(--dur-reveal) var(--ease-entrance), transform var(--dur-reveal) var(--ease-entrance); }
+.tsh .tsh-rv-wait.tsh-rv-in { opacity:1; transform:none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tsh .tsh-rv-wait { opacity:1; transform:none; }
+  .tsh *, .tsh *::before, .tsh *::after { animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important; }
+}
+@media (forced-colors: active) {
+  .tsh .tsh-chip[aria-pressed="true"] { outline:2px solid CanvasText; }
+  .tsh .tsh-bar, .tsh .tsh-divider { background:CanvasText; }
+  .tsh .tsh-flag, .tsh .tsh-note.tsh-critical, .tsh .tsh-note.tsh-important { border-color:CanvasText; }
+  .tsh .tsh-tip { border:1px solid CanvasText; }
+}
+
+/* ===== external-link-interstitial.css, inlined VERBATIM ===== */
+/* ============================================================================
+   External-link interstitial - CANON (contract section 6, D23), Tiro / FFW
+   Touch Medical uses its own (D16). Do not cross them.
+
+   Extracted 2026-07-30 from tlt3211-careers-explorer-s02-2026-07-28-v1, the route
+   the owner blessed. Selectors are class-only here - the source scoped everything
+   under `#ce-root`, which made the whole thing uncopyable into any other family.
+
+   Two fixes applied on extraction, both named in contract section 6:
+     1. backdrop click now closes (the source had no backdrop-click-close)
+     2. a matching EXIT. The source animated in and then hard-cut out on
+        `display:none`. section 6: "gentle entrance and a matching exit, never a hard cut."
+        That needs opacity/visibility rather than display, so the open/closed
+        mechanism changed - see the JS, which no longer toggles `display`.
+
+   PORTABLE BY CONSTRUCTION. Every var() carries a literal fallback and prefers the
+   CANONICAL Tiro token name. The first cut used the careers vocabulary (--deep-purple,
+   --white, --text-main); inlined into layered-hub, where those names do not exist, the
+   whole declaration was invalid and radius, colours and fonts computed to their initial
+   values - invisibly. A shared partial that assumes one family's tokens is not shared.
+   ============================================================================ */
+
+/* POSITIONING - read this before changing it back to `fixed`.
+
+   D78 rules that `position: fixed` is wrong inside Rise, and extends here: Rise sizes
+   the asset's iframe to its CONTENT, so `fixed` pins to the whole asset rather than to
+   the learner's screen and `vh` measures the asset. On a tall build a centred fixed
+   overlay opens hundreds or thousands of pixels from the control that was activated -
+   measured at 4,916px of asset on the TAB6102 portal, so roughly 2,458px away.
+
+   `absolute` alone is a different wrong answer: with no positioned ancestor it resolves
+   against the initial containing block. The host MUST give the overlay a positioned
+   ancestor and place it INSIDE that, which is the placement contract the JS enforces and
+   the HTML header states. Placing it immediately before </body> is now wrong.
+
+   `align-items: flex-start` rather than `center`, so a host-set offset is honoured.
+   The panel's own vertical placement comes from the JS. Note the selector is scoped to
+   `.interstitial` alone: a loose `align-items` substitution also matches `.ce-prep-row`
+   and silently flattens the preparing-dots row, which needs its centring. */
+.interstitial {
+  position: absolute;
+  inset: 0;
+  z-index: 4000;
+  display: flex;                      /* was toggled display:none/flex; see below */
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(30, 18, 48, .68);
+
+  /* The exit fix. `display` cannot be transitioned, so a display-toggled overlay
+     always hard-cuts on close no matter what easing is on the panel. Holding it
+     in the layout and hiding it with opacity+visibility gives a real exit, and
+     `visibility` (not just opacity) keeps it out of the tab order when closed.
+
+     The `visibility 0s linear .22s` is the load-bearing part, not a flourish:
+       * CLOSING - visibility waits the full fade, then flips to hidden, so the
+         dialog is still painted while it fades out.
+       * OPENING - the .is-open rule below zeroes that delay, so visibility flips
+         to visible IMMEDIATELY.
+     Transitioning visibility naively (`visibility .22s`) breaks the dialog: a
+     `visibility: hidden` element cannot take focus, so the JS `.focus()` call in
+     the same tick silently does nothing and the learner is left with focus on
+     <body>, outside the trap. Measured on this demo before it was fixed. */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .22s ease, visibility 0s linear .22s;
+}
+
+.interstitial.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity .22s ease, visibility 0s linear 0s;
+}
+
+.interstitial-panel {
+  width: min(520px, 100%);
+
+  /* `vh` is part of the same D78 defect as `position: fixed`, and it is easy to miss
+     when only the positioning is fixed: in a content-sized iframe the viewport IS the
+     document, so `100vh` measures the whole asset and this cap never binds - a long
+     destination URL then makes the panel taller than the screen with no way to scroll
+     it. The JS sets `--interstitial-vh` from the real visible height and this falls
+     back to `100vh` where no host has set it (an ordinary page, where vh is correct). */
+  max-height: calc(var(--interstitial-vh, 100vh) - 40px);
+  overflow: auto;
+  padding: 24px;
+  border-radius: var(--radius-modal, var(--radius-lg, 14px));
+  background: var(--color-surface, #fff);
+  box-shadow: var(--shadow-modal, 0 18px 48px rgba(24,12,44,.28));
+
+  /* section 8: 4px accent top-stripe on every overlay */
+  border-top: 4px solid var(--color-primary, #370c65);
+
+  transform: translateY(10px);
+  transition: transform .26s cubic-bezier(.2, .7, .3, 1);
+}
+
+.interstitial.is-open .interstitial-panel { transform: none; }
+
+/* The panel's own focus ring - it takes a tab stop only while it scrolls (see the JS), and
+   had no ring rule at all until 2026-09-23, so the a11y harness failed it outright.
+   INSET, deliberately: outside the panel the ring would sit on the dark backdrop, where
+   #370c65 measures 2.43:1 against the backdrop over a white page, below the 3:1 a focus
+   indicator needs. Inset, it sits on the panel's white surface at 14.97:1. */
+.interstitial-panel:focus-visible {
+  outline: var(--focus-ring-width, 3px) solid var(--focus-ring-color, #370c65);
+  outline-offset: calc(-1 * var(--focus-ring-width, 3px));
+}
+
+.interstitial-panel h2 {
+  margin-top: 0;
+  color: var(--color-primary, #370c65);
+}
+
+/* The destination, written out. This is the point of the pattern (D23): the
+   learner sees the actual URL before anything opens, so a link whose text and
+   destination disagree cannot get past them. Never truncate it. */
+.url-mini-box {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 8px;
+  border: 1px solid var(--color-border, #d5cae6);
+  border-radius: 4px;
+  background: var(--color-surface, #fff);
+  color: var(--color-text, #221a2e);
+  font-family: var(--font-mono, ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace);
+  font-size: .8rem;
+  text-align: left;
+  word-break: break-all;
+}
+
+.destination-domain {
+  font-family: var(--font-mono, ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace);
+  overflow-wrap: anywhere;
+}
+
+.link-hint {
+  margin-top: 8px;
+  color: var(--color-text-muted, #5c5470);
+  font-size: .75rem;
+  font-style: italic;
+}
+
+.ce-prep-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.ce-prep-row .link-hint { margin-top: 0; }
+
+/* The loading beat. It is deliberate, not decoration: it puts a pause between
+   "I clicked a link" and "a tab opened", which is the moment the learner reads
+   the URL. Honour reduced motion by shortening it, not by removing the pause. */
+.ce-dots { display: inline-flex; gap: 5px; }
+
+.ce-dots i {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent, #8b6fb8);
+  animation: ce-dot-pulse 1s infinite ease-in-out;
+}
+
+.ce-dots i:nth-child(2) { animation-delay: .15s; }
+.ce-dots i:nth-child(3) { animation-delay: .30s; }
+
+@keyframes ce-dot-pulse {
+  0%, 80%, 100% { opacity: .35; transform: scale(.8); }
+  40%           { opacity: 1;   transform: none; }
+}
+
+.interstitial-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.interstitial-button {
+  min-height: 44px;                   /* house floor, WCAG 2.5.5 AAA */
+  padding: 10px 18px;
+  border: 2px solid var(--color-primary, #370c65);
+  border-radius: var(--radius-control, var(--radius-sm, 8px));
+  background: var(--color-primary, #370c65);
+  color: var(--color-surface, #fff);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+}
+
+.interstitial-button.secondary {
+  background: var(--color-surface, #fff);
+  color: var(--color-primary, #370c65);
+}
+
+/* Hover lift only where the device can hover (2026-09-23). On a touch screen a tapped button
+   otherwise keeps its lifted, brightened state after the finger leaves, so it reads as still
+   pressed. Adds a condition, changes nothing on a pointer device. */
+@media (hover: hover) {
+  .interstitial-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-raised, 0 6px 16px rgba(24,12,44,.18));
+    filter: brightness(1.06);
+  }
+}
+
+.interstitial-button:active { transform: translateY(1px) scale(.99); }
+
+.interstitial-button:disabled {
+  border-color: #bdc3c7;
+  background: #bdc3c7;
+  color: #fff;
+  cursor: not-allowed;
+}
+
+/* The focus ring is an OUTLINE (D69), so the hover rule - which sets box-shadow,
+   transform and filter - cannot take it away. Corrected 2026-09-23: this comment still
+   described the box-shadow ring D69 retired, when the hover rule's (0,4,0) beat
+   `:focus-visible`'s (0,2,0) and a keyboard user who moved the pointer over the focused
+   button lost the ring. The combined guard below dates from then; it is kept because it is
+   harmless. */
+.interstitial-button:focus-visible {
+  outline: var(--focus-ring-width, 3px) solid var(--focus-ring-color, #370c65); outline-offset: var(--focus-ring-offset, 2px);
+}
+
+.interstitial-button:hover:not(:disabled):focus-visible,
+.interstitial-button:active:focus-visible {
+  outline: var(--focus-ring-width, 3px) solid var(--focus-ring-color, #370c65); outline-offset: var(--focus-ring-offset, 2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interstitial,
+  .interstitial-panel { transition: none; }
+  .ce-dots i { animation: none; opacity: .7; }
+}
+
+/*TSH-CSS-END*/
+-->
+<script>
+(function () {
+  var me = document.currentScript;
+  if (!me) { return; }
+  var n = me.previousSibling;
+  while (n && n.nodeType !== 8) { n = n.previousSibling; }
+  if (!n || n.nodeValue.indexOf('TSH-CSS') !== 0) { return; }
+  var p = n.previousSibling;
+  while (p && p.nodeType !== 1) { p = p.previousSibling; }
+  if (p && p.tagName === 'STYLE') { return; }  /* the <style> survived: nothing to do */
+  var s = document.createElement('style');
+  s.setAttribute('data-tsh', 'carried');
+  s.textContent = n.nodeValue.slice(7);
+  document.head.appendChild(s);
+}());
+</script>
+<div class="tsh" style="position:relative;">
+  <p><a class="tsh-btn tsh-btn-secondary" href="S05-learn-more.html"><span aria-hidden="true">&larr;</span> Back to the course page</a></p>
+  <h3><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /></svg> Sexual harassment: what it is and what to do</h3>
+  <div class="tsh-note error tsh-critical">
+    <p class="tsh-note-title"><span class="tsh-flag"><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M7 18v-6a5 5 0 1 1 10 0v6" /><path pathLength="1" d="M5 21a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2z" /><path pathLength="1" d="M21 12h1" /><path pathLength="1" d="M18.5 4.5 18 5" /><path pathLength="1" d="M2 12h1" /><path pathLength="1" d="M12 2v1" /><path pathLength="1" d="m4.929 4.929.707.707" /><path pathLength="1" d="M12 12v6" /></svg>Urgent</span> In an emergency</p>
+    <p>If you or anyone you know is in immediate danger, a threat to life or at risk from criminal activities, do not hesitate to ring 999.</p>
+    <p><a class="tsh-btn tsh-btn-primary" href="tel:999">Call 999</a></p>
+    <p>Then contact a Designated Safeguarding Lead as soon as it is safe to do so.</p>
+  </div>
+  <p class="tsh-lead">Sexual harassment has no place at TIRO, at your workplace or online. If it happens to you, or you see it happen to someone else, tell us. You do not need evidence.</p>
+
+  <hr class="tsh-divider" aria-hidden="true">
+  <div class="tsh-bar" aria-hidden="true"></div>
+  <h4><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle pathLength="1" cx="12" cy="12" r="10" /><path pathLength="1" d="M12 16v-4" /><path pathLength="1" d="M12 8h.01" /></svg> What counts as sexual harassment</h4>
+  <div class="tsh-card" style="max-width:68ch;margin-inline:auto;">
+    <p>Sexual harassment is unwanted behaviour of a sexual nature that:</p>
+    <ul>
+      <li>violates your dignity, or</li>
+      <li>makes you feel intimidated, degraded, humiliated or offended, or creates a hostile atmosphere.</li>
+    </ul>
+    <ul class="tsh-list">
+      <li><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle pathLength="1" cx="12" cy="12" r="10" /><path pathLength="1" d="M12 16v-4" /><path pathLength="1" d="M12 8h.01" /></svg><span>It does not have to be deliberate. What matters is the effect on you, or on anyone who sees it.</span></li>
+      <li><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle pathLength="1" cx="12" cy="12" r="10" /><path pathLength="1" d="M12 16v-4" /><path pathLength="1" d="M12 8h.01" /></svg><span>One incident can be enough.</span></li>
+      <li><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle pathLength="1" cx="12" cy="12" r="10" /><path pathLength="1" d="M12 16v-4" /><path pathLength="1" d="M12 8h.01" /></svg><span>It can happen between people of any gender, in person, online or by message.</span></li>
+    </ul>
+  </div>
+  <div class="tsh-note warning tsh-important" style="max-width:68ch;margin-inline:auto;">
+    <p class="tsh-note-title"><span class="tsh-flag"><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /><path pathLength="1" d="M12 9v4" /><path pathLength="1" d="M12 17h.01" /></svg>Important</span> "It was only banter" is not an excuse</p>
+    <p>Saying it was banter, a joke or a compliment, or "I didn't mean it like that", does not make it acceptable. Behaviour is judged by its impact, not just what someone meant.</p>
+  </div>
+
+  <h4>Examples</h4>
+  <p class="tsh-lead">These are some examples. Something can still be sexual harassment if it is not listed here.</p>
+  <ul class="tsh-grid tsh-g210">
+    <li><div class="tsh-card" style="height:100%;">
+      <h5><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /><path pathLength="1" d="M12 7v2" /><path pathLength="1" d="M12 13h.01" /></svg> Things people say</h5>
+      <ul>
+        <li>Sexual comments or jokes</li>
+        <li>Suggestive remarks</li>
+        <li>Questions about your sex life</li>
+        <li>Catcalling</li>
+        <li>Sexual propositions</li>
+      </ul>
+    </div></li>
+    <li><div class="tsh-card" style="height:100%;">
+      <h5><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle pathLength="1" cx="12" cy="8" r="5" /><path pathLength="1" d="M20 21a8 8 0 0 0-16 0" /></svg> Things people do</h5>
+      <ul>
+        <li>Unwanted touching, hugs or kissing</li>
+        <li>Standing unnecessarily close</li>
+        <li>Blocking your way</li>
+        <li>Sexual assault</li>
+      </ul>
+    </div></li>
+    <li><div class="tsh-card" style="height:100%;">
+      <h5><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" /><circle pathLength="1" cx="12" cy="12" r="3" /></svg> Things people show</h5>
+      <ul>
+        <li>Pornographic material or sexual images</li>
+        <li>Sexual gestures</li>
+        <li>Leering or staring</li>
+      </ul>
+    </div></li>
+    <li><div class="tsh-card" style="height:100%;">
+      <h5><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect pathLength="1" width="14" height="20" x="5" y="2" rx="2" ry="2" /><path pathLength="1" d="M12 18h.01" /></svg> Online and on your phone</h5>
+      <ul>
+        <li>Sexual messages</li>
+        <li>Sharing sexual images, including images made with AI</li>
+        <li>Online harassment</li>
+        <li>Inappropriate contact on social media</li>
+        <li>Offensive memes</li>
+      </ul>
+    </div></li>
+    <li><div class="tsh-card" style="height:100%;">
+      <h5><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z" /><path pathLength="1" d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z" /><path pathLength="1" d="M7 21h10" /><path pathLength="1" d="M12 3v18" /><path pathLength="1" d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2" /></svg> Using power or position</h5>
+      <ul>
+        <li>Asking for sexual favours</li>
+        <li>Offering opportunities in return for a relationship</li>
+        <li>Favouritism because of a relationship</li>
+      </ul>
+    </div></li>
+  </ul>
+
+  <hr class="tsh-divider" aria-hidden="true">
+  <div class="tsh-bar" aria-hidden="true"></div>
+  <h4><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle pathLength="1" cx="9" cy="7" r="4" /><path pathLength="1" d="M22 21v-2a4 4 0 0 0-3-3.87" /><path pathLength="1" d="M16 3.13a4 4 0 0 1 0 7.75" /></svg> Who it can come from</h4>
+  <p class="tsh-lead">Anyone. That includes TIRO staff, your employer or manager, people you work with, customers, clients, suppliers, contractors, visitors and members of the public. You should never feel you have to put up with it to protect a work relationship.</p>
+  <div class="tsh-card" style="max-width:68ch;margin-inline:auto;">
+    <h5><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /></svg> TIRO staff must keep professional boundaries</h5>
+    <p>Anyone working for TIRO must never:</p>
+    <ul>
+      <li>use their position to seek a personal, emotional or sexual relationship with you</li>
+      <li>share their personal social media accounts with you</li>
+      <li>swap personal contact details with you outside approved channels</li>
+    </ul>
+    <p>If a member of TIRO staff does any of these, tell a Designated Safeguarding Lead. If it is about a Safeguarding Lead, contact the Safeguarding Governor or the CEO. Their details are in How does TIRO safeguard?</p>
+  </div>
+
+  <hr class="tsh-divider" aria-hidden="true">
+  <div class="tsh-bar" aria-hidden="true"></div>
+  <h4><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5" /><path pathLength="1" d="M14 6a6 6 0 0 1 6 6v3" /><path pathLength="1" d="M4 15v-3a6 6 0 0 1 6-6" /><rect pathLength="1" x="2" y="15" width="20" height="4" rx="1" /></svg> If it happens at your workplace</h4>
+  <p class="tsh-lead">As an apprentice, you spend most of your time with your employer. If something happens there:</p>
+  <ul class="tsh-list" style="max-width:68ch;margin-inline:auto;">
+    <li><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="m3 11 18-5v12L3 14v-3z" /><path pathLength="1" d="M11.6 16.8a3 3 0 1 1-5.8-1.6" /></svg><span>Tell us as soon as you can.</span></li>
+    <li><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /></svg><span>TIRO will support you, wherever it happened.</span></li>
+    <li><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle pathLength="1" cx="9" cy="7" r="4" /><polyline pathLength="1" points="16 11 18 13 22 9" /></svg><span>A Designated Safeguarding Lead may be involved.</span></li>
+    <li><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /></svg><span>TIRO may talk to your employer, where that is appropriate.</span></li>
+    <li><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect pathLength="1" width="8" height="4" x="8" y="2" rx="1" /><path pathLength="1" d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5.5" /><path pathLength="1" d="M4 13.5V6a2 2 0 0 1 2-2h2" /><path pathLength="1" d="M13.378 15.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" /></svg><span>TIRO may arrange things differently to keep you safe.</span></li>
+  </ul>
+  <p class="tsh-lead"><strong>Your safety and wellbeing always come first.</strong></p>
+
+  <hr class="tsh-divider" aria-hidden="true">
+  <div class="tsh-bar" aria-hidden="true"></div>
+  <h4><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" /><circle pathLength="1" cx="12" cy="12" r="3" /></svg> If you see it happen</h4>
+  <p class="tsh-lead">Comments and jokes that nobody challenges can grow into more serious behaviour. Speaking up early helps stop that.</p>
+  <ul class="tsh-grid tsh-g300">
+    <li><div class="tsh-card" style="height:100%;">
+      <h5><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /><path pathLength="1" d="M12 7v2" /><path pathLength="1" d="M12 13h.01" /></svg> If it feels safe to speak up</h5>
+      <p>You can keep it simple. For example:</p>
+      <ul>
+        <li>"That's not okay."</li>
+        <li>"What do you mean by that?"</li>
+      </ul>
+    </div></li>
+    <li><div class="tsh-card" style="height:100%;">
+      <h5><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /></svg> If it does not feel safe</h5>
+      <p>You are never expected to put yourself at risk. Instead:</p>
+      <ul>
+        <li>check in with the person it happened to</li>
+        <li>encourage them to get support</li>
+        <li>report what you saw</li>
+      </ul>
+    </div></li>
+  </ul>
+
+  <hr class="tsh-divider" aria-hidden="true">
+  <div class="tsh-bar" aria-hidden="true"></div>
+  <h4><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="m3 11 18-5v12L3 14v-3z" /><path pathLength="1" d="M11.6 16.8a3 3 0 1 1-5.8-1.6" /></svg> How to report it</h4>
+  <p class="tsh-lead">Tell any of these. Use whichever you are most comfortable with. You do not have to deal with it yourself, and you are never expected to confront the person.</p>
+  <ul class="tsh-grid tsh-g210">
+    <li><div class="tsh-card" style="height:100%;">
+      <span class="tsh-eyebrow">Option 1</span>
+      <h5><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle pathLength="1" cx="9" cy="7" r="4" /><polyline pathLength="1" points="16 11 18 13 22 9" /></svg> Your Work-based Learning Coach</h5>
+      <p>Your main point of contact for your apprenticeship.</p>
+    </div></li>
+    <li><div class="tsh-card" style="height:100%;">
+      <span class="tsh-eyebrow">Option 2</span>
+      <h5><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect pathLength="1" width="20" height="16" x="2" y="4" rx="2" /><path pathLength="1" d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg> The Safeguarding inbox</h5>
+      <p>Your email goes to all of the Safeguarding Leads at once.</p>
+      <p><a class="tsh-go" href="mailto:safeguarding@tiro.ac.uk">safeguarding@tiro.ac.uk</a></p>
+    </div></li>
+    <li><div class="tsh-card" style="height:100%;">
+      <span class="tsh-eyebrow">Option 3</span>
+      <h5><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg> A Designated Safeguarding Lead</h5>
+      <p>Call or email any of them directly.</p>
+      <p><a class="tsh-go" href="S01-how-does-tiro-safeguard.html">See their details</a></p>
+    </div></li>
+  </ul>
+  <div class="tsh-note info" style="max-width:68ch;margin-inline:auto;">
+    <p class="tsh-note-title"><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /></svg> You will not be treated unfairly for speaking up</p>
+    <p>TIRO does not tolerate anyone being treated badly for raising a concern, supporting someone who does, or helping with an investigation. Reports are handled promptly, respectfully, sensitively and as confidentially as possible.</p>
+  </div>
+
+  <hr class="tsh-divider" aria-hidden="true">
+  <div class="tsh-bar" aria-hidden="true"></div>
+  <h4><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect pathLength="1" width="8" height="4" x="8" y="2" rx="1" /><path pathLength="1" d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5.5" /><path pathLength="1" d="M4 13.5V6a2 2 0 0 1 2-2h2" /><path pathLength="1" d="M13.378 15.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" /></svg> What happens next</h4>
+  <ol class="tsh-steps" style="max-width:760px;margin-inline:auto;grid-template-columns:1fr;">
+    <li><span>You raise a concern. You will be listened to and taken seriously.</span></li>
+    <li><span>TIRO checks for any immediate risk, considers safeguarding and works out what support you need. Temporary arrangements may be put in place to keep people safe.</span></li>
+    <li><span>If more is needed, an impartial person looks into it, fairly and sensitively.</span></li>
+    <li><span>There is an outcome. It could be anything from no further action to disciplinary action, a safeguarding referral or a referral to the police. You will be told the outcome where that is appropriate and allowed.</span></li>
+    <li><span>Support can carry on afterwards, including wellbeing support and pointers to specialist organisations.</span></li>
+  </ol>
+
+  <hr class="tsh-divider" aria-hidden="true">
+  <div class="tsh-bar" aria-hidden="true"></div>
+  <h4>Get support</h4>
+  <p class="tsh-lead">Support is available whether or not you make a formal report. These services are free and confidential. Select a service to see how to contact it.</p>
+  <p class="tsh-lead tsh-small tsh-muted">Links to other websites open a short check first, so you can see where you are going.</p>
+  <div class="tsh-card tsh-soft" style="max-width:68ch;margin-inline:auto;">
+    <h5>Want to understand it better?</h5>
+    <p>HASSL is a UK campaign against harassment. Its short films, including Girls Just Wanna and Contradictions, show what harassment looks like day to day and the pressure it puts on people.</p>
+    <p>HASSL raises awareness. It does not run a helpline, so if you need support, use the services below.</p>
+    <p class="tsh-actions" style="justify-content:flex-start;margin:0;"><a class="tsh-btn tsh-btn-secondary" href="https://hassl.uk/pages/awareness-campaigns" data-ext data-org="HASSL" data-title="HASSL awareness campaigns">Watch HASSL&#x27;s films</a></p>
+  </div>
+  <h5 class="tsh-center">Talk to someone</h5>
+  <ul class="tsh-grid tsh-g300 tsh-orgs">
+    <li><details class="tsh-org" data-verified="true">
+        <!-- DRAFT: checked against the provider's own website, 13 Oct 2026 -->
+        <summary aria-describedby="sh-tip-1">
+          <span class="tsh-org-head"><h6>Rape Crisis England &amp; Wales</h6><br><span class="tsh-tag">Age 16+</span></span>
+          <span class="tsh-org-more"><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="m6 9 6 6 6-6" /></svg></span>
+          <span class="tsh-tip" role="tooltip" id="sh-tip-1">Free, confidential support for anyone aged 16 or over affected by sexual violence, including sexual harassment</span>
+        </summary>
+        <div class="tsh-org-body">
+          <p class="tsh-org-what">Free, confidential support for anyone aged 16 or over affected by sexual violence, including sexual harassment</p>
+          <p class="tsh-org-line"><span>Phone</span><span><a class="tsh-call tsh-go" href="tel:08085002222">0808 500 2222</a></span></p><p class="tsh-org-line"><span>Hours</span><span>24 hours, every day</span></p><p class="tsh-org-line"><span>Chat</span><span><a class="tsh-go" href="https://247sexualabusesupport.org.uk/" data-ext data-org="Rape Crisis England &amp; Wales" data-title="24/7 Rape and Sexual Abuse Support Line: online chat">247sexualabusesupport.org.uk</a></span></p><p class="tsh-org-line"><span>Website</span><span><a class="tsh-go" href="https://rapecrisis.org.uk/" data-ext data-org="Rape Crisis England &amp; Wales" data-title="Rape Crisis England &amp; Wales">rapecrisis.org.uk</a></span></p>
+        </div>
+    </details></li>
+    <li><details class="tsh-org" data-verified="true">
+        <summary aria-describedby="sh-tip-2">
+          <span class="tsh-org-head"><h6>Childline</h6></span>
+          <span class="tsh-org-more"><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="m6 9 6 6 6-6" /></svg></span>
+          <span class="tsh-tip" role="tooltip" id="sh-tip-2">Free, confidential support for children and young people</span>
+        </summary>
+        <div class="tsh-org-body">
+          <p class="tsh-org-what">Free, confidential support for children and young people</p>
+          <p class="tsh-org-line"><span>Phone</span><span><a class="tsh-call tsh-go" href="tel:08001111">0800 1111</a></span></p><p class="tsh-org-line"><span>Hours</span><span>24 hours, every day</span></p><p class="tsh-org-line"><span>Website</span><span><a class="tsh-go" href="https://www.childline.org.uk/" data-ext data-org="Childline" data-title="Childline">childline.org.uk</a></span></p>
+        </div>
+    </details></li>
+    <li><details class="tsh-org" data-verified="false">
+        <!-- UNVERIFIED: awaiting Pass 2 and safeguarding lead sign-off -->
+        <summary aria-describedby="sh-tip-5">
+          <span class="tsh-org-head"><h6>The Mix</h6></span>
+          <span class="tsh-org-more"><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="m6 9 6 6 6-6" /></svg></span>
+          <span class="tsh-tip" role="tooltip" id="sh-tip-5">Support for under 25s on mental health, relationships and money</span>
+        </summary>
+        <div class="tsh-org-body">
+          <p class="tsh-org-what">Support for under 25s on mental health, relationships and money</p>
+          <p class="tsh-org-line"><span>Phone</span><span><a class="tsh-call tsh-go" href="tel:08088084994">0808 808 4994</a></span></p><p class="tsh-org-line"><span>Hours</span><span>Helpline 4pm to 11pm. Crisis text support 24 hours</span></p><p class="tsh-org-line"><span>Text</span><span><a href="sms:85258">THEMIX to 85258</a></span></p><p class="tsh-org-line"><span>Website</span><span><a class="tsh-go" href="https://www.themix.org.uk/" data-ext data-org="The Mix" data-title="The Mix">themix.org.uk</a></span></p>
+        </div>
+    </details></li>
+  </ul>
+  <h5 class="tsh-center">If someone has shared, or threatens to share, intimate images of you</h5>
+  <p class="tsh-lead">Do not pay or reply. Tell a Designated Safeguarding Lead, and use the service for your age to get the images taken down.</p>
+  <ul class="tsh-grid tsh-g300 tsh-orgs">
+    <li><details class="tsh-org" data-verified="true">
+        <!-- DRAFT: checked against the provider's own website, 13 Oct 2026 -->
+        <summary aria-describedby="sh-tip-3">
+          <span class="tsh-org-head"><h6>Report Remove (Childline and the IWF)</h6><br><span class="tsh-tag">Under 18</span></span>
+          <span class="tsh-org-more"><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="m6 9 6 6 6-6" /></svg></span>
+          <span class="tsh-tip" role="tooltip" id="sh-tip-3">Get sexual images or videos of you removed from the internet, including fakes made with AI</span>
+        </summary>
+        <div class="tsh-org-body">
+          <p class="tsh-org-what">Get sexual images or videos of you removed from the internet, including fakes made with AI</p>
+          <p class="tsh-org-line"><span>Who for</span><span>Under 18</span></p><p class="tsh-org-line"><span>Hours</span><span>Online, any time. Childline usually replies within two working days</span></p><p class="tsh-org-line"><span>Website</span><span><a class="tsh-go" href="https://www.childline.org.uk/info-advice/bullying-abuse-safety/online-mobile-safety/remove-nude-image-shared-online/" data-ext data-org="Childline" data-title="Report Remove">childline.org.uk: Report Remove</a></span></p>
+        </div>
+    </details></li>
+    <li><details class="tsh-org" data-verified="true">
+        <!-- DRAFT: checked against the provider's own website, 13 Oct 2026 -->
+        <summary aria-describedby="sh-tip-4">
+          <span class="tsh-org-head"><h6>StopNCII.org (Revenge Porn Helpline)</h6><br><span class="tsh-tag">18+</span></span>
+          <span class="tsh-org-more"><svg class="tsh-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="m6 9 6 6 6-6" /></svg></span>
+          <span class="tsh-tip" role="tooltip" id="sh-tip-4">Stop intimate images of you being shared on participating websites and apps</span>
+        </summary>
+        <div class="tsh-org-body">
+          <p class="tsh-org-what">Stop intimate images of you being shared on participating websites and apps</p>
+          <p class="tsh-org-line"><span>Who for</span><span>18 and over</span></p><p class="tsh-org-line"><span>Helpline</span><span>Revenge Porn Helpline, 10am to 4pm, Monday to Friday</span></p><p class="tsh-org-line"><span>Website</span><span><a class="tsh-go" href="https://stopncii.org/" data-ext data-org="StopNCII.org (SWGfL)" data-title="StopNCII.org">stopncii.org</a></span></p><p class="tsh-org-line"><span>Helpline site</span><span><a class="tsh-go" href="https://revengepornhelpline.org.uk/" data-ext data-org="Revenge Porn Helpline" data-title="Revenge Porn Helpline">revengepornhelpline.org.uk</a></span></p>
+        </div>
+    </details></li>
+  </ul>
+
+  <hr class="tsh-divider" aria-hidden="true">
+  <nav class="tsh-actions" aria-label="More safeguarding support"><a class="tsh-btn tsh-btn-secondary" href="S03-national-support.html">National support</a> <a class="tsh-btn tsh-btn-secondary" href="https://moodle.tiro.co.uk/moodle/course/view.php?id=155#section-4">Regional support</a> <a class="tsh-btn tsh-btn-primary" href="https://moodle.tiro.co.uk/moodle/course/view.php?id=155#section-10">Log a concern</a></nav>
+<!-- ===== external-link-interstitial.html, inlined VERBATIM ===== -->
+<div class="interstitial" id="ce-interstitial" role="dialog" aria-modal="true"
+     aria-labelledby="ce-ext-title" aria-describedby="ce-ext-reason">
+  <div class="interstitial-panel">
+
+    <h2 id="ce-ext-title">You are leaving this activity</h2>
+    <p id="ce-ext-reason"></p>
+
+    <p>
+      <strong>Destination:</strong> <span id="ce-dest-title"></span><br>
+      <strong>Organisation:</strong> <span id="ce-dest-org"></span>
+    </p>
+    <p class="destination-domain" id="ce-dest-domain"></p>
+
+    <p>The destination opens in a new tab. Check that the address is expected before continuing.</p>
+
+    <!-- The URL in full. Never truncate it: seeing the real address is the
+         entire safety value of this pattern. -->
+    <div class="url-mini-box" id="ce-dest-url"></div>
+
+    <div class="ce-prep-row">
+      <span class="ce-dots" id="ce-ext-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <p id="ce-ext-status" class="link-hint" aria-live="polite">Ready to open.</p>
+    </div>
+
+    <!-- "Open destination" starts DISABLED and is enabled by the JS after the
+         preparing beat. That pause is the pattern, not a loading spinner.
+         "Copy link" is always available (D23) - it is the way out when a popup
+         blocker eats the new tab, so it must never be conditional. -->
+    <div class="interstitial-actions">
+      <button class="interstitial-button" id="ce-open-dest" type="button" disabled>Open destination</button>
+      <button class="interstitial-button secondary" id="ce-copy-dest" type="button">Copy link</button>
+      <button class="interstitial-button secondary" id="ce-close-int" type="button">Stay here</button>
+    </div>
+
+  </div>
+</div>
+
+</div>
+<script>
+/* ===== external-link-interstitial.js, inlined VERBATIM ===== */
+/* ============================================================================
+   External-link interstitial - CANON (contract section 6, D23), Tiro / FFW.
+   Touch Medical has its own (D16). Do not cross them.
+
+   Extracted 2026-07-30 from tlt3211-careers-explorer-s02-2026-07-28-v1.
+   Inline this VERBATIM inside the page's own <script>. Do not re-type it: every
+   re-typing of a shared behaviour in this library has produced a new variant.
+
+   USAGE - one call, from any link-shaped control:
+
+     ExternalLink.open({
+       url:   'https://www.example.org/page',
+       title: 'Page title as the learner should read it',
+       org:   'Organisation name'
+     }, triggerElement);
+
+   `triggerElement` is where focus RETURNS on close (section 6). Pass the actual button
+   or link the learner activated - usually `event.currentTarget`.
+
+   WIRING A LINK. Do NOT ship a bare `target="_blank"` (contract section 6 retires it,
+   and LINK-1 flags it). Route it:
+
+     document.querySelectorAll('a[data-ext]').forEach(function (a) {
+       a.addEventListener('click', function (e) {
+         e.preventDefault();
+         ExternalLink.open({ url: a.href, title: a.dataset.title || a.textContent.trim(),
+                             org: a.dataset.org || '' }, a);
+       });
+     });
+
+   Keep the real `href` on the anchor so middle-click, "copy link address" and
+   right-click still work, and so it degrades to a working link if JS dies.
+
+   CHANGES ON EXTRACTION, both named in contract section 6:
+     1. backdrop click closes (the source had none)
+     2. a matching exit - the source toggled `display`, which cannot transition,
+        so it always hard-cut on close. Now driven by the `.is-open` class only;
+        the CSS handles opacity/visibility. NOTHING here touches `style.display`.
+   Plus: `navigator.clipboard` is tried first, with the textarea kept as the
+   fallback. `document.execCommand('copy')` is deprecated and already fails in
+   some embedded contexts, which is exactly where this runs.
+
+   CHANGED 2026-09-23 (CORRECTIVE, from the learning-resources base zero review):
+     * the panel opens beside the trigger on EVERY page, kept inside what the learner
+       can see - see placePanel();
+     * a focused button is scrolled into view INSIDE the panel - see revealInPanel();
+     * the panel's own scroll stop joins the focus trap - see the keydown handler.
+   ============================================================================ */
+
+var ExternalLink = (function () {
+  'use strict';
+
+  /* Elements are resolved LAZILY, on first use, not when this IIFE runs.
+
+     A shared partial must not care where in the page it was inlined. Resolving at
+     IIFE time means that if this script sits above the markup - which is exactly
+     what happens when a build appends its scripts before </body> and the partial
+     lands after them - `getElementById` returns null, the guard takes the no-op
+     path, and every external link then does NOTHING AT ALL, silently. Measured on
+     the first build that inlined this, where the dialog simply never appeared and
+     nothing errored.
+
+     Lazy lookup makes the order irrelevant. The no-op guard stays, but now it only
+     fires when the partial genuinely is not on the page. */
+  var el = null;
+
+  function els() {
+    if (el) return el;
+    var root = document.getElementById('ce-interstitial');
+    if (!root) return null;
+    el = {
+      root:    root,
+      title:   document.getElementById('ce-dest-title'),
+      org:     document.getElementById('ce-dest-org'),
+      domain:  document.getElementById('ce-dest-domain'),
+      url:     document.getElementById('ce-dest-url'),
+      reason:  document.getElementById('ce-ext-reason'),
+      status:  document.getElementById('ce-ext-status'),
+      dots:    document.getElementById('ce-ext-dots'),
+      btnOpen: document.getElementById('ce-open-dest'),
+      btnCopy: document.getElementById('ce-copy-dest'),
+      btnStay: document.getElementById('ce-close-int')
+    };
+    bind();
+    return el;
+  }
+
+  var pending = null, trigger = null, prepTimer = null, bound = false;
+
+  function reducedMotion() {
+    return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  }
+
+  function isOpen() {
+    var e = els();
+    return !!e && e.root.classList.contains('is-open');
+  }
+
+  /* WCAG 2.1.1. `.interstitial-panel` is `overflow:auto` with a max-height, so on a
+     short viewport it genuinely scrolls - measured on the careers exemplar at 320:
+     scrollHeight 796 against clientHeight 524. Chrome does not make an overflow
+     container focusable (Firefox does), so without a tab stop the overflow is only
+     reachable via whatever happens to be focusable inside it. That is luck, not a
+     guarantee: it depends on where the buttons sit relative to the overflow.
+
+     Same pattern the how-to panel uses - the tab stop and role are added ONLY while
+     it actually scrolls, so a short interstitial (every one today) gains no stray
+     stop, and they are withdrawn again when it does not. */
+  function syncPanelScrollability(e) {
+    var p = e.root.querySelector('.interstitial-panel');
+    if (!p) return;
+    if (p.scrollHeight > p.clientHeight + 1) {
+      p.setAttribute('tabindex', '0');
+      p.setAttribute('role', 'region');
+      p.setAttribute('aria-label', 'Leaving this page, scrollable');
+    } else {
+      p.removeAttribute('tabindex');
+      p.removeAttribute('role');
+      p.removeAttribute('aria-label');
+    }
+  }
+
+  /* A FOCUSED BUTTON MUST BE VISIBLE, and on a short screen it is not by default.
+
+     Every scripted focus here passes `preventScroll`, because inside a Rise or Visme iframe a
+     bare focus() scrolls the HOST lesson. But preventScroll also stops THIS panel scrolling, so
+     when the panel is taller than the screen the focused button stays below its scroll edge,
+     clipped. Measured 2026-09-23 at 320x568: panel 528px tall, 862px of content, and "Open
+     destination" focused at 929-980px while the panel's visible box ended at 786px - a
+     keyboard user on a phone could not see the control they were on. Same at 640x360 (1280 at
+     200% zoom).
+
+     The fix scrolls the panel's OWN content, by setting its scrollTop. That moves nothing
+     outside the panel, so the host lesson stays exactly where it was. */
+  function revealInPanel(e, btn) {
+    var p = e.root.querySelector('.interstitial-panel');
+    if (!p || !btn || p.scrollHeight <= p.clientHeight + 1) return;
+    var pr = p.getBoundingClientRect(), br = btn.getBoundingClientRect();
+    if (br.bottom > pr.bottom - 8)  p.scrollTop += (br.bottom - pr.bottom) + 16;
+    else if (br.top < pr.top + 8)   p.scrollTop -= (pr.top - br.top) + 16;
+  }
+
+  /* THE PLACEMENT CONTRACT (D78, extended to this behaviour).
+
+     THE PANEL OPENS BESIDE THE TRIGGER ON EVERY PAGE, and stays inside the part of the
+     overlay the learner can actually see. CHANGED 2026-09-23 (CORRECTIVE).
+
+     Until then it anchored beside the trigger ONLY in a content-sized frame (the Rise case,
+     detected D78's way: innerHeight >= scrollHeight) and otherwise fell back to
+     `margin-top: auto`. That fallback was believed to centre the panel. It does not: in a
+     top-aligned flex overlay an auto top margin pushes the panel to the BOTTOM of the
+     overlay. On an ordinary page with the overlay covering a tall container, that is below
+     the screen. Measured on the learning-resources base zero: the panel at 595-1123px with a
+     568px screen. Anchoring to the trigger is right on every page, because the learner has
+     just pressed it, so it is where they are looking; and clamping to the visible part of
+     the overlay keeps a panel near the bottom of the screen from running off it.
+
+     In a content-sized frame the visible part IS the whole overlay, so this is the same
+     behaviour it always had there.
+
+     A host that needs something different passes `placement` on the data object:
+       'auto'    (default) beside the trigger, kept on screen
+       'centre'  centred in the part of the overlay the learner can see
+       a number  an explicit top offset in pixels, in the overlay's coordinate space,
+                 honoured as given apart from staying inside the overlay */
+  function placePanel(e, triggerEl, placement) {
+    var p = e.root.querySelector('.interstitial-panel');
+    if (!p) return;
+
+    /* Reset first: open() can run many times and a stale offset outlives its trigger. */
+    p.style.marginTop = '';
+
+    /* NEVER TRUST innerHeight WITHOUT CHECKING IT IS A REAL NUMBER, and this is not
+       defensiveness for its own sake - it was measured breaking this panel. Several
+       embedded and headless contexts report `innerHeight` as 0, including the in-app
+       preview pane. Setting the variable from that gives `calc(0px - 40px)`, CSS clamps
+       a negative max-height to 0, and the panel collapses to a sliver: measured at 52px
+       against 2150px of content, still "open", still passing every static check, and
+       unreadable. Where the number is not usable, REMOVE the variable so the stylesheet
+       falls back to `100vh`, which is the correct answer on any ordinary page. */
+    var vh = window.innerHeight;
+    var vhUsable = typeof vh === 'number' && isFinite(vh) && vh > 0;
+
+    /* The overlay is `inset: 0` on a positioned ancestor, so its own box is the coordinate
+       space. What the learner can see of it runs from the top of the screen to the bottom,
+       translated into that space. With no usable viewport height, assume all of it. */
+    var r = e.root.getBoundingClientRect();
+    var ovH = e.root.clientHeight;
+    var visTop = vhUsable ? Math.max(0, -r.top) : 0;
+    var visBottom = vhUsable ? Math.min(ovH, vh - r.top) : ovH;
+
+    /* THE PANEL IS SIZED TO WHAT CAN BE SEEN OF THE OVERLAY, not to the whole screen. The two
+       differ wherever the container starts or ends on screen, and sizing to the screen then
+       gives a panel that cannot fit. Measured 2026-09-23 on the careers base zero at 320x568:
+       its container ends 36px above the bottom of the screen, so 532px of overlay was visible,
+       and a 528px panel plus 40px of padding went 16px off the top. The stylesheet's
+       max-height takes the padding off this number. */
+    if (vhUsable) e.root.style.setProperty('--interstitial-vh', Math.max(160, visBottom - visTop) + 'px');
+    else          e.root.style.removeProperty('--interstitial-vh');
+    var ph = p.offsetHeight;
+    /* THE OVERLAY'S OWN PADDING SITS ABOVE THE PANEL, so the margin that puts the panel's top
+       edge at a given point is that point LESS the padding. Missed in the first cut of this
+       function on 2026-09-23 and caught the same day: every placement landed 20px low, and on
+       a short screen - where the panel is clamped to the bottom edge - its last 12px ran off
+       the screen, measured at 320x568 and at 640x360. Read, not assumed, so a host that
+       changes the padding keeps working. */
+    var ovStyle = window.getComputedStyle(e.root);
+    var padTop = parseFloat(ovStyle.paddingTop) || 0;
+    var padBottom = parseFloat(ovStyle.paddingBottom) || 0;
+
+    var top;
+    if (typeof placement === 'number') {
+      top = placement;
+    } else {
+      if (placement !== 'centre' && triggerEl && triggerEl.getBoundingClientRect) {
+        top = (triggerEl.getBoundingClientRect().top - r.top) - 24;  /* a little above, so both are readable */
+      } else {
+        top = visTop + Math.max(0, (visBottom - visTop - ph) / 2);
+      }
+      /* On screen: never above the top of what can be seen, never running off its bottom.
+         A panel taller than the screen pins its top to the top of the screen. */
+      var lo = visTop + 8, hi = Math.max(lo, visBottom - ph - 8);
+      top = Math.min(Math.max(top, lo), hi);
+    }
+
+    /* And always inside the overlay itself, clear of its padding. `top` is where the panel's
+       top edge goes; the margin is that less the padding above it. */
+    var maxTop = Math.max(padTop, ovH - ph - padBottom);
+    top = Math.max(padTop, Math.min(top, maxTop));
+    p.style.marginTop = (top - padTop) + 'px';
+  }
+
+  function open(data, triggerEl) {
+    var e = els();
+    if (!e) return;                       /* partial genuinely absent: no-op, never throw */
+
+    pending = data;
+    trigger = triggerEl || null;
+
+    e.title.textContent  = data.title || data.url;
+    e.org.textContent    = data.org   || 'Not stated';
+    e.url.textContent    = data.url;
+    e.reason.textContent = 'This link opens ' + (data.title || 'an external page') +
+                           ' on an external website.';
+
+    /* A malformed URL must not take the dialog down with it - the learner still
+       needs to see the raw string and be able to copy it. */
+    try { e.domain.textContent = new URL(data.url).hostname; }
+    catch (err) { e.domain.textContent = ''; }
+
+    e.dots.style.visibility = 'visible';
+    e.status.textContent    = 'Preparing the link...';
+    e.btnOpen.disabled      = true;
+
+    e.root.classList.add('is-open');
+    placePanel(e, trigger, data.placement);  /* must run AFTER is-open: offsetHeight is 0 until open */
+    syncPanelScrollability(e);  /* AFTER placePanel, which sets the panel's height cap */
+    e.btnStay.focus({ preventScroll: true });  /* focus lands on the SAFE option, never on "Open" */
+    revealInPanel(e, e.btnStay);
+
+    if (prepTimer) clearTimeout(prepTimer);
+    prepTimer = setTimeout(function () {
+      e.dots.style.visibility = 'hidden';   /* not display:none - keeps the row height stable */
+      e.status.textContent    = 'Ready to open.';
+      e.btnOpen.disabled      = false;
+      syncPanelScrollability(e);            /* the status line re-wraps; height can change */
+      e.btnOpen.focus({ preventScroll: true });
+      revealInPanel(e, e.btnOpen);
+    }, reducedMotion() ? 250 : 1300);
+  }
+
+  function close() {
+    var e = els();
+    if (!e) return;
+    /* Withdraw the tab stop with the panel. A hidden element left carrying
+       tabindex="0" and role="region" is the same defect the how-to panel hit -
+       attributes present, element measuring 0x0. */
+    var p = e.root.querySelector('.interstitial-panel');
+    if (p) { p.removeAttribute('tabindex'); p.removeAttribute('role'); p.removeAttribute('aria-label'); }
+    e.root.classList.remove('is-open');
+    if (prepTimer) clearTimeout(prepTimer);
+    if (trigger && typeof trigger.focus === 'function') trigger.focus({ preventScroll: true });   /* section 6: focus returns */
+    pending = null;
+  }
+
+  function legacyCopy(url) {
+    var ta = document.createElement('textarea');
+    ta.value = url;
+    ta.setAttribute('readonly', '');
+    /* absolute, never fixed. Same rule as the overlay (D78): inside a content-sized
+       Rise iframe `fixed` pins to the whole asset. `absolute` parks the textarea
+       off-screen just as well without pinning, and the selection behaves identically. */
+    ta.style.position = 'absolute';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (err) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  /* Bound once, the first time the elements resolve. */
+  function bind() {
+    if (bound) return;
+    bound = true;
+
+    el.btnOpen.addEventListener('click', function () {
+      if (!pending) return;
+      window.open(pending.url, '_blank', 'noopener,noreferrer');
+      el.status.textContent =
+        'Link opened in a new tab. Nothing opened? Copy the link and open it manually.';
+    });
+
+    el.btnCopy.addEventListener('click', function () {
+      if (!pending) return;
+      var url = pending.url;
+
+      function report(ok) {
+        el.status.textContent = ok
+          ? 'Link copied. Paste it into a fresh browser tab.'
+          : 'Copying is unavailable. Select and copy the visible URL manually.';
+      }
+
+      /* Async clipboard first; it is the only one that works in some sandboxed LMS
+         iframes. The textarea stays as the fallback, because it works in others. */
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(function () { report(true); },
+                                               function () { report(legacyCopy(url)); });
+      } else {
+        report(legacyCopy(url));
+      }
+    });
+
+    el.btnStay.addEventListener('click', close);
+
+    /* Backdrop click - the fix contract section 6 asked for on extraction. Guarded on
+       `=== el.root` so a click inside the panel does not bubble up and close it. */
+    el.root.addEventListener('click', function (ev) {
+      if (ev.target === el.root) close();
+    });
+  }
+
+  /* WHILE THIS DIALOG IS OPEN IT OWNS THE KEYBOARD, and both halves of that are
+     load-bearing.
+
+     CAPTURE PHASE, not bubble. A host page that opens a link from inside its own
+     dialog has its own Escape handler and its own Tab trap, and in the bubble phase
+     whichever listener was REGISTERED FIRST runs first - which is decided by where
+     this file happens to be pasted into index.html, not by anything either party
+     controls. Measured on two builds: in the TAB6102 portal this block sits at line
+     994 and the host dialog at 1691, so one Escape closed both; in the careers
+     exemplar the order is reversed. Same code, different bug, chosen by paste
+     position. Capture runs before every bubble listener regardless of order.
+
+     stopImmediatePropagation, not stopPropagation. Both listeners are on `document`,
+     and stopPropagation does not stop other listeners on the SAME node.
+
+     The host is not asked to cooperate, because a host that has to know about this
+     is one that can get it wrong. It sees no keystroke at all while the dialog is up. */
+  document.addEventListener('keydown', function (ev) {
+    if (!isOpen()) return;
+    if (ev.key !== 'Escape' && ev.key !== 'Tab') return;
+
+    ev.stopImmediatePropagation();
+
+    if (ev.key === 'Escape') { close(); return; }
+
+    /* Focus trap. Recomputed per keypress on purpose: "Open destination" starts
+       disabled and becomes enabled part-way through, so a list captured on open
+       would be stale exactly when it matters.
+
+       THE PANEL ITSELF IS IN THE LIST WHILE IT SCROLLS (CHANGED 2026-09-23). syncPanel-
+       Scrollability() gives it a tab stop precisely so a keyboard user can scroll it, and
+       this list used to hold buttons only, so the trap wrapped straight past it: the Tab
+       cycle measured Copy link, Stay here, Open destination, and the panel's stop could
+       never be reached. It comes first because it comes first in the document. */
+    var controls = Array.prototype.slice.call(el.root.querySelectorAll('button'))
+                        .filter(function (b) { return !b.disabled; });
+    var panel = el.root.querySelector('.interstitial-panel');
+    if (panel && panel.getAttribute('tabindex') === '0') controls.unshift(panel);
+    if (!controls.length) return;
+    var first = controls[0], last = controls[controls.length - 1];
+    if (ev.shiftKey && document.activeElement === first) { ev.preventDefault(); last.focus({ preventScroll: true }); revealInPanel(el, last); }
+    else if (!ev.shiftKey && document.activeElement === last) { ev.preventDefault(); first.focus({ preventScroll: true }); revealInPanel(el, first); }
+  }, true);
+
+  return { open: open, close: close, isOpen: isOpen };
+})();
+
+
+(function () {
+  /* Build-side wiring (canon README: "the only part a build writes itself").
+     Binds a[data-ext] in every .tsh block once. If the interstitial is not on the page,
+     the links stay ordinary links and still work. */
+  function wire() {
+    if (!window.ExternalLink || typeof window.ExternalLink.open !== 'function') { return; }
+    var links = document.querySelectorAll('.tsh a[data-ext]');
+    for (var i = 0; i < links.length; i++) {
+      var a = links[i];
+      if (a.getAttribute('data-ext-bound') === '1') { continue; }
+      a.setAttribute('data-ext-bound', '1');
+      a.addEventListener('click', function (e) {
+        var el = e.currentTarget;
+        e.preventDefault();
+        window.ExternalLink.open({ url: el.getAttribute('data-ext-url') || el.href, title: el.getAttribute('data-title') || el.textContent.trim(), org: el.getAttribute('data-org') || '' }, el);
+      });
+    }
+  }
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', wire); } else { wire(); }
+  window.addEventListener('load', wire);
+}());
+
+(function () {
+  if (window.__tshUi) { return; }
+  window.__tshUi = true;
+  var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Sequential fade-in. Marked hidden only here, so no script means nothing is hidden. */
+  function reveal() {
+    if (still || !('IntersectionObserver' in window)) { return; }
+    var sel = '.tsh .tsh-reveal, .tsh .tsh-grid > li, .tsh .tsh-card, .tsh .tsh-note:not(.tsh-critical), .tsh .tsh-flow-step, .tsh .tsh-figure, .tsh .tsh-steps > li, .tsh .tsh-actions';
+    var all = document.querySelectorAll(sel), items = [];
+    for (var a = 0; a < all.length; a++) {
+      var x = all[a];
+      if (x.hasAttribute('data-rv') || x.closest('#ce-interstitial, .tsh-panel, details:not([open])')) { continue; }
+      /* an item inside another item fades with its parent, not twice */
+      var up = x.parentElement && x.parentElement.closest(sel);
+      if (up && up.closest('.tsh') === x.closest('.tsh')) { continue; }
+      items.push(x);
+    }
+    if (!items.length) { return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        /* in view, or already scrolled past (jump links, fast scrolling): never leave it hidden */
+        if (en.isIntersecting || en.boundingClientRect.bottom < 0) { en.target.classList.add('tsh-rv-in'); io.unobserve(en.target); }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+    var seen = [];
+    for (var i = 0; i < items.length; i++) {
+      var el = items[i], parent = el.parentNode, n = 0;
+      for (var k = 0; k < seen.length; k++) { if (seen[k].p === parent) { n = ++seen[k].n; break; } }
+      if (k === seen.length) { seen.push({ p: parent, n: 0 }); }
+      el.setAttribute('data-rv', '1');
+      el.style.transitionDelay = Math.min(n, 8) * 90 + 'ms';
+      el.classList.add('tsh-rv-wait');
+      io.observe(el);
+    }
+    /* A jump or a fast scroll can carry an item from below the screen to above it without it ever
+       intersecting, so anything left waiting above the screen is shown on the next scroll. */
+    var t = null;
+    window.addEventListener('scroll', function () {
+      if (t) { return; }
+      t = setTimeout(function () {
+        t = null;
+        var w = document.querySelectorAll('.tsh .tsh-rv-wait:not(.tsh-rv-in)');
+        for (var q = 0; q < w.length; q++) {
+          if (w[q].getBoundingClientRect().bottom < 0) { w[q].classList.add('tsh-rv-in'); io.unobserve(w[q]); }
+        }
+      }, 150);
+    }, { passive: true });
+  }
+
+  /* Click-to-load video: YouTube is contacted only when the learner presses play. */
+  function videos() {
+    var figs = document.querySelectorAll('.tsh .tsh-video[data-yt]:not([data-v])');
+    for (var i = 0; i < figs.length; i++) {
+      (function (fig) {
+        fig.setAttribute('data-v', '1');
+        var thumb = fig.querySelector('.tsh-video-thumb');
+        if (thumb) { thumb.addEventListener('error', function () { thumb.remove(); }); }
+        var btn = fig.querySelector('.tsh-video-play');
+        btn.addEventListener('click', function () {
+          var f = document.createElement('iframe');
+          f.src = 'https://www.youtube-nocookie.com/embed/' + fig.getAttribute('data-yt') + '?autoplay=1&rel=0&cc_load_policy=1&hl=en-GB';
+          f.title = 'Video: ' + fig.getAttribute('data-title');
+          f.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen');
+          f.setAttribute('allowfullscreen', '');
+          var frame = fig.querySelector('.tsh-video-frame');
+          frame.innerHTML = '';
+          frame.appendChild(f);
+          f.focus({ preventScroll: true });
+        });
+      }(figs[i]));
+    }
+  }
+
+  /* Organisation cards: "Show all details" for each list, and Escape dismisses a hover tip
+     (WCAG 1.4.13) until the pointer or focus moves on. */
+  function orgs() {
+    var btns = document.querySelectorAll('.tsh [data-tsh-expand]:not([data-o])');
+    for (var i = 0; i < btns.length; i++) {
+      (function (b) {
+        b.setAttribute('data-o', '1');
+        b.addEventListener('click', function () {
+          var root = b.closest('.tsh');
+          var cards = root.querySelectorAll('details.tsh-org');
+          var open = b.getAttribute('data-state') !== 'open';
+          for (var j = 0; j < cards.length; j++) { cards[j].open = open; }
+          b.setAttribute('data-state', open ? 'open' : 'closed');
+          b.querySelector('.tsh-expand-label').textContent = open ? 'Hide all details' : 'Show all details';
+        });
+      }(btns[i]));
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') { return; }
+      var d = document.querySelectorAll('.tsh details.tsh-org');
+      for (var j = 0; j < d.length; j++) {
+        if (d[j].querySelector('summary:hover, summary:focus-visible')) { d[j].classList.add('tip-off'); }
+      }
+    });
+    document.addEventListener('mouseout', function (e) {
+      var d = e.target.closest && e.target.closest('details.tsh-org.tip-off');
+      if (d && !d.contains(e.relatedTarget)) { d.classList.remove('tip-off'); }
+    });
+    document.addEventListener('focusout', function (e) {
+      var d = e.target.closest && e.target.closest('details.tsh-org.tip-off');
+      if (d) { d.classList.remove('tip-off'); }
+    });
+  }
+
+  function all() { reveal(); videos(); orgs(); }
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', all); } else { all(); }
+}());
+</script>
+</main></body></html>
