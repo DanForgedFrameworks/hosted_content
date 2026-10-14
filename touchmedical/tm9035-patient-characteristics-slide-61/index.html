@@ -86,6 +86,7 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 .card__biconwrap{ position:absolute; top:clamp(9px,1.5vh,15px); right:clamp(12px,1.4vw,18px); width:clamp(24px,2.5vw,30px); height:clamp(24px,2.5vw,30px); color:var(--teal); opacity:.9; }
 .card__biconwrap svg{ width:100%; height:100%; }
 .card__bname{ font-size:clamp(.72rem,1.25vw,.86rem); font-weight:700; color:var(--teal); text-transform:uppercase; letter-spacing:.04em; text-align:center; }
+.nocase{ text-transform:none; }   /* owner 14 Oct late: METex14, never METEX14, under a capitals style */
 .detail{ display:flex; flex-direction:column; gap:clamp(4px,0.9vh,8px); }
 .detail__row{ display:flex; align-items:baseline; justify-content:center; gap:7px; font-size:clamp(.8rem,1.45vw,1rem); }
 .detail__row .lab{ font-weight:600; color:var(--navy); }
@@ -135,7 +136,7 @@ body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--fon
 .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 
 /* ===== Continue nudge — eased-in end-of-content reminder (house behaviour) ===== */
-.frame.nudge-shown{ padding-bottom:64px; }
+.frame.nudge-shown .navprompt{ visibility:hidden; }   /* owner 14 Oct late: the cards keep their size - the All done bar takes the instruction line's place instead of pushing the cards up */
 .nudge{ position:fixed; left:50%; bottom:14px; transform:translateX(-50%); z-index:40; display:none; align-items:center; gap:10px; max-width:calc(100% - 28px); padding:9px 17px; border-radius:999px; background:rgba(34,47,85,0.94); color:#fff; font-size:15px; font-weight:600; line-height:1.25; box-shadow:0 8px 22px rgba(16,26,38,0.30); }
 .nudge.is-on{ display:inline-flex; animation:nudgeIn .5s ease both; }
 .nudge b{ font-weight:700; }
@@ -199,6 +200,47 @@ body.is-fullscreen{ padding-top:56px; }
   *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
 }
 </style>
+<!-- dyn-icon:css:start -->
+<style id="dyn-icon-css">
+/* dyn-icon (owner rulings 13 Oct 2026; touchmedical-html contract 5B "When an icon moves"): the movement shows the
+   idea; still and complete at rest; one icon plays by itself when the screen opens, every other one on the learner's
+   hover, focus or select; one cycle, then still; nothing moves with reduced motion; off screen the idle rule pauses it. */
+svg.dy .acc{ stroke:var(--dy-acc,currentColor); } svg.dy .acc-fill{ fill:var(--dy-acc,currentColor); stroke:none; }
+/* module drawings: smoke, age calendar, brain, DNA lens */
+svg.dy .ember{ opacity:.55; } svg.dy .wisp{ stroke-dasharray:7 7; }
+svg.dy.run .ember{ animation:dyEmber 2.4s ease-in-out both; } @keyframes dyEmber{ 0%,100%{ opacity:.55; } 25%,70%{ opacity:1; } 45%{ opacity:.6; } }
+svg.dy.run .wisp{ animation:dyWisp 2.4s ease-in-out both; animation-delay:calc(var(--d) * .3s); }
+@keyframes dyWisp{ 0%,100%{ stroke-dashoffset:0; opacity:1; transform:none; } 8%{ stroke-dashoffset:7; opacity:0; transform:translateY(2px); } 55%{ stroke-dashoffset:0; opacity:1; transform:none; } 75%{ opacity:.2; transform:translateY(-2px); } }
+svg.dy .leaf{ opacity:0; transform-origin:12px 9.6px; fill:#fff; fill-opacity:.6; }
+svg.dy .days circle{ opacity:0; transform-box:fill-box; transform-origin:center; } svg.dy .rings{ transform-box:fill-box; transform-origin:center bottom; }
+svg.dy.run .leaf{ animation:dyLeaf 2.4s ease-in-out both; } @keyframes dyLeaf{ 0%{ opacity:0; transform:none; } 6%{ opacity:1; transform:none; } 40%{ opacity:1; transform:scaleY(-.15); } 52%,100%{ opacity:0; transform:scaleY(-.15); } }
+svg.dy.run .days circle{ animation:dyDay 2.4s ease-out both; animation-delay:calc(var(--d) * .12s + .9s); } @keyframes dyDay{ 0%{ opacity:0; transform:scale(0); } 20%{ opacity:1; transform:scale(1.3); } 30%,70%{ opacity:1; transform:none; } 100%{ opacity:0; } }
+svg.dy.run .rings{ animation:dyRings 2.4s ease-in-out both; } @keyframes dyRings{ 0%,100%{ transform:none; } 8%{ transform:translateY(-1px); } 18%{ transform:none; } 46%{ transform:translateY(-.8px); } 54%{ transform:none; } }
+svg.dy .met,svg.dy .ring{ transform-box:fill-box; transform-origin:center; } svg.dy .ring{ opacity:0; }
+svg.dy.run .met{ animation:dyMet 2.4s ease-out both; animation-delay:calc(var(--d) * .3s); } @keyframes dyMet{ 0%,100%{ transform:none; opacity:1; } 6%,20%{ transform:scale(0); opacity:0; } 35%{ transform:scale(1.4); opacity:1; } 45%{ transform:none; } }
+svg.dy.run .ring{ animation:dyRing 2.4s ease-out both; animation-delay:calc(var(--d) * .3s + .4s); } @keyframes dyRing{ 0%{ opacity:.8; transform:none; } 40%,100%{ opacity:0; transform:scale(2.8); } }
+svg.dy .r.dim{ opacity:.55; } svg.dy .lens-glass{ fill:#fff; fill-opacity:.55; stroke:var(--dy-acc,currentColor); }
+svg.dy .lens2{ transform:translate(15.4px,8.6px); } svg.dy.run .lens2{ animation:dyLens 2.6s ease-in-out both; } @keyframes dyLens{ 0%,100%{ transform:translate(15.4px,8.6px); } 45%{ transform:translate(8.2px,15.8px); } }
+/* the assets' own drawings */
+svg.dy .bk,svg.dy .pl,svg.dy .br,svg.dy .cd,svg.dy .mer{ transform-box:fill-box; transform-origin:center; }
+svg.dy.run .bk{ animation:dyBk 2.4s ease-in-out both; } @keyframes dyBk{ 0%,100%{ opacity:1; transform:none; } 8%,30%{ opacity:0; transform:translateX(-4px); } 70%{ opacity:1; transform:none; } }
+svg.dy .spd{ opacity:0; }
+svg.dy.run .rn{ animation:dyRn 2.2s ease-in-out both; } @keyframes dyRn{ 0%,100%{ transform:none; } 30%{ transform:translateX(-2px); } 62%{ transform:translateX(3px); } }
+svg.dy.run .spd{ animation:dySpd 2.2s ease-out both; animation-delay:calc(var(--d) * .1s + .5s); } @keyframes dySpd{ 0%{ opacity:0; transform:translateX(5px); } 30%{ opacity:1; } 70%,100%{ opacity:0; transform:translateX(-5px); } }
+svg.dy.run .pl{ animation:dyPl 2.2s ease-out both; } @keyframes dyPl{ 0%,100%{ opacity:1; transform:none; } 8%,30%{ opacity:0; transform:scale(.3); } 60%{ opacity:1; transform:scale(1.15); } 75%{ transform:none; } }
+svg.dy .hm,svg.dy .hh{ transform-origin:24px 24px; }
+svg.dy.run .hm{ animation:dyHm 2.4s ease-in-out both; } @keyframes dyHm{ 0%{ transform:none; } 85%,100%{ transform:rotate(360deg); } }
+svg.dy.run .br{ animation:dyBr 2.2s ease-in-out both; } @keyframes dyBr{ 0%,100%{ transform:none; } 35%{ transform:scale(1.12,1); } 62%{ transform:scale(.98,1); } 80%{ transform:none; } }
+svg.dy.run .cd{ animation:dyCd 1.1s ease-out both; animation-delay:calc(var(--d) * .18s + .1s); } @keyframes dyCd{ 0%{ opacity:0; transform:scale(0); } 45%{ opacity:1; transform:scale(1.35); } 65%,100%{ opacity:1; transform:none; } }
+svg.dy .liq{ transform-box:fill-box; transform-origin:50% 100%; } svg.dy.run .liq{ animation:dyLiq 2.4s ease-in-out both; } @keyframes dyLiq{ 0%,15%{ transform:scaleY(0); } 75%{ transform:scaleY(1.08); } 100%{ transform:none; } }
+svg.dy .tk{ stroke-dasharray:9 9; } svg.dy.run .tk{ animation:dyTk 2s ease-in-out both; } @keyframes dyTk{ 0%,20%{ stroke-dashoffset:9; opacity:0; } 30%{ opacity:1; } 75%,100%{ stroke-dashoffset:0; opacity:1; } }
+svg.dy .bl{ stroke-dasharray:11 11; } svg.dy.run .bl{ animation:dyBl 2s ease-in-out both; animation-delay:calc(var(--d) * .3s); } @keyframes dyBl{ 0%,15%{ stroke-dashoffset:11; } 65%,100%{ stroke-dashoffset:0; } }
+.dy .mer{ vector-effect:non-scaling-stroke; } svg.dy.run .mer{ animation:dyMer 2.6s ease-in-out both; } @keyframes dyMer{ 0%{ transform:none; opacity:1; } 55%{ transform:scaleX(2.3); opacity:0; } 56%{ transform:scaleX(0); opacity:0; } 70%{ opacity:1; } 100%{ transform:none; opacity:1; } }
+svg.dy .shk{ transform-origin:8px 11px; transform:translateY(-2px) rotate(-28deg); }
+svg.dy.run .shk{ animation:dyShk 1.6s ease-in-out both; } @keyframes dyShk{ 0%,25%{ transform:none; } 55%{ transform:translateY(-2px); } 100%{ transform:translateY(-2px) rotate(-28deg); } }
+@media (prefers-reduced-motion:reduce){ svg.dy, svg.dy *{ animation:none !important; } }
+</style>
+<!-- dyn-icon:css:end -->
 <!-- r4-embed:start -->
 <style id="r4-embed-css">
   /* owner 2026-09-22: a slide that is off screen or in a hidden tab does no work */
@@ -245,12 +287,24 @@ body.is-fullscreen{ padding-top:56px; }
   }
 </style>
 <!-- r4-strip:end -->
+<!-- mod-head:css:start -->
+<style id="mod-head-css">
+/* module heading (owner 14 Oct 2026): left, glow, capped rule - tools/tm9035-module-heading.py */
+.banner h1.banner__title{ text-align:left !important; letter-spacing:-.01em; text-shadow:0 2px 10px rgba(0,152,190,.30); }
+.banner h1.banner__title *:not(em):not(i):not(.gene){ color:inherit !important; }
+.banner h1.banner__title em, .banner h1.banner__title i, .banner h1.banner__title .gene{ color:inherit !important; }
+.mh-rule{ display:flex; align-items:center; align-self:flex-start; width:66%; max-width:960px; margin:6px 0 0; }
+.mh-rule i{ flex:0 0 auto; width:4px; height:14px; background:#0098be; border-radius:2px; }
+.mh-rule b{ flex:1 1 auto; height:3px; background:#0098be; border-radius:2px; }
+.banner{ background:#fff !important; box-shadow:none !important; border-bottom:0 !important; }
+</style>
+<!-- mod-head:css:end -->
 </head>
 <body>
 <main class="frame" aria-label="Patient characteristics">
 
   <header class="banner">
-    <h1 class="banner__title">Patient characteristics</h1>
+    <h1 class="banner__title">Patient characteristics</h1><!-- mh-rule --><div class="mh-rule" aria-hidden="true"><i></i><b></b><i></i></div><!-- /mh-rule -->
   </header>
 
   <div class="grid" id="grid"></div>
@@ -298,13 +352,13 @@ body.is-fullscreen{ padding-top:56px; }
 
   const ICON = {
     sex:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="17" cy="16" r="8"/><path d="M17 24v15M11 33h12"/><circle cx="31" cy="32" r="8"/><path d="M37 26l8-8M39 18h6v6"/></svg>',
-    ecog:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="27" cy="9" r="4"/><path d="M25 16l-6 6 4 5 2 11M23 27l-9 3M27 22l8 4-2 9M19 22l-7 2"/></svg>',
-    age:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="11" width="34" height="30" rx="3"/><path d="M7 19h34M16 7v8M32 7v8"/><path d="M16 28h6M16 34h12"/></svg>',
-    brain:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 11c-3.5 0-6 2.4-6.3 5.2C14.4 16.7 12 19 12 22c0 1.7.8 3.2 2 4.2-.3 3 1.9 5.6 5 5.8.7 1.9 2.6 3 4.7 3"/><path d="M24 11c3.5 0 6 2.4 6.3 5.2 3.3.5 5.7 2.8 5.7 5.8 0 1.7-.8 3.2-2 4.2.3 3-1.9 5.6-5 5.8-.7 1.9-2.6 3-4.7 3"/><path d="M24 11v24"/></svg>',
-    smoking:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="28" width="30" height="8" rx="1.5"/><path d="M16 28v8M26 28v8"/><path d="M40 36h2M40 30h2"/><path d="M30 22c4-2 2-6 0-8M37 22c4-2 2-7 0-9"/></svg>',
+    ecog:'<svg class="dy dy-ecog" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="rn"><circle cx="27" cy="9" r="4"/><path d="M25 16l-6 6 4 5 2 11M23 27l-9 3M27 22l8 4-2 9M19 22l-7 2"/></g><path class="spd acc" style="--d:0" d="M3 17h6"/><path class="spd acc" style="--d:1" d="M2 25h6"/><path class="spd acc" style="--d:2" d="M4 33h5"/></svg>',
+    age:'<svg class="dy dy-agecal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="rings"><path d="M8 2v3"/><path d="M16 2v3"/></g><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path class="leaf acc" d="M3.6 9.6h16.8v10a1.6 1.6 0 0 1-1.6 1.6H5.2a1.6 1.6 0 0 1-1.6-1.6z"/><g class="days acc-fill"><circle style="--d:0" cx="7.5" cy="13" r=".95"/><circle style="--d:1" cx="12" cy="13" r=".95"/><circle style="--d:2" cx="16.5" cy="13" r=".95"/><circle style="--d:3" cx="7.5" cy="17" r=".95"/><circle style="--d:4" cx="12" cy="17" r=".95"/></g></svg>',
+    brain:'<svg class="dy dy-brain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path opacity=".85" d="M12 18V5" /> <path opacity=".85" d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4" /> <path opacity=".85" d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5" /> <path opacity=".85" d="M17.997 5.125a4 4 0 0 1 2.526 5.77" /> <path opacity=".85" d="M18 18a4 4 0 0 0 2-7.464" /> <path opacity=".85" d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517" /> <path opacity=".85" d="M6 18a4 4 0 0 1-2-7.464" /> <path opacity=".85" d="M6.003 5.125a4 4 0 0 0-2.526 5.77" /><circle class="met acc-fill" style="--d:0" cx="8.3" cy="9.6" r="1.6"/><circle class="met acc-fill" style="--d:1" cx="16" cy="13.4" r="1.6"/><circle class="met acc-fill" style="--d:2" cx="8.6" cy="17" r="1.35"/><circle class="ring acc" style="--d:0" cx="8.3" cy="9.6" r="1.25"/><circle class="ring acc" style="--d:1" cx="16" cy="13.4" r="1.25"/><circle class="ring acc" style="--d:2" cx="8.6" cy="17" r="1.05"/></svg>',
+    smoking:'<svg class="dy dy-smoke" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 12H3a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h14"/><path d="M7 12v4"/><path d="M21 16a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><rect class="ember acc-fill" x="17.6" y="12.6" width="2.6" height="2.8" rx=".6"/><path class="wisp acc" style="--d:0" d="M18 9c0-2.5-2-2.5-2-5"/><path class="wisp acc" style="--d:1" d="M22 9c0-2.5-2-2.5-2-5"/></svg>',
     line:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="17" y="6" width="14" height="12" rx="2"/><path d="M20 6V4h8v2"/><path d="M24 18v6"/><path d="M19 24h10v12a3 3 0 0 1-3 3h-4a3 3 0 0 1-3-3z"/><path d="M24 39v5"/></svg>',
-    histology:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="21" cy="21" r="12"/><path d="M30 30l10 10"/><path d="M16 21h10M21 16v10"/></svg>',
-    dna:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 6c0 10 16 8 16 18s-16 8-16 18"/><path d="M32 6c0 10-16 8-16 18s16 8 16 18"/><path d="M17 13h14M15 21h18M15 27h18M17 35h14"/></svg>'
+    histology:'<svg class="dy dy-hist" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="21" cy="21" r="12"/><path d="M30 30l10 10"/><path class="pl acc" d="M16 21h10M21 16v10"/></svg>',
+    dna:'<svg class="dy dy-detect" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g transform="translate(12 12) rotate(-45) scale(.95) translate(-12 -12)"><path d="M3.00 5.50 L3.25 5.52 L3.50 5.60 L3.75 5.72 L4.00 5.89 L4.25 6.11 L4.50 6.37 L4.75 6.68 L5.00 7.02 L5.25 7.40 L5.50 7.82 L5.75 8.27 L6.00 8.75 L6.25 9.25 L6.50 9.78 L6.75 10.32 L7.00 10.87 L7.25 11.43 L7.50 12.00 L7.75 12.57 L8.00 13.13 L8.25 13.68 L8.50 14.22 L8.75 14.75 L9.00 15.25 L9.25 15.73 L9.50 16.18 L9.75 16.60 L10.00 16.98 L10.25 17.32 L10.50 17.63 L10.75 17.89 L11.00 18.11 L11.25 18.28 L11.50 18.40 L11.75 18.48 L12.00 18.50 L12.25 18.48 L12.50 18.40 L12.75 18.28 L13.00 18.11 L13.25 17.89 L13.50 17.63 L13.75 17.32 L14.00 16.98 L14.25 16.60 L14.50 16.18 L14.75 15.73 L15.00 15.25 L15.25 14.75 L15.50 14.22 L15.75 13.68 L16.00 13.13 L16.25 12.57 L16.50 12.00 L16.75 11.43 L17.00 10.87 L17.25 10.32 L17.50 9.78 L17.75 9.25 L18.00 8.75 L18.25 8.27 L18.50 7.82 L18.75 7.40 L19.00 7.02 L19.25 6.68 L19.50 6.37 L19.75 6.11 L20.00 5.89 L20.25 5.72 L20.50 5.60 L20.75 5.52 L21.00 5.50" opacity=".7"/><path d="M3.00 18.50 L3.25 18.48 L3.50 18.40 L3.75 18.28 L4.00 18.11 L4.25 17.89 L4.50 17.63 L4.75 17.32 L5.00 16.98 L5.25 16.60 L5.50 16.18 L5.75 15.73 L6.00 15.25 L6.25 14.75 L6.50 14.22 L6.75 13.68 L7.00 13.13 L7.25 12.57 L7.50 12.00 L7.75 11.43 L8.00 10.87 L8.25 10.32 L8.50 9.78 L8.75 9.25 L9.00 8.75 L9.25 8.27 L9.50 7.82 L9.75 7.40 L10.00 7.02 L10.25 6.68 L10.50 6.37 L10.75 6.11 L11.00 5.89 L11.25 5.72 L11.50 5.60 L11.75 5.52 L12.00 5.50 L12.25 5.52 L12.50 5.60 L12.75 5.72 L13.00 5.89 L13.25 6.11 L13.50 6.37 L13.75 6.68 L14.00 7.02 L14.25 7.40 L14.50 7.82 L14.75 8.27 L15.00 8.75 L15.25 9.25 L15.50 9.78 L15.75 10.32 L16.00 10.87 L16.25 11.43 L16.50 12.00 L16.75 12.57 L17.00 13.13 L17.25 13.68 L17.50 14.22 L17.75 14.75 L18.00 15.25 L18.25 15.73 L18.50 16.18 L18.75 16.60 L19.00 16.98 L19.25 17.32 L19.50 17.63 L19.75 17.89 L20.00 18.11 L20.25 18.28 L20.50 18.40 L20.75 18.48 L21.00 18.50" opacity=".7"/><path class="r dim" stroke-width="1.15" style="--d:0" d="M3.80 6.85 V17.15"/><path class="r dim" stroke-width="1.15" style="--d:1" d="M5.40 8.75 V15.25"/><path class="r dim" stroke-width="1.15" style="--d:2" d="M10.20 7.84 V16.16"/><path class="r dim" stroke-width="1.15" style="--d:3" d="M13.80 7.84 V16.16"/><path class="r dim" stroke-width="1.15" style="--d:4" d="M18.60 8.75 V15.25"/><path class="r dim" stroke-width="1.15" style="--d:5" d="M20.20 6.85 V17.15"/></g><g class="lens2"><circle class="lens-glass" cx="0" cy="0" r="4"/><path class="acc" d="M2.9 2.9 6 6"/></g></svg>'
   };
 
   const TEAL='var(--c2)', NAVY='var(--c1)';
@@ -323,7 +377,7 @@ body.is-fullscreen{ padding-top:56px; }
       levels:[{lab:'1L', n:50, pct:'47.2', c:NAVY},{lab:'2L+', n:56, pct:'52.8', c:TEAL}] },
     { id:'histology', name:'Histology', icon:ICON.histology, type:'split3',
       levels:[{lab:'Adenocarcinoma', n:84, pct:'79.2', c:NAVY},{lab:'Squamous', n:7, pct:'6.6', c:'var(--c4)'},{lab:'Others', n:15, pct:'14.2', c:'var(--c3)'}] },
-    { id:'detection', name:'<em>MET</em>ex14 skipping detection method', icon:ICON.dna, type:'dual',
+    { id:'detection', name:'<span class="nocase"><em>MET</em>ex14</span> skipping detection method', icon:ICON.dna, type:'dual',
       note:'Patients could have both.',
       levels:[{lab:'Liquid biopsy', n:48, pct:'45.3', c:TEAL},{lab:'Tissue biopsy', n:83, pct:'78.3', c:TEAL}] }
   ];
@@ -711,5 +765,56 @@ body.is-fullscreen{ padding-top:56px; }
 </script>
 <!-- r4-embed:end -->
 <script id="build-stamp">(function(){var T="TM 9035: Patient characteristics flip-cards",M="TM 9035 tm9035-patient-characteristics-slide-61-2026-06-24-v1 r4 2026-10-11";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<!-- dyn-icon:js:start -->
+<script id="dyn-icon-js">
+/* dyn-icon: plays a moving icon once (owner rulings 13 Oct 2026; contract 5B). The screen's one arrival icon plays by
+   itself; every other one plays when the learner points at, focuses or selects its card, or when the card's other face
+   or panel is opened. A cycle ends still, at the resting drawing. Reduced motion: nothing plays. */
+(function () {
+  var C = {"host": ".card", "hostIcon": ".card__front svg.dy", "auto": ".card__front svg.dy", "autoAt": 1100, "show": ".card[aria-expanded=\"true\"] .card__back svg.dy"};
+  var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  function shown(s) { return !!s && s.getClientRects().length > 0 && !s.closest("[hidden],[inert]"); }
+  function play(s) {
+    if (reduce || !s || s.classList.contains("run") || !shown(s)) return false;
+    s.classList.add("run");
+    function end() {
+      setTimeout(function () {
+        var busy = s.getAnimations ? s.getAnimations({ subtree: true }).some(function (a) { return a.playState === "running" || a.playState === "paused" || a.pending; }) : false;
+        if (!busy) { s.classList.remove("run"); s.removeEventListener("animationend", end); }
+      }, 30);
+    }
+    s.addEventListener("animationend", end);
+    return true;
+  }
+  function fromHost(e) {
+    var h = C.host && e.target && e.target.closest ? e.target.closest(C.host) : null;
+    if (!h || (e.type === "pointerover" && e.relatedTarget && h.contains(e.relatedTarget))) return;
+    var list = h.querySelectorAll(C.hostIcon || "svg.dy");
+    for (var i = 0; i < list.length; i++) play(list[i]);
+  }
+  function sweep(first) {
+    if (!C.show) return;
+    var all = document.querySelectorAll("svg.dy");
+    for (var i = 0; i < all.length; i++) {
+      var s = all[i], v = s.matches(C.show) && shown(s);
+      if (v && !s.__dyVis && first !== true) play(s);
+      s.__dyVis = v;
+    }
+  }
+  document.addEventListener("pointerover", fromHost);
+  document.addEventListener("focusin", fromHost);
+  document.addEventListener("click", function (e) { fromHost(e); setTimeout(sweep, C.showAt || 150); }, true);
+  document.addEventListener("keydown", function () { setTimeout(sweep, C.showAt || 150); }, true);
+  function start() {
+    sweep(true);
+    if (C.auto) setTimeout(function () {
+      var l = document.querySelectorAll(C.auto);
+      for (var i = 0; i < l.length; i++) if (play(l[i])) break;
+    }, C.autoAt || 900);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
+})();
+</script>
+<!-- dyn-icon:js:end -->
 </body>
 </html>

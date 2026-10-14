@@ -256,6 +256,19 @@ body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-wei
   }
 </style>
 <!-- r4-strip:end -->
+<!-- mod-head:css:start -->
+<style id="mod-head-css">
+/* module heading (owner 14 Oct 2026): left, glow, capped rule - tools/tm9035-module-heading.py */
+.banner h1.banner__title{ text-align:left !important; letter-spacing:-.01em; text-shadow:0 2px 10px rgba(0,152,190,.30); }
+.banner h1.banner__title *:not(em):not(i):not(.gene){ color:inherit !important; }
+.banner h1.banner__title em, .banner h1.banner__title i, .banner h1.banner__title .gene{ color:inherit !important; }
+.mh-rule{ display:flex; align-items:center; align-self:flex-start; width:66%; max-width:960px; margin:6px 0 0; }
+.mh-rule i{ flex:0 0 auto; width:4px; height:14px; background:#0098be; border-radius:2px; }
+.mh-rule b{ flex:1 1 auto; height:3px; background:#0098be; border-radius:2px; }
+.banner{ background:#fff !important; box-shadow:none !important; border-bottom:0 !important; }
+.banner__prompt{ text-align:left !important; }
+</style>
+<!-- mod-head:css:end -->
 </head>
 <body>
 
@@ -280,7 +293,7 @@ body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-wei
 <main class="frame" aria-label="Your starting point — confidence baseline">
 
   <header class="banner">
-    <h1 class="banner__title">Your starting point</h1>
+    <h1 class="banner__title">Your starting point</h1><!-- mh-rule --><div class="mh-rule" aria-hidden="true"><i></i><b></b><i></i></div><!-- /mh-rule -->
     <p class="banner__prompt">Gauge where you stand before the module &mdash; you&rsquo;ll revisit this at the end.</p>
   </header>
 
@@ -471,7 +484,8 @@ body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-wei
   function buildDone(){
     $('doneGrid').innerHTML = TOPICS.map(function(t,i){
       var v=baseRatings[i]||'none';
-      return '<span class="tag" data-v="'+v+'"><b>'+(i+1)+'</b>&nbsp;'+t.html+' &middot; '+CHIP_TEXT[v]+'</span>';
+      /* the label is one flex item, so the tag's gap never opens between italic MET and "ex14" (owner 13 Oct) */
+      return '<span class="tag" data-v="'+v+'"><b>'+(i+1)+'</b><span>'+t.html+' &middot; '+CHIP_TEXT[v]+'</span></span>';
     }).join('');
   }
 

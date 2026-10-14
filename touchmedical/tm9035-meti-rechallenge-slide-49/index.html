@@ -73,6 +73,9 @@
     .donut-foot { grid-column: 1 / -1; margin: 2px 0 0; font-size: clamp(.72rem,1.05vw,.84rem); font-weight: 600; color: var(--muted); text-align: center; line-height: 1.3; }
     .donut-foot .tepo-link { color: var(--teal-strong); font-weight: 700; background: none; border: 0; padding: 0 1px; font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
     .donut-foot .tepo-link:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; border-radius: 3px; }
+    /* owner 2026-10-14: one instruction line under the donut, in the donut-foot style */
+    .donut-col { height: 100%; min-height: 0; display: grid; grid-template-rows: minmax(0,1fr) auto; align-items: center; justify-items: center; gap: 6px; }
+    .donut-hint { margin: 0; font-size: clamp(.72rem,1.05vw,.84rem); font-weight: 600; color: var(--muted); text-align: center; line-height: 1.3; }
     /* "Data not available" category — hover/focus reveals the caveat */
     .legend__item--na { position: relative; opacity: .92; }
     .legend__item--na .legend__name { color: var(--muted); font-weight: 600; }
@@ -104,16 +107,22 @@
     @media (prefers-reduced-motion: no-preference) {
       @keyframes riseIn { from { transform: translateY(10px); } to { transform: translateY(0); } }
       @keyframes popIn  { from { transform: scale(.965); }      to { transform: scale(1); } }
-      .legend__item, .stat[data-rise], .tepo-note[data-rise] { animation: riseIn .44s cubic-bezier(.34,1.4,.5,1) backwards; }
+      .legend__item { animation: riseIn .44s cubic-bezier(.34,1.4,.5,1) backwards; }
       .legend__item:nth-child(1){ animation-delay:.03s } .legend__item:nth-child(2){ animation-delay:.09s }
       .legend__item:nth-child(3){ animation-delay:.15s } .legend__item:nth-child(4){ animation-delay:.21s }
       .legend__item:nth-child(5){ animation-delay:.27s } .legend__item:nth-child(6){ animation-delay:.33s }
       .legend__item:nth-child(7){ animation-delay:.39s } .legend__item:nth-child(8){ animation-delay:.45s }
       .legend__item:nth-child(9){ animation-delay:.51s }
       .donut-stack { animation: popIn .5s cubic-bezier(.34,1.4,.5,1) backwards; }
-      .stat[data-rise]:nth-child(1){ animation-delay:.05s } .stat[data-rise]:nth-child(2){ animation-delay:.12s }
-      .stat[data-rise]:nth-child(3){ animation-delay:.19s } .stat[data-rise]:nth-child(4){ animation-delay:.26s }
-      .tepo-note[data-rise]{ animation-delay:.32s }
+      /* owner 2026-10-14: Best response cards ease in one after another EVERY time the tab is shown.
+         CSS transitions keyed on .xpanel.active (no script restart); at rest on the shown tab opacity is 1.
+         Leaving the tab resets them only after the panel's own 320ms fade-out. */
+      #panel-1 [data-rise] { opacity: 0; transform: translateY(10px); transition: opacity 0s linear .32s, transform 0s linear .32s; }
+      #panel-1.active [data-rise] { opacity: 1; transform: translateY(0); transition: opacity .4s ease-out, transform .4s ease-out; }
+      #panel-1.active .stat[data-rise]:nth-child(2) { transition-delay: .15s; }
+      #panel-1.active .stat[data-rise]:nth-child(3) { transition-delay: .3s; }
+      #panel-1.active .stat[data-rise]:nth-child(4) { transition-delay: .45s; }
+      #panel-1.active .tepo-note[data-rise] { transition-delay: .6s; }
     }
 
     /* ===== Footer (progress + source) ===== */
@@ -290,10 +299,22 @@
   }
 </style>
 <!-- r4-strip:end -->
+<!-- mod-head:css:start -->
+<style id="mod-head-css">
+/* module heading (owner 14 Oct 2026): left, glow, capped rule - tools/tm9035-module-heading.py */
+.caption > h1{ text-align:left !important; letter-spacing:-.01em; text-shadow:0 2px 10px rgba(0,152,190,.30); }
+.caption > h1 *:not(em):not(i):not(.gene){ color:inherit !important; }
+.caption > h1 em, .caption > h1 i, .caption > h1 .gene{ color:inherit !important; }
+.mh-rule{ display:flex; align-items:center; align-self:flex-start; width:66%; max-width:960px; margin:6px 0 0; }
+.mh-rule i{ flex:0 0 auto; width:4px; height:14px; background:#0098be; border-radius:2px; }
+.mh-rule b{ flex:1 1 auto; height:3px; background:#0098be; border-radius:2px; }
+.caption{ background:#fff !important; box-shadow:none !important; border-bottom:0 !important; }
+</style>
+<!-- mod-head:css:end -->
 </head>
 <body>
   <main class="slide" id="slide" aria-label="Outcomes with METi rechallenge — explorer">
-    <div class="caption"><h1>Outcomes with METi rechallenge</h1></div>
+    <div class="caption"><h1>Outcomes with METi rechallenge</h1><!-- mh-rule --><div class="mh-rule" aria-hidden="true"><i></i><b></b><i></i></div><!-- /mh-rule --></div>
 
     <div class="lead"><p><b>65 patients</b> received subsequent treatment with a MET inhibitor. Use the two tabs to see <b>which agents</b> were used and the <b>best response</b> achieved.</p></div>
 
@@ -307,6 +328,7 @@
         <!-- Tab 1: donut -->
         <div class="xpanel active" role="tabpanel" id="panel-0" aria-labelledby="tab-0" tabindex="0">
           <div class="donut-grid">
+            <div class="donut-col">
             <div class="donut-stack">
               <svg viewBox="0 0 42 42" role="img" aria-label="Donut chart of subsequent MET inhibitors received (n=63 patients with a named agent)">
                 <circle r="15.915" cx="21" cy="21" fill="none" stroke="var(--mist)" stroke-width="6"></circle>
@@ -326,6 +348,8 @@
                 <div class="donut__sub" id="donutSub">patients received<br>subsequent METi</div>
                 <div class="donut__lab" id="donutLab"></div>
               </div>
+            </div>
+            <p class="donut-hint" id="donutHint">Select any part of the chart to see its breakdown.</p>
             </div>
 
             <div class="legend" id="legend" role="list" aria-label="Subsequent MET inhibitors by patient number">
@@ -454,6 +478,7 @@
           t.tabIndex = on ? 0 : -1;
         });
         panels.forEach(function (p, k) { p.classList.toggle('active', k === i); p.setAttribute('aria-hidden', String(k !== i)); });
+        clearPin();
         if (i === 0) playTab1Tally(); else if (i === 1) playTab2Tally();
         markSeen(i);
         if (focusPanel) panels[i].focus();
@@ -505,15 +530,32 @@
         segs.forEach(function (s) { s.classList.remove('is-active'); });
         items.forEach(function (it) { it.classList.remove('is-active'); });
       }
+      /* owner 2026-10-14: SELECT pins a breakdown until another / the same one is selected, anywhere else
+         is selected, Escape, or a tab change. Pointing still previews; leaving returns to the pinned one. */
+      var pinned = null;
+      function restore() { if (pinned) focusKey(pinned); else clearFocus(); }
+      function setPin(k) { pinned = (k && DATA[k]) ? k : null; restore(); }
+      function clearPin() { if (pinned) { pinned = null; clearFocus(); } }
+      function togglePin(k) { setPin(pinned === k ? null : k); }
       function bindFocus(el) {
         var k = el.getAttribute('data-k');
         el.addEventListener('mouseenter', function () { focusKey(k); });
-        el.addEventListener('mouseleave', clearFocus);
+        el.addEventListener('mouseleave', restore);
         el.addEventListener('focus', function () { focusKey(k); });
-        el.addEventListener('blur', clearFocus);
+        el.addEventListener('blur', restore);
+        if (!DATA[k]) return;
+        el.addEventListener('click', function () { togglePin(k); });
+        if (el.tagName.toLowerCase() === 'circle') {
+          el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); togglePin(k); } });
+        }
       }
       segs.forEach(bindFocus);
       items.forEach(bindFocus);
+      document.addEventListener('click', function (e) {
+        var t = e.target;
+        var hit = t && t.closest ? t.closest('.donut__seg, .legend__item') : null;
+        if (!hit || !DATA[hit.getAttribute('data-k')]) clearPin();
+      });
 
       /* ===== Count-up tally (owner-requested) — Tab 1: sequential per-inhibitor run-up (number + %),
          the donut centre collating the running total, and the ring filling segment-by-segment; Tab 2:
@@ -548,20 +590,22 @@
         }
         raf1 = requestAnimationFrame(function (ts) { for (var j = 0; j < TALLY.length; j++) { paintSeg(TALLY[j], 0); paintLeg(TALLY[j], 0, 0); } big.textContent = '0'; frame(ts); });
       }
-      var STAT = Array.prototype.slice.call(document.querySelectorAll('#panel-1 .stat__val:not(.na)')).map(function (el) { var raw = el.childNodes[0].nodeValue.trim(); return { node: el.childNodes[0], val: parseFloat(raw), dec: (raw.split('.')[1] || '').length }; });
+      /* owner 2026-10-14: each card's count starts once that card has faded in (card i: i*150ms stagger + 400ms fade) */
+      var STAT_CARDS = Array.prototype.slice.call(document.querySelectorAll('#panel-1 .stat'));
+      var STAT = Array.prototype.slice.call(document.querySelectorAll('#panel-1 .stat__val:not(.na)')).map(function (el) { var raw = el.childNodes[0].nodeValue.trim(); return { node: el.childNodes[0], val: parseFloat(raw), dec: (raw.split('.')[1] || '').length, wait: STAT_CARDS.indexOf(el.closest('.stat')) * 150 + 400 }; });
       var raf2 = null, t2on = false;
       function cancelTab2() { if (raf2) { cancelAnimationFrame(raf2); raf2 = null; } t2on = false; }
       function finalTab2() { cancelTab2(); STAT.forEach(function (s) { s.node.nodeValue = s.val.toFixed(s.dec) + ' '; }); }
       function playTab2Tally() {
         cancelTab2();
         if (reduceMotion) { finalTab2(); return; }
-        var per = 460, step = 120, N = STAT.length, total = step * (N - 1) + per, t0 = null;
+        var per = 460, N = STAT.length, total = STAT[N - 1].wait + per, t0 = null;
         t2on = true;
         function frame(ts) {
           if (!t2on) return;
           if (t0 === null) t0 = ts;
           var t = ts - t0;
-          STAT.forEach(function (s, i) { var e = easeOutCubic(Math.max(0, Math.min(1, (t - i * step) / per))); s.node.nodeValue = (s.val * e).toFixed(s.dec) + ' '; });
+          STAT.forEach(function (s) { var e = easeOutCubic(Math.max(0, Math.min(1, (t - s.wait) / per))); s.node.nodeValue = (s.val * e).toFixed(s.dec) + ' '; });
           if (t < total) { raf2 = requestAnimationFrame(frame); } else { finalTab2(); }
         }
         raf2 = requestAnimationFrame(function (ts) { STAT.forEach(function (s) { s.node.nodeValue = (0).toFixed(s.dec) + ' '; }); frame(ts); });
@@ -580,10 +624,8 @@
       }
       var tepoLink = document.getElementById('toTepo');
       if (tepoLink) tepoLink.addEventListener('click', gotoTepo);
-      document.querySelectorAll('[data-k="tepotinib"]').forEach(function (el) {
-        el.addEventListener('click', gotoTepo);
-        el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); gotoTepo(); } });
-      });
+      /* owner 2026-10-14: the Tepotinib slice and key item pin their breakdown like every other one;
+         the "see best response" link under the donut is the route to the Best response tab. */
 
       /* ----- source modal ----- */
       var sourceModal = document.getElementById('source-modal');
@@ -620,7 +662,8 @@
 
       document.addEventListener('keydown', function (e) {
         if (inter.classList.contains('is-open')) { if (e.key === 'Escape') { e.preventDefault(); closeInter(); } else if (e.key === 'Tab') { trap(e, inter); } return; }
-        if (e.key === 'Escape' && sourceModal.classList.contains('visible')) closeSource();
+        if (e.key === 'Escape' && sourceModal.classList.contains('visible')) { closeSource(); return; }
+        if (e.key === 'Escape') clearPin();
       });
 
       markSeen(0);

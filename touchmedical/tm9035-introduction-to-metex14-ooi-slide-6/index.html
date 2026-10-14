@@ -48,8 +48,9 @@
     .feedback.visible { opacity: 1; transform: translateY(0); }
     .feedback-title { margin: 0 0 4px; color: var(--navy); font-size: 1.06rem; font-weight: 700; }
     .feedback p { margin: 0; color: #151515; font-size: clamp(.9rem, 1.5vw, 1.02rem); line-height: 1.36; }
-    .citation-control { position: relative; display: inline-flex; align-items: baseline; }
-    .citation-trigger { padding: 0 2px; border: 0; border-bottom: 1px dashed var(--teal); background: transparent; color: var(--teal); font: inherit; font-size: .78em; font-weight: 700; cursor: pointer; }
+    /* owner 13 Oct (B9): the reference numbers sit at the end of the response, as a superscript, numbering unchanged */
+    .citation-control { position: relative; display: inline; white-space: nowrap; } .citation-control .citation-panel { white-space: normal; }
+    .citation-trigger { padding: 0 1px; border: 0; background: transparent; color: var(--teal); font: inherit; font-size: .7em; font-weight: 700; line-height: 1; vertical-align: super; cursor: pointer; text-decoration: underline dotted; text-underline-offset: 2px; }
     .citation-trigger:focus-visible, .reference-link:focus-visible, .external-actions button:focus-visible { outline: 3px solid var(--navy); outline-offset: 3px; }
     .citation-panel { position: absolute; z-index: 5; right: 0; bottom: calc(100% + 10px); width: min(720px, calc(100vw - 36px)); max-height: min(340px, 60vh); overflow: auto; padding: 15px 18px; border: 2px solid var(--teal); border-radius: 14px; background: #fff; box-shadow: 0 14px 28px rgba(34,47,85,.22); text-align: left; opacity: 0; transform: translateY(6px); visibility: hidden; transition: opacity 180ms ease, transform 180ms ease, visibility 180ms ease; }
     .citation-control:hover .citation-panel, .citation-control:focus-within .citation-panel, .citation-control.open .citation-panel { opacity: 1; transform: translateY(0); visibility: visible; }
@@ -186,10 +187,24 @@
   .citation-list sup, .citation-list .num { color: var(--teal, #0098be); font-weight: 700; }
 </style>
 <!-- r4-refs-skin:end -->
+<!-- mod-head:css:start -->
+<style id="mod-head-css">
+/* module heading (owner 14 Oct 2026): left, glow, capped rule - tools/tm9035-module-heading.py */
+.title-band h1.title{ text-align:left !important; letter-spacing:-.01em; text-shadow:0 2px 10px rgba(0,152,190,.30); }
+.title-band h1.title *:not(em):not(i):not(.gene){ color:inherit !important; }
+.title-band h1.title em, .title-band h1.title i, .title-band h1.title .gene{ color:inherit !important; }
+.mh-rule{ display:flex; align-items:center; align-self:flex-start; width:66%; max-width:960px; margin:6px 0 0; }
+.mh-rule i{ flex:0 0 auto; width:4px; height:14px; background:#0098be; border-radius:2px; }
+.mh-rule b{ flex:1 1 auto; height:3px; background:#0098be; border-radius:2px; }
+.title-band{ background:#fff !important; box-shadow:none !important; border-bottom:0 !important; }
+.title-band{ flex-direction:column !important; align-items:flex-start !important; justify-content:flex-start !important; }
+.title-band h1.title{ align-self:stretch; }
+</style>
+<!-- mod-head:css:end -->
 </head>
 <body>
   <main class="slide" aria-label="MET exon 14 skipping knowledge check">
-    <header class="title-band"><h1 class="title">Introduction to <em>MET</em>ex14 skipping NSCLC and tepotinib</h1></header>
+    <header class="title-band"><h1 class="title">Introduction to <em>MET</em>ex14 skipping NSCLC and tepotinib</h1><!-- mh-rule --><div class="mh-rule" aria-hidden="true"><i></i><b></b><i></i></div><!-- /mh-rule --></header>
     <section class="answers-wrap" aria-label="Answer options">
       <section class="question-band" aria-labelledby="question-text">
         <div class="question"><span class="question-icon" aria-hidden="true">?</span><p id="question-text"><span class="lead">Consider:</span> What proportion of patients with NSCLC have <em>MET</em>ex14 skipping mutations?</p></div>
@@ -277,7 +292,7 @@
       }
 
       function citationMarkup() {
-        return `<span class="citation-control"><button class="citation-trigger" type="button" aria-expanded="false" aria-controls="citation-panel">References</button><span class="citation-panel" id="citation-panel" role="region" aria-label="References 4 to 6"><h2>References</h2><ol class="citation-list" start="4"><li>Awad MM, Oxnard GR, Jackman DR, Savukoski DO, Hall D, Shivdasani P, et al. <em>MET</em> Exon 14 Mutations in Non&ndash;Small-Cell Lung Cancer Are Associated With Advanced Age and Stage-Dependent <em>MET</em> Genomic Amplification and c-Met Overexpression. <em>J Clin Oncol.</em> 2016;34(7):721&ndash;730.</li><li>Remon J, Hendriks LEL, Mountzios G, Garc&iacute;a-Campelo R, Saw SPL, et al. <em>MET</em> alterations in NSCLC-Current Perspectives and Future Challenges. <em>J Thorac Oncol.</em> 2023;18(4):419&ndash;435.</li><li>Tong JH, Yeung SF, Chan AW, Chung LY, Chau SL, Lung RW, et al. <em>MET</em> Amplification and Exon 14 Splice Site Mutation Define Unique Molecular Subgroups of Non-Small Cell Lung Carcinoma with Poor Prognosis. <em>Clin Cancer Res.</em> 2016;22(12):3048&ndash;3056.</li></ol></span></span>`;
+        return `<span class="citation-control"><button class="citation-trigger" type="button" aria-expanded="false" aria-controls="citation-panel" aria-label="References 4 to 6">4&ndash;6</button><span class="citation-panel" id="citation-panel" role="region" aria-label="References 4 to 6"><h2>References</h2><ol class="citation-list" start="4"><li>Awad MM, Oxnard GR, Jackman DR, Savukoski DO, Hall D, Shivdasani P, et al. <em>MET</em> Exon 14 Mutations in Non&ndash;Small-Cell Lung Cancer Are Associated With Advanced Age and Stage-Dependent <em>MET</em> Genomic Amplification and c-Met Overexpression. <em>J Clin Oncol.</em> 2016;34(7):721&ndash;730.</li><li>Remon J, Hendriks LEL, Mountzios G, Garc&iacute;a-Campelo R, Saw SPL, et al. <em>MET</em> alterations in NSCLC-Current Perspectives and Future Challenges. <em>J Thorac Oncol.</em> 2023;18(4):419&ndash;435.</li><li>Tong JH, Yeung SF, Chan AW, Chung LY, Chau SL, Lung RW, et al. <em>MET</em> Amplification and Exon 14 Splice Site Mutation Define Unique Molecular Subgroups of Non-Small Cell Lung Carcinoma with Poor Prognosis. <em>Clin Cancer Res.</em> 2016;22(12):3048&ndash;3056.</li></ol></span></span>`;
       }
 
       feedback.addEventListener('click', event => {

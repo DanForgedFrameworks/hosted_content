@@ -432,6 +432,48 @@ body.is-fullscreen{ padding-top:56px; }
    rather than leaving it at opacity 0. Content is never gated behind animation (§6). */
 .entrance-done{ animation:none !important; opacity:1 !important; }
 </style>
+<!-- dyn-icon:css:start -->
+<style id="dyn-icon-css">.source-panel__label{ display:flex; align-items:center; gap:6px; } .source-panel__label .srclock{ width:15px; height:15px; flex:0 0 auto; }
+
+/* dyn-icon (owner rulings 13 Oct 2026; touchmedical-html contract 5B "When an icon moves"): the movement shows the
+   idea; still and complete at rest; one icon plays by itself when the screen opens, every other one on the learner's
+   hover, focus or select; one cycle, then still; nothing moves with reduced motion; off screen the idle rule pauses it. */
+svg.dy .acc{ stroke:var(--dy-acc,currentColor); } svg.dy .acc-fill{ fill:var(--dy-acc,currentColor); stroke:none; }
+/* module drawings: smoke, age calendar, brain, DNA lens */
+svg.dy .ember{ opacity:.55; } svg.dy .wisp{ stroke-dasharray:7 7; }
+svg.dy.run .ember{ animation:dyEmber 2.4s ease-in-out both; } @keyframes dyEmber{ 0%,100%{ opacity:.55; } 25%,70%{ opacity:1; } 45%{ opacity:.6; } }
+svg.dy.run .wisp{ animation:dyWisp 2.4s ease-in-out both; animation-delay:calc(var(--d) * .3s); }
+@keyframes dyWisp{ 0%,100%{ stroke-dashoffset:0; opacity:1; transform:none; } 8%{ stroke-dashoffset:7; opacity:0; transform:translateY(2px); } 55%{ stroke-dashoffset:0; opacity:1; transform:none; } 75%{ opacity:.2; transform:translateY(-2px); } }
+svg.dy .leaf{ opacity:0; transform-origin:12px 9.6px; fill:#fff; fill-opacity:.6; }
+svg.dy .days circle{ opacity:0; transform-box:fill-box; transform-origin:center; } svg.dy .rings{ transform-box:fill-box; transform-origin:center bottom; }
+svg.dy.run .leaf{ animation:dyLeaf 2.4s ease-in-out both; } @keyframes dyLeaf{ 0%{ opacity:0; transform:none; } 6%{ opacity:1; transform:none; } 40%{ opacity:1; transform:scaleY(-.15); } 52%,100%{ opacity:0; transform:scaleY(-.15); } }
+svg.dy.run .days circle{ animation:dyDay 2.4s ease-out both; animation-delay:calc(var(--d) * .12s + .9s); } @keyframes dyDay{ 0%{ opacity:0; transform:scale(0); } 20%{ opacity:1; transform:scale(1.3); } 30%,70%{ opacity:1; transform:none; } 100%{ opacity:0; } }
+svg.dy.run .rings{ animation:dyRings 2.4s ease-in-out both; } @keyframes dyRings{ 0%,100%{ transform:none; } 8%{ transform:translateY(-1px); } 18%{ transform:none; } 46%{ transform:translateY(-.8px); } 54%{ transform:none; } }
+svg.dy .met,svg.dy .ring{ transform-box:fill-box; transform-origin:center; } svg.dy .ring{ opacity:0; }
+svg.dy.run .met{ animation:dyMet 2.4s ease-out both; animation-delay:calc(var(--d) * .3s); } @keyframes dyMet{ 0%,100%{ transform:none; opacity:1; } 6%,20%{ transform:scale(0); opacity:0; } 35%{ transform:scale(1.4); opacity:1; } 45%{ transform:none; } }
+svg.dy.run .ring{ animation:dyRing 2.4s ease-out both; animation-delay:calc(var(--d) * .3s + .4s); } @keyframes dyRing{ 0%{ opacity:.8; transform:none; } 40%,100%{ opacity:0; transform:scale(2.8); } }
+svg.dy .r.dim{ opacity:.55; } svg.dy .lens-glass{ fill:#fff; fill-opacity:.55; stroke:var(--dy-acc,currentColor); }
+svg.dy .lens2{ transform:translate(15.4px,8.6px); } svg.dy.run .lens2{ animation:dyLens 2.6s ease-in-out both; } @keyframes dyLens{ 0%,100%{ transform:translate(15.4px,8.6px); } 45%{ transform:translate(8.2px,15.8px); } }
+/* the assets' own drawings */
+svg.dy .bk,svg.dy .pl,svg.dy .br,svg.dy .cd,svg.dy .mer{ transform-box:fill-box; transform-origin:center; }
+svg.dy.run .bk{ animation:dyBk 2.4s ease-in-out both; } @keyframes dyBk{ 0%,100%{ opacity:1; transform:none; } 8%,30%{ opacity:0; transform:translateX(-4px); } 70%{ opacity:1; transform:none; } }
+svg.dy .spd{ opacity:0; }
+svg.dy.run .rn{ animation:dyRn 2.2s ease-in-out both; } @keyframes dyRn{ 0%,100%{ transform:none; } 30%{ transform:translateX(-2px); } 62%{ transform:translateX(3px); } }
+svg.dy.run .spd{ animation:dySpd 2.2s ease-out both; animation-delay:calc(var(--d) * .1s + .5s); } @keyframes dySpd{ 0%{ opacity:0; transform:translateX(5px); } 30%{ opacity:1; } 70%,100%{ opacity:0; transform:translateX(-5px); } }
+svg.dy.run .pl{ animation:dyPl 2.2s ease-out both; } @keyframes dyPl{ 0%,100%{ opacity:1; transform:none; } 8%,30%{ opacity:0; transform:scale(.3); } 60%{ opacity:1; transform:scale(1.15); } 75%{ transform:none; } }
+svg.dy .hm,svg.dy .hh{ transform-origin:24px 24px; }
+svg.dy.run .hm{ animation:dyHm 2.4s ease-in-out both; } @keyframes dyHm{ 0%{ transform:none; } 85%,100%{ transform:rotate(360deg); } }
+svg.dy.run .br{ animation:dyBr 2.2s ease-in-out both; } @keyframes dyBr{ 0%,100%{ transform:none; } 35%{ transform:scale(1.12,1); } 62%{ transform:scale(.98,1); } 80%{ transform:none; } }
+svg.dy.run .cd{ animation:dyCd 1.1s ease-out both; animation-delay:calc(var(--d) * .18s + .1s); } @keyframes dyCd{ 0%{ opacity:0; transform:scale(0); } 45%{ opacity:1; transform:scale(1.35); } 65%,100%{ opacity:1; transform:none; } }
+svg.dy .liq{ transform-box:fill-box; transform-origin:50% 100%; } svg.dy.run .liq{ animation:dyLiq 2.4s ease-in-out both; } @keyframes dyLiq{ 0%,15%{ transform:scaleY(0); } 75%{ transform:scaleY(1.08); } 100%{ transform:none; } }
+svg.dy .tk{ stroke-dasharray:9 9; } svg.dy.run .tk{ animation:dyTk 2s ease-in-out both; } @keyframes dyTk{ 0%,20%{ stroke-dashoffset:9; opacity:0; } 30%{ opacity:1; } 75%,100%{ stroke-dashoffset:0; opacity:1; } }
+svg.dy .bl{ stroke-dasharray:11 11; } svg.dy.run .bl{ animation:dyBl 2s ease-in-out both; animation-delay:calc(var(--d) * .3s); } @keyframes dyBl{ 0%,15%{ stroke-dashoffset:11; } 65%,100%{ stroke-dashoffset:0; } }
+.dy .mer{ vector-effect:non-scaling-stroke; } svg.dy.run .mer{ animation:dyMer 2.6s ease-in-out both; } @keyframes dyMer{ 0%{ transform:none; opacity:1; } 55%{ transform:scaleX(2.3); opacity:0; } 56%{ transform:scaleX(0); opacity:0; } 70%{ opacity:1; } 100%{ transform:none; opacity:1; } }
+svg.dy .shk{ transform-origin:8px 11px; transform:translateY(-2px) rotate(-28deg); }
+svg.dy.run .shk{ animation:dyShk 1.6s ease-in-out both; } @keyframes dyShk{ 0%,25%{ transform:none; } 55%{ transform:translateY(-2px); } 100%{ transform:translateY(-2px) rotate(-28deg); } }
+@media (prefers-reduced-motion:reduce){ svg.dy, svg.dy *{ animation:none !important; } }
+</style>
+<!-- dyn-icon:css:end -->
 <!-- r4-embed:start -->
 <style id="r4-embed-css">
   /* owner 2026-09-22: a slide that is off screen or in a hidden tab does no work */
@@ -492,13 +534,24 @@ body.is-fullscreen{ padding-top:56px; }
   }
 </style>
 <!-- r4-strip:end -->
+<!-- mod-head:css:start -->
+<style id="mod-head-css">
+/* module heading (owner 14 Oct 2026): left, glow, capped rule - tools/tm9035-module-heading.py */
+.cap h1.cap__title{ text-align:left !important; letter-spacing:-.01em; text-shadow:0 2px 10px rgba(0,152,190,.30); }
+.cap h1.cap__title *:not(em):not(i):not(.gene){ color:inherit !important; }
+.cap h1.cap__title em, .cap h1.cap__title i, .cap h1.cap__title .gene{ color:inherit !important; }
+.mh-rule{ display:flex; align-items:center; align-self:flex-start; width:66%; max-width:960px; margin:6px 0 0; }
+.mh-rule i{ flex:0 0 auto; width:4px; height:14px; background:#0098be; border-radius:2px; }
+.mh-rule b{ flex:1 1 auto; height:3px; background:#0098be; border-radius:2px; }
+</style>
+<!-- mod-head:css:end -->
 </head>
 <body>
 <main class="slide" id="slide" aria-label="Long-term outcomes in the VISION study — interactive Kaplan–Meier explorer">
 
   <div class="cap">
     <div class="cap__text">
-      <h1 class="cap__title">Long-term outcomes <span style="font-weight:600;color:var(--muted)">(VISION study)</span></h1>
+      <h1 class="cap__title">Long-term outcomes <span style="font-weight:600;color:var(--muted)">(VISION study)</span></h1><!-- mh-rule --><div class="mh-rule" aria-hidden="true"><i></i><b></b><i></i></div><!-- /mh-rule -->
       <p class="cap__sub" id="capSub"></p>
     </div>
     <button class="cap__back" id="backBtn" type="button">
@@ -520,7 +573,7 @@ body.is-fullscreen{ padding-top:56px; }
         <span id="hubSourceLockedTxt">Explore all three endpoints to unlock the source reference.</span>
       </p>
       <div class="source-panel" id="hubSourcePanel" hidden>
-        <div class="source-panel__label">Source</div>
+        <div class="source-panel__label"><svg class="dy dy-lock srclock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="9" rx="2"/><path class="shk" d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Source</div>
         <p class="source-panel__cite" id="citeTxt">16. Mazieres J, Veillon R, Cortot AB, Ferrara R, Felip E, Garassino MC, Le X, et al. Tepotinib in patients with <em>MET</em>ex14 skipping NSCLC from the VISION study: &ge;3-year follow-up outcomes. <em>J Thorac Oncol.</em> 2025;20(3 Suppl 1):S59&ndash;S60. (81P)</p>
       </div>
     </div>
@@ -632,11 +685,14 @@ body.is-fullscreen{ padding-top:56px; }
     </table>
 
     <div class="modal__foot">
-      <p class="modal__note">CI, confidence interval. Median (95% CI) in months. Events: deaths (OS), progression/death (PFS), loss of response (DOR). Data cut-off 20&nbsp;May&nbsp;2024. The source reference is available on the start screen once all three endpoints have been explored.</p>
+      <p class="modal__note">CI, confidence interval. Median (95% CI) in months. Events: deaths (OS), progression/death (PFS), loss of response (DOR). Data cut-off 20&nbsp;May&nbsp;2024. <span id="modalSrcLocked">The source reference is available on the start screen once all three endpoints have been explored.</span></p>
+      <!-- owner 13 Oct (item 35): once the last endpoint is explored, the source is offered here as well -->
+      <div class="source-panel modal__src" id="modalSrcPanel" hidden><div class="source-panel__label"><svg class="dy dy-lock srclock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="9" rx="2"/><path class="shk" d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Source</div><p class="source-panel__cite" id="modalSrcCite"></p></div>
     </div>
   </div>
 </div>
 
+<style>.modal__src{ margin-top:10px; } .modal__src[hidden]{ display:none; }</style>
 <!-- ============ D16 EXTERNAL-LINK INTERSTITIAL ============ -->
 <div class="inter" id="inter" role="dialog" aria-modal="true" aria-labelledby="interTitle" aria-describedby="interReason" hidden>
   <div class="inter__panel" role="document">
@@ -661,9 +717,9 @@ body.is-fullscreen{ padding-top:56px; }
   /* ---------- ICONS ---------- */
   const ICON = {
     /* B2 (R3-090) Option 3: neutral time-interval glyph - no arrowhead, no slope. */
-    os:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 24h28"/><path d="M10 18v12M38 18v12"/><circle cx="24" cy="24" r="3.2"/></svg>',
-    dor:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="24" r="16"/><path d="M24 14v10l7 4"/></svg>',
-    pfs:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 24h28"/><path d="M10 18v12M38 18v12"/><path d="M24 19v10"/></svg>'
+    os:'<svg class="dy dy-breath" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="br"><path d="M10 24h28"/><path d="M10 18v12M38 18v12"/><circle cx="24" cy="24" r="3.2"/></g></svg>',
+    dor:'<svg class="dy dy-clock" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="24" r="16"/><path class="hm acc" d="M24 24V14"/><path class="hh" d="M24 24l7 4"/></svg>',
+    pfs:'<svg class="dy dy-breath" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="br"><path d="M10 24h28"/><path d="M10 18v12M38 18v12"/><path d="M24 19v10"/></g></svg>'
   };
   const ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>';
   const TICK = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
@@ -714,6 +770,8 @@ body.is-fullscreen{ padding-top:56px; }
   // the source unlocks only once all endpoints are explored (both medians each)
   function refreshHubSource(){
     const n=state.filter(s=>s.naive&&s.treated).length, all=n===METRICS.length;
+    var msp=document.getElementById('modalSrcPanel'), msl=document.getElementById('modalSrcLocked');
+    if(msp){ msp.hidden=!all; if(msl) msl.hidden=all; if(all) document.getElementById('modalSrcCite').innerHTML=document.getElementById('citeTxt').innerHTML; }
     if(all){
       hubSourceLocked.hidden=true;
       if(hubSourcePanel.hidden){ hubSourcePanel.hidden=false; replay(hubSourcePanel,'fadeUp','.5s','0s'); }
@@ -1255,5 +1313,56 @@ body.is-fullscreen{ padding-top:56px; }
 <!-- r4-embed:end -->
 <script id="build-stamp">(function(){var T="TM 9035: Kaplan-Meier outcomes explorer",M="TM 9035 tm9035-km-explorer-slide-16-2026-06-23-v1 r4 2026-10-11";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
 <script id="layer-release">(function(){var SAFE=/^(fadeUp|fadeZoom|hotpop|rise)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;if(el.getAnimations&&el.getAnimations().some(function(a){return a.playState==="paused";})){seen.set(el,now);return;}var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
+<!-- dyn-icon:js:start -->
+<script id="dyn-icon-js">
+/* dyn-icon: plays a moving icon once (owner rulings 13 Oct 2026; contract 5B). The screen's one arrival icon plays by
+   itself; every other one plays when the learner points at, focuses or selects its card, or when the card's other face
+   or panel is opened. A cycle ends still, at the resting drawing. Reduced motion: nothing plays. */
+(function () {
+  var C = {"host": ".hub__grid .card", "auto": ".hub__grid .card svg.dy", "autoAt": 1000, "show": "#hubSourcePanel svg.dy", "showAt": 450};
+  var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  function shown(s) { return !!s && s.getClientRects().length > 0 && !s.closest("[hidden],[inert]"); }
+  function play(s) {
+    if (reduce || !s || s.classList.contains("run") || !shown(s)) return false;
+    s.classList.add("run");
+    function end() {
+      setTimeout(function () {
+        var busy = s.getAnimations ? s.getAnimations({ subtree: true }).some(function (a) { return a.playState === "running" || a.playState === "paused" || a.pending; }) : false;
+        if (!busy) { s.classList.remove("run"); s.removeEventListener("animationend", end); }
+      }, 30);
+    }
+    s.addEventListener("animationend", end);
+    return true;
+  }
+  function fromHost(e) {
+    var h = C.host && e.target && e.target.closest ? e.target.closest(C.host) : null;
+    if (!h || (e.type === "pointerover" && e.relatedTarget && h.contains(e.relatedTarget))) return;
+    var list = h.querySelectorAll(C.hostIcon || "svg.dy");
+    for (var i = 0; i < list.length; i++) play(list[i]);
+  }
+  function sweep(first) {
+    if (!C.show) return;
+    var all = document.querySelectorAll("svg.dy");
+    for (var i = 0; i < all.length; i++) {
+      var s = all[i], v = s.matches(C.show) && shown(s);
+      if (v && !s.__dyVis && first !== true) play(s);
+      s.__dyVis = v;
+    }
+  }
+  document.addEventListener("pointerover", fromHost);
+  document.addEventListener("focusin", fromHost);
+  document.addEventListener("click", function (e) { fromHost(e); setTimeout(sweep, C.showAt || 150); }, true);
+  document.addEventListener("keydown", function () { setTimeout(sweep, C.showAt || 150); }, true);
+  function start() {
+    sweep(true);
+    if (C.auto) setTimeout(function () {
+      var l = document.querySelectorAll(C.auto);
+      for (var i = 0; i < l.length; i++) if (play(l[i])) break;
+    }, C.autoAt || 900);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
+})();
+</script>
+<!-- dyn-icon:js:end -->
 </body>
 </html>

@@ -161,6 +161,47 @@ body{
   .tmh-prep i{ animation:none; }
 }
 </style>
+<!-- dyn-icon:css:start -->
+<style id="dyn-icon-css">
+/* dyn-icon (owner rulings 13 Oct 2026; touchmedical-html contract 5B "When an icon moves"): the movement shows the
+   idea; still and complete at rest; one icon plays by itself when the screen opens, every other one on the learner's
+   hover, focus or select; one cycle, then still; nothing moves with reduced motion; off screen the idle rule pauses it. */
+svg.dy .acc{ stroke:var(--dy-acc,currentColor); } svg.dy .acc-fill{ fill:var(--dy-acc,currentColor); stroke:none; }
+/* module drawings: smoke, age calendar, brain, DNA lens */
+svg.dy .ember{ opacity:.55; } svg.dy .wisp{ stroke-dasharray:7 7; }
+svg.dy.run .ember{ animation:dyEmber 2.4s ease-in-out both; } @keyframes dyEmber{ 0%,100%{ opacity:.55; } 25%,70%{ opacity:1; } 45%{ opacity:.6; } }
+svg.dy.run .wisp{ animation:dyWisp 2.4s ease-in-out both; animation-delay:calc(var(--d) * .3s); }
+@keyframes dyWisp{ 0%,100%{ stroke-dashoffset:0; opacity:1; transform:none; } 8%{ stroke-dashoffset:7; opacity:0; transform:translateY(2px); } 55%{ stroke-dashoffset:0; opacity:1; transform:none; } 75%{ opacity:.2; transform:translateY(-2px); } }
+svg.dy .leaf{ opacity:0; transform-origin:12px 9.6px; fill:#fff; fill-opacity:.6; }
+svg.dy .days circle{ opacity:0; transform-box:fill-box; transform-origin:center; } svg.dy .rings{ transform-box:fill-box; transform-origin:center bottom; }
+svg.dy.run .leaf{ animation:dyLeaf 2.4s ease-in-out both; } @keyframes dyLeaf{ 0%{ opacity:0; transform:none; } 6%{ opacity:1; transform:none; } 40%{ opacity:1; transform:scaleY(-.15); } 52%,100%{ opacity:0; transform:scaleY(-.15); } }
+svg.dy.run .days circle{ animation:dyDay 2.4s ease-out both; animation-delay:calc(var(--d) * .12s + .9s); } @keyframes dyDay{ 0%{ opacity:0; transform:scale(0); } 20%{ opacity:1; transform:scale(1.3); } 30%,70%{ opacity:1; transform:none; } 100%{ opacity:0; } }
+svg.dy.run .rings{ animation:dyRings 2.4s ease-in-out both; } @keyframes dyRings{ 0%,100%{ transform:none; } 8%{ transform:translateY(-1px); } 18%{ transform:none; } 46%{ transform:translateY(-.8px); } 54%{ transform:none; } }
+svg.dy .met,svg.dy .ring{ transform-box:fill-box; transform-origin:center; } svg.dy .ring{ opacity:0; }
+svg.dy.run .met{ animation:dyMet 2.4s ease-out both; animation-delay:calc(var(--d) * .3s); } @keyframes dyMet{ 0%,100%{ transform:none; opacity:1; } 6%,20%{ transform:scale(0); opacity:0; } 35%{ transform:scale(1.4); opacity:1; } 45%{ transform:none; } }
+svg.dy.run .ring{ animation:dyRing 2.4s ease-out both; animation-delay:calc(var(--d) * .3s + .4s); } @keyframes dyRing{ 0%{ opacity:.8; transform:none; } 40%,100%{ opacity:0; transform:scale(2.8); } }
+svg.dy .r.dim{ opacity:.55; } svg.dy .lens-glass{ fill:#fff; fill-opacity:.55; stroke:var(--dy-acc,currentColor); }
+svg.dy .lens2{ transform:translate(15.4px,8.6px); } svg.dy.run .lens2{ animation:dyLens 2.6s ease-in-out both; } @keyframes dyLens{ 0%,100%{ transform:translate(15.4px,8.6px); } 45%{ transform:translate(8.2px,15.8px); } }
+/* the assets' own drawings */
+svg.dy .bk,svg.dy .pl,svg.dy .br,svg.dy .cd,svg.dy .mer{ transform-box:fill-box; transform-origin:center; }
+svg.dy.run .bk{ animation:dyBk 2.4s ease-in-out both; } @keyframes dyBk{ 0%,100%{ opacity:1; transform:none; } 8%,30%{ opacity:0; transform:translateX(-4px); } 70%{ opacity:1; transform:none; } }
+svg.dy .spd{ opacity:0; }
+svg.dy.run .rn{ animation:dyRn 2.2s ease-in-out both; } @keyframes dyRn{ 0%,100%{ transform:none; } 30%{ transform:translateX(-2px); } 62%{ transform:translateX(3px); } }
+svg.dy.run .spd{ animation:dySpd 2.2s ease-out both; animation-delay:calc(var(--d) * .1s + .5s); } @keyframes dySpd{ 0%{ opacity:0; transform:translateX(5px); } 30%{ opacity:1; } 70%,100%{ opacity:0; transform:translateX(-5px); } }
+svg.dy.run .pl{ animation:dyPl 2.2s ease-out both; } @keyframes dyPl{ 0%,100%{ opacity:1; transform:none; } 8%,30%{ opacity:0; transform:scale(.3); } 60%{ opacity:1; transform:scale(1.15); } 75%{ transform:none; } }
+svg.dy .hm,svg.dy .hh{ transform-origin:24px 24px; }
+svg.dy.run .hm{ animation:dyHm 2.4s ease-in-out both; } @keyframes dyHm{ 0%{ transform:none; } 85%,100%{ transform:rotate(360deg); } }
+svg.dy.run .br{ animation:dyBr 2.2s ease-in-out both; } @keyframes dyBr{ 0%,100%{ transform:none; } 35%{ transform:scale(1.12,1); } 62%{ transform:scale(.98,1); } 80%{ transform:none; } }
+svg.dy.run .cd{ animation:dyCd 1.1s ease-out both; animation-delay:calc(var(--d) * .18s + .1s); } @keyframes dyCd{ 0%{ opacity:0; transform:scale(0); } 45%{ opacity:1; transform:scale(1.35); } 65%,100%{ opacity:1; transform:none; } }
+svg.dy .liq{ transform-box:fill-box; transform-origin:50% 100%; } svg.dy.run .liq{ animation:dyLiq 2.4s ease-in-out both; } @keyframes dyLiq{ 0%,15%{ transform:scaleY(0); } 75%{ transform:scaleY(1.08); } 100%{ transform:none; } }
+svg.dy .tk{ stroke-dasharray:9 9; } svg.dy.run .tk{ animation:dyTk 2s ease-in-out both; } @keyframes dyTk{ 0%,20%{ stroke-dashoffset:9; opacity:0; } 30%{ opacity:1; } 75%,100%{ stroke-dashoffset:0; opacity:1; } }
+svg.dy .bl{ stroke-dasharray:11 11; } svg.dy.run .bl{ animation:dyBl 2s ease-in-out both; animation-delay:calc(var(--d) * .3s); } @keyframes dyBl{ 0%,15%{ stroke-dashoffset:11; } 65%,100%{ stroke-dashoffset:0; } }
+.dy .mer{ vector-effect:non-scaling-stroke; } svg.dy.run .mer{ animation:dyMer 2.6s ease-in-out both; } @keyframes dyMer{ 0%{ transform:none; opacity:1; } 55%{ transform:scaleX(2.3); opacity:0; } 56%{ transform:scaleX(0); opacity:0; } 70%{ opacity:1; } 100%{ transform:none; opacity:1; } }
+svg.dy .shk{ transform-origin:8px 11px; transform:translateY(-2px) rotate(-28deg); }
+svg.dy.run .shk{ animation:dyShk 1.6s ease-in-out both; } @keyframes dyShk{ 0%,25%{ transform:none; } 55%{ transform:translateY(-2px); } 100%{ transform:translateY(-2px) rotate(-28deg); } }
+@media (prefers-reduced-motion:reduce){ svg.dy, svg.dy *{ animation:none !important; } }
+</style>
+<!-- dyn-icon:css:end -->
 <!-- r4-embed:start -->
 <style id="r4-embed-css">
   /* owner 2026-09-22: a slide that is off screen or in a hidden tab does no work */
@@ -249,22 +290,22 @@ const REFERENCES = [
   { n:2,  cat:CAT1, type:"Journal article", cite:"Remon J, Hendriks LEL, Mountzios G, García-Campelo R, Saw SPL, et al. MET alterations in NSCLC-Current Perspectives and Future Challenges. J Thorac Oncol. 2023;18(4):419–435.", short:"Remon J, et al. J Thorac Oncol. 2023;18(4):419–435.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2022.10.015" },
   { n:3,  cat:CAT1, type:"Journal article", cite:"Awad MM, Oxnard GR, Jackman DR, Savukoski DO, Hall D, Shivdasani P, et al. MET Exon 14 Mutations in Non–Small-Cell Lung Cancer Are Associated With Advanced Age and Stage-Dependent MET Genomic Amplification and c-Met Overexpression. J Clin Oncol. 2016;34(7):721–730.", short:"Awad MM, et al. J Clin Oncol. 2016;34(7):721–730.", journal:"J Clin Oncol.", url:"https://doi.org/10.1200/JCO.2015.63.4600" },
   { n:4,  cat:CAT1, type:"Journal article", cite:"Tong JH, Yeung SF, Chan AW, Chung LY, Chau SL, Lung RW, et al. MET Amplification and Exon 14 Splice Site Mutation Define Unique Molecular Subgroups of Non-Small Cell Lung Carcinoma with Poor Prognosis. Clin Cancer Res. 2016;22(12):3048–3056.", short:"Tong JH, et al. Clin Cancer Res. 2016;22(12):3048–3056.", journal:"Clin Cancer Res.", url:"https://doi.org/10.1158/1078-0432.CCR-15-2061" },
-  { n:5,  cat:CAT2, type:"Journal article", cite:"Hendriks L, Kerr K, Menis J, Mok T, Nestle U, Passaro A, et al. Oncogene-addicted metastatic non-small-cell lung cancer: ESMO Clinical Practice Guideline for diagnosis, treatment and follow-up. Ann Oncol. 2023;34(4):339–57.", short:"Hendriks L, et al. Ann Oncol. 2023;34(4):339–57.", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2022.12.009" },
+  { n:5,  cat:CAT2, type:"Journal article", cite:"Hendriks LE, Kerr KM, Menis J, Mok TS, Nestle U, Passaro A, et al. Oncogene-addicted metastatic non-small-cell lung cancer: ESMO Clinical Practice Guideline for diagnosis, treatment and follow-up. Ann Oncol. 2023;34(4):339–357.", short:"Hendriks LE, et al. Ann Oncol. 2023;34(4):339–357.", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2022.12.009" },
   { n:6,  cat:CAT2, type:"Journal article", cite:"Lee S, Menis J, Kim T, Kim H, Zhou C, Kurniawati S, et al. Pan-Asian adapted ESMO Clinical Practice Guidelines for the diagnosis, treatment and follow-up of patients with oncogene-addicted metastatic non-small-cell lung cancer. ESMO Open. 2024;9(12):103996.", short:"Lee S, et al. ESMO Open. 2024;9(12):103996.", journal:"ESMO Open.", url:"https://doi.org/10.1016/j.esmoop.2024.103996" },
-  { n:7,  cat:CAT1, type:"Journal article", cite:"Russo A, Javey M, Huang RSP, Yaung SJ, Kaplan B, Hiemenz MC, et al. Molecular Profiling Across 80,000 Patients With Lung Cancer. J Thorac Oncol. 2026;21(8):103695.", short:"Russo A, et al. J Thorac Oncol. 2026;21(8):103695.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2026.103695" },
-  { n:8,  cat:CAT1, type:"Journal article", cite:"Aggarwal C, Marmarelis ME, Hwang WT, Scholes DG, McWilliams TL, Singh AP, et al. Association Between Availability of Molecular Genotyping Results and Overall Survival in Patients With Advanced Nonsquamous Non-Small-Cell Lung Cancer. JCO Precis Oncol. 2023;7:e2300191.", short:"Aggarwal C, et al. JCO Precis Oncol. 2023;7:e2300191.", journal:"JCO Precis Oncol.", url:"https://doi.org/10.1200/PO.23.00191" },
-  { n:9,  cat:CAT2, type:"Prescribing information", cite:"US FDA. TEPMETKO (tepotinib) Prescribing Information. 2024.", avail:"emdserono.com/…/tepmetko-pi.pdf", accessed:"June 2026", url:"https://www.emdserono.com/us-en/pi/tepmetko-pi.pdf" },
-  { n:10, cat:CAT2, type:"Regulatory review report", cite:"PMDA. 2020.", avail:"pmda.go.jp/files/000236338.pdf", accessed:"October 2026", url:"https://www.pmda.go.jp/files/000236338.pdf" },
-  { n:11, cat:CAT2, type:"SmPC", cite:"European Medicines Agency. TEPMETKO (tepotinib) Summary of Product Characteristics. 2026.", avail:"ema.europa.eu/…/tepmetko-epar-product-information_en.pdf", accessed:"June 2026", url:"https://www.ema.europa.eu/en/documents/product-information/tepmetko-epar-product-information_en.pdf" },
-  { n:12, cat:CAT2, type:"Prescribing information", cite:"US FDA. Tabrecta (capmatinib) Prescribing Information. 2024.", avail:"novartis.com/…/tabrecta.pdf", accessed:"June 2026", url:"https://www.novartis.com/us-en/sites/novartis_us/files/tabrecta.pdf" },
-  { n:13, cat:CAT2, type:"SmPC", cite:"European Medicines Agency. Tabrecta (capmatinib) Summary of Product Characteristics. 2025.", avail:"ema.europa.eu/…/tabrecta-epar-product-information_en.pdf", accessed:"June 2026", url:"https://www.ema.europa.eu/en/documents/product-information/tabrecta-epar-product-information_en.pdf" },
+  { n:7,  cat:CAT1, type:"Journal article", cite:"Russo A, Javey M, Huang RSP, Yaung SJ, Kaplan B, Hiemenz MC, et al. Molecular Profiling Across 80,000 Patients With Lung Cancer. J Thorac Oncol. 2026;21(8):103695.", short:"Russo A, et al. J Thorac Oncol. 2026 (e-pub ahead of print). doi:10.1016/j.jtho.2026.103695.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2026.103695" },
+  { n:8,  cat:CAT1, type:"Journal article", cite:"Aggarwal C, Marmarelis ME, Hwang WT, Scholes DG, McWilliams TL, Singh AP, et al. Association Between Availability of Molecular Genotyping Results and Overall Survival in Patients With Advanced Nonsquamous Non-Small-Cell Lung Cancer. JCO Precis Oncol. 2023;7:e2300191.", short:"Aggarwal C, et al. JCO Precis Oncol. 2023;e2300191. doi:10.1200/PO.23.00191.", journal:"JCO Precis Oncol.", url:"https://doi.org/10.1200/PO.23.00191" },
+  { n:9,  cat:CAT2, type:"Prescribing information", short:"US FDA. TEPMETKO (tepotinib) prescribing information. 2024.", cite:"US FDA. TEPMETKO (tepotinib) Prescribing Information. 2024.", avail:"emdserono.com/…/tepmetko-pi.pdf", accessed:"June 2026", url:"https://www.emdserono.com/us-en/pi/tepmetko-pi.pdf" },
+  { n:10, cat:CAT2, type:"Regulatory review report", short:"PMDA. 2020. Available at: https://www.pmda.go.jp/files/000236338.pdf (accessed October 2026)", cite:"Pharmaceuticals and Medical Devices Agency. 2020. Report on the Deliberation Results - Tepmetko Tablets 250 mg.", avail:"pmda.go.jp/files/000236338.pdf", accessed:"October 2026", url:"https://www.pmda.go.jp/files/000236338.pdf" },
+  { n:11, cat:CAT2, type:"SmPC", short:"EMA. TEPMETKO (tepotinib) SmPC. 2026.", cite:"European Medicines Agency. TEPMETKO (tepotinib) Summary of Product Characteristics. 2026.", avail:"ema.europa.eu/…/tepmetko-epar-product-information_en.pdf", accessed:"June 2026", url:"https://www.ema.europa.eu/en/documents/product-information/tepmetko-epar-product-information_en.pdf" },
+  { n:12, cat:CAT2, type:"Prescribing information", short:"US FDA. Tabrecta (capmatinib) prescribing information. 2024.", cite:"US FDA. Tabrecta (capmatinib) Prescribing Information. 2024.", avail:"novartis.com/…/tabrecta.pdf", accessed:"June 2026", url:"https://www.novartis.com/us-en/sites/novartis_us/files/tabrecta.pdf" },
+  { n:13, cat:CAT2, type:"SmPC", short:"EMA. Tabrecta (capmatinib) SmPC. 2025.", cite:"European Medicines Agency. Tabrecta (capmatinib) Summary of Product Characteristics. 2025.", avail:"ema.europa.eu/…/tabrecta-epar-product-information_en.pdf", accessed:"June 2026", url:"https://www.ema.europa.eu/en/documents/product-information/tabrecta-epar-product-information_en.pdf" },
   { n:14, cat:CAT2, type:"Clinical guideline", cite:"Hendriks LE, et al. ESMO Oncogene-Addicted Non-Small Cell Lung Cancer Living Guideline v1.3. 2026.", avail:"esmo.org/guidelines/living-guidelines/…", accessed:"June 2026", url:"https://www.esmo.org/guidelines/living-guidelines/esmo-living-guideline-oncogene-addicted-metastatic-non-small-cell-lung-cancer/management-of-advanced-and-metastatic-disease/ret-fusion-ntrk-her2-activating-mutations-her2-overexpression-met-ex14-skipping-mutation-c-met-or-kras-g12c-mutation/ret-ntrk-her2-exon-20-egfr-ex20ins" },
   { n:15, cat:CAT2, type:"Journal article", cite:"Mazieres J, Paik PK, Garassino MC, Le X, Sakai H, Veillon R, et al. Tepotinib Treatment in Patients With MET Exon 14-Skipping Non-Small Cell Lung Cancer: Long-term Follow-up of the VISION Phase 2 Nonrandomized Clinical Trial. JAMA Oncol. 2023;9(9):1260–1266.", short:"Mazieres J, et al. JAMA Oncol. 2023;9(9):1260–1266.", journal:"JAMA Oncol.", url:"https://doi.org/10.1001/jamaoncol.2023.1962" },
-  { n:16, cat:CAT3, type:"Conference abstract", cite:"Mazieres J, Veillon R, Cortot AB, Ferrara R, Felip E, Garassino MC, Le X, et al. Tepotinib in patients with METex14 skipping NSCLC from the VISION study: ≥3-year follow-up outcomes. J Thorac Oncol. 2025;20(3 Suppl 1):S59–S60. (81P)", short:"Mazieres J, et al. 81P. J Thorac Oncol. 2025;20(3, Suppl 1):S59–S60.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/S1556-0864(25)00276-X" },
-  { n:17, cat:CAT3, type:"Conference abstract", cite:"Felip E, Ferrara R, Veillon R, Le X, Smit EF, Mazieres J, et al. Safety and Patient-Reported Outcomes With Tepotinib in Patients With METex14 Skipping NSCLC: ≥3-Years Follow-Up of VISION. J Thorac Oncol. 2025;20(10 Suppl 1):S483–S484. (P3.12.40)", short:"Felip E, et al. P3.12.40. J Thorac Oncol. 2025;20(10, Suppl 1):S483–S484.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2025.09.902" },
-  { n:18, cat:CAT3, type:"Conference abstract", cite:"Griesinger F, Ferrara R, Felip E, Smit EF, Veillon R, Le X, et al. Long-term outcomes with tepotinib for clinically relevant subgroups of patients with METex14 skipping NSCLC in the VISION study: A ≥3-year follow-up. Ann Oncol. 2025;36:S1061–S1062. (1996P)", short:"Griesinger F, et al. 1996P. Ann Oncol. 2025;36(Suppl):S1061–S1062.", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2025.08.2620" },
-  { n:19, cat:CAT3, type:"Conference abstract", cite:"Viteri S, Felip E, Smit E, Veillon R, Le X, Raskin J, et al. Treatment sequencing of tepotinib in patients with METex14 skipping NSCLC: Outcomes from ≥3 years follow-up of the VISION study. Ann Oncol. 2025;36:S1060–S1061. (1995P)", short:"Viteri S, et al. 1995P. Ann Oncol. 2025;36(Suppl):S1060–S1061.", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2025.08.2619" },
-  { n:20, cat:CAT3, type:"Conference abstract", cite:"Yang J, Morise M, Ahn M, Kato T, Zhao J, Chen YM, et al. Long-term outcomes in Asian patients with MET exon 14 skipping NSCLC receiving tepotinib in the VISION study: ≥3-year follow-up data. Ann Oncol. 2025;36:S2062–S2063. (992P)", short:"Yang J, et al. 992P. Ann Oncol. 2025;36(Suppl):S2062–S2063.", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2025.10.703" },
+  { n:16, cat:CAT3, type:"Conference abstract", cite:"Mazieres J, Veillon R, Cortot AB, Ferrara R, Felip E, Garassino MC, Le X, et al. Tepotinib in patients with METex14 skipping NSCLC from the VISION study: ≥3-year follow-up outcomes. J Thorac Oncol. 2025;20(3 Suppl 1):S59–S60. (81P)", short:"Mazieres J, et al. J Thorac Oncol. 2025;20(3, S1):S59–S60 (81P).", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/S1556-0864(25)00276-X" },
+  { n:17, cat:CAT3, type:"Conference abstract", cite:"Felip E, Ferrara R, Veillon R, Le X, Smit EF, Mazieres J, et al. Safety and Patient-Reported Outcomes With Tepotinib in Patients With METex14 Skipping NSCLC: ≥3-Years Follow-Up of VISION. J Thorac Oncol. 2025;20(10 Suppl 1):S483–S484. (P3.12.40)", short:"Felip E, et al. J Thorac Oncol. 2025;20(10, S1):S483–S484.", journal:"J Thorac Oncol.", url:"https://doi.org/10.1016/j.jtho.2025.09.902" },
+  { n:18, cat:CAT3, type:"Conference abstract", cite:"Griesinger F, Ferrara R, Felip E, Smit EF, Veillon R, Le X, et al. Long-term outcomes with tepotinib for clinically relevant subgroups of patients with METex14 skipping NSCLC in the VISION study: A ≥3-year follow-up. Ann Oncol. 2025;36:S1061–S1062. (1996P)", short:"Griesinger F, et al. Ann Oncol. 2025;36:S1061–S1062 (1996P).", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2025.08.2620" },
+  { n:19, cat:CAT3, type:"Conference abstract", cite:"Viteri S, Felip E, Smit E, Veillon R, Le X, Raskin J, et al. Treatment sequencing of tepotinib in patients with METex14 skipping NSCLC: Outcomes from ≥3 years follow-up of the VISION study. Ann Oncol. 2025;36:S1060–S1061. (1995P)", short:"Viteri S, et al. Ann Oncol. 2025;36:S1060–S1061 (1995P).", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2025.08.2619" },
+  { n:20, cat:CAT3, type:"Conference abstract", cite:"Yang J, Morise M, Ahn M, Kato T, Zhao J, Chen YM, et al. Long-term outcomes in Asian patients with MET exon 14 skipping NSCLC receiving tepotinib in the VISION study: ≥3-year follow-up data. Ann Oncol. 2025;36:S2062–S2063. (992P)", short:"Yang J, et al. Ann Oncol. 2025;36:S2062–S2063 (992P).", journal:"Ann Oncol.", url:"https://doi.org/10.1016/j.annonc.2025.10.703" },
 ];
 
 /* ============================================================
@@ -282,9 +323,9 @@ const REFERENCES = [
   const CATS = [CAT1, CAT2, CAT3];
   const THEME = { [CAT1]:'var(--tm-accent)', [CAT2]:'var(--tm-accent2)', [CAT3]:'var(--tm-accent3)' };
   const ICON = {
-    [CAT1]:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.31"/><path d="M14 9.3V2"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/><path d="M5.5 16h13"/></svg>',
-    [CAT2]:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>',
-    [CAT3]:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></svg>'
+    [CAT1]:'<svg class="dy dy-flask" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path class="liq" d="M5.52 16A6.5 6.5 0 0 0 18.48 16Z" fill="currentColor" stroke="none" opacity=".28"/><path d="M10 2v7.31"/><path d="M14 9.3V2"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/><path d="M5.5 16h13"/></svg>',
+    [CAT2]:'<svg class="dy dy-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path class="tk" d="m9 12 2 2 4-4"/></svg>',
+    [CAT3]:'<svg class="dy dy-board" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/><path class="bl" style="--d:0" stroke-width="1.7" d="M7 7.2h6"/><path class="bl" style="--d:1" stroke-width="1.7" d="M7 10.8h10"/></svg>'
   };
   const OPEN_ICON = '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>';
 
@@ -674,5 +715,56 @@ function italGene(s){ return String(s).replace(/\bMET(?=ex14)/g, '<em>MET</em>')
 <!-- r4-embed:end -->
 <script id="build-stamp">(function(){var T="TM 9035: References hub: abstract activity",M="TM 9035 vision-abstract-references-hub r4 2026-10-11";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
 <script id="layer-release">(function(){var SAFE=/^(tmh-rise)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;if(el.getAnimations&&el.getAnimations().some(function(a){return a.playState==="paused";})){seen.set(el,now);return;}var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
+<!-- dyn-icon:js:start -->
+<script id="dyn-icon-js">
+/* dyn-icon: plays a moving icon once (owner rulings 13 Oct 2026; contract 5B). The screen's one arrival icon plays by
+   itself; every other one plays when the learner points at, focuses or selects its card, or when the card's other face
+   or panel is opened. A cycle ends still, at the resting drawing. Reduced motion: nothing plays. */
+(function () {
+  var C = {"host": ".tmh-cat", "auto": ".tmh-cat svg.dy", "autoAt": 900};
+  var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  function shown(s) { return !!s && s.getClientRects().length > 0 && !s.closest("[hidden],[inert]"); }
+  function play(s) {
+    if (reduce || !s || s.classList.contains("run") || !shown(s)) return false;
+    s.classList.add("run");
+    function end() {
+      setTimeout(function () {
+        var busy = s.getAnimations ? s.getAnimations({ subtree: true }).some(function (a) { return a.playState === "running" || a.playState === "paused" || a.pending; }) : false;
+        if (!busy) { s.classList.remove("run"); s.removeEventListener("animationend", end); }
+      }, 30);
+    }
+    s.addEventListener("animationend", end);
+    return true;
+  }
+  function fromHost(e) {
+    var h = C.host && e.target && e.target.closest ? e.target.closest(C.host) : null;
+    if (!h || (e.type === "pointerover" && e.relatedTarget && h.contains(e.relatedTarget))) return;
+    var list = h.querySelectorAll(C.hostIcon || "svg.dy");
+    for (var i = 0; i < list.length; i++) play(list[i]);
+  }
+  function sweep(first) {
+    if (!C.show) return;
+    var all = document.querySelectorAll("svg.dy");
+    for (var i = 0; i < all.length; i++) {
+      var s = all[i], v = s.matches(C.show) && shown(s);
+      if (v && !s.__dyVis && first !== true) play(s);
+      s.__dyVis = v;
+    }
+  }
+  document.addEventListener("pointerover", fromHost);
+  document.addEventListener("focusin", fromHost);
+  document.addEventListener("click", function (e) { fromHost(e); setTimeout(sweep, C.showAt || 150); }, true);
+  document.addEventListener("keydown", function () { setTimeout(sweep, C.showAt || 150); }, true);
+  function start() {
+    sweep(true);
+    if (C.auto) setTimeout(function () {
+      var l = document.querySelectorAll(C.auto);
+      for (var i = 0; i < l.length; i++) if (play(l[i])) break;
+    }, C.autoAt || 900);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
+})();
+</script>
+<!-- dyn-icon:js:end -->
 </body>
 </html>

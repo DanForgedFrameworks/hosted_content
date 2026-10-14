@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- in-module:flag:start --><script>try{if(/[?&]in=module(&|#|$)/.test(location.search))document.documentElement.classList.add("in-module");}catch(e){}</script><!-- in-module:flag:end -->
   <title>TM 9035: Efficacy outcomes in Asian patients: knowledge check (grouped forest)</title>
   <style>
     @font-face { font-family: "Poppins"; src: url("assets/poppins-400.ttf") format("truetype"); font-weight: 400; font-display: swap; }
@@ -72,9 +73,28 @@
     /* ===== Forest viewer ===== */
     #viewer .vhead { flex: 0 0 auto; padding: 4px clamp(14px,2.5vw,28px) 2px; text-align: center; }
     #viewer .vhead h2 { margin: 0; color: var(--teal); font-size: clamp(1rem,1.7vw,1.3rem); font-weight: 700; }
+    /* owner 2026-10-14: the table eases in when opened and out when closed */
+    #viewer.active { animation: tableIn 400ms cubic-bezier(.22,.61,.36,1) backwards; }
+    #viewer.active.is-leaving { animation: tableOut 340ms cubic-bezier(.22,.61,.36,1) forwards; pointer-events: none; }
+    /* owner 2026-10-14: Open all / Close all, top right above the table */
+    #viewer .vhead-row { width: min(100%, 1240px); margin: 0 auto; display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); align-items: center; gap: 12px; }
+    #viewer .vhead-row h2 { grid-column: 2; }
+    .all-btn { grid-column: 3; justify-self: end; min-height: 44px; min-width: 44px; padding: 7px 15px; border: 2px solid var(--teal); border-radius: 10px; background: #fff; color: var(--teal); font: inherit; font-size: .9rem; font-weight: 700; white-space: nowrap; cursor: pointer; transition: background 160ms ease; }
+    .all-btn:hover { background: var(--pale); }
+    .all-btn:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+    /* several groups open at once: tighter rows so the whole plot still fits the box */
+    .forest.is-dense { font-size: clamp(.68rem,1vw,.78rem); }
+    .forest.is-dense th, .forest.is-dense td { padding-top: 0; padding-bottom: 0; line-height: 1.04; }
+    .forest.is-dense thead th { padding-top: 2px; padding-bottom: 2px; }
+    .forest.is-dense .track { height: 12px; }
+    .forest.is-dense .dot { transform: translate(-50%, -50%) scale(.78); }
+    .forest.is-dense .glabel .chev { width: 14px; height: 14px; font-size: .62rem; }
     #viewer .vbody { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: safe center; padding: clamp(4px,1vw,10px) clamp(14px,2.5vw,28px) 0; }
     .forest-scope { width: min(100%, 1240px); margin: 0 auto; }
     .fround { border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px var(--line); }
+    #viewer .vbody.is-scroll { overflow-y: auto; justify-content: flex-start; overscroll-behavior: contain; padding-top: 0; }
+    #viewer .vbody.is-scroll .fround { overflow: clip; }   /* hidden would stop the header sticking */
+    #viewer .vbody.is-scroll .forest thead th { position: sticky; top: 0; z-index: 2; }
     .forest { width: 100%; border-collapse: collapse; font-size: clamp(.72rem,1.12vw,.9rem); }
     .forest th, .forest td { padding: clamp(1px,0.35vw,3px) 8px; border-bottom: 1px solid var(--line); vertical-align: middle; line-height: 1.12; }
     .forest thead th { background: var(--navy); color: #fff; font-weight: 700; border-bottom: 0; text-align: center; }
@@ -116,6 +136,8 @@
 
     @keyframes revealUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes viewerIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    @keyframes tableIn { from { opacity: 0; transform: translateY(12px) scale(.985); } to { opacity: 1; transform: none; } }
+    @keyframes tableOut { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(12px) scale(.985); } }
     @keyframes rowIn { from { opacity: 0; transform: translateY(-7px); } to { opacity: 1; transform: none; } }
     @keyframes rowOut { from { opacity: 1; } to { opacity: 0; } }
     @keyframes celebrate { 0% { transform: scale(1); } 45% { transform: scale(1.04) translateY(-5px); } 100% { transform: scale(1); } }
@@ -169,8 +191,11 @@
       .answers.cols-4, .answers.cols-3 { grid-template-columns: minmax(0,1fr); }
       .answer { min-height: 78px; }
       #viewer .vbody { overflow: auto; }
+      #viewer .vhead-row { grid-template-columns: minmax(0,1fr) auto; }
+      #viewer .vhead-row h2 { grid-column: 1; }
+      .all-btn { grid-column: 2; }
     }
-    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } #viewer.active, #viewer.active.is-leaving { animation: none; } }
   </style>
 <!-- r4-embed:start -->
 <style id="r4-embed-css">
@@ -218,10 +243,68 @@
   }
 </style>
 <!-- r4-strip:end -->
+<!-- mod-head:css:start -->
+<style id="mod-head-css">
+/* module heading (owner 14 Oct 2026): left, glow, capped rule - tools/tm9035-module-heading.py */
+.caption > h1{ text-align:left !important; letter-spacing:-.01em; text-shadow:0 2px 10px rgba(0,152,190,.30); }
+.caption > h1 *:not(em):not(i):not(.gene){ color:inherit !important; }
+.caption > h1 em, .caption > h1 i, .caption > h1 .gene{ color:inherit !important; }
+.mh-rule{ display:flex; align-items:center; align-self:flex-start; width:66%; max-width:960px; margin:6px 0 0; }
+.mh-rule i{ flex:0 0 auto; width:4px; height:14px; background:#0098be; border-radius:2px; }
+.mh-rule b{ flex:1 1 auto; height:3px; background:#0098be; border-radius:2px; }
+.caption{ background:#fff !important; box-shadow:none !important; border-bottom:0 !important; }
+.caption > p, .caption .sub, .caption small{ text-align:left !important; }
+</style>
+<!-- mod-head:css:end -->
+<!-- in-module:css:start -->
+<style id="in-module-css">
+/* prototype-only (owner 14 Oct 2026): everything here is scoped under html.in-module, set only by ?in=module */
+html.in-module .im-tabs { flex: 0 0 auto; display: flex; gap: 10px; padding: 6px 16px 10px; background: #fff; }
+html.in-module .im-tab { min-height: 44px; min-width: 44px; padding: 8px 24px; border: 2px solid var(--teal-strong); border-radius: 12px; background: #fff; color: var(--teal-strong); font: inherit; font-size: clamp(.9rem,1.3vw,1.05rem); font-weight: 700; line-height: 1.2; cursor: pointer; transition: background 180ms ease, color 180ms ease, box-shadow 180ms ease; }
+html.in-module .im-tab:hover { background: var(--pale); }
+html.in-module .im-tab[aria-selected="true"] { background: var(--teal-strong); color: var(--on-accent); box-shadow: 0 6px 14px rgba(0,122,152,.25); }
+html.in-module .im-tab:focus-visible { outline: 3px solid var(--navy); outline-offset: 3px; }
+html.in-module .flow[hidden], html.in-module .im-panel[hidden] { display: none; }
+html.in-module .im-fade { animation: imFade 260ms ease backwards; }
+@keyframes imFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+html.in-module .im-panel { flex: 1 1 auto; min-height: 0; display: flex; align-items: center; justify-content: center; gap: clamp(18px,3vw,44px); padding: clamp(6px,1.2vh,14px) clamp(14px,3vw,28px) clamp(8px,1.6vh,18px); }
+html.in-module .im-card { background: var(--mist); border: 1px solid var(--line); border-radius: 18px; padding: clamp(12px,2vh,22px) clamp(16px,2.4vw,30px); }
+html.in-module .im-ringcard { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; text-align: center; }
+html.in-module .im-ring { position: relative; width: clamp(160px,34vh,236px); height: clamp(160px,34vh,236px); }
+html.in-module .im-ring svg { display: block; width: 100%; height: 100%; }
+html.in-module .im-ring .im-track { fill: none; stroke: var(--line); stroke-width: 24; }
+html.in-module .im-ring .im-arc { fill: none; stroke: var(--teal); stroke-width: 24; }
+html.in-module .im-ringlab { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; }
+html.in-module .im-ringlab .im-k { font-size: clamp(.8rem,1.2vw,.95rem); font-weight: 700; color: var(--muted); }
+html.in-module .im-ringlab .im-v { font-size: clamp(1.7rem,3.2vw,2.5rem); font-weight: 700; color: var(--navy); font-variant-numeric: tabular-nums; }
+html.in-module .im-ci { margin: 8px 0 0; font-size: clamp(.82rem,1.25vw,1rem); font-weight: 700; color: var(--navy); }
+html.in-module .im-n { margin: 2px 0 0; font-size: clamp(.8rem,1.15vw,.95rem); font-weight: 600; color: var(--muted); }
+
+html.in-module .im-barcard { flex: 0 1 620px; min-width: 0; }
+html.in-module .im-barcard h2 { margin: 0 0 clamp(8px,1.6vh,16px); color: var(--teal); font-size: clamp(1rem,1.7vw,1.3rem); font-weight: 700; line-height: 1.2; }
+html.in-module .im-row { display: grid; grid-template-columns: 44px minmax(0,1fr) 138px; align-items: center; gap: 12px; margin-bottom: clamp(10px,2vh,18px); }
+html.in-module .im-row .im-name { font-weight: 700; color: var(--navy); font-size: clamp(.9rem,1.3vw,1.05rem); }
+html.in-module .im-bar { position: relative; height: 26px; border-radius: 6px; background-color: #fff; background-image: linear-gradient(90deg, #d5dde7 1px, transparent 1px); background-size: 33.3333% 100%; box-shadow: 0 0 0 1px var(--line); }
+html.in-module .im-fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 6px; background: var(--teal); }
+html.in-module .im-row .im-val { font-weight: 700; color: var(--navy); font-size: clamp(.8rem,1.15vw,.95rem); white-space: nowrap; font-variant-numeric: tabular-nums; }
+html.in-module .im-axis { position: relative; display: grid; grid-template-columns: 44px minmax(0,1fr) 138px; gap: 12px; }
+html.in-module .im-ticks { position: relative; height: 18px; grid-column: 2; }
+html.in-module .im-ticks span { position: absolute; top: 0; transform: translateX(-50%); font-size: clamp(.66rem,1vw,.78rem); font-weight: 700; color: var(--navy); }
+html.in-module .im-ticks span:first-child { transform: none; }
+html.in-module .im-ticks span:last-child { transform: translateX(-100%); }
+html.in-module .im-cap { margin: 2px 0 0; text-align: center; font-size: clamp(.72rem,1.1vw,.86rem); font-weight: 700; color: var(--navy); }
+html.in-module .im-capwrap { display: grid; grid-template-columns: 44px minmax(0,1fr) 138px; gap: 12px; }
+html.in-module .im-capwrap .im-cap { grid-column: 2; }
+@media (prefers-reduced-motion: reduce) { html.in-module .im-fade { animation: none; } }
+/* the Overall panel carries its own heading; the question-stage subtitle under the title would read as a near-duplicate */
+html.in-module:has(#im-tab-overall[aria-selected="true"]) #subtitle { visibility: hidden; }
+</style>
+<!-- in-module:css:end -->
 </head>
 <body>
   <main class="slide" id="slide" aria-label="Efficacy outcomes in Asian patients knowledge check">
-    <div class="caption"><h1>Efficacy outcomes</h1><p class="sub" id="subtitle">ORR, DOR and PFS in Asian patients</p></div>
+    <div class="caption"><h1>Efficacy outcomes</h1><!-- mh-rule --><div class="mh-rule" aria-hidden="true"><i></i><b></b><i></i></div><!-- /mh-rule --><p class="sub" id="subtitle">ORR, DOR and PFS in Asian patients</p></div>
 
     <div class="flow">
       <!-- MCQ 1 -->
@@ -263,7 +346,7 @@
 
       <!-- Forest viewer -->
       <section class="step" id="viewer" aria-label="ORR by IRC forest plot">
-        <div class="vhead"><h2>ORR by IRC in Asian patients with <em>MET</em>ex14 skipping</h2></div>
+        <div class="vhead"><div class="vhead-row"><h2>ORR by IRC in Asian patients with <em>MET</em>ex14 skipping</h2><button class="all-btn" type="button" id="forest-all" aria-expanded="false" aria-controls="sex1 sex2 age1 age2 smk1 smk2 hist1 hist2 hist3 ecog1 ecog2 bm1 bm2 line1 line2">Open all</button></div></div>
         <div class="vbody">
           <div class="forest-scope">
             <div class="fround">
@@ -377,8 +460,28 @@
         subtitle.textContent = 'ORR in Asian patients by subgroups of interest';
         showStep('mcq2');
       });
-      document.getElementById('to-forest').addEventListener('click', () => showStep('viewer'));
-      document.getElementById('forest-back').addEventListener('click', () => { showStep('mcq2'); });
+      /* owner 2026-10-14: the table eases in (CSS on #viewer.active) and eases out before the question returns */
+      let leaving = false;
+      function openViewer() { leaving = false; steps.viewer.classList.remove('is-leaving'); showStep('viewer'); fitDense(); }
+      function closeViewer() {
+        if (!steps.viewer.classList.contains('active') || leaving) return;
+        if (reduceMotion) { showStep('mcq2'); return; }
+        leaving = true;
+        const v = steps.viewer;
+        const finish = () => {
+          if (!leaving) return;
+          leaving = false;
+          v.removeEventListener('animationend', onEnd);
+          v.classList.remove('is-leaving');
+          showStep('mcq2');
+        };
+        const onEnd = e => { if (e.target === v) finish(); };
+        v.addEventListener('animationend', onEnd);
+        v.classList.add('is-leaving');
+        window.setTimeout(finish, 420);
+      }
+      document.getElementById('to-forest').addEventListener('click', openViewer);
+      document.getElementById('forest-back').addEventListener('click', closeViewer);
 
       /* Forest group expand / collapse (with roll-out) */
       function setGroup(row, open, animate) {
@@ -406,24 +509,63 @@
       const fgroups = Array.from(document.querySelectorAll('.fgroup'));
       const groupCount = fgroups.length;
       const exploredGroups = new Set();
+      const allBtn = document.getElementById('forest-all');
+      const vbody = steps.viewer.querySelector('.vbody');
+      const forestTable = steps.viewer.querySelector('.forest');
+      function markExplored(key) {
+        exploredGroups.add(key);
+        if (exploredGroups.size >= groupCount) {
+          slide.classList.add('nudge-shown');
+          if (nudge) nudge.classList.add('is-on');
+        }
+      }
+      /* the button label always says what it will do: Close all only when every group is open */
+      function syncAll() {
+        const allOpen = fgroups.every(g => g.getAttribute('aria-expanded') === 'true');
+        allBtn.textContent = allOpen ? 'Close all' : 'Open all';
+        allBtn.setAttribute('aria-expanded', String(allOpen));
+      }
+      /* tighter rows only when the open groups would not otherwise fit the box */
+      const forestScope = steps.viewer.querySelector('.forest-scope');
+      function fitDense() {
+        if (!steps.viewer.classList.contains('active')) return;
+        forestTable.classList.remove('is-dense');
+        forestScope.style.removeProperty('zoom');
+        vbody.classList.remove('is-scroll');
+        if (vbody.scrollHeight <= vbody.clientHeight + 1) return;
+        forestTable.classList.add('is-dense');
+        if (vbody.scrollHeight <= vbody.clientHeight + 1) return;
+        /* still too tall: owner 2026-10-14 - keep the text full size and let the plot scroll inside the box
+           (it used to scale down to ~78%, about 8.5px text at 1370x620) */
+        vbody.classList.add('is-scroll');
+      }
+      function afterChange(closing) {
+        syncAll();
+        fitDense();
+        if (closing) window.setTimeout(fitDense, reduceMotion ? 0 : 320);
+      }
       document.querySelectorAll('.glabel').forEach(label => {
         function toggle() {
           const row = label.closest('.fgroup');
           const open = row.getAttribute('aria-expanded') !== 'true';
-          if (open) {
-            fgroups.forEach(g => { if (g !== row && g.getAttribute('aria-expanded') === 'true') setGroup(g, false, false); });
-            exploredGroups.add(label.getAttribute('data-group'));
-            if (exploredGroups.size >= groupCount) {
-              slide.classList.add('nudge-shown');
-              if (nudge) nudge.classList.add('is-on');
-            }
-          }
+          if (open) markExplored(label.getAttribute('data-group'));
           setGroup(row, open, true);
+          afterChange(!open);
         }
         label.addEventListener('click', toggle);
         label.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
       });
-      document.addEventListener('keydown', e => { if (e.key === 'Escape' && steps.viewer.classList.contains('active')) showStep('mcq2'); });
+      allBtn.addEventListener('click', () => {
+        const openAll = allBtn.getAttribute('aria-expanded') !== 'true';
+        fgroups.forEach(g => {
+          const isOpen = g.getAttribute('aria-expanded') === 'true';
+          if (openAll) { markExplored(g.querySelector('.glabel').getAttribute('data-group')); if (!isOpen) setGroup(g, true, true); }
+          else if (isOpen) setGroup(g, false, true);
+        });
+        afterChange(!openAll);
+      });
+      window.addEventListener('resize', fitDense);
+      document.addEventListener('keydown', e => { if (e.key === 'Escape' && steps.viewer.classList.contains('active')) closeViewer(); });
     }());
   </script>
 
@@ -674,5 +816,112 @@
 <!-- r4-embed:end -->
 <script id="build-stamp">(function(){var T="TM 9035: Efficacy outcomes in Asian patients: knowledge check (grouped forest)",M="TM 9035 tm9035-ooi-slide-66-asian-subgroups-2026-06-24-v1 r4 2026-10-11";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
 <script id="layer-release">(function(){var SAFE=/^(celebrate|revealUp|rowIn|rowOut|viewerIn)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;if(el.getAnimations&&el.getAnimations().some(function(a){return a.playState==="paused";})){seen.set(el,now);return;}var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
+<!-- in-module:js:start -->
+<script id="in-module-js">
+/* prototype-only (owner 14 Oct 2026): runs only when the page URL carries in=module. Adds the Overall tab
+   (ORR ring + DOR / PFS / OS bars) beside the existing flow, which becomes the "By subgroup" tab. */
+(function () {
+  if (!document.documentElement.classList.contains("in-module")) return;
+  var slide = document.getElementById("slide"), flow = slide && slide.querySelector(".flow"), nudge = document.getElementById("nudge");
+  if (!slide || !flow) return;
+  var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+
+  /* "All done" waits for the Overall tab to have been seen (it is first, so seen on load) as well as the existing requirement */
+  var overallSeen = false;
+  function guardNudge() {
+    if (!nudge) return;
+    if (!overallSeen) { nudge.classList.remove("is-on"); slide.classList.remove("nudge-shown"); }
+  }
+  if (nudge) new MutationObserver(guardNudge).observe(nudge, { attributes: true, attributeFilter: ["class"] });
+
+  var C = 2 * Math.PI * 80;
+  var bars = [["DOR", 18.5, "(10.4, 31.7)"], ["PFS", 13.8, "(10.8, 21.5)"], ["OS", 23.7, "(19.6, 28.5)"]];
+  var rows = "";
+  bars.forEach(function (b) {
+    rows += '<div class="im-row"><span class="im-name">' + b[0] + '</span><div class="im-bar"><span class="im-fill"></span></div>' +
+      '<span class="im-val"><span class="im-num">' + b[1].toFixed(1) + '</span> ' + b[2] + '</span></div>';
+  });
+  var panel = document.createElement("div");
+  panel.className = "im-panel"; panel.id = "im-overall"; panel.setAttribute("role", "tabpanel"); panel.setAttribute("aria-labelledby", "im-tab-overall");
+  panel.innerHTML =
+    '<div class="im-card im-ringcard"><div class="im-ring" role="img" aria-label="ORR % 56.6%, 95% CI 46.6, 66.2, n=60/106">' +
+      '<svg viewBox="0 0 200 200" aria-hidden="true"><circle class="im-track" cx="100" cy="100" r="80"/>' +
+      '<circle class="im-arc" cx="100" cy="100" r="80" transform="rotate(-90 100 100)" stroke-dasharray="' + C.toFixed(2) + '" stroke-dashoffset="' + C.toFixed(2) + '"/></svg>' +
+      '<div class="im-ringlab" aria-hidden="true"><span class="im-k">ORR %</span><span class="im-v"><span class="im-rnum">56.6</span>%</span></div></div>' +
+      '<p class="im-ci">95% CI 46.6, 66.2</p><p class="im-n">(n=60/106)</p></div>' +
+    '<div class="im-card im-barcard"><h2>ORR, DOR, PFS and OS in Asian patients</h2>' + rows +
+      '<div class="im-axis"><div class="im-ticks" aria-hidden="true"><span style="left:0%">0</span><span style="left:33.3333%">10</span><span style="left:66.6667%">20</span><span style="left:100%">30</span></div></div>' +
+      '<div class="im-capwrap"><p class="im-cap">Median (95% CI) months</p></div></div>';
+
+  var tabs = document.createElement("div");
+  tabs.className = "im-tabs"; tabs.setAttribute("role", "tablist"); tabs.setAttribute("aria-label", "Efficacy outcomes views");
+  tabs.innerHTML =
+    '<button type="button" class="im-tab" role="tab" id="im-tab-overall" aria-selected="true" aria-controls="im-overall" tabindex="0">Overall</button>' +
+    '<button type="button" class="im-tab" role="tab" id="im-tab-sub" aria-selected="false" aria-controls="im-flow" tabindex="-1">By subgroup</button>';
+  flow.id = "im-flow"; flow.setAttribute("role", "tabpanel"); flow.setAttribute("aria-labelledby", "im-tab-sub"); flow.hidden = true;
+  flow.parentNode.insertBefore(tabs, flow);
+  flow.parentNode.insertBefore(panel, flow);
+
+  var tabEls = [tabs.children[0], tabs.children[1]];
+  var arc = panel.querySelector(".im-arc"), rnum = panel.querySelector(".im-rnum");
+  var fills = panel.querySelectorAll(".im-fill"), nums = panel.querySelectorAll(".im-num");
+
+  /* growth: fade first, then ring and bars grow with the figures counting up. One loop, held while the slide is idle. */
+  var raf = 0, elapsed = 0, last = 0, FADE = 280, GROW = 1100;
+  function ease(t) { return 1 - Math.pow(1 - t, 3); }
+  function paint(k) {
+    var rp = ease(k);
+    arc.setAttribute("stroke-dashoffset", (C * (1 - 0.566 * rp)).toFixed(2));
+    rnum.textContent = (56.6 * rp).toFixed(1);
+    for (var i = 0; i < bars.length; i++) {
+      var p = ease(Math.max(0, Math.min(1, k * 1.25 - i * 0.12)));
+      fills[i].style.width = (bars[i][1] / 30 * 100 * p).toFixed(2) + "%";
+      nums[i].textContent = (bars[i][1] * p).toFixed(1);
+    }
+  }
+  function finalValues() { paint(1); rnum.textContent = "56.6"; for (var i = 0; i < bars.length; i++) nums[i].textContent = bars[i][1].toFixed(1); }
+  function tick(now) {
+    raf = 0;
+    if (panel.hidden) return;
+    var dt = last ? Math.min(now - last, 60) : 0; last = now;
+    if (slide.getAttribute("data-idle") !== "1") elapsed += dt;
+    var k = Math.max(0, Math.min(1, (elapsed - FADE) / GROW));
+    paint(k);
+    if (k < 1) raf = requestAnimationFrame(tick); else finalValues();
+  }
+  function playOverall() {
+    cancelAnimationFrame(raf); raf = 0;
+    if (reduce) { finalValues(); return; }
+    elapsed = 0; last = 0; paint(0);
+    raf = requestAnimationFrame(tick);
+  }
+
+  function fade(el) {
+    if (reduce) return;
+    el.classList.remove("im-fade"); void el.offsetWidth; el.classList.add("im-fade");
+    el.addEventListener("animationend", function done(e) { if (e.target === el) { el.classList.remove("im-fade"); el.removeEventListener("animationend", done); } });
+  }
+  function select(which, focus) {
+    var ov = which === 0;
+    tabEls.forEach(function (t, i) { t.setAttribute("aria-selected", String(i === which)); t.tabIndex = i === which ? 0 : -1; });
+    if (focus) tabEls[which].focus();
+    panel.hidden = !ov; flow.hidden = ov;
+    if (ov) { overallSeen = true; fade(panel); playOverall(); }
+    else { cancelAnimationFrame(raf); raf = 0; fade(flow); window.dispatchEvent(new Event("resize")); }
+  }
+  tabEls.forEach(function (t, i) {
+    t.addEventListener("click", function () { select(i, false); });
+    t.addEventListener("keydown", function (e) {
+      var k = e.key, n = -1;
+      if (k === "ArrowRight" || k === "ArrowDown") n = (i + 1) % 2;
+      else if (k === "ArrowLeft" || k === "ArrowUp") n = (i + 1) % 2;
+      else if (k === "Home") n = 0; else if (k === "End") n = 1;
+      if (n >= 0) { e.preventDefault(); select(n, true); }
+    });
+  });
+  select(0, false);
+}());
+</script>
+<!-- in-module:js:end -->
 </body>
 </html>

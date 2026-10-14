@@ -638,7 +638,7 @@ body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-wei
     if(pri.length){ L.push(''); L.push('Flagged to revisit next: '+pri.join('; ')+'.'); }
     L.push(''); L.push('MY REFLECTION');
     PROMPTS.forEach(function(q,i){ L.push(q); L.push(a[i]||'(not completed)'); L.push(''); });
-    L.push('— This is a personal reflective CPD record, not clinical guidance. Figures relate to the 313 patients with METex14 skipping NSCLC in the Phase 2 VISION trial (Mazieres J, et al. JAMA Oncol. 2023;9(9):1260–6).');
+    L.push('— This is a personal reflective CPD record, not clinical guidance. Figures relate to the 313 patients with METex14 skipping NSCLC in the Phase 2 VISION trial (Mazieres J, et al. JAMA Oncol. 2023;9(9):1260–1266).');
     return L.join('\n');
   }
 
@@ -684,7 +684,7 @@ body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-wei
       '<h2>My reflection</h2>'+refl+
       '<p class="foot">This is a personal reflective CPD record, not clinical guidance or an operational decision. '+
       'Figures relate to the 313 patients with <em>MET</em>ex14 skipping NSCLC in the Phase&nbsp;2 VISION trial '+
-      '(Mazieres J, et al. JAMA Oncol. 2023;9(9):1260&ndash;6).</p>'+
+      '(Mazieres J, et al. <em>JAMA Oncol.</em> 2023;9(9):1260&ndash;1266).</p>'+
       '</body></html>';
   }
 

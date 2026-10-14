@@ -139,6 +139,32 @@ body.is-table .region--table{ display:flex; }
 .dtick{ position:absolute; transform:translateX(-50%); font-size:clamp(.62rem,1.05vw,.72rem); font-weight:600; color:var(--faint); font-variant-numeric:tabular-nums; }
 .daxislab{ flex:0 0 auto; text-align:center; font-size:clamp(.8rem,1.4vw,.98rem); font-weight:700; color:var(--navy); margin-top:2px; }
 
+/* ---------- chart entrance (owner 2026-10-14) ----------
+   The panel eases in first (chartIn, .4s); THEN the marks grow from zero, one row after
+   another (--i), and the figures count up in step (script: the count rides these animations).
+   backwards fill, never both: the layer is released when each one ends (contract section 4
+   check 7). Off screen the r4-embed idle rule pauses them; reduced motion: none of it plays. */
+.bars .bar + .bar{ --i:1; } .bars .bar + .bar + .bar{ --i:2; }
+.dumb__plot .drow + .drow{ --i:1; } .dumb__plot .drow + .drow + .drow{ --i:2; }
+.dpt.is-mean, .dval--mean{ --j:1; }
+.chart.is-active .bar__fill{ transform-origin:left center; animation:barGrow .9s cubic-bezier(.22,1,.36,1) calc(.4s + var(--i,0) * .14s) backwards; }
+.chart.is-active .dpt{ animation:dGrow .9s cubic-bezier(.22,1,.36,1) calc(.4s + var(--i,0) * .14s + var(--j,0) * .07s) backwards; }
+.chart.is-active .dval{ animation:dGrowVal .9s cubic-bezier(.22,1,.36,1) calc(.4s + var(--i,0) * .14s + var(--j,0) * .07s) backwards; }
+@keyframes barGrow{ from{ transform:scaleX(0); } }
+@keyframes dGrow{ from{ left:0%; opacity:0; } }
+@keyframes dGrowVal{ from{ left:0%; opacity:0; } 35%{ opacity:0; } }
+
+/* data table eases in and out (same lift as the citation card's rise); the script holds
+   is-table until the ease-out ends */
+body.is-table .region--table{ animation:tableIn .38s cubic-bezier(.22,1,.36,1) backwards; }
+body.is-table .region--table.is-out{ animation:tableOut .3s cubic-bezier(.4,0,1,1) forwards; pointer-events:none; }
+@keyframes tableIn{ from{ opacity:0; transform:translateY(10px) scale(.99); } }
+@keyframes tableOut{ to{ opacity:0; transform:translateY(10px) scale(.99); } }
+@media (prefers-reduced-motion:reduce){
+  .chart.is-active .bar__fill, .chart.is-active .dpt, .chart.is-active .dval,
+  body.is-table .region--table, body.is-table .region--table.is-out{ animation:none !important; }
+}
+
 /* ---------- toggle controls (chrome) ---------- */
 .controls{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:clamp(12px,2.4vw,26px); padding:clamp(6px,1.1vh,11px) clamp(12px,3vw,24px); }
 .toggle-btn{ display:inline-flex; align-items:center; gap:9px; min-height:42px; padding:10px 20px; border:2px solid var(--teal); border-radius:10px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.9rem; cursor:pointer; transition:filter .15s ease; }
@@ -289,12 +315,58 @@ body.is-fullscreen{ padding-top:56px; }
   }
 </style>
 <!-- r4-strip:end -->
+<!-- mod-head:css:start -->
+<style id="mod-head-css">
+/* module heading (owner 14 Oct 2026): left, glow, capped rule - tools/tm9035-module-heading.py */
+.banner h1.banner__title{ text-align:left !important; letter-spacing:-.01em; text-shadow:0 2px 10px rgba(0,152,190,.30); }
+.banner h1.banner__title *:not(em):not(i):not(.gene){ color:inherit !important; }
+.banner h1.banner__title em, .banner h1.banner__title i, .banner h1.banner__title .gene{ color:inherit !important; }
+.mh-rule{ display:flex; align-items:center; align-self:flex-start; width:66%; max-width:960px; margin:6px 0 0; }
+.mh-rule i{ flex:0 0 auto; width:4px; height:14px; background:#0098be; border-radius:2px; }
+.mh-rule b{ flex:1 1 auto; height:3px; background:#0098be; border-radius:2px; }
+.banner{ background:#fff !important; box-shadow:none !important; border-bottom:0 !important; }
+</style>
+<!-- mod-head:css:end -->
+<script id="in-module-flag">/* prototype-only: the full-module prototype loads this page with ?in=module */
+try{ if(/[?&]in=module(&|#|$)/.test(location.search)) document.documentElement.classList.add('in-module'); }catch(e){}
+</script>
+<!-- in-module:css:start -->
+<style id="in-module-css">
+/* Everything here is scoped under html.in-module: without ?in=module none of it applies. */
+html.in-module:not(.im-ready) .keymsg__box{ visibility:hidden; }
+html.in-module .keymsg__box{ flex:1 1 auto; padding:5px 22px; gap:11px; font-size:clamp(.9rem,1.45vw,1rem); line-height:1.3; align-items:center; }
+html.in-module .keymsg__box .keymsg__ic{ align-self:flex-start; margin-top:10px; }
+html.in-module .keymsg__box .im-body{ display:block; flex:1 1 auto; min-width:0; }
+html.in-module .im-ask{ display:flex; flex-wrap:nowrap; align-items:center; justify-content:space-between; gap:6px 16px; }
+html.in-module .im-ask__q{ flex:1 1 auto; min-width:0; }
+html.in-module .body{ gap:clamp(4px,.8vh,9px); }
+html.in-module .im-ask__q b{ font-weight:700; color:var(--teal-strong); }
+html.in-module .im-btn{ flex:0 0 auto; display:inline-flex; align-items:center; justify-content:center; gap:8px; min-width:96px; min-height:44px; padding:8px 20px; border:2px solid var(--teal); border-radius:10px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.9rem; line-height:1.2; cursor:pointer; transition:filter .15s ease, background .15s ease, color .15s ease; }
+html.in-module .im-btn:hover{ filter:brightness(.95); }
+html.in-module .im-btn:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+html.in-module .im-btn[aria-expanded="true"]{ background:#fff; color:var(--teal-strong); cursor:default; }
+html.in-module .im-btn[aria-expanded="true"]:hover{ filter:none; }
+/* owner 14 Oct late: the module's Consider element (green, question-mark icon); the answer sits under it in space
+   kept for it from the start, so the chart below never moves when it opens */
+html.in-module .keymsg__box{ background:#e7f6ee !important; border:2px solid #2f9e6f !important; color:#186b49; font-weight:700; }
+html.in-module .keymsg__box .keymsg__ic{ color:#2f9e6f; align-self:center; margin-top:0; }
+html.in-module .im-ask__q b{ color:#186b49; }
+html.in-module .im-ans{ display:block; margin:0 auto; width:calc(100% - 2*clamp(14px,2.4vw,34px)); max-width:1240px; box-sizing:border-box; padding:6px 18px; border-left:4px solid var(--teal); border-radius:4px 12px 12px 4px; background:var(--mist,#f4f8fb); color:var(--navy); font-size:clamp(.88rem,1.4vw,.98rem); line-height:1.35; }
+html.in-module .im-ans[hidden]{ display:block; visibility:hidden; }
+html.in-module .im-ans.is-in{ animation:imReveal .5s cubic-bezier(.22,1,.36,1) backwards; }
+@keyframes imReveal{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
+@media (prefers-reduced-motion:reduce){
+  html.in-module .im-ans.is-in{ animation:none !important; }
+  html.in-module .im-btn{ transition:none !important; }
+}
+</style>
+<!-- in-module:css:end -->
 </head>
 <body>
 <main class="frame" aria-label="Dose reductions and interruptions in METex14 skipping NSCLC in VISION">
 
   <header class="banner">
-    <h1 class="banner__title">Dose reductions and interruptions</h1>
+    <h1 class="banner__title">Dose reductions and interruptions</h1><!-- mh-rule --><div class="mh-rule" aria-hidden="true"><i></i><b></b><i></i></div><!-- /mh-rule -->
   </header>
 
   <div class="body" id="body">
@@ -483,9 +555,24 @@ body.is-fullscreen{ padding-top:56px; }
   var toCharts = document.getElementById('toCharts');
   var live = document.getElementById('live');
   var tableOpened = false;
+  var regionTable = document.getElementById('regionTable');
+  var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var closing = false, outT = 0;
+
+  /* the table eases out before the charts come back (owner 2026-10-14) */
+  function finishClose(){
+    if(!closing) return;
+    closing = false; clearTimeout(outT);
+    regionTable.classList.remove('is-out');
+    body.classList.remove('is-table');
+    kick();
+  }
+  regionTable.addEventListener('animationend', function(e){ if(e.target === regionTable && e.animationName === 'tableOut') finishClose(); });
 
   function showTable(){
+    if(closing){ closing = false; clearTimeout(outT); regionTable.classList.remove('is-out'); }
     body.classList.add('is-table');
+    kick();
     toTable.hidden = true; toCharts.hidden = false;
     toCharts.focus();
     live.textContent = 'Data table shown. Full figures for Overall, 1L and 2L+ cohorts.';
@@ -496,10 +583,13 @@ body.is-fullscreen{ padding-top:56px; }
     }
   }
   function showCharts(){
-    body.classList.remove('is-table');
     toCharts.hidden = true; toTable.hidden = false;
     toTable.focus();
     live.textContent = 'Charts shown.';
+    if(reduceMotion || !body.classList.contains('is-table')){ body.classList.remove('is-table'); kick(); return; }
+    closing = true;
+    regionTable.classList.add('is-out');
+    outT = setTimeout(finishClose, 420);   /* fallback if animationend never arrives */
   }
   toTable.addEventListener('click', showTable);
   toCharts.addEventListener('click', showCharts);
@@ -515,13 +605,13 @@ body.is-fullscreen{ padding-top:56px; }
   }
   TABS.forEach(function(o){
     var tab=document.getElementById(o.t);
-    if(tab) tab.addEventListener('click', function(){ selectTab(o.t); });
+    if(tab) tab.addEventListener('click', function(){ selectTab(o.t); kick(); });
   });
   // arrow-key roving between tabs
   var tabEls = TABS.map(function(o){ return document.getElementById(o.t); });
   tabEls.forEach(function(tab,i){ if(!tab) return; tab.addEventListener('keydown', function(e){
     var n = e.key==='ArrowRight'?i+1 : e.key==='ArrowLeft'?i-1 : -1;
-    if(n<0) return; e.preventDefault(); var t=tabEls[(n+tabEls.length)%tabEls.length]; if(t){ selectTab(t.id); t.focus(); }
+    if(n<0) return; e.preventDefault(); var t=tabEls[(n+tabEls.length)%tabEls.length]; if(t){ selectTab(t.id); t.focus(); kick(); }
   }); });
 
   /* ---------- dumbbell median/mean filter (keep at least one on) ---------- */
@@ -562,6 +652,53 @@ body.is-fullscreen{ padding-top:56px; }
     el.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); showCallout(el, html); } });
   });
   window.addEventListener('resize', hideCallout);
+
+  /* ---------- count-ups (owner 2026-10-14) ----------
+     Each figure rides its own mark's CSS grow animation (barGrow / dGrowVal), so it holds,
+     pauses and resumes exactly as the mark does (the r4-embed idle rule pauses both). Only the
+     leading number counts; the rest of the text stays put. The figure is baked in the markup:
+     with no running animation (reduced motion, hidden panel, interrupted) the exact original
+     text is put straight back. */
+  var COUNT = [];
+  Array.prototype.forEach.call(document.querySelectorAll('.dval, .bar__val'), function(el){
+    var txt = el.textContent, m = /^(\d+(?:\.\d+)?)([\s\S]*)$/.exec(txt);
+    if(!m) return;
+    var isD = el.classList.contains('dval');
+    var bar = isD ? null : el.closest('.bar');
+    var driver = isD ? el : (bar && bar.querySelector('.bar__fill'));
+    if(!driver) return;
+    COUNT.push({ el:el, text:txt, end:parseFloat(m[1]), dec:(m[1].split('.')[1]||'').length, tail:m[2], driver:driver, name:isD ? 'dGrowVal' : 'barGrow' });
+  });
+  var raf = 0;
+  function animOf(o){
+    if(!o.driver.getAnimations) return null;
+    var list = o.driver.getAnimations();
+    for(var i = 0; i < list.length; i++){ if(list[i].animationName === o.name) return list[i]; }
+    return null;
+  }
+  function frame(){
+    raf = 0;
+    var going = false;
+    COUNT.forEach(function(o){
+      var a = animOf(o);
+      if(!a || a.playState === 'finished' || a.playState === 'idle'){ if(o.el.textContent !== o.text) o.el.textContent = o.text; return; }
+      var t = a.effect.getComputedTiming(), lt = t.localTime, p;
+      if(a.pending || lt === null || lt === undefined){ p = 0; going = true; }
+      else { p = Math.max(0, Math.min(1, (lt - (t.delay || 0)) / (t.duration || 1))); }
+      if(p >= 1){ if(o.el.textContent !== o.text) o.el.textContent = o.text; return; }
+      o.el.textContent = (o.end * (1 - Math.pow(1 - p, 4))).toFixed(o.dec) + o.tail;
+      if(a.playState === 'running') going = true;
+    });
+    if(going) raf = requestAnimationFrame(frame);
+  }
+  function kick(){ if(reduceMotion || !COUNT.length) return; if(!raf) raf = requestAnimationFrame(frame); }
+  document.addEventListener('animationstart', kick);
+  document.addEventListener('visibilitychange', kick);
+  /* the idle hold lifting (data-idle back to 0) restarts the count with its marks */
+  if(typeof MutationObserver !== 'undefined'){
+    new MutationObserver(kick).observe(document.body, { subtree:true, attributes:true, attributeFilter:['data-idle'] });
+  }
+  kick();
 
 })();
 </script>
@@ -811,6 +948,84 @@ body.is-fullscreen{ padding-top:56px; }
 })();
 </script>
 <!-- r4-embed:end -->
+<!-- in-module:js:start -->
+<script id="in-module-js">
+/* prototype-only (?in=module): the top box becomes a Consider question with a reveal, and the
+   "All done" nudge waits for that reveal as well as for the page's own requirement (data table opened). */
+(function(){
+  "use strict";
+  var root = document.documentElement;
+  if(!root.classList.contains('in-module')) return;
+  try{
+    var box = document.querySelector('.keymsg__box');
+    var ic = box && box.querySelector('.keymsg__ic');
+    var nudge = document.getElementById('nudge');
+    var frame = document.querySelector('.frame');
+    var revealed = false, held = false, guarding = false;
+
+    if(box && ic){
+      var body = document.createElement('span');
+      body.className = 'im-body';
+      body.innerHTML =
+        '<span class="im-ask">' +
+          '<span class="im-ask__q"><b>Consider:</b> In total, 197 patients had dose reductions and/or interruptions. What was the treatment duration in these patients?</span>' +
+          '<button class="im-btn" id="im-reveal" type="button" aria-expanded="false" aria-controls="im-answer">Reveal</button>' +
+        '</span>';
+      while(ic.nextSibling){ box.removeChild(ic.nextSibling); }
+      box.appendChild(body);
+      /* the module's question-mark icon in place of the info icon */
+      ic.innerHTML = '<svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg>';
+      /* the answer below the box, in space kept for it */
+      var ansEl = document.createElement('p'); ansEl.className = 'im-ans'; ansEl.id = 'im-answer'; ansEl.hidden = true;
+      ansEl.innerHTML = 'In patients who had a dose reduction and/or interruption (n=197), the median duration of tepotinib treatment was <b>10.7 months</b> (range: 0.7, 83.1). Use the tabs to review measures by line of therapy.';
+      var kmsg = box.closest('.keymsg') || box;
+      kmsg.insertAdjacentElement('afterend', ansEl);
+
+      var btn = document.getElementById('im-reveal');
+      var ans = document.getElementById('im-answer');
+      var reveal = function(){
+        if(revealed) return;
+        revealed = true;
+        ans.hidden = false;
+        ans.classList.add('is-in');
+        btn.setAttribute('aria-expanded', 'true');
+        if(held) release();
+      };
+      btn.addEventListener('click', reveal);   /* Enter and Space on a button arrive as a select */
+    }
+    root.classList.add('im-ready');
+
+    /* hold the nudge until the Consider answer has been revealed */
+    function release(){
+      held = false; guarding = true;
+      if(frame) frame.classList.add('nudge-shown');
+      if(nudge) nudge.classList.add('is-on');
+      guarding = false;
+    }
+    if(nudge && typeof MutationObserver !== 'undefined'){
+      new MutationObserver(function(){
+        if(guarding || revealed) return;
+        if(nudge.classList.contains('is-on') || (frame && frame.classList.contains('nudge-shown'))){
+          guarding = true;
+          nudge.classList.remove('is-on');
+          if(frame) frame.classList.remove('nudge-shown');
+          guarding = false;
+          held = true;
+        }
+      }).observe(nudge, { attributes:true, attributeFilter:['class'] });
+      if(frame){
+        new MutationObserver(function(){
+          if(guarding || revealed) return;
+          if(frame.classList.contains('nudge-shown')){
+            guarding = true; frame.classList.remove('nudge-shown'); guarding = false; held = true;
+          }
+        }).observe(frame, { attributes:true, attributeFilter:['class'] });
+      }
+    }
+  }catch(e){ root.classList.add('im-ready'); }
+})();
+</script>
+<!-- in-module:js:end -->
 <script id="build-stamp">(function(){var T="TM 9035: Dose reductions and interruptions",M="TM 9035 tm9035-dose-reductions-interruptions-slide-40-2026-06-29-v1 r4 2026-10-11";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
 <script id="layer-release">(function(){var SAFE=/^(chartIn|rise)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;if(el.getAnimations&&el.getAnimations().some(function(a){return a.playState==="paused";})){seen.set(el,now);return;}var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
 </body>
