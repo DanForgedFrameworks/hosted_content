@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<!-- build: TM 9035 | tm9035-orr-subgroups-slide-37-2026-06-24-v1 | r4 | 2026-10-11 -->
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>[TEST A] TM 9035: ORR subgroups forest plot</title>
+<style>
+/* ============================================================
+   TOUCH MEDICAL — TM9035 SLIDE 37  (fit-to-embed-box, 680 ceiling)
+   Long-term ORR across clinically relevant subgroups (VISION METex14).
+   Tiered: hub (subgroup cards, simple dot-strips) -> explorer (per-subgroup
+   forest: point + 95% CI vs Overall band, cycle) -> full forest plot.
+   Source gated until all 7 subgroups explored. Honest forest viz throughout.
+   Self-contained. No external runtime dependencies. Poppins (bundled).
+   Brand: teal #0098be, navy #222f55.
+   ============================================================ */
+@font-face { font-family:"Poppins"; src:url("assets/poppins-400.ttf") format("truetype"); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-600.ttf") format("truetype"); font-weight:600; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-700.ttf") format("truetype"); font-weight:700; font-style:normal; font-display:swap; }
+
+:root{
+  --teal:#0098be; --teal-strong:#007a98;
+  --navy:#222f55; --on-accent:#ffffff;
+  --neutral:#c6d3e2;
+  --muted:#56608a; --faint:#8a91b0;
+  --pale:#d9eff8; --mist:#f4f7f9; --line:#e3e8ee;
+  --backdrop:rgba(16,26,38,.68);
+  --band:rgba(0,152,190,.12);
+  --c1:#222f55; --c2:#0098be; --c3:#4f9fc4; --c4:#86bdd8; --c5:#b9d8e8;
+  --title-shadow-slim:0 1px 2px rgba(34,47,85,.16);   /* slim title variant */
+  --font:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{ box-sizing:border-box; }
+html,body{ height:100%; margin:0; }
+body{ overflow:hidden; background:#fff; color:var(--navy); font-family:var(--font); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; display:flex; align-items:center; justify-content:center; }
+
+/* ---------- frame: fill height, cap at 680, centred ---------- */
+.frame{ width:100%; height:100%; max-height:680px; display:flex; flex-direction:column; overflow:hidden; background:#fff; }
+
+/* banner */
+.banner{ flex:0 0 auto; text-align:center; padding:clamp(7px,1.5vh,13px) clamp(16px,3vw,40px) clamp(5px,1vh,9px); background:#fff; box-shadow:0 4px 11px rgba(34,47,85,0.07); }
+.banner__title{ margin:0; font-size:clamp(30px,3.4vw,48px); color:var(--navy); font-weight:700; line-height:1.1; letter-spacing:-0.012em; text-shadow:var(--title-shadow-slim); }
+.banner__title em{ font-style:italic; }
+
+/* navigation prompt — its own callout box (teal-accented; green is reserved for OOI questions) */
+.navprompt{ flex:0 0 auto; display:flex; justify-content:center; padding:clamp(4px,.7vh,7px) clamp(14px,3vw,30px) 0; }
+.navprompt__box{ display:inline-flex; align-items:center; gap:10px; max-width:1000px; padding:6px 16px; border:2px solid var(--teal); border-radius:14px; background:rgba(0,152,190,.06); color:var(--teal-strong); font-size:clamp(.82rem,1.4vw,1rem); font-weight:600; line-height:1.32; text-align:left; }
+.navprompt__ic{ flex:0 0 auto; width:26px; height:26px; display:grid; place-items:center; color:var(--teal); }
+.navprompt__ic svg{ width:100%; height:100%; }
+
+/* ---------- footnote marker + tooltip (hover / focus / tap) ---------- */
+.fnote{ position:relative; display:inline-flex; vertical-align:baseline; }
+.fnote__btn{ display:inline-grid; place-items:center; min-width:15px; height:15px; margin-left:1px; padding:0 1px; border:0; background:transparent; color:var(--teal-strong); font:inherit; font-size:.78em; font-weight:700; line-height:1; vertical-align:super; cursor:pointer; text-decoration:underline dotted; text-decoration-color:var(--teal); text-decoration-thickness:1.5px; text-underline-offset:3px; }   /* owner 14 Oct 2026: defined terms = dotted teal underline, pointer; never help/solid */
+.fnote__btn:focus-visible{ outline:2px solid var(--navy); outline-offset:2px; border-radius:3px; }
+.fnote__pop{ position:absolute; left:0; bottom:calc(100% + 7px); width:max-content; max-width:min(280px,68vw); padding:9px 12px; border:2px solid var(--teal); border-radius:10px; background:#fff; box-shadow:0 12px 26px rgba(34,47,85,.22); color:#151515; font-size:clamp(.72rem,1.05vw,.84rem); font-weight:400; line-height:1.4; text-align:left; white-space:normal; opacity:0; visibility:hidden; transform:translateY(-4px); transition:opacity .15s ease, visibility .15s ease, transform .15s ease; z-index:9; }
+/* owner 14 Oct 2026: shown only through .open, which the script sets - pointing previews, select pins (see the footnote script) */
+.fnote.open .fnote__pop{ opacity:1; visibility:visible; transform:translateY(0); }
+/* On the hub the cards are only ~116px tall, so a pop-up opening UPWARD from a
+   top-row card lands above the frame and cannot be read. On the hub they all open
+   downward; the card no longer clips, so it simply overlays the row below. */
+[data-view="hub"] .fnote__pop{ top:calc(100% + 7px); bottom:auto; transform:translateY(4px); }
+/* Right-hand column: a 280px pop-up anchored left runs off the frame edge, so it
+   anchors right instead. 3-column grid, so every 3rd card. */
+#cards .hcard:nth-child(3n) .fnote__pop{ left:auto; right:0; }
+[data-view="hub"] .fnote.open .fnote__pop{ transform:translateY(0); }
+.hcard:has(.fnote.open){ z-index:50; }   /* an open pop-up lays over the neighbouring cards, pointed at or pinned */
+
+/* ---------- stage shell ---------- */
+.stage{ flex:1 1 auto; min-height:0; position:relative; }
+.view{ position:absolute; inset:0; display:flex; flex-direction:column; padding:clamp(8px,1.5vh,16px) clamp(14px,2.6vw,34px) clamp(6px,1.1vh,12px); opacity:0; visibility:hidden; transform:translateY(8px); transition:opacity .14s ease-in, transform .14s ease-in, visibility 0s linear .14s; }
+/* owner 14 Oct 2026: the outgoing view fades out quickly, the incoming one eases in (opacity + small rise); .46s in all */
+.view.is-active{ opacity:1; visibility:visible; transform:none; transition:opacity .32s ease-out .1s, transform .36s cubic-bezier(.22,.61,.36,1) .1s, visibility 0s; }
+/* subgroup to subgroup inside the explorer: the old plot fades out (.12s), the new one eases in, and the
+   markers and CI whiskers glide from where they were to their new values (script: renderExplorer) */
+.fx-swap{ transition:opacity .3s ease-out, transform .32s cubic-bezier(.22,.61,.36,1); }
+.fx-swap.fx-out{ opacity:0; transition:opacity .12s ease-in; }
+.fx-swap.fx-pre{ opacity:0; transform:translateY(8px); transition:none; }
+.forest.fx-glide .pdot,.forest.fx-glide .pwhisk{ transition:left .38s cubic-bezier(.22,.61,.36,1), width .38s cubic-bezier(.22,.61,.36,1), height .38s cubic-bezier(.22,.61,.36,1); }
+[data-view="hub"] #view-hub,[data-view="explorer"] #view-explorer,[data-view="full"] #view-full{ }
+
+/* ---------- HUB ---------- */
+.hero{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:clamp(14px,2.4vw,28px); text-align:left; margin-bottom:clamp(5px,1vh,10px); }
+.hero__stat{ flex:0 0 auto; display:flex; flex-direction:column; align-items:center; padding:clamp(6px,1.1vh,10px) clamp(14px,2vw,22px); border:2px solid var(--teal); border-radius:14px; background:var(--mist); }
+.hero__big{ font-size:clamp(1.3rem,2.7vw,1.75rem); font-weight:700; color:var(--teal); line-height:1; font-variant-numeric:tabular-nums; }
+.hero__cap{ margin-top:3px; font-size:clamp(.7rem,1.25vw,.82rem); font-weight:600; color:var(--muted); white-space:nowrap; }
+.hero__msg{ margin:0; max-width:70ch; font-size:clamp(.8rem,1.35vw,.92rem); font-weight:500; line-height:1.34; color:var(--navy); }
+
+/* 3 columns x 3 rows: 7 subgroups + the full-forest launcher = 8 cards, 1 blank. */
+/* grid-auto-rows:1fr - rows divide the space they HAVE. A fixed minimum here made
+   the grid overflow its container and collide with the hero and the controls. */
+.cards{ flex:1 1 auto; min-height:0; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); grid-auto-rows:1fr; align-content:stretch; gap:clamp(8px,1.1vw,13px); }
+/* min-height is the guard: 3 rows previously squeezed the card to 105px against
+   132px of content and silently clipped the name and the scale labels. */
+.hcard{ position:relative; display:flex; flex-direction:column; align-items:stretch; justify-content:center; gap:clamp(3px,.6vh,6px); min-height:0; border:2px solid var(--line); border-radius:16px; background:#fff; padding:clamp(17px,2.6vh,22px) clamp(13px,1.3vw,18px); font:inherit; color:var(--navy); text-align:left; cursor:pointer; overflow:visible; transition:border-color .16s ease, box-shadow .16s ease, transform .16s ease; }
+/* Footnote pop-ups are absolutely positioned inside the card. With overflow:hidden
+   they were clipped out of sight entirely. The card lifts while focused so the
+   pop-up layers over its neighbours instead of under them. */
+.hcard:focus-within{ z-index:50; }
+.fnote__pop{ z-index:60; }
+.hcard:hover{ border-color:var(--teal); transform:translateY(-3px); box-shadow:0 10px 20px rgba(34,47,85,.12); }
+.hcard:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+.hcard__top{ display:flex; align-items:center; gap:9px; }
+.hcard__icon{ flex:0 0 auto; width:clamp(21px,2.1vw,26px); height:clamp(21px,2.1vw,26px); color:var(--teal); }
+.hcard__icon svg{ width:100%; height:100%; }
+.hcard__name{ font-size:clamp(.95rem,1.55vw,1.14rem); font-weight:700; line-height:1.16; }
+.hcard__strip{ position:relative; flex:0 0 auto; height:clamp(23px,3.2vh,28px); margin-top:8px; }
+/* R4 13 Oct: the upper letter badges rise above the strip and sat on the card name at 1370x700
+   (Smoking history N, Histology S, Brain metastases N, Line of therapy 2L+). The strip gets 8px of
+   room above it, paid for by a slimmer card padding so the 3x3 grid still fits its rows. */
+.cards .hcard{ padding-top:clamp(12px,2vh,17px); padding-bottom:clamp(12px,2vh,17px); }
+/* Short-viewport compaction (contract 0.11 pattern). At 1370x620 the three rows
+   only get 99px each and the card content did not fit - every card overflowed.
+   Compact ONLY that case so the 700 layout keeps its approved size. */
+@media (max-height:660px){
+  #cards .hcard{ padding:12px clamp(11px,1.2vw,15px); gap:2px; }
+  #cards .hcard__icon{ width:17px; height:17px; }
+  /* longest name ("Brain metastases at baseline") wraps to two lines and was the
+     one card still overflowing by 3px at 620 - tighten leading to absorb it. */
+  /* At 620 the long names ("Brain metastases at baseline") wrap to two lines and
+     push the card past its row. One line + ellipsis in the short case only; the
+     700 layout keeps the full name on two lines. */
+  #cards .hcard__name{ font-size:.8rem; line-height:1.06; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #cards .hcard__top{ min-width:0; }
+  /* R4 13 Oct: the upper letter badges rise ~12px above the strip and sat on the name (Histology S,
+     Brain metastases N). Room above the strip; the gap and the ends absorb it so the card still fits. */
+  #cards .hcard__strip{ height:17px; margin-top:10px; }
+  #cards .hcard__ends{ font-size:.58rem; margin-top:1px; }
+  .hero{ margin-bottom:4px; }
+  .hero__big{ font-size:1.4rem; }
+}
+.hcard__track{ position:absolute; left:1px; right:1px; top:50%; height:9px; transform:translateY(-50%); border-radius:9px; background:var(--mist); box-shadow:inset 0 0 0 1px var(--line); }
+.hcard__ovl{ position:absolute; top:50%; height:15px; width:2px; transform:translate(-50%,-50%); background:var(--teal); border-radius:2px; opacity:.55; }
+.hmk{ position:absolute; top:0; bottom:0; transform:translateX(-50%); }
+.hmk__dot{ position:absolute; left:0; top:50%; width:10px; height:10px; transform:translate(-50%,-50%); border-radius:50%; background:var(--navy); border:2px solid #fff; box-shadow:0 1px 2px rgba(16,26,38,.32); }
+.hmk__stem{ position:absolute; left:0; width:1.5px; transform:translateX(-50%); background:var(--navy); opacity:.26; }
+.hmk__pill{ position:absolute; left:0; top:50%; background:var(--navy); color:#fff; font-size:clamp(.5rem,.95vw,.6rem); font-weight:700; line-height:1; padding:2px 5px; border-radius:6px; white-space:nowrap; }
+.hmk--l0 .hmk__pill{ transform:translate(-50%,calc(-50% - 15px)); }
+.hmk--l1 .hmk__pill{ transform:translate(-50%,calc(-50% + 15px)); }
+.hmk--l0 .hmk__stem{ top:calc(50% - 10px); height:10px; }
+.hmk--l1 .hmk__stem{ top:50%; height:10px; }
+.hcard__ends{ display:flex; justify-content:space-between; margin-top:4px; font-size:clamp(.66rem,1.05vw,.74rem); font-weight:600; color:var(--faint); letter-spacing:.03em; }
+.hcard__tick{ position:absolute; top:9px; right:9px; width:21px; height:21px; border-radius:50%; background:var(--teal); color:#fff; display:none; align-items:center; justify-content:center; }
+.hcard.is-seen .hcard__tick{ display:flex; }
+.hcard__tick svg{ width:12px; height:12px; }
+
+/* launcher card */
+.hcard--launch{ border-style:dashed; border-color:var(--teal); background:var(--mist); align-items:center; justify-content:center; text-align:center; gap:8px; }
+.hcard--launch:hover{ background:var(--pale); }
+.hcard--launch .lc__plus{ width:34px; height:34px; border-radius:50%; border:2.5px solid var(--teal); color:var(--teal); display:grid; place-items:center; }
+.hcard--launch .lc__plus svg{ width:18px; height:18px; }
+.hcard--launch .lc__txt{ font-size:clamp(.84rem,1.4vw,1rem); font-weight:700; color:var(--teal); line-height:1.2; }
+
+/* ---------- EXPLORER ---------- */
+.exhead{ flex:0 0 auto; display:flex; align-items:center; gap:clamp(8px,1.4vw,16px); margin-bottom:clamp(6px,1.2vh,12px); }
+.backbtn{ flex:0 0 auto; display:inline-flex; align-items:center; gap:6px; min-height:38px; padding:7px 14px; border:2px solid var(--teal); border-radius:10px; background:#fff; color:var(--teal); font:inherit; font-weight:700; font-size:.82rem; cursor:pointer; transition:background .15s ease,color .15s ease; }
+.backbtn:hover{ background:var(--teal); color:#fff; }
+.backbtn:focus-visible,.navbtn:focus-visible,.dot:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+.backbtn svg{ width:15px; height:15px; }
+.extitle{ flex:1 1 auto; display:flex; align-items:center; gap:10px; min-width:0; }
+.extitle__icon{ flex:0 0 auto; width:clamp(30px,3vw,40px); height:clamp(30px,3vw,40px); display:grid; place-items:center; border:3px solid var(--teal); border-radius:50%; color:var(--teal); }
+.extitle__icon svg{ width:56%; height:56%; }
+.extitle__name{ margin:0; font-size:clamp(1rem,1.9vw,1.3rem); font-weight:700; }
+.excyc{ flex:0 0 auto; display:flex; align-items:center; gap:clamp(7px,1.2vw,12px); }
+.navbtn{ flex:0 0 auto; width:38px; height:38px; border-radius:50%; border:2px solid var(--teal); background:#fff; color:var(--teal); cursor:pointer; display:grid; place-items:center; transition:background .15s ease,color .15s ease,transform .12s ease; }
+.navbtn svg{ width:17px; height:17px; }
+.navbtn:hover{ background:var(--teal); color:#fff; }
+.navbtn:active{ transform:scale(.93); }
+.dots{ display:flex; gap:7px; }
+.dot{ width:9px; height:9px; border-radius:50%; border:0; background:#c7d2de; cursor:pointer; padding:0; transition:transform .15s ease, background .15s ease; }
+.dot[aria-current="true"]{ background:var(--teal); transform:scale(1.25); }
+.dot:hover{ background:var(--teal-strong); }
+.expanel{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; justify-content:center; }
+.exnote{ flex:0 0 auto; margin:clamp(6px,1.2vh,12px) 0 0; font-size:clamp(.72rem,1.25vw,.84rem); font-weight:500; color:var(--muted); font-style:italic; }
+
+/* ---------- FULL ---------- */
+.fuhead{ flex:0 0 auto; display:flex; align-items:center; gap:clamp(8px,1.4vw,16px); margin-bottom:clamp(5px,1vh,10px); }
+.futitle{ flex:1 1 auto; margin:0; font-size:clamp(.96rem,1.8vw,1.22rem); font-weight:700; }
+.fulegend{ flex:0 0 auto; display:flex; align-items:center; gap:clamp(10px,1.6vw,18px); font-size:clamp(.66rem,1.15vw,.76rem); font-weight:600; color:var(--muted); }
+.fulegend span{ display:inline-flex; align-items:center; gap:5px; }
+.fulegend .lg-dot{ width:11px; height:11px; border-radius:50%; background:var(--navy); }
+.fulegend .lg-band{ width:16px; height:11px; border-radius:3px; background:var(--band); box-shadow:inset 0 0 0 1px rgba(0,152,190,.3); }
+.fubody{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; justify-content:flex-start; }
+
+/* ---------- forest engine (shared) ---------- */
+/* A3 (R3-152): axis truncated to 10-75, so the plot no longer needs the full page. */
+.forest{ display:flex; align-items:flex-start; gap:clamp(8px,1.2vw,16px); width:min(100%,1080px); margin-inline:auto; }
+.forest__labels{ flex:0 0 auto; display:grid; grid-auto-rows:var(--rowh); }
+.forest__labels.has-group{ grid-template-columns:auto auto auto; }
+.forest__labels:not(.has-group){ grid-template-columns:auto auto; }
+.flbl{ display:flex; align-items:center; padding:0 8px 0 0; font-size:clamp(.72rem,1.25vw,.86rem); line-height:1.1; white-space:nowrap; }
+.flbl--group{ font-weight:700; color:var(--navy); }
+.flbl--lvl{ font-weight:600; color:var(--navy); }
+.flbl--lvl.is-overall{ font-weight:700; }
+.flbl--n{ justify-content:flex-end; font-weight:600; color:var(--muted); font-variant-numeric:tabular-nums; padding-right:4px; }
+.is-sep{ border-top:1px solid var(--line); }
+.forest__mid{ flex:1 1 auto; min-width:0; display:flex; flex-direction:column; }
+.forest__plot{ position:relative; }
+.forest__bg{ position:absolute; inset:0; pointer-events:none; }
+.pgrid{ position:absolute; top:0; bottom:0; width:1px; background:var(--line); transform:translateX(-.5px); }
+.pband{ position:absolute; top:0; bottom:0; background:var(--band); }
+.poverall{ position:absolute; top:0; bottom:0; width:2px; transform:translateX(-1px); background:repeating-linear-gradient(180deg,var(--muted) 0 5px,transparent 5px 9px); }   /* R4-51: dashed grey reference line, as the poster */
+.forest__prows{ position:relative; }
+.prow{ position:relative; height:var(--rowh); }
+.prow:focus-visible{ outline:3px solid var(--navy); outline-offset:-2px; border-radius:5px; }
+.pwhisk{ position:absolute; top:50%; height:2px; transform:translateY(-50%); background:var(--muted); }
+.pwhisk::before,.pwhisk::after{ content:""; position:absolute; top:-4px; height:10px; width:2px; background:var(--muted); }
+.pwhisk::before{ left:0; } .pwhisk::after{ right:0; }
+.pdot{ position:absolute; top:50%; transform:translate(-50%,-50%); border-radius:50%; background:var(--navy); border:2px solid #fff; box-shadow:0 1px 3px rgba(16,26,38,.3); }
+.pdot.is-overall{ background:var(--teal); }
+.forest__axis{ position:relative; height:16px; margin-top:3px; }
+.forest__axis{ border-top:1.5px solid var(--muted); }   /* R4-49: x-axis line; the break mark went with the truncated axis */
+.ptick{ position:absolute; top:2px; transform:translateX(-50%); font-size:clamp(.62rem,1.1vw,.72rem); font-weight:600; color:var(--faint); font-variant-numeric:tabular-nums; }
+.forest__axtitle{ text-align:center; font-size:clamp(.66rem,1.15vw,.78rem); font-weight:700; color:var(--muted); margin-top:1px; }
+.forest__vals{ flex:0 0 auto; display:grid; grid-auto-rows:var(--rowh); }
+.fval{ display:flex; align-items:center; justify-content:flex-start; font-size:clamp(.72rem,1.25vw,.86rem); font-weight:600; color:var(--navy); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.fval b{ font-weight:700; }
+.fval.is-overall{ color:var(--teal); }
+
+/* ---------- footer controls (chrome) ---------- */
+.controls{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:clamp(12px,2.4vw,26px); padding:clamp(6px,1.1vh,11px) clamp(12px,3vw,24px); border-top:1px solid var(--line); }
+.progress{ font-size:clamp(.76rem,1.4vw,.9rem); font-weight:700; color:var(--teal); white-space:nowrap; font-variant-numeric:tabular-nums; }
+.cite-src{ display:inline-flex; align-items:center; gap:8px; min-height:38px; padding:8px 16px; border:2px solid var(--teal); border-radius:10px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.84rem; cursor:pointer; transition:filter .15s ease; }
+.cite-src:hover:not(:disabled){ filter:brightness(.95); }
+.cite-src:disabled{ background:#fff; color:var(--faint); border-color:var(--line); cursor:not-allowed; }
+.cite-src svg{ width:14px; height:14px; }
+.cite-src:focus-visible,.cite-dismiss:focus-visible,.inter__btn:focus-visible,.cite-view:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+
+/* ---------- citation modal ---------- */
+.cite-modal{ position:fixed; inset:0; z-index:40; display:none; align-items:center; justify-content:center; padding:clamp(12px,4vw,40px); background:var(--backdrop); }
+.cite-modal.is-open{ display:flex; }
+.cite-card{ width:min(680px,100%); max-height:calc(100% - 24px); overflow:auto; background:#fff; border-radius:16px; box-shadow:0 24px 60px rgba(16,26,38,.4); padding:clamp(18px,3vw,26px); animation:rise .22s ease both; }
+.cite-card__check{ width:38px; height:38px; border-radius:50%; background:var(--teal); color:#fff; display:grid; place-items:center; margin-bottom:12px; }
+.cite-card__eyebrow{ margin:0 0 4px; font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--teal); }
+.cite-card__title{ margin:0 0 8px; font-size:clamp(1.05rem,2vw,1.25rem); font-weight:700; color:var(--navy); }
+.cite-card__body{ margin:0; font-size:.92rem; line-height:1.5; color:var(--navy); }
+.cite-card__ref{ display:block; margin-top:10px; padding-top:10px; border-top:1px solid var(--line); font-size:.85rem; line-height:1.5; color:var(--muted); }
+.cite-card__ref sup{ color:var(--teal); font-weight:700; }
+.cite-card__actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+.cite-view{ flex:0 0 auto; display:inline-flex; align-items:center; gap:7px; min-height:44px; padding:10px 18px; border:2px solid var(--teal); border-radius:10px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.88rem; cursor:pointer; transition:filter .15s ease; }
+.cite-view:hover{ filter:brightness(.95); }
+.cite-dismiss{ flex:0 0 auto; min-height:44px; padding:10px 18px; border:2px solid var(--teal); border-radius:10px; background:#fff; color:var(--teal); font:inherit; font-weight:700; font-size:.88rem; cursor:pointer; }
+
+/* ---------- D16/D22 interstitial ---------- */
+.inter{ position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center; padding:clamp(12px,4vw,40px); background:var(--backdrop); }
+.inter.is-open{ display:flex; }
+.inter__panel{ width:min(460px,100%); max-height:calc(100% - 24px); overflow:auto; background:#fff; border-radius:16px; box-shadow:0 24px 60px rgba(16,26,38,.4); padding:22px; animation:rise .2s ease both; }
+.inter__title{ font-size:1.05rem; font-weight:700; margin:0 0 8px; color:var(--navy); }
+.inter__p{ font-size:.82rem; line-height:1.5; color:var(--muted); margin:0 0 10px; }
+.inter__p strong{ color:var(--navy); font-weight:600; }
+.inter__url{ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.72rem; line-height:1.45; color:var(--muted); background:var(--mist); border:1px solid var(--line); border-radius:8px; padding:9px 11px; word-break:break-all; }
+.inter__status{ margin-top:12px; display:flex; align-items:center; gap:9px; min-height:22px; font-size:.76rem; font-style:italic; color:var(--muted); }
+.prep{ display:inline-flex; gap:5px; }
+.prep i{ width:8px; height:8px; border-radius:50%; background:var(--teal); display:inline-block; animation:prep 1s infinite ease-in-out; }
+.prep i:nth-child(2){ animation-delay:.15s; }
+.prep i:nth-child(3){ animation-delay:.3s; }
+.inter__actions{ display:flex; flex-wrap:wrap; gap:9px; margin-top:16px; }
+.inter__btn{ min-height:44px; padding:10px 18px; border:2px solid var(--teal); border-radius:10px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:.82rem; cursor:pointer; }
+.inter__btn.secondary{ background:#fff; color:var(--teal); }
+.inter__btn:disabled{ background:#c3c8d2; border-color:#c3c8d2; color:#fff; cursor:not-allowed; }
+.inter__btn:hover:not(:disabled){ filter:brightness(.96); }
+
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+@keyframes rise{ from{ opacity:0; transform:translateY(10px) scale(.99);} to{ opacity:1; transform:none; } }
+@keyframes prep{ 0%,100%{ transform:scale(.6); opacity:.4; } 50%{ transform:scale(1); opacity:1; } }
+
+/* ===== Continue nudge — eased-in end-of-content reminder (fires once all 7 explored) ===== */
+.frame.nudge-shown{ padding-bottom:0; } /* nudge is a fixed overlay — must NOT steal box height (was 80px, which squished the cards inside the locked 1370xN box) */
+.nudge{ position:fixed; left:50%; bottom:74px; transform:translateX(-50%); z-index:38; display:none; align-items:center; gap:10px; max-width:calc(100% - 28px); padding:9px 17px; border-radius:999px; background:rgba(34,47,85,.94); color:#fff; font-size:15px; font-weight:600; line-height:1.25; box-shadow:0 8px 22px rgba(16,26,38,.30); }
+.nudge.is-on{ display:inline-flex; animation:nudgeIn .5s ease both; }
+.nudge b{ font-weight:700; }
+.nudge__chev{ flex:0 0 auto; display:inline-grid; place-items:center; }
+.nudge__chev svg{ width:20px; height:20px; transition:transform .3s ease; }
+.nudge.is-on .nudge__chev{ animation:nudgeBob 1.6s ease-in-out .6s infinite; }
+.nudge__m{ display:none; }
+body.is-fullscreen .nudge{ bottom:auto; top:60px; }
+body.is-fullscreen .nudge__d{ display:none; }
+body.is-fullscreen .nudge__m{ display:inline; }
+body.is-fullscreen .nudge__chev svg{ transform:rotate(180deg); }
+body.is-fullscreen .nudge.is-on .nudge__chev{ animation:nudgeBobUp 1.6s ease-in-out .6s infinite; }
+@keyframes nudgeIn{ from{ opacity:0; transform:translateX(-50%) translateY(12px);} to{ opacity:1; transform:translateX(-50%) translateY(0);} }
+@keyframes nudgeBob{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(3px);} }
+@keyframes nudgeBobUp{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-3px);} }
+
+/* ===== §4.2 Mobile/Visme launch card + return-to-course (single-screen variant) ===== */
+.mlaunch{ display:none; }
+.returnbar{ display:none; }
+body.is-embedded-mobile .frame{ display:none !important; }
+body.is-embedded-mobile{ display:block; }
+body.is-embedded-mobile .mlaunch{ display:flex; position:fixed; inset:0; z-index:50; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:42px; padding:90px 70px; background:linear-gradient(135deg,#0098be 0%, #007a98 55%, #222f55 100%); color:#fff; }
+.mlaunch__badge{ font-size:30px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; opacity:.9; }
+.mlaunch__title{ margin:0; font-size:50px; font-weight:700; line-height:1.08; }
+.mlaunch__title em{ font-style:italic; }
+.mlaunch__lead{ margin:0; max-width:1040px; font-size:36px; font-weight:500; line-height:1.4; opacity:.96; }
+.mlaunch__btn{ display:inline-flex; align-items:center; gap:26px; margin-top:6px; padding:44px 88px; border-radius:999px; background:#fff; color:#007a98; font:inherit; font-weight:700; font-size:46px; text-decoration:none; box-shadow:0 18px 54px rgba(16,26,38,.38); }
+.mlaunch__btn svg{ width:54px; height:54px; }
+.mlaunch__note{ margin:0; max-width:1040px; font-size:27px; line-height:1.4; opacity:.85; }
+body.is-fullscreen .returnbar{ display:inline-flex; align-items:center; justify-content:center; gap:9px; position:fixed; top:10px; left:10px; z-index:60; box-sizing:border-box; width:auto; height:44px; padding:0 18px 0 13px; border-radius:999px; background:rgba(34,47,85,.92); color:#fff; text-decoration:none; box-shadow:0 6px 16px rgba(16,26,38,.26); font:inherit; }
+body.is-fullscreen .returnbar__ic{ flex:0 0 auto; width:22px; height:22px; display:grid; place-items:center; }
+body.is-fullscreen .returnbar__ic svg{ width:22px; height:22px; }
+body.is-fullscreen .returnbar__lab{ font:inherit; font-weight:700; font-size:15px; white-space:nowrap; }
+body.is-fullscreen .returnbar:focus-visible{ outline:3px solid var(--teal); outline-offset:3px; }
+body.is-fullscreen{ padding-top:56px; }
+
+/* ---------- phone (<760px, or a phone on its side: under 500px tall) ---------- */
+/* R4 13 Oct (phone gate): a phone on its side is 844 wide, so it got the desktop 3x3 grid squeezed into
+   ~330px of height and every card overlapped. Under 500px tall it now scrolls like the upright phone.
+   The desktop fit sizes are 620px tall or more, so they never reach this block. */
+@media (max-width:760px), (max-height:500px){
+  html,body{ height:auto; }
+  body{ overflow:auto; display:block; }
+  .frame{ height:auto; min-height:100%; max-height:none; }
+  .stage{ position:static; }
+  .view{ position:static; opacity:1; visibility:visible; display:none; }
+  [data-view="hub"] #view-hub,[data-view="explorer"] #view-explorer,[data-view="full"] #view-full{ display:flex; }
+  .hero{ flex-direction:column; }
+  .cards{ grid-template-columns:1fr 1fr; }
+  .forest{ font-size:.8rem; }
+  .frame.nudge-shown{ padding-bottom:0; }
+  .nudge{ font-size:13px; left:12px; right:12px; bottom:14px; transform:none; max-width:none; justify-content:center; }
+  .nudge.is-on{ animation:none; }
+  /* R4 12 Oct (H11): the back button, the title and the prev/dots/next all shared one row and piled up.
+     On a phone: row 1 = back button + prev/dots/next, row 2 = the subgroup title, full width. */
+  .exhead, .fuhead{ flex-wrap:wrap; row-gap:10px; }
+  .exhead .extitle{ order:3; flex:1 1 100%; }
+  .exhead .excyc{ margin-left:auto; gap:6px; }
+  .exhead .dots{ gap:5px; }
+  .exhead .navbtn{ width:44px; height:44px; }
+  .backbtn{ min-height:44px; }
+  /* R4 13 Oct (phone gate): the letter badges sit 15px above and below the track. On a phone the card
+     name wraps to two lines and the badges landed on it (Age, Smoking history, Histology). Cards now
+     size to their content, with room above and below the strip; the short-screen ellipsis is undone. */
+  .cards{ grid-auto-rows:auto; }
+  #cards .hcard{ justify-content:flex-start; padding:14px 12px; gap:4px; }
+  #cards .hcard__icon{ width:21px; height:21px; }
+  #cards .hcard__name{ font-size:.95rem; line-height:1.16; white-space:normal; overflow:visible; }
+  #cards .hcard__strip{ height:28px; margin:18px 0 16px; }
+  #cards .hcard__ends{ font-size:.66rem; margin-top:4px; }
+  .hcard--launch{ min-height:150px; }
+}
+@media (max-height:500px) and (min-width:761px){
+  .cards{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .hero{ flex-direction:row; }
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+  .view,.view.is-active,.fx-swap{ transition:none !important; transform:none !important; }   /* swaps are instant: no delay either */
+  .forest .pdot,.forest .pwhisk{ transition:none !important; }
+}
+</style>
+<!-- dyn-icon:css:start -->
+<style id="dyn-icon-css">
+/* dyn-icon (owner rulings 13 Oct 2026; touchmedical-html contract 5B "When an icon moves"): the movement shows the
+   idea; still and complete at rest; one icon plays by itself when the screen opens, every other one on the learner's
+   hover, focus or select; one cycle, then still; nothing moves with reduced motion; off screen the idle rule pauses it. */
+svg.dy .acc{ stroke:var(--dy-acc,currentColor); } svg.dy .acc-fill{ fill:var(--dy-acc,currentColor); stroke:none; }
+/* module drawings: smoke, age calendar, brain, DNA lens */
+svg.dy .ember{ opacity:.55; } svg.dy .wisp{ stroke-dasharray:7 7; }
+svg.dy.run .ember{ animation:dyEmber 2.4s ease-in-out both; } @keyframes dyEmber{ 0%,100%{ opacity:.55; } 25%,70%{ opacity:1; } 45%{ opacity:.6; } }
+svg.dy.run .wisp{ animation:dyWisp 2.4s ease-in-out both; animation-delay:calc(var(--d) * .3s); }
+@keyframes dyWisp{ 0%,100%{ stroke-dashoffset:0; opacity:1; transform:none; } 8%{ stroke-dashoffset:7; opacity:0; transform:translateY(2px); } 55%{ stroke-dashoffset:0; opacity:1; transform:none; } 75%{ opacity:.2; transform:translateY(-2px); } }
+svg.dy .leaf{ opacity:0; transform-origin:12px 9.6px; fill:#fff; fill-opacity:.6; }
+svg.dy .days circle{ opacity:0; transform-box:fill-box; transform-origin:center; } svg.dy .rings{ transform-box:fill-box; transform-origin:center bottom; }
+svg.dy.run .leaf{ animation:dyLeaf 2.4s ease-in-out both; } @keyframes dyLeaf{ 0%{ opacity:0; transform:none; } 6%{ opacity:1; transform:none; } 40%{ opacity:1; transform:scaleY(-.15); } 52%,100%{ opacity:0; transform:scaleY(-.15); } }
+svg.dy.run .days circle{ animation:dyDay 2.4s ease-out both; animation-delay:calc(var(--d) * .12s + .9s); } @keyframes dyDay{ 0%{ opacity:0; transform:scale(0); } 20%{ opacity:1; transform:scale(1.3); } 30%,70%{ opacity:1; transform:none; } 100%{ opacity:0; } }
+svg.dy.run .rings{ animation:dyRings 2.4s ease-in-out both; } @keyframes dyRings{ 0%,100%{ transform:none; } 8%{ transform:translateY(-1px); } 18%{ transform:none; } 46%{ transform:translateY(-.8px); } 54%{ transform:none; } }
+svg.dy .met,svg.dy .ring{ transform-box:fill-box; transform-origin:center; } svg.dy .ring{ opacity:0; }
+svg.dy.run .met{ animation:dyMet 2.4s ease-out both; animation-delay:calc(var(--d) * .3s); } @keyframes dyMet{ 0%,100%{ transform:none; opacity:1; } 6%,20%{ transform:scale(0); opacity:0; } 35%{ transform:scale(1.4); opacity:1; } 45%{ transform:none; } }
+svg.dy.run .ring{ animation:dyRing 2.4s ease-out both; animation-delay:calc(var(--d) * .3s + .4s); } @keyframes dyRing{ 0%{ opacity:.8; transform:none; } 40%,100%{ opacity:0; transform:scale(2.8); } }
+svg.dy .r.dim{ opacity:.55; } svg.dy .lens-glass{ fill:#fff; fill-opacity:.55; stroke:var(--dy-acc,currentColor); }
+svg.dy .lens2{ transform:translate(15.4px,8.6px); } svg.dy.run .lens2{ animation:dyLens 2.6s ease-in-out both; } @keyframes dyLens{ 0%,100%{ transform:translate(15.4px,8.6px); } 45%{ transform:translate(8.2px,15.8px); } }
+/* the assets' own drawings */
+svg.dy .bk,svg.dy .pl,svg.dy .br,svg.dy .cd,svg.dy .mer{ transform-box:fill-box; transform-origin:center; }
+svg.dy.run .bk{ animation:dyBk 2.4s ease-in-out both; } @keyframes dyBk{ 0%,100%{ opacity:1; transform:none; } 8%,30%{ opacity:0; transform:translateX(-4px); } 70%{ opacity:1; transform:none; } }
+svg.dy .spd{ opacity:0; }
+svg.dy.run .rn{ animation:dyRn 2.2s ease-in-out both; } @keyframes dyRn{ 0%,100%{ transform:none; } 30%{ transform:translateX(-2px); } 62%{ transform:translateX(3px); } }
+svg.dy.run .spd{ animation:dySpd 2.2s ease-out both; animation-delay:calc(var(--d) * .1s + .5s); } @keyframes dySpd{ 0%{ opacity:0; transform:translateX(5px); } 30%{ opacity:1; } 70%,100%{ opacity:0; transform:translateX(-5px); } }
+svg.dy.run .pl{ animation:dyPl 2.2s ease-out both; } @keyframes dyPl{ 0%,100%{ opacity:1; transform:none; } 8%,30%{ opacity:0; transform:scale(.3); } 60%{ opacity:1; transform:scale(1.15); } 75%{ transform:none; } }
+svg.dy .hm,svg.dy .hh{ transform-origin:24px 24px; }
+svg.dy.run .hm{ animation:dyHm 2.4s ease-in-out both; } @keyframes dyHm{ 0%{ transform:none; } 85%,100%{ transform:rotate(360deg); } }
+svg.dy.run .br{ animation:dyBr 2.2s ease-in-out both; } @keyframes dyBr{ 0%,100%{ transform:none; } 35%{ transform:scale(1.12,1); } 62%{ transform:scale(.98,1); } 80%{ transform:none; } }
+svg.dy.run .cd{ animation:dyCd 1.1s ease-out both; animation-delay:calc(var(--d) * .18s + .1s); } @keyframes dyCd{ 0%{ opacity:0; transform:scale(0); } 45%{ opacity:1; transform:scale(1.35); } 65%,100%{ opacity:1; transform:none; } }
+svg.dy .liq{ transform-box:fill-box; transform-origin:50% 100%; } svg.dy.run .liq{ animation:dyLiq 2.4s ease-in-out both; } @keyframes dyLiq{ 0%,15%{ transform:scaleY(0); } 75%{ transform:scaleY(1.08); } 100%{ transform:none; } }
+svg.dy .tk{ stroke-dasharray:9 9; } svg.dy.run .tk{ animation:dyTk 2s ease-in-out both; } @keyframes dyTk{ 0%,20%{ stroke-dashoffset:9; opacity:0; } 30%{ opacity:1; } 75%,100%{ stroke-dashoffset:0; opacity:1; } }
+svg.dy .bl{ stroke-dasharray:11 11; } svg.dy.run .bl{ animation:dyBl 2s ease-in-out both; animation-delay:calc(var(--d) * .3s); } @keyframes dyBl{ 0%,15%{ stroke-dashoffset:11; } 65%,100%{ stroke-dashoffset:0; } }
+.dy .mer{ vector-effect:non-scaling-stroke; } svg.dy.run .mer{ animation:dyMer 2.6s ease-in-out both; } @keyframes dyMer{ 0%{ transform:none; opacity:1; } 55%{ transform:scaleX(2.3); opacity:0; } 56%{ transform:scaleX(0); opacity:0; } 70%{ opacity:1; } 100%{ transform:none; opacity:1; } }
+svg.dy .shk{ transform-origin:8px 11px; transform:translateY(-2px) rotate(-28deg); }
+svg.dy.run .shk{ animation:dyShk 1.6s ease-in-out both; } @keyframes dyShk{ 0%,25%{ transform:none; } 55%{ transform:translateY(-2px); } 100%{ transform:translateY(-2px) rotate(-28deg); } }
+@media (prefers-reduced-motion:reduce){ svg.dy, svg.dy *{ animation:none !important; } }
+</style>
+<!-- dyn-icon:css:end -->
+<!-- r4-embed:start -->
+<style id="r4-embed-css">
+  /* owner 2026-09-22: a slide that is off screen or in a hidden tab does no work */
+  [data-idle="1"], [data-idle="1"] * { animation-play-state: paused !important; }
+  /* owner 2026-09-23 / 2026-10-11: the in-activity zoom (script at the end of the page). Only that script sets
+     html.zi-on, and only inside a frame on a touch device, so a direct link and a desktop keep what they had. */
+  html.zi-on, html.zi-on * { touch-action: pan-x pan-y; }
+  html.zi-zoomed, html.zi-zoomed * { touch-action: none !important; }
+  #zi-full { display: none; position: fixed; z-index: 2147483646; left: calc(10 * var(--zi-g)); top: calc(10 * var(--zi-g)); height: calc(36 * var(--zi-g)); margin: 0;
+    padding: 0 calc(3 * var(--zi-g)) 0 calc(12 * var(--zi-g)); gap: calc(8 * var(--zi-g)); box-sizing: border-box; align-items: center; border: 0; border-radius: calc(18 * var(--zi-g));
+    background: var(--navy, #222f55); color: #fff; box-shadow: 0 calc(3 * var(--zi-g)) calc(10 * var(--zi-g)) rgba(34,47,85,.3);
+    font-family: inherit; font-weight: 700; font-size: calc(14 * var(--zi-g)); font-variant-numeric: tabular-nums;
+    cursor: pointer; -webkit-tap-highlight-color: transparent; -webkit-appearance: none; appearance: none; }
+  html.zi-zoomed #zi-full { display: flex; }
+  #zi-full::after { content: ""; position: absolute; left: calc(-5 * var(--zi-g)); right: calc(-5 * var(--zi-g)); top: calc(-5 * var(--zi-g)); bottom: calc(-5 * var(--zi-g)); }
+  #zi-full:focus-visible { outline: calc(2.5 * var(--zi-g)) solid var(--teal, #0096be); outline-offset: calc(2 * var(--zi-g)); }
+  #zi-full .zi-num { min-width: calc(30 * var(--zi-g)); text-align: right; }
+  #zi-full .zi-dot { width: calc(30 * var(--zi-g)); height: calc(30 * var(--zi-g)); padding: calc(7.5 * var(--zi-g)); box-sizing: border-box; border-radius: 50%; background: var(--teal, #0096be); color: #fff; }
+  #zi-full svg { display: block; width: 100%; height: 100%; }
+</style>
+<!-- r4-embed:end -->
+
+<meta name="build-version" content="TM 9035 tm9035-orr-subgroups-slide-37-2026-06-24-v1 r4 2026-10-11">
+<!-- r4-strip:start -->
+<style id="r4-strip-css">
+  /* owner 2026-10-12 (fix A): full-screen phone view only - the chrome gets its own strip, never sits on content */
+  body.is-fullscreen { padding-top: 64px !important; }
+  body.is-fullscreen::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 64px; z-index: 55;
+    background: #fff; box-shadow: 0 1px 0 rgba(34,47,85,.12); pointer-events: none; }
+  body.is-fullscreen .returnbar { top: 10px !important; left: 10px !important; z-index: 61 !important; }
+  body.is-fullscreen:has(.nudge.is-on) { padding-top: 116px !important; }
+  body.is-fullscreen:has(.nudge.is-on)::before { height: 116px; }
+  body.is-fullscreen .nudge { top: 62px !important; bottom: auto !important; left: 10px !important; right: 10px !important;
+    transform: none !important; max-width: none !important; justify-content: center; z-index: 61 !important; }
+  body.is-fullscreen .nudge.is-on { animation: none !important; }
+  /* pop-ups (Source, data tables, leave-site notice) open above the strip */
+  body.is-fullscreen .modal, body.is-fullscreen .srcmodal, body.is-fullscreen .src-modal, body.is-fullscreen #citeModal,
+  body.is-fullscreen .cite-modal, body.is-fullscreen .inter { z-index: 70 !important; }
+  /* wide screens (phone landscape): the Finished bar shares the one strip, to the right of Return to course */
+  @media (min-width: 640px) {
+    body.is-fullscreen:has(.nudge.is-on) { padding-top: 64px !important; }
+    body.is-fullscreen:has(.nudge.is-on)::before { height: 64px; }
+    body.is-fullscreen .nudge { top: 10px !important; left: 230px !important; height: 44px; box-sizing: border-box; }
+  }
+</style>
+<!-- r4-strip:end -->
+<!-- mod-head:css:start -->
+<style id="mod-head-css">
+/* module heading (owner 14 Oct 2026): left, glow, capped rule - tools/tm9035-module-heading.py */
+.banner h1.banner__title{ text-align:left !important; letter-spacing:-.01em; text-shadow:0 2px 10px rgba(0,152,190,.30); }
+.banner h1.banner__title *:not(em):not(i):not(.gene){ color:inherit !important; }
+.banner h1.banner__title em, .banner h1.banner__title i, .banner h1.banner__title .gene{ color:inherit !important; }
+.mh-rule{ display:flex; align-items:center; align-self:flex-start; width:66%; max-width:960px; margin:6px 0 0; }
+.mh-rule i{ flex:0 0 auto; width:4px; height:14px; background:#0098be; border-radius:2px; }
+.mh-rule b{ flex:1 1 auto; height:3px; background:#0098be; border-radius:2px; }
+.banner{ background:#fff !important; box-shadow:none !important; border-bottom:0 !important; }
+</style>
+<!-- mod-head:css:end -->
+</head>
+<body>
+<main class="frame" data-view="hub" id="frame" aria-label="Long-term ORR across clinically relevant subgroups in VISION">
+
+  <header class="banner">
+    <h1 class="banner__title">Long-term ORR across clinically relevant subgroups</h1><!-- mh-rule --><div class="mh-rule" aria-hidden="true"><i></i><b></b><i></i></div><!-- /mh-rule -->
+  </header>
+
+  <div class="navprompt">
+    <p class="navprompt__box"><span class="navprompt__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>Select a subgroup to compare it against the overall estimate, or view the full forest plot.</p>
+  </div>
+
+  <div class="stage">
+
+    <!-- ===== HUB ===== -->
+    <section class="view is-active" id="view-hub" aria-label="Subgroup hub">
+      <div class="hero">
+        <div class="hero__stat">
+          <span class="hero__big">51.8%</span>
+          <span class="hero__cap">Overall ORR (95% CI 46.1, 57.4) &middot; N=313</span>
+        </div>
+        <p class="hero__msg">ORR was consistent across all patient subgroups assessed by sex, age, smoking history, histology, ECOG&nbsp;PS, brain metastases at baseline and line of therapy.</p>
+      </div>
+      <div class="cards" id="cards"></div>
+    </section>
+
+    <!-- ===== EXPLORER ===== -->
+    <section class="view" id="view-explorer" aria-label="Subgroup detail" aria-hidden="true">
+      <div class="exhead">
+        <button class="backbtn" type="button" data-back><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>All subgroups</button>
+        <div class="extitle"><span class="extitle__icon" id="exIcon" aria-hidden="true"></span><h2 class="extitle__name" id="exName" tabindex="-1"></h2></div>
+        <div class="excyc">
+          <button class="navbtn" id="exPrev" type="button" aria-label="Previous subgroup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <div class="dots" id="exDots" role="group" aria-label="Choose a subgroup"></div>
+          <button class="navbtn" id="exNext" type="button" aria-label="Next subgroup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+      </div>
+      <div class="expanel" id="exPanel"></div>
+      <p class="exnote" id="exNote" hidden></p>
+    </section>
+
+    <!-- ===== FULL FOREST ===== -->
+    <section class="view" id="view-full" aria-label="Full forest plot" aria-hidden="true">
+      <div class="fuhead">
+        <button class="backbtn" type="button" data-back><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>All subgroups</button>
+        <h2 class="futitle" id="fuTitle" tabindex="-1">Long-term ORR across clinically relevant subgroups</h2>
+        <div class="fulegend" aria-hidden="true">
+          <span><i class="lg-dot"></i> marker size &prop; n</span>
+          <span><i class="lg-band"></i> Overall 95% CI</span>
+        </div>
+      </div>
+      <div class="fubody" id="fuBody"></div>
+    </section>
+
+  </div>
+
+  <div class="controls">
+    <span class="progress" aria-hidden="true"><b id="progNum">0</b> of 7 subgroups explored</span>
+    <button class="cite-src" id="citeSrc" type="button" aria-haspopup="dialog" disabled>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <span id="citeSrcLabel">Source locked</span>
+    </button>
+  </div>
+
+  <p class="sr-only" id="live" aria-live="polite" aria-atomic="true"></p>
+</main>
+
+<!-- §4.2 return-to-course (shown only in the opened full-screen view) -->
+<a class="returnbar" id="returnBar" href="#" aria-label="Return to the course">
+  <span class="returnbar__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 5 4 10 9 15"/><path d="M4 10 H15 a5 5 0 0 1 5 5 V19"/></svg></span>
+  <span class="returnbar__lab">Return to course</span>
+</a>
+
+<!-- §4.2 embedded-mobile launch card (shown only when iframed on a phone) -->
+<div class="mlaunch" role="group" aria-label="Open the activity full screen">
+  <span class="mlaunch__badge">Touch Oncology &middot; CPD activity</span>
+  <h1 class="mlaunch__title">Long-term ORR across clinically relevant subgroups</h1>
+  <p class="mlaunch__lead">This interactive forest plot is best viewed full screen on your phone. Tap below to open it.</p>
+  <a class="mlaunch__btn" id="mlaunchBtn" href="#" target="_blank" rel="noopener">Open the activity <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><polyline points="13 6 19 12 13 18"/></svg></a>
+  <p class="mlaunch__note">On a computer, the activity appears here directly.</p>
+</div>
+
+<!-- continue nudge — eases in once all 7 subgroups have been explored -->
+<div class="nudge" id="nudge" role="status" aria-live="polite">
+  <span class="nudge__chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+  <span class="nudge__d">All done &mdash; use the <b>&#9664;&nbsp;&#9654;</b> arrows at the bottom of the screen to continue when you&rsquo;re ready.</span>
+  <span class="nudge__m">Finished &mdash; tap <b>Return to course</b> to carry on.</span>
+</div>
+
+<!-- citation modal -->
+<div class="cite-modal" id="citeModal" role="dialog" aria-modal="true" aria-labelledby="citeTitle" hidden>
+  <div class="cite-card" role="document">
+    <p class="cite-card__eyebrow">Source</p>
+    <h2 class="cite-card__title" id="citeTitle">VISION trial &mdash; tepotinib in <em>MET</em>ex14 skipping NSCLC</h2>
+    <p class="cite-card__body">
+      <span class="cite-card__ref">18. Griesinger F, Ferrara R, Felip E, Smit EF, Veillon R, Le X, et al. Long-term outcomes with tepotinib for clinically relevant subgroups of patients with <em>MET</em>ex14 skipping NSCLC in the VISION study: A &ge;3-year follow-up. <em>Ann Oncol.</em> 2025;36:S1061&ndash;S1062. (1996P)</span>
+    </p>
+    <div class="cite-card__actions">
+      <button class="cite-dismiss" id="citeDismiss" type="button">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- D16/D22 interstitial -->
+<div class="inter" id="inter" role="dialog" aria-modal="true" aria-labelledby="interTitle" aria-describedby="interReason" hidden>
+  <div class="inter__panel" role="document">
+    <h2 class="inter__title" id="interTitle">You are leaving this activity</h2>
+    <p class="inter__p" id="interReason">This link opens an external source in a new tab.</p>
+    <p class="inter__p"><strong>Source:</strong> <span id="interDest"></span><br><strong>Organisation:</strong> <span id="interOrg"></span></p>
+    <p class="inter__p">The source opens in a new tab. Check the address is expected before continuing.</p>
+    <div class="inter__url" id="interUrl"></div>
+    <div class="inter__status" aria-live="polite"><span class="prep" aria-hidden="true"><i></i><i></i><i></i></span><span id="interStatus">Preparing the link&hellip;</span></div>
+    <div class="inter__actions">
+      <button class="inter__btn" id="interOpen" type="button" disabled>Open source</button>
+      <button class="inter__btn secondary" id="interCopy" type="button">Copy link</button>
+      <button class="inter__btn secondary" id="interStay" type="button">Stay here</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- data (supplied figures, verbatim) ---------- */
+  const OVERALL = { lab:'Overall', n:313, orr:51.8, lo:46.1, hi:57.4, isOverall:true };
+  const ICON = {
+    sex:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="17" cy="16" r="8"/><path d="M17 24v15M11 33h12"/><circle cx="31" cy="32" r="8"/><path d="M37 26l8-8M39 18h6v6"/></svg>',
+    age:'<svg class="dy dy-agecal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="rings"><path d="M8 2v3"/><path d="M16 2v3"/></g><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path class="leaf acc" d="M3.6 9.6h16.8v10a1.6 1.6 0 0 1-1.6 1.6H5.2a1.6 1.6 0 0 1-1.6-1.6z"/><g class="days acc-fill"><circle style="--d:0" cx="7.5" cy="13" r=".95"/><circle style="--d:1" cx="12" cy="13" r=".95"/><circle style="--d:2" cx="16.5" cy="13" r=".95"/><circle style="--d:3" cx="7.5" cy="17" r=".95"/><circle style="--d:4" cx="12" cy="17" r=".95"/></g></svg>',
+    smoking:'<svg class="dy dy-smoke" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 12H3a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h14"/><path d="M7 12v4"/><path d="M21 16a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><rect class="ember acc-fill" x="17.6" y="12.6" width="2.6" height="2.8" rx=".6"/><path class="wisp acc" style="--d:0" d="M18 9c0-2.5-2-2.5-2-5"/><path class="wisp acc" style="--d:1" d="M22 9c0-2.5-2-2.5-2-5"/></svg>',
+    histology:'<svg class="dy dy-hist" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="21" cy="21" r="12"/><path d="M30 30l10 10"/><path class="pl acc" d="M16 21h10M21 16v10"/></svg>',
+    ecog:'<svg class="dy dy-ecog" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="rn"><circle cx="27" cy="9" r="4"/><path d="M25 16l-6 6 4 5 2 11M23 27l-9 3M27 22l8 4-2 9M19 22l-7 2"/></g><path class="spd acc" style="--d:0" d="M3 17h6"/><path class="spd acc" style="--d:1" d="M2 25h6"/><path class="spd acc" style="--d:2" d="M4 33h5"/></svg>',
+    brain:'<svg class="dy dy-brain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path opacity=".85" d="M12 18V5" /> <path opacity=".85" d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4" /> <path opacity=".85" d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5" /> <path opacity=".85" d="M17.997 5.125a4 4 0 0 1 2.526 5.77" /> <path opacity=".85" d="M18 18a4 4 0 0 0 2-7.464" /> <path opacity=".85" d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517" /> <path opacity=".85" d="M6 18a4 4 0 0 1-2-7.464" /> <path opacity=".85" d="M6.003 5.125a4 4 0 0 0-2.526 5.77" /><circle class="met acc-fill" style="--d:0" cx="8.3" cy="9.6" r="1.6"/><circle class="met acc-fill" style="--d:1" cx="16" cy="13.4" r="1.6"/><circle class="met acc-fill" style="--d:2" cx="8.6" cy="17" r="1.35"/><circle class="ring acc" style="--d:0" cx="8.3" cy="9.6" r="1.25"/><circle class="ring acc" style="--d:1" cx="16" cy="13.4" r="1.25"/><circle class="ring acc" style="--d:2" cx="8.6" cy="17" r="1.05"/></svg>',
+    line:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="17" y="6" width="14" height="12" rx="2"/><path d="M20 6V4h8v2"/><path d="M24 18v6"/><path d="M19 24h10v12a3 3 0 0 1-3 3h-4a3 3 0 0 1-3-3z"/><path d="M24 39v5"/></svg>'
+  };
+  const SUBGROUPS = [
+    { id:'sex', name:'Sex', icon:ICON.sex, levels:[
+      {lab:'Male', short:'M', n:154, orr:51.3, lo:43.1, hi:59.4},
+      {lab:'Female', short:'F', n:159, orr:52.2, lo:44.1, hi:60.2} ] },
+    { id:'age', name:'Age', icon:ICON.age, levels:[
+      {lab:'<75 years', short:'<75', n:184, orr:55.4, lo:47.9, hi:62.7},
+      {lab:'≥75 years', short:'≥75', n:129, orr:46.5, lo:37.7, hi:55.5} ] },
+    { id:'smoking', name:'Smoking history', icon:ICON.smoking, foot:{mk:'*', txt:'Smoking history was missing for 10 patients.'}, levels:[
+      {lab:'Yes', short:'Y', n:149, orr:56.4, lo:48.0, hi:64.5},
+      {lab:'No', short:'N', n:154, orr:47.4, lo:39.3, hi:55.6} ] },
+    { id:'histology', name:'Histology', icon:ICON.histology, foot:{mk:'†', txt:'33 patients had histology other than squamous and adenocarcinoma.'}, levels:[
+      {lab:'Adenocarcinoma', short:'A', n:252, orr:54.0, lo:47.6, hi:60.2},
+      {lab:'Squamous', short:'S', n:28, orr:35.7, lo:18.6, hi:55.9} ] },
+    { id:'ecog', name:'ECOG PS', icon:ICON.ecog, foot:{mk:'‡', txt:'One patient had ECOG PS 2.', down:true}, levels:[
+      {lab:'0', short:'0', n:81, orr:59.3, lo:47.8, hi:70.1},
+      {lab:'1', short:'1', n:231, orr:49.4, lo:42.7, hi:56.0} ] },
+    { id:'brain', name:'Brain metastases at baseline', icon:ICON.brain, foot:{mk:'§', txt:'Identified at baseline (investigator or independent review).', down:true}, levels:[
+      {lab:'Yes', short:'Y', n:57, orr:56.1, lo:42.4, hi:69.3},
+      {lab:'No', short:'N', n:256, orr:50.8, lo:44.5, hi:57.1} ] },
+    { id:'line', name:'Line of therapy', icon:ICON.line, note:'2L is a subset of 2L+ (second line or later); the two rows are not mutually exclusive.', levels:[
+      {lab:'1L', short:'1L', n:164, orr:57.9, lo:50.0, hi:65.6},
+      {lab:'2L', short:'2L', n:92, orr:45.7, lo:35.2, hi:56.4},
+      {lab:'2L+', short:'2L+', n:149, orr:45.0, lo:36.8, hi:53.3} ] }
+  ];
+
+  function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  // Footnote marker (hover / focus / tap tooltip). Returns '' when the subgroup has no note.
+  function footMark(s){
+    if(!s||!s.foot) return '';
+    const mk=esc(s.foot.mk), txt=esc(s.foot.txt);
+    // span (not <button>) so it stays valid when nested inside the hub card <button>
+    return '<span class="fnote'+(s.foot.down?' fnote--down':'')+'">'+
+      '<span class="fnote__btn" role="button" tabindex="0" aria-expanded="false" aria-label="Footnote: '+txt+'">'+mk+'</span>'+
+      '<span class="fnote__pop" role="note">'+txt+'</span>'+
+    '</span>';
+  }
+  function markerR(n){ return 4 + 7*Math.sqrt(n/313); }     // px radius, area ~ n
+  // R4-50 (8 Oct 2026): axis 0-80 at FL's request ("why not at 0?"); it was a truncated
+  // 10-75 under R3-152. Data run 18.6-70.1, so nothing clips; the clamp is a guard only.
+  // Grid, band and overall line now all go through fx(): before this they were placed on
+  // a 0-100 scale while the dots used 10-75, so the overall line sat near 44, not 51.8.
+  const FMIN=0, FMAX=80;
+  function fx(v){ return Math.max(0, Math.min(100, (v-FMIN)/(FMAX-FMIN)*100)); }
+  function fmt(v){ return v.toFixed(1); }
+  // Hub dot-strips are zoomed to a window around the data (all points 35.7-59.3) so the
+  // per-subgroup spread is visible; the explorer/full forest use the 0-80 axis (fx).
+  // Narrowed shared window (was 30-65). Data run 35.7-59.3, so nothing clips and the
+  // spread uses ~87% of each strip instead of ~67%. Still ONE scale for all cards.
+  const ZMIN=34, ZMAX=61;
+  function zx(v){ return Math.max(0, Math.min(100, (v-ZMIN)/(ZMAX-ZMIN)*100)); }
+  // Assign each level marker to lane 0 (label above) or 1 (label below) so close
+  // labels on the zoomed strip never collide.
+  function laneOf(levels){
+    const items=levels.map(l=>({l:l, x:zx(l.orr)})).sort((a,b)=>a.x-b.x);
+    const last=[-999,-999], MINSEP=12;
+    items.forEach(it=>{
+      let lane=0;
+      if(it.x-last[0]<MINSEP){ lane = (it.x-last[1]<MINSEP) ? (last[0]<=last[1]?0:1) : 1; }
+      last[lane]=it.x; it.lane=lane;
+    });
+    return items;
+  }
+
+  /* ---------- forest builder (shared) ---------- */
+  function buildForest(rows, opts){
+    opts = opts||{}; const rowH = opts.rowH||40, groupCol = !!opts.groupCol;
+    const wrap=document.createElement('div'); wrap.className='forest'; wrap.style.setProperty('--rowh', rowH+'px');
+
+    const labels=document.createElement('div'); labels.className='forest__labels'+(groupCol?' has-group':'');
+    rows.forEach((r,idx)=>{
+      const sep = groupCol && idx>0 && r.group!==rows[idx-1].group;
+      if(groupCol){
+        const firstOfGroup = idx===0 || r.group!==rows[idx-1].group;
+        const g=document.createElement('div'); g.className='flbl flbl--group'+(sep?' is-sep':'');
+        if(firstOfGroup && r.group){ g.innerHTML = esc(r.group)+footMark(r); }
+        else { g.textContent=''; }
+        labels.appendChild(g);
+      }
+      const lv=document.createElement('div'); lv.className='flbl flbl--lvl'+(r.isOverall?' is-overall':'')+(sep?' is-sep':'');
+      lv.textContent=r.lab; labels.appendChild(lv);
+      const nn=document.createElement('div'); nn.className='flbl flbl--n'+(sep?' is-sep':'');
+      nn.textContent=r.n; labels.appendChild(nn);
+    });
+
+    const mid=document.createElement('div'); mid.className='forest__mid';
+    const plot=document.createElement('div'); plot.className='forest__plot';
+    const bg=document.createElement('div'); bg.className='forest__bg';
+    [0,20,40,60,80].forEach(p=>{ const g=document.createElement('span'); g.className='pgrid'; g.style.left=fx(p)+'%'; bg.appendChild(g); });
+    const band=document.createElement('span'); band.className='pband'; band.style.left=fx(OVERALL.lo)+'%'; band.style.width=(fx(OVERALL.hi)-fx(OVERALL.lo))+'%'; bg.appendChild(band);
+    const ovl=document.createElement('span'); ovl.className='poverall'; ovl.style.left=fx(OVERALL.orr)+'%'; bg.appendChild(ovl);
+    plot.appendChild(bg);
+    const prows=document.createElement('div'); prows.className='forest__prows';
+    rows.forEach(r=>{
+      const pr=document.createElement('div'); pr.className='prow'; pr.tabIndex=0; pr.setAttribute('role','img');
+      pr.setAttribute('aria-label',(r.group?r.group+', ':'')+r.lab+': ORR '+fmt(r.orr)+'% (95% CI '+fmt(r.lo)+' to '+fmt(r.hi)+'), n='+r.n);
+      const wh=document.createElement('span'); wh.className='pwhisk'; wh.style.left=fx(r.lo)+'%'; wh.style.width=(fx(r.hi)-fx(r.lo))+'%';
+      const dot=document.createElement('span'); dot.className='pdot'+(r.isOverall?' is-overall':''); const rad=markerR(r.n);
+      dot.style.left=fx(r.orr)+'%'; dot.style.width=dot.style.height=(2*rad).toFixed(1)+'px';
+      pr.appendChild(wh); pr.appendChild(dot); prows.appendChild(pr);
+    });
+    plot.appendChild(prows); mid.appendChild(plot);
+    const axis=document.createElement('div'); axis.className='forest__axis';
+    [0,20,40,60,80].forEach(p=>{ const t=document.createElement('span'); t.className='ptick'; t.style.left=fx(p)+'%'; t.textContent=p; axis.appendChild(t); });
+    mid.appendChild(axis);
+    const axt=document.createElement('div'); axt.className='forest__axtitle'; axt.textContent='ORR, % (95% CI)'; mid.appendChild(axt);
+
+    const vals=document.createElement('div'); vals.className='forest__vals';
+    rows.forEach(r=>{ const v=document.createElement('div'); v.className='fval'+(r.isOverall?' is-overall':''); v.innerHTML='<b>'+fmt(r.orr)+'</b>&nbsp;('+fmt(r.lo)+', '+fmt(r.hi)+')'; vals.appendChild(v); });
+
+    wrap.appendChild(labels); wrap.appendChild(mid); wrap.appendChild(vals);
+    return wrap;
+  }
+
+  /* ---------- HUB cards ---------- */
+  const cardsEl=document.getElementById('cards');
+  SUBGROUPS.forEach((s,i)=>{
+    const marks = laneOf(s.levels).map(it=>
+      '<span class="hmk hmk--l'+it.lane+'" style="left:'+it.x.toFixed(1)+'%">'+
+        '<span class="hmk__pill">'+esc(it.l.short)+'</span>'+
+        '<span class="hmk__stem"></span>'+
+        '<span class="hmk__dot"></span>'+
+      '</span>').join('');
+    const aria = s.name+'. ORR by level: '+s.levels.map(l=>l.lab+' '+fmt(l.orr)+'%').join(', ')+'. Overall '+fmt(OVERALL.orr)+'%. Select to explore with 95% confidence intervals.';
+    const btn=document.createElement('button'); btn.className='hcard'; btn.type='button'; btn.dataset.index=i;
+    btn.setAttribute('aria-label', aria);
+    btn.innerHTML =
+      '<span class="hcard__tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>'+
+      '<span class="hcard__top"><span class="hcard__icon">'+s.icon+'</span><span class="hcard__name">'+esc(s.name)+footMark(s)+'</span></span>'+
+      '<span class="hcard__strip" aria-hidden="true"><span class="hcard__track"></span><span class="hcard__ovl" style="left:'+zx(OVERALL.orr).toFixed(1)+'%"></span>'+marks+'</span>'+
+      '<span class="hcard__ends" aria-hidden="true"><span>'+ZMIN+'</span><span>ORR&nbsp;%</span><span>'+ZMAX+'</span></span>';
+    cardsEl.appendChild(btn);
+  });
+  // launcher card
+  const launch=document.createElement('button'); launch.className='hcard hcard--launch'; launch.type='button'; launch.id='launchFull';
+  launch.setAttribute('aria-label','View the full forest plot across all subgroups');
+  launch.innerHTML='<span class="lc__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span><span class="lc__txt">View full<br>forest plot</span>';
+  cardsEl.appendChild(launch);
+
+  const hcards = Array.from(cardsEl.querySelectorAll('.hcard[data-index]'));
+
+  /* ---------- EXPLORER ---------- */
+  const frame=document.getElementById('frame');
+  const exIcon=document.getElementById('exIcon'), exName=document.getElementById('exName');
+  const exPanel=document.getElementById('exPanel'), exNote=document.getElementById('exNote');
+  const exDots=document.getElementById('exDots');
+  const progNum=document.getElementById('progNum'), live=document.getElementById('live');
+  const citeSrc=document.getElementById('citeSrc'), citeSrcLabel=document.getElementById('citeSrcLabel');
+  const visited=new Set();
+  let exIndex=0;
+
+  SUBGROUPS.forEach((s,i)=>{
+    const d=document.createElement('button'); d.className='dot'; d.type='button'; d.dataset.index=i;
+    d.setAttribute('aria-label','Go to '+s.name); exDots.appendChild(d);
+  });
+  const exDotEls=Array.from(exDots.children);
+
+  function paintPanel(s){
+    const rows=[OVERALL].concat(s.levels.map(l=>Object.assign({},l)));
+    const rowH = s.levels.length>=3 ? 44 : 52;
+    const f=buildForest(rows,{rowH:rowH});
+    exPanel.innerHTML=''; exPanel.appendChild(f);
+    if(s.note){ exNote.hidden=false; exNote.textContent='Note: '+s.note; }
+    else if(s.foot){ exNote.hidden=false; exNote.textContent=s.foot.mk+s.foot.txt; }   // R4-52..55: poster footnote shown, not only on hover
+    else { exNote.hidden=true; exNote.textContent=''; }
+    return f;
+  }
+  // owner 14 Oct 2026: subgroup to subgroup, the old plot fades out (.12s) and the new one eases in (.32s),
+  // its markers and CI whiskers gliding from where the old ones stood. Opening from the hub uses the view
+  // fade instead (animate false). Reduced motion: an instant swap, as before.
+  let swapT=0;
+  function renderExplorer(i, animate){
+    const s=SUBGROUPS[i]; exIndex=i;
+    exIcon.innerHTML=s.icon; exName.textContent=s.name+(s.foot?s.foot.mk:'');
+    exDotEls.forEach((d,n)=>d.setAttribute('aria-current', n===i?'true':'false'));
+    const old=exPanel.querySelector('.forest');
+    clearTimeout(swapT);
+    if(!animate || reduceMotion || !old || frame.dataset.view!=='explorer'){
+      exNote.classList.remove('fx-out','fx-pre'); paintPanel(s); markVisited(i); return;
+    }
+    const pr=old.querySelector('.forest__plot').getBoundingClientRect();
+    const prev=Array.from(old.querySelectorAll('.prow')).map(r=>{
+      const dr=r.querySelector('.pdot').getBoundingClientRect(), wr=r.querySelector('.pwhisk').getBoundingClientRect();
+      return { dx:dr.left+dr.width/2-pr.left, dw:dr.width, wl:wr.left-pr.left, ww:wr.width };
+    });
+    old.classList.add('fx-swap','fx-out'); exNote.classList.add('fx-swap','fx-out');
+    swapT=setTimeout(()=>{
+      const f=paintPanel(s);
+      f.classList.add('fx-swap','fx-pre'); exNote.classList.remove('fx-out'); exNote.classList.add('fx-pre');
+      const moves=[];
+      f.querySelectorAll('.prow').forEach((r,k)=>{
+        const p=prev[k]; if(!p) return;
+        const d=r.querySelector('.pdot'), w=r.querySelector('.pwhisk');
+        moves.push([d,w,d.style.left,d.style.width,w.style.left,w.style.width]);
+        d.style.left=p.dx+'px'; d.style.width=d.style.height=p.dw+'px'; w.style.left=p.wl+'px'; w.style.width=p.ww+'px';
+      });
+      void f.offsetWidth;
+      f.classList.add('fx-glide'); f.classList.remove('fx-pre'); exNote.classList.remove('fx-pre');
+      moves.forEach(m=>{ m[0].style.left=m[2]; m[0].style.width=m[0].style.height=m[3]; m[1].style.left=m[4]; m[1].style.width=m[5]; });
+    },120);
+    markVisited(i);
+  }
+  const nudge=document.getElementById('nudge');
+  function markVisited(i){
+    if(!visited.has(i)){
+      visited.add(i); hcards[i].classList.add('is-seen'); progNum.textContent=visited.size;
+      if(visited.size===SUBGROUPS.length){
+        unlockSource();
+        frame.classList.add('nudge-shown'); if(nudge) nudge.classList.add('is-on');
+        live.textContent=SUBGROUPS[i].name+' explored. All seven explored — the Source button is now available.'; return;
+      }
+    }
+    live.textContent=SUBGROUPS[i].name+' shown. '+visited.size+' of '+SUBGROUPS.length+' explored.';
+  }
+
+  /* ---------- FULL forest ---------- */
+  const fuBody=document.getElementById('fuBody');
+  const FULL_ROWS=(function(){ const rows=[Object.assign({group:''},OVERALL)];
+    SUBGROUPS.forEach(s=> s.levels.forEach(l=> rows.push(Object.assign({group:s.name, foot:s.foot},l))) ); return rows; })();
+  function renderFull(){
+    if(matchMedia('(max-width:760px)').matches){ fuBody.innerHTML=''; fuBody.appendChild(buildForest(FULL_ROWS,{rowH:30, groupCol:true})); return; }
+    const avail=fuBody.clientHeight||440;                                  // fit rows to the height we actually have
+    const rh=Math.max(16, Math.min(34, Math.floor((avail-46)/FULL_ROWS.length)));
+    fuBody.innerHTML=''; fuBody.appendChild(buildForest(FULL_ROWS,{rowH:rh, groupCol:true}));
+  }
+
+  /* ---------- view switching ---------- */
+  const views={ hub:document.getElementById('view-hub'), explorer:document.getElementById('view-explorer'), full:document.getElementById('view-full') };
+  let lastTrigger=null;
+  function setView(name, focusEl){
+    frame.dataset.view=name;
+    Object.keys(views).forEach(k=>{ const v=views[k]; const on=k===name; v.classList.toggle('is-active',on); v.setAttribute('aria-hidden', on?'false':'true'); });
+    if(focusEl){ try{ focusEl.focus(); }catch(e){} }
+  }
+  function openExplorer(i, trigger){ lastTrigger=trigger||null; renderExplorer(i); setView('explorer', exName); }
+  function openFull(trigger){ lastTrigger=trigger||null; setView('full', document.getElementById('fuTitle')); renderFull(); }
+  window.addEventListener('resize',()=>{ if(frame.dataset.view==='full') renderFull(); });
+  function backToHub(){ setView('hub'); if(lastTrigger&&lastTrigger.focus){ try{ lastTrigger.focus(); }catch(e){} } lastTrigger=null; }
+
+  hcards.forEach(c=>c.addEventListener('click',()=>openExplorer(+c.dataset.index,c)));
+  launch.addEventListener('click',()=>openFull(launch));
+  document.querySelectorAll('[data-back]').forEach(b=>b.addEventListener('click',backToHub));
+  document.getElementById('exPrev').addEventListener('click',()=>renderExplorer((exIndex-1+SUBGROUPS.length)%SUBGROUPS.length,true));
+  document.getElementById('exNext').addEventListener('click',()=>renderExplorer((exIndex+1)%SUBGROUPS.length,true));
+  exDotEls.forEach(d=>d.addEventListener('click',()=>{ if(+d.dataset.index!==exIndex) renderExplorer(+d.dataset.index,true); }));
+  // keyboard cycling in explorer
+  document.getElementById('view-explorer').addEventListener('keydown',e=>{
+    if(e.key==='ArrowLeft'){ e.preventDefault(); renderExplorer((exIndex-1+SUBGROUPS.length)%SUBGROUPS.length,true); }
+    else if(e.key==='ArrowRight'){ e.preventDefault(); renderExplorer((exIndex+1)%SUBGROUPS.length,true); }
+  });
+
+  /* ---------- source unlock + citation ---------- */
+  let sourceUnlocked=false;
+  function unlockSource(){ sourceUnlocked=true; citeSrc.disabled=false; citeSrcLabel.textContent='Source'; }
+  const citeModal=document.getElementById('citeModal');
+  let citeLastFocus=null;
+  function openCite(){ if(!sourceUnlocked) return; citeLastFocus=document.activeElement; citeModal.hidden=false; citeModal.classList.add('is-open'); setTimeout(()=>document.getElementById('citeDismiss').focus({preventScroll:true}),30); }
+  function closeCite(){ citeModal.classList.remove('is-open'); citeModal.hidden=true; if(citeLastFocus&&citeLastFocus.focus){ try{ citeLastFocus.focus(); }catch(e){} } }
+  citeSrc.addEventListener('click',openCite);
+  document.getElementById('citeDismiss').addEventListener('click',closeCite);
+  citeModal.addEventListener('click',e=>{ if(e.target===citeModal) closeCite(); });
+
+  /* ---------- D16/D22 interstitial ---------- */
+  const inter=document.getElementById('inter');
+  const iDest=document.getElementById('interDest'), iOrg=document.getElementById('interOrg'), iUrl=document.getElementById('interUrl');
+  const iStatus=document.getElementById('interStatus'), iDots=inter.querySelector('.prep');
+  const iOpen=document.getElementById('interOpen'), iCopy=document.getElementById('interCopy'), iStay=document.getElementById('interStay');
+  let pendingURL=null, interTrigger=null, launchTimer=null;
+  function orgFromHost(h){ return ({'doi.org':'Publisher (resolved via doi.org)'})[h]||h; }
+  function openInter(url,ref,trigger){
+    pendingURL=url; interTrigger=trigger; let host=url; try{ host=new URL(url).hostname; }catch(e){}
+    iDest.textContent=ref; iOrg.textContent=orgFromHost(host); iUrl.textContent=url;
+    if(iDots) iDots.style.display=''; iStatus.textContent='Preparing the link…'; iOpen.disabled=true;
+    inter.hidden=false; inter.classList.add('is-open'); iStay.focus();
+    if(launchTimer) clearTimeout(launchTimer);
+    launchTimer=setTimeout(()=>{ if(iDots) iDots.style.display='none'; iStatus.textContent='Ready to open.'; iOpen.disabled=false; iOpen.focus(); }, reduceMotion?250:1300);
+  }
+  function closeInter(){ if(launchTimer) clearTimeout(launchTimer); inter.classList.remove('is-open'); inter.hidden=true; if(interTrigger&&interTrigger.focus){ try{ interTrigger.focus(); }catch(e){} } }
+  // The View source control was removed on 6 Aug (source links live only in the hubs); its wiring
+  // stayed and threw, which stopped the footnote and keyboard handlers below from running. R4.
+  iOpen.addEventListener('click',()=>{ if(!pendingURL) return; window.open(pendingURL,'_blank','noopener,noreferrer'); iStatus.textContent='Link opened in a new tab. Nothing opened? Copy the link and open it manually.'; });
+  iCopy.addEventListener('click',()=>{ if(!pendingURL) return; const ta=document.createElement('textarea'); ta.value=pendingURL; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select(); let ok=false; try{ ok=document.execCommand('copy'); }catch(e){} document.body.removeChild(ta); iStatus.textContent=ok?'Link copied. Paste it into a fresh browser tab.':'Copying is unavailable. Select and copy the visible URL manually.'; });
+  iStay.addEventListener('click',closeInter);
+  inter.addEventListener('click',e=>{ if(e.target===inter) closeInter(); });
+
+  /* ---------- footnote definitions (owner 14 Oct 2026, mirrors slide 31's glossary: pinned + settle) ----------
+     Pointing (or focus) previews one; select (click, tap, Enter, Space) pins it until another term is selected,
+     anywhere else is selected, or Escape. Moving the pointer away never closes a pinned one. */
+  let fnPinned=null;
+  function fnShow(note){
+    document.querySelectorAll('.fnote.open').forEach(n=>{ if(n!==note){ n.classList.remove('open'); const b=n.querySelector('.fnote__btn'); if(b) b.setAttribute('aria-expanded','false'); } });
+    if(note){ note.classList.add('open'); const b=note.querySelector('.fnote__btn'); if(b) b.setAttribute('aria-expanded','true'); }
+  }
+  function fnSettle(){ if(fnPinned && !fnPinned.isConnected) fnPinned=null; fnShow(fnPinned); }
+  function fnUnpin(){ fnPinned=null; fnShow(null); }
+  function fnToggle(note){ if(fnPinned===note){ fnUnpin(); } else { fnPinned=note; fnShow(note); } }
+  function fnOf(e){ return e.target && e.target.closest ? e.target.closest('.fnote') : null; }
+  document.addEventListener('mouseover',e=>{ const n=fnOf(e); if(n && !(e.relatedTarget && n.contains(e.relatedTarget))) fnShow(n); });
+  document.addEventListener('mouseout',e=>{ const n=fnOf(e); if(n && !(e.relatedTarget && n.contains(e.relatedTarget))) fnSettle(); });
+  document.addEventListener('focusin',e=>{ const b=e.target.closest&&e.target.closest('.fnote__btn'); if(b) fnShow(b.closest('.fnote')); });
+  document.addEventListener('focusout',e=>{ const b=e.target.closest&&e.target.closest('.fnote__btn'); if(b) fnSettle(); });
+  document.addEventListener('click',e=>{
+    const btn=e.target.closest('.fnote__btn');
+    if(btn){ e.preventDefault(); e.stopPropagation(); fnToggle(btn.closest('.fnote')); return; }
+    // selecting the open pop-up's own text keeps it (and does not open the hub card it sits in)
+    if(e.target.closest('.fnote__pop') && fnOf(e)===fnPinned){ e.stopPropagation(); return; }
+    if(fnPinned) fnUnpin();
+  },true);
+  document.addEventListener('keydown',e=>{
+    const btn=e.target.closest&&e.target.closest('.fnote__btn');
+    if(btn && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); e.stopPropagation(); fnToggle(btn.closest('.fnote')); }
+  },true);
+
+  /* ---------- keyboard: interstitial > citation modal > footnote > back ---------- */
+  function trap(e,container){ const f=container.querySelectorAll('a[href],button:not([disabled])'); if(!f.length) return; const first=f[0],last=f[f.length-1]; if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); } else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); } }
+  document.addEventListener('keydown',e=>{
+    if(inter.classList.contains('is-open')){ if(e.key==='Escape'){ e.preventDefault(); closeInter(); return; } if(e.key==='Tab'){ trap(e,inter); } return; }
+    if(citeModal.classList.contains('is-open')){ if(e.key==='Escape'){ e.preventDefault(); closeCite(); return; } if(e.key==='Tab'){ trap(e,citeModal); } return; }
+    if(e.key==='Escape'){ if(fnPinned||document.querySelector('.fnote.open')){ e.preventDefault(); fnUnpin(); return; } }
+    if(e.key==='Escape' && frame.dataset.view!=='hub'){ e.preventDefault(); backToHub(); }
+  },true);
+
+})();
+</script>
+
+<script>
+/* §4.2 — mobile/Visme: launch card + return-to-course (single-screen variant) */
+(function () {
+  "use strict";
+  var fullscreen = /[?&]fullscreen=1/.test(location.search);
+  var inIframe = true; try { inIframe = (window.self !== window.top); } catch (e) { inIframe = true; }
+  var isMobile = /Android|iPhone|iPad|iPod|Mobile|Silk/i.test(navigator.userAgent);
+  var btn = document.getElementById('mlaunchBtn');
+  var base = location.href.split('#')[0].split('?')[0];
+  var courseUrl = ''; try { courseUrl = document.referrer || ''; } catch (e) { courseUrl = ''; }
+  var target = base + '?fullscreen=1' + (courseUrl ? '&return=' + encodeURIComponent(courseUrl) : '');
+  if (btn) {
+    btn.href = target;
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      var w = null;
+      try { w = window.open(target, '_blank'); } catch (err) { w = null; }
+      if (!w) { try { window.top.location.href = target; } catch (err2) { window.location.href = target; } }
+    });
+  }
+  var rb = document.getElementById('returnBar');
+  var returnUrl = (function () { try { return new URLSearchParams(location.search).get('return'); } catch (e) { return null; } })();
+  if (rb) {
+    if (returnUrl) { rb.href = returnUrl; }
+    rb.addEventListener('click', function (e) {
+      e.preventDefault();
+      try { if (window.opener && !window.opener.closed) { window.close(); return; } } catch (err) {}
+      if (window.history.length > 1) { window.history.back(); return; }
+      if (returnUrl) { window.location.href = returnUrl; }
+    });
+  }
+  if (isMobile) { document.body.classList.add('is-mobile'); }
+  /* TEST A (19 Oct): no launch card on a phone inside a frame - the activity shows in the frame with its own zoom (the Touch assets' approach) */
+  if (fullscreen) { document.body.classList.add('is-fullscreen'); }
+}());
+</script>
+<!-- r4-embed:start -->
+<script id="r4-embed-js">
+/* The embed behaviour standard for a flexible TM9035 page (touchmedical-html contract section 4; owner rulings
+   2026-09-22/23, adapted for flexible pages 2026-10-11). The main box is the page's first visible top-level
+   element (main.frame, main.slide, .stage, #tmh-root); it is marked data-stage="1" data-fluid="1". */
+(function () {
+  function pickRoot() {
+    var s = document.querySelector('[data-stage="1"]');
+    if (s && s.isConnected) return s;
+    var best = null, area = 0, kids = document.body ? document.body.children : [];
+    for (var i = 0; i < kids.length; i++) {
+      var k = kids[i];
+      if (/^(SCRIPT|STYLE|TEMPLATE|NOSCRIPT|LINK)$/.test(k.tagName) || k.id === "zi-full") continue;
+      var r = k.getBoundingClientRect(), a = r.width * r.height;
+      if (a > area) { area = a; best = k; }
+    }
+    if (best) { best.setAttribute("data-stage", "1"); best.setAttribute("data-fluid", "1"); }
+    return best;
+  }
+
+  /* ---- idle: paused while off screen or hidden ---- */
+  var idleOff = false;
+  function idleSet() {
+    var r = pickRoot(); if (!r) return;
+    r.setAttribute("data-idle", (idleOff || document.hidden) ? "1" : "0");
+  }
+  function idleStart() {
+    var r = pickRoot(); if (!r) return;
+    idleSet();
+    if (typeof IntersectionObserver !== "undefined") {
+      new IntersectionObserver(function (es) { idleOff = !es.some(function (e) { return e.isIntersecting; }); idleSet(); },
+        { threshold: 0 }).observe(r);
+    }
+    document.addEventListener("visibilitychange", idleSet);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", idleStart); else idleStart();
+
+  /* ---- in-activity zoom: inside a frame, on a touch device only ---- */
+  var inFrame = true;
+  try { inFrame = window.self !== window.top; } catch (e) { inFrame = true; }
+  var touch = !!(window.matchMedia && window.matchMedia("(hover: none)").matches);
+  if (!inFrame || !touch) return;
+
+  var MAX = 3, root = document.documentElement, stage = null, z = 1, tx = 0, ty = 0, g = null;
+  var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  root.classList.add("zi-on");
+
+  var FIT = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 3v6H3M15 3v6h6M9 21v-6H3M15 21v-6h6" ' +
+    'fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var chip = document.createElement("button");
+  chip.id = "zi-full"; chip.type = "button";
+  chip.setAttribute("aria-label", "Back to full view");
+  chip.setAttribute("data-review", "chrome");
+  chip.setAttribute("data-review-id", "g-zoom-full");
+  chip.innerHTML = '<span class="zi-num" aria-hidden="true">1.0×</span><span class="zi-dot">' + FIT + "</span>";
+  var num = chip.querySelector(".zi-num");
+
+  /* the chip is sized in screen pixels: --zi-g is frame px per screen px, measured from a pinch */
+  var measured = 0;
+  function estimate() {
+    var a = screen.width, b = screen.height, short = Math.min(a, b), long = Math.max(a, b);
+    var type = (screen.orientation && screen.orientation.type) || "";
+    var land = /landscape/.test(type) || window.orientation === 90 || window.orientation === -90;
+    var vw = land ? long : short, vh = land ? short : long;
+    var s = Math.min((vw - 40) / (innerWidth || 1370), (vh - 120) / (innerHeight || 700));
+    return Math.max(0.15, Math.min(1, s));
+  }
+  function setUnit() { root.style.setProperty("--zi-g", (1 / (measured || estimate())).toFixed(4) + "px"); }
+  function measure(a, b) {
+    var dc = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+    var ds = Math.hypot(a.screenX - b.screenX, a.screenY - b.screenY);
+    if (dc < 20 || !ds) return;
+    var s = ds / dc;
+    if (s > 0.1 && s < 1.25 && Math.abs(s - 1) > 0.001) { measured = s; setUnit(); }
+  }
+  setUnit();
+
+  var wrote = { s: null, t: null }, prevTransition = null, restoreT = 0;
+  function animateOnce() {
+    if (reduce || !stage) return;
+    var s = stage;
+    if (prevTransition === null) prevTransition = s.style.transition;
+    s.style.transition = (prevTransition ? prevTransition + ", " : "") + "scale .2s ease, translate .2s ease";
+    clearTimeout(restoreT);
+    restoreT = setTimeout(function () { s.style.transition = prevTransition; prevTransition = null; }, 260);
+  }
+  function commit(animate) {
+    if (!stage) return;
+    if (animate) animateOnce();
+    if (z <= 1.001 && !tx && !ty) {
+      /* at rest a flexible page carries no transform at all */
+      stage.style.removeProperty("scale"); stage.style.removeProperty("translate");
+    } else {
+      stage.style.translate = tx + "px " + ty + "px";
+      stage.style.scale = String(z);
+    }
+    wrote.s = stage.style.scale; wrote.t = stage.style.translate;
+    root.classList.toggle("zi-zoomed", z > 1.001);
+    num.textContent = z.toFixed(1) + "×";
+    unscroll();
+  }
+  function toFull(animate) {
+    g = null;
+    if (!stage || (z === 1 && !tx && !ty)) return;
+    z = 1; tx = 0; ty = 0;
+    commit(animate);
+  }
+  function unscroll() {
+    for (var p = stage && stage.parentElement; p; p = p.parentElement) {
+      if (p.scrollTop || p.scrollLeft) { p.scrollTop = 0; p.scrollLeft = 0; }
+    }
+  }
+  document.addEventListener("scroll", function (e) {
+    var t = e.target;
+    if (stage && z > 1.001 && (t === document || (t.contains && t !== stage && t.contains(stage)))) unscroll();
+  }, true);
+
+  var mo = null;
+  function findStage() {
+    var s = pickRoot();
+    if (!s || !s.isConnected || !s.getBoundingClientRect().width) { stage = null; requestAnimationFrame(findStage); return; }
+    if (s === stage) return;
+    stage = s;
+    if (!chip.isConnected) document.body.appendChild(chip);
+    if (mo) mo.disconnect();
+    mo = new MutationObserver(function () {
+      if (stage.style.scale !== wrote.s || stage.style.translate !== wrote.t) commit(false);
+    });
+    mo.observe(stage, { attributes: true, attributeFilter: ["style"] });
+    commit(false);
+  }
+  function ensureStage() { if (!stage || !stage.isConnected) findStage(); return !!stage && stage.isConnected; }
+
+  function origin() { return { x: stage.offsetLeft + stage.offsetWidth / 2, y: stage.offsetTop + stage.offsetHeight / 2 }; }
+  function fitted() {
+    var O = origin(), r = stage.getBoundingClientRect();
+    return { O: O,
+      l: O.x + (r.left - O.x - tx) / z, r: O.x + (r.right - O.x - tx) / z,
+      t: O.y + (r.top - O.y - ty) / z, b: O.y + (r.bottom - O.y - ty) / z };
+  }
+  function clamp(F) {
+    tx = Math.min((1 - z) * (F.l - F.O.x), Math.max((1 - z) * (F.r - F.O.x), tx));
+    ty = Math.min((1 - z) * (F.t - F.O.y), Math.max((1 - z) * (F.b - F.O.y), ty));
+  }
+  function dist(a, b) { return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY); }
+  function mid(a, b) { return { x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 }; }
+
+  function startPinch(e) {
+    var a = e.touches[0], b = e.touches[1], F = fitted(), m = mid(a, b);
+    measure(a, b);
+    g = { mode: "pinch", d0: Math.max(10, dist(a, b)), z0: z, F: F,
+      qx: F.O.x + (m.x - F.O.x - tx) / z, qy: F.O.y + (m.y - F.O.y - ty) / z };
+  }
+  function startPan(t) { g = { mode: "pan-pending", x0: t.clientX, y0: t.clientY, tx0: tx, ty0: ty, F: fitted() }; }
+  function onChip(t) { return !!t && (t === chip || chip.contains(t)); }
+
+  window.addEventListener("touchstart", function (e) {
+    if (!ensureStage() || onChip(e.target)) { g = null; return; }
+    if (e.touches.length === 2) startPinch(e);
+    else if (e.touches.length === 1 && z > 1.001) startPan(e.touches[0]);
+    else g = null;
+  }, { passive: true, capture: true });
+
+  window.addEventListener("touchmove", function (e) {
+    if (!stage || !g) return;
+    if (e.touches.length >= 2) {
+      if (g.mode !== "pinch") startPinch(e);
+      e.preventDefault();
+      var a = e.touches[0], b = e.touches[1], m = mid(a, b);
+      z = Math.min(MAX, Math.max(1, g.z0 * dist(a, b) / g.d0));
+      tx = m.x - g.F.O.x - z * (g.qx - g.F.O.x);
+      ty = m.y - g.F.O.y - z * (g.qy - g.F.O.y);
+      clamp(g.F); commit(false);
+    } else if (e.touches.length === 1 && (g.mode === "pan-pending" || g.mode === "pan")) {
+      var t = e.touches[0], dx = t.clientX - g.x0, dy = t.clientY - g.y0;
+      /* under 10 screen points stays a tap (measured through the same scale as the chip) */
+      if (g.mode === "pan-pending" && Math.hypot(dx, dy) * (measured || estimate()) < 10) return;
+      g.mode = "pan";
+      e.preventDefault();
+      tx = g.tx0 + dx; ty = g.ty0 + dy;
+      clamp(g.F); commit(false);
+    }
+  }, { passive: false, capture: true });
+
+  function end(e) {
+    if (!g) return;
+    if (e.touches.length === 1 && z > 1.001) startPan(e.touches[0]);
+    else if (e.touches.length === 0) { g = null; if (z < 1.02) { z = 1; tx = 0; ty = 0; commit(false); } }
+  }
+  window.addEventListener("touchend", end, { passive: true, capture: true });
+  window.addEventListener("touchcancel", end, { passive: true, capture: true });
+  chip.addEventListener("click", function () { toFull(true); });
+
+  /* back to full view by itself: slide hidden or left, tab hidden, frame resized */
+  new MutationObserver(function (list) {
+    for (var i = 0; i < list.length; i++) {
+      var m = list[i];
+      if (m.attributeName === "data-idle" && m.target.getAttribute("data-idle") === "1") toFull(false);
+    }
+  }).observe(document.documentElement, { subtree: true, attributes: true, attributeFilter: ["data-idle"] });
+  document.addEventListener("visibilitychange", function () { if (document.hidden) toFull(false); });
+  window.addEventListener("resize", function () { setUnit(); toFull(false); });
+  if (screen.orientation && screen.orientation.addEventListener) {
+    screen.orientation.addEventListener("change", function () { measured = 0; setUnit(); });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", findStage); else findStage();
+})();
+</script>
+<!-- r4-embed:end -->
+<script id="build-stamp">(function(){var T="[TEST A] TM 9035: ORR subgroups forest plot",M="TM 9035 tm9035-orr-subgroups-slide-37-2026-06-24-v1 r4 2026-10-11";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<script id="layer-release">(function(){var SAFE=/^(rise)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;if(el.getAnimations&&el.getAnimations().some(function(a){return a.playState==="paused";})){seen.set(el,now);return;}var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
+<!-- dyn-icon:js:start -->
+<script id="dyn-icon-js">
+/* dyn-icon: plays a moving icon once (owner rulings 13 Oct 2026; contract 5B). The screen's one arrival icon plays by
+   itself; every other one plays when the learner points at, focuses or selects its card, or when the card's other face
+   or panel is opened. A cycle ends still, at the resting drawing. Reduced motion: nothing plays. */
+(function () {
+  var C = {"host": ".hcard", "auto": ".hcard svg.dy", "autoAt": 1100, "show": "#exIcon svg.dy"};
+  var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  function shown(s) { return !!s && s.getClientRects().length > 0 && !s.closest("[hidden],[inert]"); }
+  function play(s) {
+    if (reduce || !s || s.classList.contains("run") || !shown(s)) return false;
+    s.classList.add("run");
+    function end() {
+      setTimeout(function () {
+        var busy = s.getAnimations ? s.getAnimations({ subtree: true }).some(function (a) { return a.playState === "running" || a.playState === "paused" || a.pending; }) : false;
+        if (!busy) { s.classList.remove("run"); s.removeEventListener("animationend", end); }
+      }, 30);
+    }
+    s.addEventListener("animationend", end);
+    return true;
+  }
+  function fromHost(e) {
+    var h = C.host && e.target && e.target.closest ? e.target.closest(C.host) : null;
+    if (!h || (e.type === "pointerover" && e.relatedTarget && h.contains(e.relatedTarget))) return;
+    var list = h.querySelectorAll(C.hostIcon || "svg.dy");
+    for (var i = 0; i < list.length; i++) play(list[i]);
+  }
+  function sweep(first) {
+    if (!C.show) return;
+    var all = document.querySelectorAll("svg.dy");
+    for (var i = 0; i < all.length; i++) {
+      var s = all[i], v = s.matches(C.show) && shown(s);
+      if (v && !s.__dyVis && first !== true) play(s);
+      s.__dyVis = v;
+    }
+  }
+  document.addEventListener("pointerover", fromHost);
+  document.addEventListener("focusin", fromHost);
+  document.addEventListener("click", function (e) { fromHost(e); setTimeout(sweep, C.showAt || 150); }, true);
+  document.addEventListener("keydown", function () { setTimeout(sweep, C.showAt || 150); }, true);
+  function start() {
+    sweep(true);
+    if (C.auto) setTimeout(function () {
+      var l = document.querySelectorAll(C.auto);
+      for (var i = 0; i < l.length; i++) if (play(l[i])) break;
+    }, C.autoAt || 900);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
+})();
+</script>
+<!-- dyn-icon:js:end -->
+</body>
+</html>
