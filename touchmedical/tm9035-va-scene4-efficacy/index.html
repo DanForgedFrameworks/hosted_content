@@ -422,8 +422,8 @@ body.is-fullscreen{ padding-top:56px; }
   body.is-fullscreen::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 64px; z-index: 55;
     background: #fff; box-shadow: 0 1px 0 rgba(34,47,85,.12); pointer-events: none; }
   body.is-fullscreen .returnbar { top: 10px !important; left: 10px !important; z-index: 61 !important; }
-  body.is-fullscreen:has(.nudge.is-on) { padding-top: 116px !important; }
-  body.is-fullscreen:has(.nudge.is-on)::before { height: 116px; }
+  body.is-fullscreen.nudge-on { padding-top: 116px !important; }
+  body.is-fullscreen.nudge-on::before { height: 116px; }
   body.is-fullscreen .nudge { top: 62px !important; bottom: auto !important; left: 10px !important; right: 10px !important;
     transform: none !important; max-width: none !important; justify-content: center; z-index: 61 !important; }
   body.is-fullscreen .nudge.is-on { animation: none !important; }
@@ -432,8 +432,8 @@ body.is-fullscreen{ padding-top:56px; }
   body.is-fullscreen .cite-modal, body.is-fullscreen .inter { z-index: 70 !important; }
   /* wide screens (phone landscape): the Finished bar shares the one strip, to the right of Return to course */
   @media (min-width: 640px) {
-    body.is-fullscreen:has(.nudge.is-on) { padding-top: 64px !important; }
-    body.is-fullscreen:has(.nudge.is-on)::before { height: 64px; }
+    body.is-fullscreen.nudge-on { padding-top: 64px !important; }
+    body.is-fullscreen.nudge-on::before { height: 64px; }
     body.is-fullscreen .nudge { top: 10px !important; left: 230px !important; height: 44px; box-sizing: border-box; }
   }
 </style>
@@ -767,7 +767,7 @@ body.is-fullscreen{ padding-top:56px; }
     });
   }
   if (isMobile) { document.body.classList.add('is-mobile'); }
-  if (inIframe && isMobile && !fullscreen) { document.body.classList.add('is-embedded-mobile'); }
+  /* owner 19 Oct 2026 (phone crash): no launch card in a frame on a phone */
   if (fullscreen) { document.body.classList.add('is-fullscreen'); }
 }());
 
@@ -785,6 +785,10 @@ body.is-fullscreen{ padding-top:56px; }
 }());
 </script>
 <!-- r4-embed:start -->
+<style id="phone-safe">/* owner 19 Oct 2026 (phone crash): no animation or transition */
+*, *::before, *::after { animation: none !important; transition: none !important; }</style>
+<script id="phone-safe-js">/* body.nudge-on follows the continue bar (replaces body:has(.nudge.is-on)) */
+(function(){var n=document.getElementById('nudge');if(!n||!window.MutationObserver)return;function f(){document.body.classList.toggle('nudge-on',n.classList.contains('is-on'));}f();new MutationObserver(f).observe(n,{attributes:true,attributeFilter:['class']});})();</script>
 <script id="r4-embed-js">
 /* The embed behaviour standard for a flexible TM9035 page (touchmedical-html contract section 4; owner rulings
    2026-09-22/23, adapted for flexible pages 2026-10-11). The main box is the page's first visible top-level
@@ -829,7 +833,7 @@ body.is-fullscreen{ padding-top:56px; }
 
   var MAX = 3, root = document.documentElement, stage = null, z = 1, tx = 0, ty = 0, g = null;
   var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-  root.classList.add("zi-on");
+  root.classList.add("zi-on"); return; /* phone crash: zoom script off, pinch lock kept */
 
   var FIT = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 3v6H3M15 3v6h6M9 21v-6H3M15 21v-6h6" ' +
     'fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -994,6 +998,6 @@ body.is-fullscreen{ padding-top:56px; }
 </script>
 <!-- r4-embed:end -->
 <script id="build-stamp">(function(){var T="TM 9035: Visual abstract: efficacy scene",M="TM 9035 tm9035-va-scene4-efficacy-2026-07-01-v1 r4 2026-10-11";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
-<script id="layer-release">(function(){var SAFE=/^(fadeIn|fadeUp|fillGrow|rise)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;if(el.getAnimations&&el.getAnimations().some(function(a){return a.playState==="paused";})){seen.set(el,now);return;}var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
+<script id="layer-release">(function(){var SAFE=/^(fadeIn|fadeUp|fillGrow|rise)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;if(el.getAnimations&&el.getAnimations().some(function(a){return a.playState==="paused";})){seen.set(el,now);return;}var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}/* phone crash: layer-release timer off */document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
 </body>
 </html>
