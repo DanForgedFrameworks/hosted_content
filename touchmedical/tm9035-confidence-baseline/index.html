@@ -385,7 +385,8 @@ body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-wei
     });
   }
   if(isMobile){ document.body.classList.add('is-mobile'); }
-  if(inIframe && isMobile && !fullscreen){ document.body.classList.add('is-embedded-mobile'); }
+  /* owner 19 Oct 2026 (phone-crash test): no launch card - on a phone inside a frame the activity shows in the frame
+     with its own zoom, as the Touch assets do. The card sat where Chrome on iPhone crashed in the touchONCOLOGY module. */
   if(fullscreen){ document.body.classList.add('is-fullscreen'); }
 })();
 </script>
