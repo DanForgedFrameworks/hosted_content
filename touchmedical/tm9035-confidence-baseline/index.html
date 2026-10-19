@@ -240,8 +240,8 @@ body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-wei
   body.is-fullscreen::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 64px; z-index: 55;
     background: #fff; box-shadow: 0 1px 0 rgba(34,47,85,.12); pointer-events: none; }
   body.is-fullscreen .returnbar { top: 10px !important; left: 10px !important; z-index: 61 !important; }
-  body.is-fullscreen:has(.nudge.is-on) { padding-top: 116px !important; }
-  body.is-fullscreen:has(.nudge.is-on)::before { height: 116px; }
+  body.is-fullscreen.nudge-on { padding-top: 116px !important; }
+  body.is-fullscreen.nudge-on::before { height: 116px; }
   body.is-fullscreen .nudge { top: 62px !important; bottom: auto !important; left: 10px !important; right: 10px !important;
     transform: none !important; max-width: none !important; justify-content: center; z-index: 61 !important; }
   body.is-fullscreen .nudge.is-on { animation: none !important; }
@@ -250,8 +250,8 @@ body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-wei
   body.is-fullscreen .cite-modal, body.is-fullscreen .inter { z-index: 70 !important; }
   /* wide screens (phone landscape): the Finished bar shares the one strip, to the right of Return to course */
   @media (min-width: 640px) {
-    body.is-fullscreen:has(.nudge.is-on) { padding-top: 64px !important; }
-    body.is-fullscreen:has(.nudge.is-on)::before { height: 64px; }
+    body.is-fullscreen.nudge-on { padding-top: 64px !important; }
+    body.is-fullscreen.nudge-on::before { height: 64px; }
     body.is-fullscreen .nudge { top: 10px !important; left: 230px !important; height: 44px; box-sizing: border-box; }
   }
 </style>
@@ -495,6 +495,9 @@ body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-wei
     var frame=document.querySelector('.frame'), nudge=$('nudge');
     if(frame) frame.classList.toggle('nudge-shown', on);
     if(nudge) nudge.classList.toggle('is-on', on);
+    /* owner 19 Oct 2026 (phone-crash test): a body class replaces body:has(.nudge.is-on), which iPhone browsers
+       re-check across the whole page on every change - the bar appearing was the second crash point */
+    document.body.classList.toggle('nudge-on', on);
   }
 
   /* ---------- step navigation ---------- */
