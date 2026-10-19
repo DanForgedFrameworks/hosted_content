@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TM9035 phone test - framed</title>
+<style>
+  body { margin: 0; font-family: -apple-system, Segoe UI, Roboto, sans-serif; background: #f3f5f8; color: #222f55; }
+  header { padding: 12px 16px; font-size: 15px; }
+  header a { color: #007a98; }
+  .box { position: relative; width: 100%; overflow: hidden; background: #fff; }
+  .box iframe { position: absolute; left: 0; top: 0; width: 1370px; height: 700px; border: 0; transform-origin: 0 0; }
+</style>
+</head>
+<body>
+<header><strong id="lab"></strong> - <a href="./">back to the list</a></header>
+<div class="box" id="box"><iframe id="f" title="Activity under test" allow="fullscreen"></iframe></div>
+<script>
+  /* Frames one test copy the way Visme does on a phone: the 1370x700 activity, scaled to the screen width. */
+  var v = (new URLSearchParams(location.search).get("v") || "c").replace(/[^abc]/g, "") || "c";
+  var names = { c: "C - live version, unchanged", a: "A - no card", b: "B - card, zoom off" };
+  document.getElementById("lab").textContent = names[v];
+  var f = document.getElementById("f"), box = document.getElementById("box");
+  function fit() { var s = box.clientWidth / 1370; f.style.transform = "scale(" + s + ")"; box.style.height = (700 * s) + "px"; }
+  fit(); addEventListener("resize", fit);
+  f.src = v + "/index.html";
+</script>
+</body>
+</html>

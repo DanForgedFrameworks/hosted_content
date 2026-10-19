@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<!-- build: TM 9035 | tm9035-confidence-baseline-2026-07-10-v1 | r4 | 2026-10-11 -->
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TM 9035: Confidence baseline (scene A): writes tm9035:confidence:baseline:v1</title>
+<style>
+/* ============================================================
+   TOUCH MEDICAL — TM9035 CONFIDENCE BASELINE (scene A)
+   The opening half of the split benchmark. Sits EARLY in the deck; its partner
+   `tm9035-benchmark-summary-and-reflection-scene-71` sits at the end and reads
+   what this writes.
+
+   Two steps, no scroll, no export:
+     1 Your starting point — confidence self-rating across the six topic areas
+     2 Thank you           — closing confirmation + what happens at the end
+
+   STORAGE (best-effort, never load-bearing). Writes
+   `tm9035:confidence:baseline:v1` = {v:1, source:'baseline-scene', ts, date, r:{0..5}}
+   to localStorage. Confirmed reachable inside the real Visme embed (probe, 2026-07-10:
+   opaque origin = no, storageAccess = granted, nonce survived writer -> reader).
+   Still fully guarded: Safari blocks third-party storage, and a sandbox without
+   allow-same-origin would throw SecurityError. If the write fails the learner sees
+   NO difference — the summary scene simply asks for a baseline itself.
+
+   COPY RULE: the thank-you page must never claim the rating was "saved", because on
+   a blocked browser that would be a lie. It promises only what is true either way:
+   you will rate these again at the end.
+
+   NO free-text capture. NO drag-and-drop (Visme scales a fixed ~1368px canvas).
+   Tap targets >= 44px. Self-contained; no external runtime dependencies.
+   Brand: Poppins (bundled), teal #0098be, navy #222f55.
+   ============================================================ */
+@font-face { font-family:"Poppins"; src:url("assets/poppins-400.ttf") format("truetype"); font-weight:400; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-600.ttf") format("truetype"); font-weight:600; font-style:normal; font-display:swap; }
+@font-face { font-family:"Poppins"; src:url("assets/poppins-700.ttf") format("truetype"); font-weight:700; font-style:normal; font-display:swap; }
+
+:root{
+  --teal:#0098be; --teal-strong:#007a98;
+  --navy:#222f55; --on-accent:#ffffff;
+  --neutral:#c6d3e2;
+  --muted:#56608a; --faint:#8a91b0;
+  --pale:#d9eff8; --mist:#f4f7f9; --line:#e3e8ee;
+  --backdrop:rgba(16,26,38,.68);
+  --title-shadow-slim:0 1px 2px rgba(34,47,85,.16);
+  /* feedback/state — slide-69's contrast-tuned realisation (see notes.md) */
+  --good:#287d5c; --good-soft:#e3f3ec;
+  --amber:#9a6a16; --amber-soft:#fbf0db;
+  --flag:#b64457; --flag-soft:#fbe7ea;
+  --font:"Poppins",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{ box-sizing:border-box; }
+html,body{ height:100%; margin:0; }
+body{ overflow:hidden; background:#eef4f7; color:var(--navy); font-family:var(--font); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; display:flex; align-items:center; justify-content:center; }
+
+.frame{ position:relative; z-index:1; width:100%; height:100%; max-width:1370px; max-height:680px; display:flex; flex-direction:column; overflow:hidden; background:#fff; border-radius:16px; box-shadow:0 20px 52px rgba(16,26,38,.18); }
+
+/* banner — §0.9 white-band heading */
+.banner{ flex:0 0 auto; text-align:center; padding:clamp(9px,1.5vh,16px) 16px; background:#fff; box-shadow:0 4px 11px rgba(34,47,85,0.07); border-bottom:1px solid var(--line); border-radius:14px 14px 0 0; }
+.banner__title{ margin:0; font-size:clamp(30px,3.4vw,48px); font-weight:700; line-height:1.1; letter-spacing:-0.012em; color:var(--navy); text-shadow:var(--title-shadow-slim); }
+.banner__title em{ font-style:italic; }
+.banner__prompt{ margin:4px 0 0; font-size:clamp(.76rem,1.3vw,.9rem); font-weight:500; color:var(--muted); }
+
+/* step rail */
+.rail{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:clamp(6px,1.4vw,16px); padding:clamp(6px,1.2vh,12px) clamp(12px,3vw,28px) clamp(4px,.9vh,9px); }
+.rail__step{ display:inline-flex; align-items:center; gap:8px; font-size:clamp(.7rem,1.15vw,.82rem); font-weight:700; color:var(--faint); }
+.rail__num{ width:23px; height:23px; flex:0 0 auto; border-radius:50%; display:grid; place-items:center; background:#fff; border:2px solid var(--line); color:var(--faint); font-size:.78rem; font-weight:700; }
+.rail__step.is-active .rail__num{ background:var(--teal); border-color:var(--teal); color:#fff; }
+.rail__step.is-active{ color:var(--navy); }
+.rail__step.is-done .rail__num{ background:var(--teal-strong); border-color:var(--teal-strong); color:#fff; }
+.rail__step.is-done{ color:var(--muted); }
+.rail__line{ width:clamp(14px,3vw,40px); height:2px; background:var(--line); border-radius:2px; }
+.rail__step.is-done + .rail__line{ background:var(--teal-strong); }
+@media (max-width:880px){ .rail__lab{ display:none; } }
+
+/* body shell */
+.body{ flex:1 1 auto; min-height:0; position:relative; padding:clamp(5px,1vh,12px) clamp(16px,2.8vw,40px) clamp(7px,1.2vh,14px); }
+.step{ position:absolute; inset:0; padding:inherit; display:none; flex-direction:column; min-height:0; overflow:hidden; }
+.step.is-on{ display:flex; }
+.step.anim-right{ animation:stepInR .36s cubic-bezier(.4,0,.2,1); }
+.step.anim-left{ animation:stepInL .36s cubic-bezier(.4,0,.2,1); }
+@keyframes stepInR{ from{ transform:translateX(40px); } to{ transform:none; } }   /* §6: transform only, never opacity */
+@keyframes stepInL{ from{ transform:translateX(-40px); } to{ transform:none; } }  /* §6: transform only, never opacity */
+.step__lead{ flex:0 0 auto; margin:0 0 clamp(5px,1vh,11px); font-size:clamp(.78rem,1.35vw,.94rem); font-weight:600; color:var(--muted); line-height:1.35; text-align:center; }
+.step__lead b{ color:var(--navy); font-weight:700; }
+
+/* confidence map */
+.cmap{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; justify-content:center; gap:clamp(5px,.95vh,10px); }
+.crow{ display:grid; grid-template-columns:1fr auto; align-items:center; gap:clamp(10px,1.6vw,20px); padding:clamp(6px,1.05vh,12px) clamp(12px,1.6vw,18px); background:#fff; border:1.5px solid var(--line); border-radius:11px; transition:border-color .15s ease, box-shadow .15s ease; }
+.crow.is-set{ border-color:var(--teal); box-shadow:0 3px 12px rgba(34,47,85,.07); }
+.crow__lab{ font-size:clamp(.74rem,1.28vw,.9rem); font-weight:600; line-height:1.22; color:var(--navy); }
+.crow__lab em{ font-style:italic; }
+.crow__lab b{ color:var(--teal-strong); font-weight:700; margin-right:6px; }
+.chips{ display:inline-flex; gap:clamp(5px,.7vw,8px); flex:0 0 auto; }
+.chip{ border:1.5px solid var(--line); background:#fff; color:var(--muted); font:inherit; font-weight:700; font-size:clamp(.68rem,1.12vw,.78rem); padding:6px clamp(8px,1.1vw,14px); border-radius:999px; cursor:pointer; white-space:nowrap; transition:all .14s ease; }
+.chip:hover{ border-color:var(--teal); color:var(--navy); }
+.chip:focus-visible{ outline:3px solid var(--navy); outline-offset:2px; }
+.chip[aria-checked="true"][data-v="good"]{ background:var(--good-soft); border-color:var(--good); color:var(--good); }
+.chip[aria-checked="true"][data-v="amber"]{ background:var(--amber-soft); border-color:var(--amber); color:var(--amber); }
+.chip[aria-checked="true"][data-v="flag"]{ background:var(--flag-soft); border-color:var(--flag); color:var(--flag); }
+.progress{ flex:0 0 auto; text-align:center; margin:clamp(4px,.8vh,9px) 0 0; font-size:clamp(.7rem,1.15vw,.8rem); font-weight:700; color:var(--teal-strong); min-height:1.2em; font-variant-numeric:tabular-nums; }
+.progress.is-full{ color:var(--good); }
+
+/* step 2 — thank-you / closing panel */
+.done{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:clamp(7px,1.2vh,14px); text-align:center; }
+.done__tick{ flex:0 0 auto; width:clamp(48px,5.6vw,64px); height:clamp(48px,5.6vw,64px); border-radius:50%; background:var(--good-soft); border:3px solid var(--good); color:var(--good); display:grid; place-items:center; }
+.done__tick svg{ width:55%; height:55%; }
+.done__h{ margin:0; font-size:clamp(1.1rem,2.1vw,1.6rem); font-weight:700; color:var(--navy); line-height:1.2; }
+.done__p{ margin:0; max-width:64ch; font-size:clamp(.82rem,1.4vw,.98rem); font-weight:500; color:var(--muted); line-height:1.45; }
+.done__p b{ color:var(--navy); font-weight:700; }
+.done__grid{ display:flex; flex-wrap:wrap; justify-content:center; gap:6px; max-width:100%; }
+.tag{ display:inline-flex; align-items:center; gap:6px; font-size:clamp(.66rem,1.06vw,.76rem); font-weight:600; padding:5px 11px; border-radius:999px; border:1.5px solid var(--line); background:#fff; color:var(--muted); }
+.tag em{ font-style:italic; }
+.tag b{ font-weight:700; }
+.tag[data-v="good"]{ border-color:var(--good); color:var(--good); background:var(--good-soft); }
+.tag[data-v="amber"]{ border-color:var(--amber); color:var(--amber); background:var(--amber-soft); }
+.tag[data-v="flag"]{ border-color:var(--flag); color:var(--flag); background:var(--flag-soft); }
+.tag[data-v="none"]{ color:var(--faint); }
+.done__note{ margin:0; font-size:clamp(.67rem,1.06vw,.75rem); color:var(--faint); line-height:1.35; max-width:74ch; }
+
+/* footer controls */
+.controls{ flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:clamp(6px,1.1vh,12px) clamp(16px,3vw,30px); border-top:1px solid var(--line); }
+.btn{ display:inline-flex; align-items:center; gap:8px; min-height:44px; padding:9px clamp(14px,1.8vw,22px); border:2px solid var(--teal); border-radius:10px; background:var(--teal); color:#fff; font:inherit; font-weight:700; font-size:clamp(.8rem,1.3vw,.9rem); cursor:pointer; transition:filter .15s ease, opacity .15s ease; }
+.btn svg{ width:17px; height:17px; }
+.btn:hover:not(:disabled){ filter:brightness(.95); }
+.btn.secondary{ background:#fff; color:var(--teal); }
+.btn.secondary:hover:not(:disabled){ background:var(--mist); filter:none; }
+.btn:focus-visible,.chip:focus-visible{ outline:3px solid var(--navy); outline-offset:3px; }
+.controls__mid{ font-size:clamp(.72rem,1.2vw,.84rem); font-weight:700; color:var(--teal); white-space:nowrap; font-variant-numeric:tabular-nums; }
+
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+@media (max-width:760px){
+  html,body{ height:auto; }
+  body{ overflow:auto; display:block; }
+  .frame{ width:auto; height:auto; min-height:100%; max-height:none; margin:0; border-radius:0; }
+  .body{ position:static; }
+  .step{ position:static; overflow:visible; }
+  .rail__lab{ display:none; }
+  .crow{ grid-template-columns:1fr; gap:8px; }
+  .chips{ flex-wrap:wrap; }
+  .chip{ min-height:44px; display:inline-flex; align-items:center; }
+  body.is-fullscreen{ padding-top:56px; }
+  .nudge{ font-size:13px; left:12px; right:12px; transform:none; max-width:none; justify-content:center; }
+  .nudge.is-on{ animation:none; }
+  .frame.nudge-shown{ padding-bottom:0; }
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+}
+
+/* ===== Continue nudge — locked house copy ===== */
+.frame.nudge-shown{ padding-bottom:72px; }
+.nudge{ position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:40; display:none; align-items:center; gap:10px; max-width:calc(100% - 28px); padding:9px 17px; border-radius:999px; background:rgba(34,47,85,0.94); color:#fff; font-size:15px; font-weight:600; line-height:1.25; box-shadow:0 8px 22px rgba(16,26,38,0.30); }
+.nudge.is-on{ display:inline-flex; animation:nudgeIn .5s ease backwards; }
+.nudge b{ font-weight:700; }
+.nudge__chev{ flex:0 0 auto; display:inline-grid; place-items:center; }
+.nudge__chev svg{ width:20px; height:20px; transition:transform .3s ease; }
+.nudge.is-on .nudge__chev{ animation:nudgeBob 1.6s ease-in-out .6s infinite; }
+.nudge__m{ display:none; }
+body.is-fullscreen .nudge{ bottom:auto; top:60px; }
+body.is-fullscreen .nudge__d{ display:none; }
+body.is-fullscreen .nudge__m{ display:inline; }
+body.is-fullscreen .nudge__chev svg{ transform:rotate(180deg); }
+body.is-fullscreen .nudge.is-on .nudge__chev{ animation:nudgeBobUp 1.6s ease-in-out .6s infinite; }
+body.is-fullscreen.is-laststep .nudge__m{ display:none; }
+@keyframes nudgeIn{ from{ transform:translateX(-50%) translateY(12px); } to{ transform:translateX(-50%) translateY(0); } }  /* §6: transform only */
+@keyframes nudgeBob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(3px); } }
+@keyframes nudgeBobUp{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-3px); } }
+
+/* ===== MOBILE/VISME — embedded-mobile launch card (contract §4.2) ===== */
+.mlaunch{ display:none; }
+body.is-embedded-mobile .frame{ display:none !important; }
+body.is-embedded-mobile{ display:block; }
+body.is-embedded-mobile .mlaunch{
+  display:flex; position:fixed; inset:0; z-index:50;
+  flex-direction:column; align-items:center; justify-content:center; text-align:center;
+  gap:42px; padding:90px 70px;
+  background:linear-gradient(135deg,#0098be 0%, #007a98 55%, #222f55 100%); color:#fff;
+}
+.mlaunch__badge{ font-size:30px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; opacity:.9; }
+.mlaunch__title{ margin:0; font-size:64px; font-weight:700; line-height:1.08; }
+.mlaunch__lead{ margin:0; max-width:1040px; font-size:36px; font-weight:500; line-height:1.4; opacity:.96; }
+.mlaunch__btn{ display:inline-flex; align-items:center; gap:26px; margin-top:6px;
+  padding:48px 92px; border-radius:999px; background:#fff; color:#007a98;
+  font:inherit; font-weight:700; font-size:48px; text-decoration:none;
+  box-shadow:0 18px 54px rgba(16,26,38,.38); }
+.mlaunch__btn svg{ width:56px; height:56px; }
+.mlaunch__note{ margin:0; max-width:1040px; font-size:27px; line-height:1.4; opacity:.85; }
+
+/* MOBILE/VISME — Return-to-course control (full-screen view only) */
+.returnbar{ display:none; }
+body.is-fullscreen .returnbar{
+  display:inline-flex; align-items:center; justify-content:center; gap:0;
+  position:fixed; top:10px; left:10px; z-index:60; box-sizing:border-box;
+  width:44px; height:44px; padding:0; overflow:hidden;
+  border-radius:13px; background:rgba(34,47,85,.92); color:#fff;
+  text-decoration:none; box-shadow:0 6px 16px rgba(16,26,38,.26);
+  transition:width .28s cubic-bezier(.4,0,.2,1), padding .28s cubic-bezier(.4,0,.2,1), gap .28s ease, border-radius .28s ease;
+}
+body.is-fullscreen .returnbar__ic{ flex:0 0 auto; width:22px; height:22px; display:grid; place-items:center; }
+body.is-fullscreen .returnbar__ic svg{ width:22px; height:22px; }
+body.is-fullscreen .returnbar__lab{ font:inherit; font-weight:700; font-size:15px; white-space:nowrap; max-width:0; opacity:0; transition:max-width .28s ease, opacity .2s ease; }
+body.is-fullscreen .returnbar:focus-visible{ outline:3px solid var(--teal); outline-offset:3px; }
+body.is-fullscreen.is-laststep .returnbar{ width:auto; gap:9px; padding:0 18px 0 13px; border-radius:999px; }
+body.is-fullscreen.is-laststep .returnbar__lab{ max-width:220px; opacity:1; }
+
+.returnhint{ display:none; }
+body.is-fullscreen.is-laststep .returnhint{ display:block; flex:0 0 auto; margin:0; padding:10px clamp(16px,3vw,30px) 4px; font-size:13px; line-height:1.42; color:var(--muted); text-align:center; }
+body.is-fullscreen.is-laststep .returnhint b{ color:var(--teal-strong); font-weight:700; }
+</style>
+<!-- r4-embed:start -->
+<style id="r4-embed-css">
+  /* owner 2026-09-22: a slide that is off screen or in a hidden tab does no work */
+  [data-idle="1"], [data-idle="1"] * { animation-play-state: paused !important; }
+  /* owner 2026-09-23 / 2026-10-11: the in-activity zoom (script at the end of the page). Only that script sets
+     html.zi-on, and only inside a frame on a touch device, so a direct link and a desktop keep what they had. */
+  html.zi-on, html.zi-on * { touch-action: pan-x pan-y; }
+  html.zi-zoomed, html.zi-zoomed * { touch-action: none !important; }
+  #zi-full { display: none; position: fixed; z-index: 2147483646; left: calc(10 * var(--zi-g)); top: calc(10 * var(--zi-g)); height: calc(36 * var(--zi-g)); margin: 0;
+    padding: 0 calc(3 * var(--zi-g)) 0 calc(12 * var(--zi-g)); gap: calc(8 * var(--zi-g)); box-sizing: border-box; align-items: center; border: 0; border-radius: calc(18 * var(--zi-g));
+    background: var(--navy, #222f55); color: #fff; box-shadow: 0 calc(3 * var(--zi-g)) calc(10 * var(--zi-g)) rgba(34,47,85,.3);
+    font-family: inherit; font-weight: 700; font-size: calc(14 * var(--zi-g)); font-variant-numeric: tabular-nums;
+    cursor: pointer; -webkit-tap-highlight-color: transparent; -webkit-appearance: none; appearance: none; }
+  html.zi-zoomed #zi-full { display: flex; }
+  #zi-full::after { content: ""; position: absolute; left: calc(-5 * var(--zi-g)); right: calc(-5 * var(--zi-g)); top: calc(-5 * var(--zi-g)); bottom: calc(-5 * var(--zi-g)); }
+  #zi-full:focus-visible { outline: calc(2.5 * var(--zi-g)) solid var(--teal, #0096be); outline-offset: calc(2 * var(--zi-g)); }
+  #zi-full .zi-num { min-width: calc(30 * var(--zi-g)); text-align: right; }
+  #zi-full .zi-dot { width: calc(30 * var(--zi-g)); height: calc(30 * var(--zi-g)); padding: calc(7.5 * var(--zi-g)); box-sizing: border-box; border-radius: 50%; background: var(--teal, #0096be); color: #fff; }
+  #zi-full svg { display: block; width: 100%; height: 100%; }
+</style>
+<!-- r4-embed:end -->
+
+<meta name="build-version" content="TM 9035 tm9035-confidence-baseline-2026-07-10-v1 r4 2026-10-11">
+<!-- r4-strip:start -->
+<style id="r4-strip-css">
+  /* owner 2026-10-12 (fix A): full-screen phone view only - the chrome gets its own strip, never sits on content */
+  body.is-fullscreen { padding-top: 64px !important; }
+  body.is-fullscreen::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 64px; z-index: 55;
+    background: #fff; box-shadow: 0 1px 0 rgba(34,47,85,.12); pointer-events: none; }
+  body.is-fullscreen .returnbar { top: 10px !important; left: 10px !important; z-index: 61 !important; }
+  body.is-fullscreen:has(.nudge.is-on) { padding-top: 116px !important; }
+  body.is-fullscreen:has(.nudge.is-on)::before { height: 116px; }
+  body.is-fullscreen .nudge { top: 62px !important; bottom: auto !important; left: 10px !important; right: 10px !important;
+    transform: none !important; max-width: none !important; justify-content: center; z-index: 61 !important; }
+  body.is-fullscreen .nudge.is-on { animation: none !important; }
+  /* pop-ups (Source, data tables, leave-site notice) open above the strip */
+  body.is-fullscreen .modal, body.is-fullscreen .srcmodal, body.is-fullscreen .src-modal, body.is-fullscreen #citeModal,
+  body.is-fullscreen .cite-modal, body.is-fullscreen .inter { z-index: 70 !important; }
+  /* wide screens (phone landscape): the Finished bar shares the one strip, to the right of Return to course */
+  @media (min-width: 640px) {
+    body.is-fullscreen:has(.nudge.is-on) { padding-top: 64px !important; }
+    body.is-fullscreen:has(.nudge.is-on)::before { height: 64px; }
+    body.is-fullscreen .nudge { top: 10px !important; left: 230px !important; height: 44px; box-sizing: border-box; }
+  }
+</style>
+<!-- r4-strip:end -->
+<!-- mod-head:css:start -->
+<style id="mod-head-css">
+/* module heading (owner 14 Oct 2026): left, glow, capped rule - tools/tm9035-module-heading.py */
+.banner h1.banner__title{ text-align:left !important; letter-spacing:-.01em; text-shadow:0 2px 10px rgba(0,152,190,.30); }
+.banner h1.banner__title *:not(em):not(i):not(.gene){ color:inherit !important; }
+.banner h1.banner__title em, .banner h1.banner__title i, .banner h1.banner__title .gene{ color:inherit !important; }
+.mh-rule{ display:flex; align-items:center; align-self:flex-start; width:66%; max-width:960px; margin:6px 0 0; }
+.mh-rule i{ flex:0 0 auto; width:4px; height:14px; background:#0098be; border-radius:2px; }
+.mh-rule b{ flex:1 1 auto; height:3px; background:#0098be; border-radius:2px; }
+.banner{ background:#fff !important; box-shadow:none !important; border-bottom:0 !important; }
+.banner__prompt{ text-align:left !important; }
+</style>
+<!-- mod-head:css:end -->
+</head>
+<body>
+
+<a class="returnbar" id="returnBar" href="#" aria-label="Return to the course">
+  <span class="returnbar__ic" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 5 4 10 9 15"/><path d="M4 10 H15 a5 5 0 0 1 5 5 V19"/></svg>
+  </span>
+  <span class="returnbar__lab">Return to course</span>
+</a>
+
+<div class="mlaunch" role="group" aria-label="Open the activity full screen">
+  <span class="mlaunch__badge">Touch Oncology &middot; CPD activity</span>
+  <h1 class="mlaunch__title">Your starting point</h1>
+  <p class="mlaunch__lead">This interactive activity is best viewed full screen on your phone. Tap below to open it.</p>
+  <a class="mlaunch__btn" id="mlaunchBtn" href="#" target="_blank" rel="noopener">
+    Open the activity
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><polyline points="13 6 19 12 13 18"/></svg>
+  </a>
+  <p class="mlaunch__note">On a computer, the activity appears here directly.</p>
+</div>
+
+<main class="frame" aria-label="Your starting point — confidence baseline">
+
+  <header class="banner">
+    <h1 class="banner__title">Your starting point</h1><!-- mh-rule --><div class="mh-rule" aria-hidden="true"><i></i><b></b><i></i></div><!-- /mh-rule -->
+    <p class="banner__prompt">Gauge where you stand before the module &mdash; you&rsquo;ll revisit this at the end.</p>
+  </header>
+
+  <nav class="rail" id="rail" aria-label="Activity steps">
+    <span class="rail__step is-active" data-rs="1"><span class="rail__num">1</span><span class="rail__lab">Where you start</span></span>
+    <span class="rail__line"></span>
+    <span class="rail__step" data-rs="2"><span class="rail__num">2</span><span class="rail__lab">Thank you</span></span>
+  </nav>
+
+  <div class="body">
+
+    <!-- STEP 1 — BASELINE RATING -->
+    <section class="step is-on" data-sid="rate" aria-label="Where you start">
+      <p class="step__lead">Across the six areas of this module, how confident do you feel <b>right now</b>? <b>There are no wrong answers</b> &mdash; this is simply your starting point.</p>
+      <div class="cmap" id="bmap"></div>
+      <p class="progress" id="progress" aria-live="polite">Rate all six areas to continue.</p>
+    </section>
+
+    <!-- STEP 2 — THANK YOU / CLOSING PANEL -->
+    <section class="step" data-sid="done" aria-label="Thank you" hidden>
+      <div class="done">
+        <span class="done__tick" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </span>
+        <h2 class="done__h">Thank you &mdash; that&rsquo;s your starting point.</h2>
+        <!-- Deliberately promises only what is true even when storage is blocked:
+             it never claims the rating was "saved". -->
+        <p class="done__p">At the <b>end of the module</b> you&rsquo;ll rate these same six areas again, and see how far you&rsquo;ve moved. Anything you marked as new to you is worth watching for as you go.</p>
+        <div class="done__grid" id="doneGrid"></div>
+        <p class="done__note">Your ratings stay on your own device and are never sent anywhere. Nothing here is clinical guidance.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="controls">
+    <button class="btn secondary" id="backBtn" type="button" disabled style="visibility:hidden">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>Back
+    </button>
+    <span class="controls__mid" id="stepLabel" aria-hidden="true">Step 1 of 2</span>
+    <button class="btn" id="nextBtn" type="button">
+      Next<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+
+  <p class="returnhint">Once you&rsquo;ve set your starting point, you can return to the course using the <b>Return to course</b> button at the top.</p>
+
+  <p class="sr-only" id="live" aria-live="polite" aria-atomic="true"></p>
+</main>
+
+<div class="nudge" id="nudge" role="status" aria-live="polite">
+  <span class="nudge__chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+  <span class="nudge__d">All done &mdash; use the <b>&#9664;&nbsp;&#9654;</b> arrows at the bottom of the screen to continue when you&rsquo;re ready.</span>
+  <span class="nudge__m">Finished &mdash; tap <b>Return to course</b> to carry on.</span>
+</div>
+
+<!-- MOBILE/VISME: launch-card decision -->
+<script>
+(function(){
+  "use strict";
+  var fullscreen = /[?&]fullscreen=1/.test(location.search);
+  var inIframe = true; try { inIframe = (window.self !== window.top); } catch(e){ inIframe = true; }
+  var isMobile = /Android|iPhone|iPad|iPod|Mobile|Silk/i.test(navigator.userAgent);
+  var btn = document.getElementById('mlaunchBtn');
+  var base = location.href.split('#')[0].split('?')[0];
+  var courseUrl = ''; try { courseUrl = document.referrer || ''; } catch(e){ courseUrl = ''; }
+  var target = base + '?fullscreen=1' + (courseUrl ? '&return=' + encodeURIComponent(courseUrl) : '');
+  if(btn){
+    btn.href = target;
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      var w = null;
+      try { w = window.open(target, '_blank'); } catch(err){ w = null; }
+      if(!w){
+        try { window.top.location.href = target; }
+        catch(err2){ window.location.href = target; }
+      }
+    });
+  }
+  var rb = document.getElementById('returnBar');
+  var returnUrl = (function(){ try { return new URLSearchParams(location.search).get('return'); } catch(e){ return null; } })();
+  if(rb){
+    if(returnUrl){ rb.href = returnUrl; }
+    rb.addEventListener('click', function(e){
+      e.preventDefault();
+      try { if(window.opener && !window.opener.closed){ window.close(); return; } } catch(err){}
+      if(window.history.length > 1){ window.history.back(); return; }
+      if(returnUrl){ window.location.href = returnUrl; }
+    });
+  }
+  if(isMobile){ document.body.classList.add('is-mobile'); }
+  /* TEST A: no launch card in a frame on a phone */
+  if(fullscreen){ document.body.classList.add('is-fullscreen'); }
+})();
+</script>
+
+<script>
+(function(){
+  "use strict";
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); }
+  function $(id){ return document.getElementById(id); }
+
+  /* ---------- content (verbatim — owner slides) ---------- */
+  // The same six Table-of-Contents content areas the summary scene rates, in the same
+  // order. The 7th TOC entry ("Summary") is omitted — rating it is circular.
+  // These MUST stay in lockstep with the summary scene, or the delta compares apples to pears.
+  var TOPICS = [
+    { html:'<em>MET</em>ex14 skipping NSCLC and tepotinib', plain:'METex14 skipping NSCLC and tepotinib' },
+    { html:'Efficacy of tepotinib in the VISION study', plain:'Efficacy of tepotinib in the VISION study' },
+    { html:'Safety of tepotinib in the VISION study', plain:'Safety of tepotinib in the VISION study' },
+    { html:'Tepotinib efficacy in clinically relevant subgroups of the VISION study', plain:'Tepotinib efficacy in clinically relevant subgroups of the VISION study' },
+    { html:'Efficacy of tepotinib across treatment lines in the VISION study', plain:'Efficacy of tepotinib across treatment lines in the VISION study' },
+    { html:'Outcomes in Asian patients in the VISION study', plain:'Outcomes in Asian patients in the VISION study' }
+  ];
+  var CHIPS = [
+    { v:'good',  label:'Confident' },
+    { v:'amber', label:'Aware, want to know more' },
+    { v:'flag',  label:'Unfamiliar' }
+  ];
+  var CHIP_TEXT = { good:'Confident', amber:'Aware, want to know more', flag:'Unfamiliar', none:'Not yet rated' };
+
+  var baseRatings = {};
+
+  /* ============================================================
+     STORAGE — best-effort, never load-bearing.
+     Probe (2026-07-10) confirmed localStorage IS reachable inside the real Visme
+     embed (opaque origin: no). It is still fully guarded: Safari blocks
+     third-party storage, and a future sandbox change could remove
+     allow-same-origin. A failed write must be invisible to the learner.
+     ============================================================ */
+  var BKEY = 'tm9035:confidence:baseline:v1';
+  function storageOK(){
+    try{ var k='tm9035:probe'; window.localStorage.setItem(k,'1'); window.localStorage.removeItem(k); return true; }
+    catch(e){ return false; }
+  }
+  var HAS_STORAGE = storageOK();
+
+  function dateStr(){ try{ return new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}); }catch(e){ return ''; } }
+  function writeBaseline(){
+    if(!HAS_STORAGE) return false;
+    try{
+      window.localStorage.setItem(BKEY, JSON.stringify({
+        v:1, source:'baseline-scene', ts:Date.now(), date:dateStr(), r:baseRatings
+      }));
+      return true;
+    }catch(e){ return false; }
+  }
+
+  /* ---------- confidence map ---------- */
+  (function(){
+    var host=$('bmap');
+    TOPICS.forEach(function(t,i){
+      var row=document.createElement('div');
+      row.className='crow'; row.dataset.row=i;
+      var chips=CHIPS.map(function(c){
+        return '<button class="chip" type="button" role="radio" aria-checked="false" data-v="'+c.v+'" data-row="'+i+'" aria-label="'+esc(t.plain)+': '+c.label+'">'+c.label+'</button>';
+      }).join('');
+      row.innerHTML='<span class="crow__lab"><b>'+(i+1)+'</b>'+t.html+'</span>'+
+        '<span class="chips" role="radiogroup" aria-label="Confidence for '+esc(t.plain)+'">'+chips+'</span>';
+      host.appendChild(row);
+    });
+    host.addEventListener('click',function(e){
+      var chip=e.target.closest('.chip'); if(!chip) return;
+      var row=+chip.dataset.row;
+      chip.parentNode.querySelectorAll('.chip').forEach(function(g){ g.setAttribute('aria-checked','false'); });
+      chip.setAttribute('aria-checked','true');
+      baseRatings[row]=chip.dataset.v;
+      chip.closest('.crow').classList.add('is-set');
+      writeBaseline();                       // guarded; a failure is silent by design
+      $('live').textContent=TOPICS[row].plain+': '+CHIP_TEXT[chip.dataset.v]+'.';
+      syncProgress();
+    });
+  })();
+
+  function rated(){ return Object.keys(baseRatings).length; }
+  function syncProgress(){
+    var n=rated(), el=$('progress');
+    el.classList.toggle('is-full', n===TOPICS.length);
+    el.textContent = n===TOPICS.length
+      ? 'All six rated — continue when you’re ready.'
+      : (n===0 ? 'Rate all six areas to continue.' : 'Rated '+n+' of '+TOPICS.length+'.');
+    // Next stays enabled throughout: a partial baseline is still a valid baseline,
+    // and the summary scene reports "no comparison yet" for any unrated area.
+  }
+
+  /* ---------- step 2: closing panel ---------- */
+  function buildDone(){
+    $('doneGrid').innerHTML = TOPICS.map(function(t,i){
+      var v=baseRatings[i]||'none';
+      /* the label is one flex item, so the tag's gap never opens between italic MET and "ex14" (owner 13 Oct) */
+      return '<span class="tag" data-v="'+v+'"><b>'+(i+1)+'</b><span>'+t.html+' &middot; '+CHIP_TEXT[v]+'</span></span>';
+    }).join('');
+  }
+
+  /* ---------- nudge ---------- */
+  function fireNudge(on){
+    var frame=document.querySelector('.frame'), nudge=$('nudge');
+    if(frame) frame.classList.toggle('nudge-shown', on);
+    if(nudge) nudge.classList.toggle('is-on', on);
+  }
+
+  /* ---------- step navigation ---------- */
+  var ACTIVE=['rate','done'], TOTAL=ACTIVE.length, current=1;
+  var steps=Array.prototype.slice.call(document.querySelectorAll('.step'));
+  var railSteps=Array.prototype.slice.call(document.querySelectorAll('.rail__step'));
+  var backBtn=$('backBtn'), nextBtn=$('nextBtn'), stepLabel=$('stepLabel');
+
+  function show(n, dir){
+    current=n;
+    var sid=ACTIVE[n-1];
+    steps.forEach(function(s){ var on=(s.dataset.sid===sid); s.classList.toggle('is-on',on); s.hidden=!on; s.classList.remove('anim-right','anim-left'); });
+    railSteps.forEach(function(r){ var rs=+r.dataset.rs; r.classList.toggle('is-active',rs===n); r.classList.toggle('is-done',rs<n); });
+    stepLabel.textContent='Step '+n+' of '+TOTAL;
+    backBtn.disabled=(n===1);
+    backBtn.style.visibility=(n===1)?'hidden':'visible';
+    document.body.classList.toggle('is-laststep', n===TOTAL);
+    if(n===TOTAL){
+      nextBtn.style.display='none';
+      buildDone();
+      fireNudge(true);
+    }else{
+      nextBtn.style.display='';
+      fireNudge(false);
+    }
+    if(!reduceMotion && dir){
+      var active=document.querySelector('.step.is-on');
+      if(active){ void active.offsetWidth; active.classList.add(dir==='left'?'anim-left':'anim-right'); }
+    }
+    $('live').textContent='Step '+n+' of '+TOTAL+'.';
+  }
+  nextBtn.addEventListener('click',function(){ if(current<TOTAL) show(current+1,'right'); });
+  backBtn.addEventListener('click',function(){ if(current>1) show(current-1,'left'); });
+  railSteps.forEach(function(r){
+    r.style.cursor='pointer';
+    r.addEventListener('click',function(){ var rs=+r.dataset.rs; if(rs<current) show(rs,'left'); });
+  });
+
+  syncProgress();
+  stepLabel.textContent='Step 1 of '+TOTAL;
+})();
+</script>
+<!-- r4-embed:start -->
+<script id="r4-embed-js">
+/* The embed behaviour standard for a flexible TM9035 page (touchmedical-html contract section 4; owner rulings
+   2026-09-22/23, adapted for flexible pages 2026-10-11). The main box is the page's first visible top-level
+   element (main.frame, main.slide, .stage, #tmh-root); it is marked data-stage="1" data-fluid="1". */
+(function () {
+  function pickRoot() {
+    var s = document.querySelector('[data-stage="1"]');
+    if (s && s.isConnected) return s;
+    var best = null, area = 0, kids = document.body ? document.body.children : [];
+    for (var i = 0; i < kids.length; i++) {
+      var k = kids[i];
+      if (/^(SCRIPT|STYLE|TEMPLATE|NOSCRIPT|LINK)$/.test(k.tagName) || k.id === "zi-full") continue;
+      var r = k.getBoundingClientRect(), a = r.width * r.height;
+      if (a > area) { area = a; best = k; }
+    }
+    if (best) { best.setAttribute("data-stage", "1"); best.setAttribute("data-fluid", "1"); }
+    return best;
+  }
+
+  /* ---- idle: paused while off screen or hidden ---- */
+  var idleOff = false;
+  function idleSet() {
+    var r = pickRoot(); if (!r) return;
+    r.setAttribute("data-idle", (idleOff || document.hidden) ? "1" : "0");
+  }
+  function idleStart() {
+    var r = pickRoot(); if (!r) return;
+    idleSet();
+    if (typeof IntersectionObserver !== "undefined") {
+      new IntersectionObserver(function (es) { idleOff = !es.some(function (e) { return e.isIntersecting; }); idleSet(); },
+        { threshold: 0 }).observe(r);
+    }
+    document.addEventListener("visibilitychange", idleSet);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", idleStart); else idleStart();
+
+  /* ---- in-activity zoom: inside a frame, on a touch device only ---- */
+  var inFrame = true;
+  try { inFrame = window.self !== window.top; } catch (e) { inFrame = true; }
+  var touch = !!(window.matchMedia && window.matchMedia("(hover: none)").matches);
+  if (!inFrame || !touch) return;
+
+  var MAX = 3, root = document.documentElement, stage = null, z = 1, tx = 0, ty = 0, g = null;
+  var reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  root.classList.add("zi-on");
+
+  var FIT = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 3v6H3M15 3v6h6M9 21v-6H3M15 21v-6h6" ' +
+    'fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var chip = document.createElement("button");
+  chip.id = "zi-full"; chip.type = "button";
+  chip.setAttribute("aria-label", "Back to full view");
+  chip.setAttribute("data-review", "chrome");
+  chip.setAttribute("data-review-id", "g-zoom-full");
+  chip.innerHTML = '<span class="zi-num" aria-hidden="true">1.0×</span><span class="zi-dot">' + FIT + "</span>";
+  var num = chip.querySelector(".zi-num");
+
+  /* the chip is sized in screen pixels: --zi-g is frame px per screen px, measured from a pinch */
+  var measured = 0;
+  function estimate() {
+    var a = screen.width, b = screen.height, short = Math.min(a, b), long = Math.max(a, b);
+    var type = (screen.orientation && screen.orientation.type) || "";
+    var land = /landscape/.test(type) || window.orientation === 90 || window.orientation === -90;
+    var vw = land ? long : short, vh = land ? short : long;
+    var s = Math.min((vw - 40) / (innerWidth || 1370), (vh - 120) / (innerHeight || 700));
+    return Math.max(0.15, Math.min(1, s));
+  }
+  function setUnit() { root.style.setProperty("--zi-g", (1 / (measured || estimate())).toFixed(4) + "px"); }
+  function measure(a, b) {
+    var dc = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+    var ds = Math.hypot(a.screenX - b.screenX, a.screenY - b.screenY);
+    if (dc < 20 || !ds) return;
+    var s = ds / dc;
+    if (s > 0.1 && s < 1.25 && Math.abs(s - 1) > 0.001) { measured = s; setUnit(); }
+  }
+  setUnit();
+
+  var wrote = { s: null, t: null }, prevTransition = null, restoreT = 0;
+  function animateOnce() {
+    if (reduce || !stage) return;
+    var s = stage;
+    if (prevTransition === null) prevTransition = s.style.transition;
+    s.style.transition = (prevTransition ? prevTransition + ", " : "") + "scale .2s ease, translate .2s ease";
+    clearTimeout(restoreT);
+    restoreT = setTimeout(function () { s.style.transition = prevTransition; prevTransition = null; }, 260);
+  }
+  function commit(animate) {
+    if (!stage) return;
+    if (animate) animateOnce();
+    if (z <= 1.001 && !tx && !ty) {
+      /* at rest a flexible page carries no transform at all */
+      stage.style.removeProperty("scale"); stage.style.removeProperty("translate");
+    } else {
+      stage.style.translate = tx + "px " + ty + "px";
+      stage.style.scale = String(z);
+    }
+    wrote.s = stage.style.scale; wrote.t = stage.style.translate;
+    root.classList.toggle("zi-zoomed", z > 1.001);
+    num.textContent = z.toFixed(1) + "×";
+    unscroll();
+  }
+  function toFull(animate) {
+    g = null;
+    if (!stage || (z === 1 && !tx && !ty)) return;
+    z = 1; tx = 0; ty = 0;
+    commit(animate);
+  }
+  function unscroll() {
+    for (var p = stage && stage.parentElement; p; p = p.parentElement) {
+      if (p.scrollTop || p.scrollLeft) { p.scrollTop = 0; p.scrollLeft = 0; }
+    }
+  }
+  document.addEventListener("scroll", function (e) {
+    var t = e.target;
+    if (stage && z > 1.001 && (t === document || (t.contains && t !== stage && t.contains(stage)))) unscroll();
+  }, true);
+
+  var mo = null;
+  function findStage() {
+    var s = pickRoot();
+    if (!s || !s.isConnected || !s.getBoundingClientRect().width) { stage = null; requestAnimationFrame(findStage); return; }
+    if (s === stage) return;
+    stage = s;
+    if (!chip.isConnected) document.body.appendChild(chip);
+    if (mo) mo.disconnect();
+    mo = new MutationObserver(function () {
+      if (stage.style.scale !== wrote.s || stage.style.translate !== wrote.t) commit(false);
+    });
+    mo.observe(stage, { attributes: true, attributeFilter: ["style"] });
+    commit(false);
+  }
+  function ensureStage() { if (!stage || !stage.isConnected) findStage(); return !!stage && stage.isConnected; }
+
+  function origin() { return { x: stage.offsetLeft + stage.offsetWidth / 2, y: stage.offsetTop + stage.offsetHeight / 2 }; }
+  function fitted() {
+    var O = origin(), r = stage.getBoundingClientRect();
+    return { O: O,
+      l: O.x + (r.left - O.x - tx) / z, r: O.x + (r.right - O.x - tx) / z,
+      t: O.y + (r.top - O.y - ty) / z, b: O.y + (r.bottom - O.y - ty) / z };
+  }
+  function clamp(F) {
+    tx = Math.min((1 - z) * (F.l - F.O.x), Math.max((1 - z) * (F.r - F.O.x), tx));
+    ty = Math.min((1 - z) * (F.t - F.O.y), Math.max((1 - z) * (F.b - F.O.y), ty));
+  }
+  function dist(a, b) { return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY); }
+  function mid(a, b) { return { x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 }; }
+
+  function startPinch(e) {
+    var a = e.touches[0], b = e.touches[1], F = fitted(), m = mid(a, b);
+    measure(a, b);
+    g = { mode: "pinch", d0: Math.max(10, dist(a, b)), z0: z, F: F,
+      qx: F.O.x + (m.x - F.O.x - tx) / z, qy: F.O.y + (m.y - F.O.y - ty) / z };
+  }
+  function startPan(t) { g = { mode: "pan-pending", x0: t.clientX, y0: t.clientY, tx0: tx, ty0: ty, F: fitted() }; }
+  function onChip(t) { return !!t && (t === chip || chip.contains(t)); }
+
+  window.addEventListener("touchstart", function (e) {
+    if (!ensureStage() || onChip(e.target)) { g = null; return; }
+    if (e.touches.length === 2) startPinch(e);
+    else if (e.touches.length === 1 && z > 1.001) startPan(e.touches[0]);
+    else g = null;
+  }, { passive: true, capture: true });
+
+  window.addEventListener("touchmove", function (e) {
+    if (!stage || !g) return;
+    if (e.touches.length >= 2) {
+      if (g.mode !== "pinch") startPinch(e);
+      e.preventDefault();
+      var a = e.touches[0], b = e.touches[1], m = mid(a, b);
+      z = Math.min(MAX, Math.max(1, g.z0 * dist(a, b) / g.d0));
+      tx = m.x - g.F.O.x - z * (g.qx - g.F.O.x);
+      ty = m.y - g.F.O.y - z * (g.qy - g.F.O.y);
+      clamp(g.F); commit(false);
+    } else if (e.touches.length === 1 && (g.mode === "pan-pending" || g.mode === "pan")) {
+      var t = e.touches[0], dx = t.clientX - g.x0, dy = t.clientY - g.y0;
+      /* under 10 screen points stays a tap (measured through the same scale as the chip) */
+      if (g.mode === "pan-pending" && Math.hypot(dx, dy) * (measured || estimate()) < 10) return;
+      g.mode = "pan";
+      e.preventDefault();
+      tx = g.tx0 + dx; ty = g.ty0 + dy;
+      clamp(g.F); commit(false);
+    }
+  }, { passive: false, capture: true });
+
+  function end(e) {
+    if (!g) return;
+    if (e.touches.length === 1 && z > 1.001) startPan(e.touches[0]);
+    else if (e.touches.length === 0) { g = null; if (z < 1.02) { z = 1; tx = 0; ty = 0; commit(false); } }
+  }
+  window.addEventListener("touchend", end, { passive: true, capture: true });
+  window.addEventListener("touchcancel", end, { passive: true, capture: true });
+  chip.addEventListener("click", function () { toFull(true); });
+
+  /* back to full view by itself: slide hidden or left, tab hidden, frame resized */
+  new MutationObserver(function (list) {
+    for (var i = 0; i < list.length; i++) {
+      var m = list[i];
+      if (m.attributeName === "data-idle" && m.target.getAttribute("data-idle") === "1") toFull(false);
+    }
+  }).observe(document.documentElement, { subtree: true, attributes: true, attributeFilter: ["data-idle"] });
+  document.addEventListener("visibilitychange", function () { if (document.hidden) toFull(false); });
+  window.addEventListener("resize", function () { setUnit(); toFull(false); });
+  if (screen.orientation && screen.orientation.addEventListener) {
+    screen.orientation.addEventListener("change", function () { measured = 0; setUnit(); });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", findStage); else findStage();
+})();
+</script>
+<!-- r4-embed:end -->
+<script id="build-stamp">(function(){var T="TM 9035: Confidence baseline (scene A): writes tm9035:confidence:baseline:v1",M="TM 9035 tm9035-confidence-baseline-2026-07-10-v1 r4 2026-10-11";function keep(){if(document.title!==T)document.title=T;if(!document.querySelector('meta[name="build-version"]')){var m=document.createElement("meta");m.name="build-version";m.content=M;(document.head||document.documentElement).appendChild(m);}}keep();addEventListener("load",keep);[0,200,1000,3000].forEach(function(d){setTimeout(keep,d);});try{new MutationObserver(keep).observe(document.documentElement,{childList:true});}catch(e){}})();</script>
+<script id="layer-release">(function(){var SAFE=/^(stepInL|stepInR)$/;var seen=new WeakMap();function secs(v,i){var p=(v||"").split(/,\s*/);return parseFloat(p[i]||p[0]||"0")||0;}function sweep(){try{var now=Date.now();document.querySelectorAll("*").forEach(function(el){var s=getComputedStyle(el);if(s.animationName==="none")return;if(s.animationIterationCount.indexOf("infinite")>-1)return;if(!/both|forwards/.test(s.animationFillMode))return;var names=s.animationName.split(/,\s*/);if(!names.every(function(n){return SAFE.test(n);}))return;if(el.getAnimations&&el.getAnimations().some(function(a){return a.playState==="paused";})){seen.set(el,now);return;}var first=seen.get(el);if(first===undefined){seen.set(el,now);first=now;}var need=0;names.forEach(function(n,i){need=Math.max(need,secs(s.animationDelay,i)+secs(s.animationDuration,i));});if(now-first<need*1000+300)return;if(el.getAnimations)el.getAnimations().forEach(function(a){try{a.finish();}catch(e){}});var fin=getComputedStyle(el),op=fin.opacity,cp=fin.clipPath;if(parseFloat(op)===0)return;el.style.setProperty("animation","none","important");el.style.setProperty("transform","none","important");el.style.setProperty("opacity",op,"important");if(getComputedStyle(el).clipPath!==cp)el.style.setProperty("clip-path",/^inset\(0(px|%)?( 0(px|%)?){0,3}\)$/.test(cp)?"none":cp,"important");});}catch(e){}}setInterval(sweep,400);document.addEventListener("visibilitychange",function(){if(!document.hidden)sweep();});})();</script>
+</body>
+</html>
