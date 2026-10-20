@@ -501,7 +501,7 @@ svg.dy.run .shk{ animation:dyShk 1.6s ease-in-out both; } @keyframes dyShk{ 0%,2
   var returnUrl=(function(){ try{ return new URLSearchParams(location.search).get('return'); }catch(e){ return null; } })();
   if(rb){ if(returnUrl){ rb.href=returnUrl; } rb.addEventListener('click',function(e){ e.preventDefault(); try{ if(window.opener&&!window.opener.closed){ window.close(); return; } }catch(err){} if(window.history.length>1){ window.history.back(); return; } if(returnUrl){ window.location.href=returnUrl; } }); }
   if(isMobile){ document.body.classList.add('is-mobile'); }
-  if(inIframe&&isMobile&&!fullscreen){ document.body.classList.add('is-embedded-mobile'); }
+  /* owner 20 Oct 2026 (phone crash): no launch card in a frame on a phone */
   if(fullscreen){ document.body.classList.add('is-fullscreen'); }
 }());
 </script>
