@@ -1247,7 +1247,7 @@ html.show-prop #turnTip [data-prop] { background: none; box-shadow: inset 0 -2px
     <button class="x" type="button" id="leaveX" aria-label="Stay here">&times;</button>
     <h2 id="leaveH"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /> <path d="M11 13l9 -9" /> <path d="M15 4h5v5" /></svg><span data-prop>Leaving this activity</span></h2>
     <p class="dest" id="leaveDest"></p>
-    <dl><dt data-prop>Organisation</dt><dd id="leaveOrg"></dd><dt data-prop>Website</dt><dd id="leaveDom"></dd></dl>
+    <dl><dt data-prop>Organization</dt><dd id="leaveOrg"></dd><dt data-prop>Website</dt><dd id="leaveDom"></dd></dl>
     <p class="url" id="leaveUrl"></p>
     <p class="prep" id="leavePrep" aria-live="polite"></p>
     <div class="bar">
@@ -1331,7 +1331,7 @@ var ROLE_NOTE = "{p:Your role is not named on this stage. This page shows how te
 var MODTOPICS = {
   1: ["Module 1", "Why {g:EGFR} matters: identifying patients across the lung cancer continuum",
       ["{g:EGFR} biology", "the mutation landscape (common, uncommon and exon 20 insertions)", "who to test and when across the continuum", "test choice at diagnosis", "first-line approaches by mutation type"]],
-  2: ["Module 2", "Testing at progression: finding the next treatment option",
+  2: ["Module 2", "Testing at progression: Finding the next treatment option",
       ["resistance biology", "blood versus tissue testing", "MET testing", "how first-line choice shapes resistance", "how results link to second-line options (MET, HER2 and combination approaches)"]] };
 
 /* Each stage: key points first (unlock the rest), the situations (sit = what the card shows, act = revealed on select),
@@ -1555,7 +1555,7 @@ function detectDevice() {
   var upright = /portrait/.test(type) ? true : /landscape/.test(type) ? false : (typeof window.orientation === "number" ? window.orientation % 180 === 0 : b > a);
   var real = !touch ? "computer" : Math.min(a, b) < 600 ? "phone" : "tablet";
   var kind = S.devForce || real;
-  DEV = { touch: kind !== "computer", kind: kind, upright: kind !== "computer" && (S.devForce ? kind === "phone" : upright), real: real, realTouch: touch };
+  DEV = { touch: kind !== "computer", kind: kind, upright: kind !== "computer" && (S.devForce && !touch ? kind === "phone" : upright), real: real, realTouch: touch };
   var r = document.documentElement;
   r.classList.toggle("dev-touch", DEV.touch); r.classList.toggle("dev-mouse", !DEV.touch);
   ["phone", "tablet", "computer"].forEach(function (k) { r.classList.toggle("dev-" + k, kind === k); });
@@ -2177,8 +2177,8 @@ function Speaker(parts, onPart, onEnd, onTick) {
    and a closing line that are proposed. Each line is its own clip, so the caption and the map follow the voice exactly.
    Until the recorded clips are added (assets/intro/cue-N.mp3), each line plays a silent clip of its own length. */
 var MODS = [["Why <em class=\"g\">EGFR</em> matters: identifying patients across the lung cancer continuum", "Video, 10 minutes"],
-  ["Testing at progression: finding the next treatment option", "Video, 10 minutes"],
-  ["Putting it into practice: the <em class=\"g\">EGFR</em> testing pathway", "<span data-prop>This activity, about 12 minutes</span>"]];
+  ["Testing at progression: Finding the next treatment option", "Video, 10 minutes"],
+  ["Putting it into practice: The <em class=\"g\">EGFR</em> testing pathway", "<span data-prop>This activity, about 12 minutes</span>"]];
 var CUES = [["Welcome to this touchEXPERT FOCUS activity.", -1, true, 3],
   ["In Module 1 we covered why <em class=\"g\">EGFR</em> matters, who to test and how to choose first-line treatment.", 0, false, 6],
   ["In Module 2 we covered what to test for at progression.", 1, false, 4],
@@ -2244,7 +2244,7 @@ function renderTitle() {
   var s = sec('<div class="tbg" aria-hidden="true"></div><div class="tscrim" aria-hidden="true"></div>' +
     '<div class="tin"><p class="kick fx-kick">touchEXPERT FOCUS</p><h1 tabindex="-1" class="fx-title" aria-label="' + plain(TITLE) + '">' + words + '</h1>' +
     '<div class="trule fx-rule" aria-hidden="true"><i></i><b></b><i></i></div>' +
-    '<p class="meta fx-meta">' + ic("clock") + '<span data-prop>About 12 minutes: five stages, eight questions</span></p>' +
+    '<p class="meta fx-meta">' + ic("clock") + '<span data-prop>About 12 minutes: Five stages, eight questions</span></p>' +
     '<div class="tbtns fx-btn"><button class="btn ' + (S.intro ? "ghost" : "primary") + '" type="button" id="introBtn">' + ic("player-play") +
     '<span data-prop>' + (S.intro ? "Replay the introduction" : "Play the introduction") + '</span></button>' +
     '<button class="btn primary" type="button" id="start"' + (S.intro ? "" : " hidden") + '><span data-prop>Start</span>' + ic("arrow-right") + '</button></div>' +
@@ -2539,7 +2539,7 @@ function scoreLine() { var n = QIDS.filter(function (c) { return S.done[c] && S.
    The cards rise in turn and their marks draw in; the opened card's answers rise in. None under reduced motion. */
 function qMark(cid) { var q = CHECKS[cid], ok = S.done[cid] && S.pick[cid] === q.ans;
   return '<span class="qm ' + (S.done[cid] ? (ok ? "right" : "wrong") : "none") + '" aria-hidden="true">' + icLen(S.done[cid] ? (ok ? "check" : "x") : "help-circle") + '</span>'; }
-function qState(cid) { var q = CHECKS[cid]; return !S.done[cid] ? "not answered yet" : S.pick[cid] === q.ans ? "correct" : "not the best answer"; }
+function qState(cid) { var q = CHECKS[cid]; return !S.done[cid] ? "Not answered yet" : S.pick[cid] === q.ans ? "Correct" : "Not the best answer"; }
 function resCard(st, k) {
   return '<button type="button" class="card rrow" data-st="' + st.n + '" aria-expanded="false" aria-controls="resRead" style="--k:' + k + '">' +
     '<span class="rh"><span class="rsi">' + icLen(st.icon) + '</span><b>Stage ' + st.n + '</b><span class="rst">' + rt(st.short) + '</span><span class="rch" aria-hidden="true">' + ic("chevron-down") + '</span></span>' +
@@ -3123,7 +3123,7 @@ function estimate() {
   var vw = DEV.upright ? short : long, vh = DEV.upright ? long : short;
   return Math.max(0.15, Math.min(1, Math.min((vw - 20) / (innerWidth || 1280), (vh - 40) / (innerHeight || 760))));
 }
-function setUnit() { root.style.setProperty("--zi-g", S.devForce ? "1px" : (1 / (measured || estimate())).toFixed(4) + "px"); }
+function setUnit() { root.style.setProperty("--zi-g", !zoomOn() ? "1px" : (1 / (measured || estimate())).toFixed(4) + "px"); }
 function measure(a, b) {
   var dc = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY), ds = Math.hypot(a.screenX - b.screenX, a.screenY - b.screenY);
   if (dc < 20 || !ds) return; var s = ds / dc;
@@ -3140,7 +3140,8 @@ function zStartPinch(e) {
   zg = { mode: "pinch", d0: Math.max(10, tdist(a, b)), z0: ZM.z, W: W, qx: (mx - W.left - ZM.tx) / k, qy: (my - W.top - ZM.ty) / k };
 }
 function zStartPan(t) { zg = { mode: "pan-pending", x0: t.clientX, y0: t.clientY, tx0: ZM.tx, ty0: ZM.ty }; }
-function zoomOn() { return DEV.realTouch && !S.devForce; }
+/* S3 (Daniel 4 Nov): forcing Phone or Tablet in the review bar on a real phone keeps the zoom; only Computer turns it off */
+function zoomOn() { return DEV.realTouch && S.devForce !== "computer"; }
 fitEl.addEventListener("touchstart", function (e) {
   if (!zoomOn() || (ziChip && (e.target === ziChip || ziChip.contains(e.target)))) { zg = null; return; }
   if (e.touches.length === 2) zStartPinch(e); else if (e.touches.length === 1 && ZM.z > 1.001) zStartPan(e.touches[0]); else zg = null;
