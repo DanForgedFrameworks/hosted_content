@@ -3180,6 +3180,23 @@ document.body.setAttribute("data-idle", "0");
 if (typeof IntersectionObserver !== "undefined")
   new IntersectionObserver(function (es) { idleOff = !es.some(function (e) { return e.isIntersecting; }); setIdle(); }, { threshold: 0 }).observe(fitEl);   /* the frame that is drawn */
 document.addEventListener("visibilitychange", setIdle);
+/* Soft text in Visme (S1, Daniel 4 Nov): an entrance left filling keeps its text on a layer of its own, and Visme's
+   fractional width resamples that layer soft. Once an entrance has played it is released (touchmedical-html contract,
+   check 7 remedy): the end state is read, the animation cancelled, and any property the base style would change back
+   is written inline. Only keyframes that end at rest in opacity and transform (classify-keyframes.py); the others
+   (line draws, glows, loops) keep their fill. */
+var RELEASE = /^(cin|fbin|fonly|fxDown|fxIn|fxUp|fxdrop|growRule|hubin|mggrow|mgin|pop|popin|rise|rzoom|scan|seq|settle|sicpop|stairIn|startIn|tsettle|turn)$/;
+document.addEventListener("animationend", function (e) {
+  var el = e.target; if (!RELEASE.test(e.animationName) || !el.getAnimations) return;
+  el.getAnimations().forEach(function (a) {
+    if (a.animationName !== e.animationName || a.playState !== "finished") return;
+    var cs = getComputedStyle(el), op = cs.opacity, tf = cs.transform;
+    a.cancel();
+    cs = getComputedStyle(el);
+    if (cs.opacity !== op) el.style.opacity = op;
+    if (cs.transform !== tf) el.style.transform = tf;
+  });
+}, true);
 
 /* ---- Phone held upright: a prompt to turn it (dismissable) ---- */
 var turnTip = document.createElement("div");
