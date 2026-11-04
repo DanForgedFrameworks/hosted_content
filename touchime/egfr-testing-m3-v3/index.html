@@ -1022,9 +1022,11 @@ html.show-prop .title [data-prop], html.show-prop .title .btn.primary [data-prop
 
 /* In-activity zoom (ported from TINT 8787-2 / 8620-5, owner rulings 2026-09-23): on a touch device the browser's own
    pinch is switched off over the activity and the activity zooms inside its box, 1x to 3x; Full view returns to 1x.
-   Sized in screen pixels through --zi-g. Never a layer hint on the stage. */
-html.zi-on .fit, html.zi-on .fit * { touch-action: pan-x pan-y; }
-html.zi-zoomed .fit, html.zi-zoomed .fit * { touch-action: none !important; }
+   Sized in screen pixels through --zi-g. Never a layer hint on the stage.
+   S2 (Daniel 4 Nov, phone crashes in Visme): the whole page, html and body included, as the standard has it (contract
+   section 4, pinch row) - keyed on .fit only, a pinch starting on the page edge still started the phone's own zoom. */
+html.zi-on, html.zi-on * { touch-action: pan-x pan-y; }
+html.zi-zoomed, html.zi-zoomed * { touch-action: none !important; }
 #zi-full { display: none; position: absolute; z-index: 60; left: calc(10 * var(--zi-g, 1px)); top: calc(10 * var(--zi-g, 1px)); height: calc(36 * var(--zi-g, 1px)); margin: 0;
   padding: 0 calc(3 * var(--zi-g, 1px)) 0 calc(12 * var(--zi-g, 1px)); gap: calc(8 * var(--zi-g, 1px)); align-items: center; border: calc(1 * var(--zi-g, 1px)) solid var(--line); border-radius: calc(18 * var(--zi-g, 1px));
   background: #F5F7FB; color: var(--navy); box-shadow: 0 calc(3 * var(--zi-g, 1px)) calc(10 * var(--zi-g, 1px)) rgba(33,46,84,.25); font: 700 calc(15 * var(--zi-g, 1px)) var(--font); font-variant-numeric: tabular-nums; cursor: pointer; }
