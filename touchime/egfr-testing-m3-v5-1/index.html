@@ -1383,6 +1383,10 @@ html.pq-on #next { visibility: hidden; }
 .rvf-body h1 { font-size: 22px; margin: 0 0 8px; } .rvf-body h2 { font-size: 18px; margin: 14px 0 6px; } .rvf-body h3 { font-size: 15.5px; margin: 12px 0 4px; }
 .rvf-body p { margin: 0 0 7px; } .rvf-body p.fb { margin-left: 18px; color: var(--muted); }
 .rvf-body pre { margin: 0; white-space: pre-wrap; font: 14px/1.5 ui-monospace, Consolas, monospace; }
+/* D41 (Daniel 16 Nov, "fuzzy" feedback in Visme): the voice bar slid with a width transition restarted on every audio
+   tick, so the page animated for the whole voice-over and Visme's scaled frame drew the feedback text soft. The bar now
+   steps with the audio (about four times a second) and nothing animates while the voice plays. */
+.vobar i, .vobar.segd .vs i { transition: none; }
 </style>
 </head>
 <body>
