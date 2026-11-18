@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prototype: programme home and module page (Level 6 Applied Biosciences)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Roboto:wght@500;700;900&display=swap">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#E1DDDB;font-family:'Open Sans',Arial,sans-serif;color:#333;font-size:16px;line-height:1.5}
+a{color:#370C75}a:hover{color:#691EDA}
+a:focus-visible,button:focus-visible{outline:3px solid #222;outline-offset:2px}
+h1,h2,h3{font-family:Roboto,Arial,sans-serif;font-weight:700;margin:0}
+p{margin:0}
+.proto{background:#222;color:#fff;font-size:14px;padding:8px 16px;text-align:center}
+.bar{background:#F08838;height:12px}
+.brand{background:#691EDA;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.wordmark{font-family:Roboto,Arial,sans-serif;font-weight:900;font-size:30px;letter-spacing:6px;color:#fff}
+.brand nav{display:flex;gap:24px;flex-wrap:wrap}
+.brand nav a{color:#fff;font-weight:600;text-decoration:none;padding:10px 0}
+.wrap{max-width:1120px;margin:0 auto;padding:24px 24px 56px;display:flex;flex-direction:column;gap:28px}
+.wrap.narrow{max-width:960px}
+.muted{color:#4A5258}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#00695C}
+h1{font-size:clamp(28px,4vw,38px);line-height:1.15;color:#370C75}
+.card{background:#fff;border-radius:10px}
+.continue{padding:28px;display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between}
+.continue h2{font-size:28px;line-height:1.2;color:#222}
+.btns{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-flex;align-items:center;min-height:48px;padding:0 22px;border-radius:6px;font-weight:700;text-decoration:none;border:2px solid #370C75;color:#370C75;background:#fff}
+.btn.primary{background:#691EDA;border-color:#691EDA;color:#fff}
+.btn:hover{background:#370C75;border-color:#370C75;color:#fff}
+.sec{display:flex;flex-direction:column;gap:14px}
+.sec>h2{font-size:22px;color:#222}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.ess{background:#fff;border-radius:8px;padding:16px;display:flex;gap:12px;align-items:flex-start;text-decoration:none}
+.ess svg{flex-shrink:0}
+.ess b{display:block;color:#370C75}
+.ess span span{font-size:14px;color:#4A5258}
+.level{overflow:hidden}
+.level header{padding:16px 20px;display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+.level h3{font-size:19px;color:#370C75}
+.level header span{font-size:14px;color:#4A5258}
+.row{display:flex;align-items:center;gap:16px;padding:12px 20px;min-height:56px;border-top:1px solid #E6E3E1;text-decoration:none;color:#333;flex-wrap:wrap}
+.row:hover{background:#F6F3FC;color:#333}
+.code{width:84px;font-family:Roboto,Arial,sans-serif;font-weight:700;color:#370C75}
+.title{flex:1 1 200px;font-weight:600}
+.pill{font-size:13px;font-weight:700;padding:4px 12px;border-radius:999px;white-space:nowrap}
+.pill.current{background:#00695C;color:#fff}
+.pill.next{border:1px solid #691EDA;color:#370C75;padding:3px 12px}
+.pill.done{background:#EDEBE9;color:#3A454B}
+.pill.later{color:#4A5258;padding:4px 0}
+.chev{color:#691EDA;font-weight:700}
+.crumb{display:flex;gap:8px;flex-wrap:wrap;font-size:14px;align-items:center}
+.crumb a{font-weight:600;padding:12px 0}
+.modhead{padding:28px;display:flex;flex-direction:column;gap:10px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;border-top:1px solid #E6E3E1;padding-top:16px}
+.facts span{display:block;font-size:13px;color:#4A5258}
+.group>h2{font-size:20px;color:#222}
+.item{display:flex;align-items:center;gap:16px;padding:16px 20px;text-decoration:none;color:#333}
+.item+.item,.item+p{border-top:1px solid #E6E3E1}
+.item:hover{background:#F6F3FC;color:#333}
+.ico{width:48px;height:48px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ico.p{background:#EFE8FC;color:#370C75}.ico.t{background:#E0F2F1;color:#00695C}.ico.o{background:#FCE9D9;color:#7A3A05}
+.item b{display:block;font-family:Roboto,Arial,sans-serif;font-size:18px;color:#370C75}
+.item span span{font-size:14px;color:#4A5258}
+.note{padding:14px 20px;font-size:15px}
+.modnav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="proto">Design prototype for discussion. This is not the live Moodle site: links go nowhere except between the two example pages, and [DATE], [N] and [NAME] are placeholders.</div>
+<div class="bar"></div>
+<div class="brand">
+  <span class="wordmark">TIRO</span>
+  <nav aria-label="Site"><a href="#home">Home</a><a href="#home">Dashboard</a><a href="#home">My courses</a></nav>
+</div>
+
+<main id="view-home" class="wrap">
+  <header>
+    <p class="muted" style="font-size:14px">Higher Education</p>
+    <h1>Level 6 Applied Biosciences</h1>
+    <p style="font-size:17px;color:#3A454B">Degree apprenticeship programme. Everything for your modules, assessments and programme documents starts on this page.</p>
+  </header>
+
+  <section class="card continue" aria-label="Your current module">
+    <div>
+      <p class="eyebrow">Your current module</p>
+      <h2>TAB6101 Microbiology</h2>
+      <p style="color:#3A454B">Level 6 · Module 1 of 4 · Final submission [DATE]</p>
+    </div>
+    <div class="btns">
+      <a class="btn primary" href="#module">Go to module</a>
+      <a class="btn" href="#module">Assessment brief</a>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>Programme essentials</h2>
+    <div class="grid">
+      <a class="ess" href="#home"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#691EDA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span><b>Programme handbook</b><span>PDF</span></span></a>
+      <a class="ess" href="#home"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#691EDA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21a2 2 0 0 0 2 2h13"/></svg><span><b>E-library</b><span>Opens Kortext</span></span></a>
+      <a class="ess" href="#home"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#691EDA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M16 16l5 5"/></svg><span><b>E-journals</b><span>Opens EBSCO</span></span></a>
+      <a class="ess" href="#home"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#691EDA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg><span><b>E-portfolio</b><span>Opens Aptem</span></span></a>
+      <a class="ess" href="#home"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#691EDA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span><b>Harvard referencing guide</b><span>PDF</span></span></a>
+      <a class="ess" href="#home"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#691EDA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg><span><b>Generative AI guidance</b><span>PDF</span></span></a>
+      <a class="ess" href="#home"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#691EDA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg><span><b>Additional considerations</b><span>Extenuating circumstances</span></span></a>
+      <a class="ess" href="#home"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#691EDA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.7"/><path d="M12 17h.01"/></svg><span><b>Get support</b><span>Coach and student services</span></span></a>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>Your modules</h2>
+    <div class="card level">
+      <header><h3>Level 6</h3><span>Your current level</span></header>
+      <a class="row" href="#module"><span class="code">TAB6101</span><span class="title">Microbiology</span><span class="pill current">Current</span><span class="chev" aria-hidden="true">›</span></a>
+      <a class="row" href="#home"><span class="code">TAB6102</span><span class="title">Bioscience Horizons</span><span class="pill next">Up next</span><span class="chev" aria-hidden="true">›</span></a>
+      <a class="row" href="#home"><span class="code">TFM6101</span><span class="title">Responsible Research and Innovation</span><span class="pill later">Opens later</span><span class="chev" aria-hidden="true">›</span></a>
+      <a class="row" href="#home"><span class="code">TFM6102</span><span class="title">Company Research Project</span><span class="pill later">Opens later</span><span class="chev" aria-hidden="true">›</span></a>
+    </div>
+    <div class="card level">
+      <header><h3>Level 5</h3><span>Completed. Everything stays available for revision.</span></header>
+      <a class="row" href="#home"><span class="code">TFM5101</span><span class="title">Project Management</span><span class="pill done">✓ Completed</span><span class="chev" aria-hidden="true">›</span></a>
+      <a class="row" href="#home"><span class="code">TFM5102</span><span class="title">Workplace Project</span><span class="pill done">✓ Completed</span><span class="chev" aria-hidden="true">›</span></a>
+      <a class="row" href="#home"><span class="code">TAB5101</span><span class="title">Human Pathology</span><span class="pill done">✓ Completed</span><span class="chev" aria-hidden="true">›</span></a>
+      <a class="row" href="#home"><span class="code">TAB5102</span><span class="title">Genes and Genetic Technology</span><span class="pill done">✓ Completed</span><span class="chev" aria-hidden="true">›</span></a>
+      <a class="row" href="#home"><span class="code">TAB5202</span><span class="title">Infection and Immunity</span><span class="pill done">✓ Completed</span><span class="chev" aria-hidden="true">›</span></a>
+      <a class="row" href="#home"><span class="code">TAB5103</span><span class="title">Laboratory Practice for Bioscience</span><span class="pill done">✓ Completed</span><span class="chev" aria-hidden="true">›</span></a>
+    </div>
+    <div class="card level">
+      <header><h3>Level 4</h3><span>Completed. Everything stays available for revision.</span></header>
+      <a class="row" href="#home"><span class="code">TAB4101</span><span class="title">Cell Biology and Biochemistry</span><span class="pill done">✓ Completed</span><span class="chev" aria-hidden="true">›</span></a>
+      <a class="row" href="#home"><span class="code">TAB4102</span><span class="title">Human Anatomy and Physiology</span><span class="pill done">✓ Completed</span><span class="chev" aria-hidden="true">›</span></a>
+      <a class="row" href="#home"><span class="code">TFM4101</span><span class="title">Mathematics and Data Analysis</span><span class="pill done">✓ Completed</span><span class="chev" aria-hidden="true">›</span></a>
+      <a class="row" href="#home"><span class="code">TFM4102</span><span class="title">Lab Practice</span><span class="pill done">✓ Completed</span><span class="chev" aria-hidden="true">›</span></a>
+      <a class="row" href="#home"><span class="code">TFM4103</span><span class="title">Reflective Project</span><span class="pill done">✓ Completed</span><span class="chev" aria-hidden="true">›</span></a>
+    </div>
+  </section>
+</main>
+
+<main id="view-module" class="wrap narrow" hidden>
+  <nav class="crumb" aria-label="Breadcrumb"><a href="#home">Level 6 Applied Biosciences</a><span aria-hidden="true">›</span><span>TAB6101 Microbiology</span></nav>
+  <header class="card modhead">
+    <p class="eyebrow">Level 6 · Module 1 of 4</p>
+    <h1>TAB6101 Microbiology</h1>
+    <p style="font-size:17px;max-width:720px">Explore how microorganisms shape health, industry and the environment, and build the judgement to identify organisms and interpret laboratory data.</p>
+    <p><a href="#module" style="font-weight:700">Module overview and learning outcomes</a></p>
+    <div class="facts">
+      <div><span>Formative submission</span><b>[DATE]</b></div>
+      <div><span>Final submission</span><b>[DATE]</b></div>
+      <div><span>Live sessions</span><b>[DAY AND TIME]</b></div>
+      <div><span>Module lead</span><b>[NAME]</b></div>
+    </div>
+  </header>
+
+  <section class="sec group">
+    <h2>1 · Learn online</h2>
+    <div class="card" style="overflow:hidden">
+      <a class="item" href="#module"><span class="ico p"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span><span><b>Digital Learning: Microbiology</b><span>Interactive sessions to work through each week</span></span></a>
+      <a class="item" href="#module"><span class="ico p"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21a2 2 0 0 0 2 2h13"/></svg></span><span><b>Core Textbook: Prescott's Microbiology</b><span>Opens in Kortext</span></span></a>
+    </div>
+  </section>
+
+  <section class="sec group">
+    <h2>2 · Live sessions</h2>
+    <div class="card" style="overflow:hidden">
+      <a class="item" href="#module"><span class="ico t"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3z"/></svg></span><span><b>Session recordings</b><span>[N] recordings, named by session number and date</span></span></a>
+      <a class="item" href="#module"><span class="ico t"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span><span><b>Session resources</b><span>Slides and handouts, named to match the recordings</span></span></a>
+    </div>
+  </section>
+
+  <section class="sec group">
+    <h2>3 · Assessment</h2>
+    <div class="card" style="overflow:hidden">
+      <a class="item" href="#module"><span class="ico o"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12h6M9 16h4"/></svg></span><span><b>Assessment brief</b><span>Brief, marking rubric and supporting materials</span></span></a>
+      <p class="note">Submit through your e-portfolio. Formative: <b>[DATE]</b> · Final: <b>[DATE]</b></p>
+    </div>
+  </section>
+
+  <nav class="modnav" aria-label="Module navigation">
+    <a class="btn" href="#home">Programme home</a>
+    <a class="btn" href="#module">Next: TAB6102 Bioscience Horizons</a>
+  </nav>
+</main>
+
+<script>
+function show(){
+  var m = location.hash === '#module';
+  document.getElementById('view-module').hidden = !m;
+  document.getElementById('view-home').hidden = m;
+  window.scrollTo(0, 0);
+}
+window.addEventListener('hashchange', show);
+show();
+</script>
+</body>
+</html>
