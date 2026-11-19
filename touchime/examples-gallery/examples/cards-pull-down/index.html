@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pull-down cards: sample and team</title>
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1f2d3d; --muted:#5b6b78; --paper:#ffffff; --surface:#f6f8fa; --line:#dde3e8;
+  --accent:#1f6f8b; --accent-hover:#185a71; --accent-soft:#e6f2f6; --on-accent:#ffffff;
+  --ok:#1f7a4d; --ok-soft:#e5f4ec; --bad:#b3261e; --bad-soft:#fbeae8; --warn:#9a5a00; --warn-soft:#fbf0dd;
+  --radius:10px; --gap:20px;
+  --shadow-rest:0 6px 18px rgba(31,45,61,.10);
+  --shadow-raised:0 12px 30px rgba(31,45,61,.16);
+  --dur-press:120ms; --dur-hover:200ms; --dur-move:300ms; --dur-reveal:500ms;
+  --ease-standard:cubic-bezier(0.4,0,0.2,1);
+  --ease-entrance:cubic-bezier(0.2,0.7,0.2,1);
+  --ease-overshoot:cubic-bezier(0.34,1.56,0.64,1);
+  --overlay-blur:6px; --dim-opacity:.6;
+}
+@media (prefers-reduced-motion: reduce){
+  :root{--dur-press:0ms;--dur-hover:0ms;--dur-move:0ms;--dur-reveal:0ms}
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;transition-delay:0ms !important}
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:'Atkinson Hyperlegible',system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--ink);
+  background:var(--surface);min-height:100vh;padding:28px 20px 80px;line-height:1.5;overflow-x:hidden}
+.wrap{max-width:1100px;margin:0 auto}
+.head{margin:0 auto 24px;max-width:1100px}
+h1{font-size:clamp(22px,2.4vw,30px);font-weight:700;margin:0 0 6px;letter-spacing:-.01em}
+.task{margin:0;font-size:17px}
+.status{margin:22px auto 0;font-size:15px;color:var(--muted);text-align:center}
+.status[data-done="true"]{color:var(--ok);font-weight:700}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.decknav{display:flex;gap:12px;align-items:center;justify-content:center;margin:22px 0 0}
+.navbtn{width:44px;height:44px;border-radius:999px;border:1px solid var(--accent);background:var(--accent);
+  color:var(--on-accent);font-size:22px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:var(--shadow-rest);transition:transform var(--dur-hover) var(--ease-standard),background var(--dur-hover)}
+.navbtn:hover{background:var(--accent-hover);transform:translateY(-2px)}
+.navbtn:focus-visible,.flip-card:focus-visible .card-inner,.pd-card:focus-visible,.bc-item:focus-visible{outline:3px solid var(--accent-hover);outline-offset:3px}
+.navlabel{font-size:15px;color:var(--muted)}
+
+.nf-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;align-items:start;max-width:1100px;margin:0 auto}
+@media (max-width:899px){.nf-grid{grid-template-columns:1fr;max-width:460px}}
+.pd-item{position:relative;transition:filter var(--dur-move) var(--ease-standard),opacity var(--dur-move) var(--ease-standard)}
+.nf-grid.has-open .pd-item:not(.is-active){filter:blur(var(--overlay-blur));opacity:var(--dim-opacity)}
+.pd-card{display:block;width:100%;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);box-shadow:var(--shadow-rest);
+  cursor:pointer;padding:0;font:inherit;color:inherit;text-align:left;min-height:150px;
+  transition:transform var(--dur-hover) var(--ease-standard),box-shadow var(--dur-hover) var(--ease-standard)}
+.pd-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-raised)}
+.pd-front{display:grid;place-items:center;padding:20px;min-height:150px}
+.pd-tile{background:var(--accent);color:var(--on-accent);border-radius:var(--radius);padding:24px 18px;width:100%;text-align:center;font-size:18px;font-weight:700}
+.pd-panel{display:grid;grid-template-rows:0fr;margin-top:10px;transition:grid-template-rows var(--dur-reveal) var(--ease-entrance)}
+.pd-item.is-open .pd-panel{grid-template-rows:1fr}
+.pd-clip{overflow:hidden;min-height:0}
+.pd-inner{border:2px solid var(--accent);border-radius:var(--radius);background:var(--paper);box-shadow:var(--shadow-raised);padding:18px;opacity:0;
+  transition:opacity var(--dur-move) var(--ease-entrance)}
+.pd-item.is-open .pd-inner{opacity:1;transition-delay:60ms}
+.pd-inner ul{margin:0;padding-left:20px;font-size:16px}
+.pd-inner li{margin:0 0 12px;opacity:0;transform:translateY(10px);transition:opacity var(--dur-move) var(--ease-entrance),transform var(--dur-move) var(--ease-entrance)}
+.pd-inner li:last-child{margin-bottom:0}
+.pd-item.is-open .pd-inner li{opacity:1;transform:translateY(0)}
+.pd-item.is-open .pd-inner li:nth-child(1){transition-delay:140ms}
+.pd-item.is-open .pd-inner li:nth-child(2){transition-delay:260ms}
+.pd-item.is-open .pd-inner li:nth-child(3){transition-delay:380ms}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <h1>Sample and team</h1>
+    <p class="task">Select a card. A sheet drops beneath it, and its points arrive one after another.</p>
+  </div>
+  <section class="nf-grid" id="deck" aria-label="Three pull-down cards">
+      <div class="pd-item">
+        <button class="pd-card" type="button" aria-expanded="false" aria-controls="pdp0"><span class="pd-front"><span class="pd-tile">Testing works best as a team</span></span></button>
+        <div class="pd-panel" id="pdp0" aria-hidden="true"><div class="pd-clip"><div class="pd-inner"><ul><li>The pulmonologist or radiologist aims to take enough tissue for diagnosis and molecular testing.</li><li>The pathologist saves tissue and, where policy allows, sends it automatically (reflex testing).</li><li>The oncologist checks results are back before starting treatment.</li></ul></div></div></div>
+      </div>
+      <div class="pd-item">
+        <button class="pd-card" type="button" aria-expanded="false" aria-controls="pdp1"><span class="pd-front"><span class="pd-tile">Little or no tissue, or a biopsy is difficult or risky</span></span></button>
+        <div class="pd-panel" id="pdp1" aria-hidden="true"><div class="pd-clip"><div class="pd-inner"><ul><li>A blood test looks for tumor DNA in the bloodstream (ctDNA).</li><li>It is useful when tissue is limited or a biopsy is not possible, or alongside tissue to speed up results.</li><li>A positive result can guide treatment.</li></ul></div></div></div>
+      </div>
+      <div class="pd-item">
+        <button class="pd-card" type="button" aria-expanded="false" aria-controls="pdp2"><span class="pd-front"><span class="pd-tile">Enough tissue</span></span></button>
+        <div class="pd-panel" id="pdp2" aria-hidden="true"><div class="pd-clip"><div class="pd-inner"><ul><li>A broad panel is preferred.</li><li>It tests EGFR and other targetable genes at the same time, which saves tissue and time.</li><li>RNA sequencing is the preferred way to find gene fusions.</li></ul></div></div></div>
+      </div>
+  </section>
+  <p class="status" id="status">Select a card to open its sheet.</p>
+</div>
+<div class="sr" id="live" role="status" aria-live="polite"></div>
+<script>
+(function(){
+  var deck=document.getElementById('deck'), live=document.getElementById('live'), status=document.getElementById('status');
+  var items=[].slice.call(document.querySelectorAll('.pd-item'));
+  function setOpen(i,open){
+    items.forEach(function(it,j){
+      var o = j===i ? open : false;
+      it.classList.toggle('is-open',o); it.classList.toggle('is-active',o);
+      it.querySelector('.pd-card').setAttribute('aria-expanded', String(o));
+      it.querySelector('.pd-panel').setAttribute('aria-hidden', String(!o));
+    });
+    var any = items.some(function(it){return it.classList.contains('is-open');});
+    deck.classList.toggle('has-open',any);
+    status.textContent = any ? 'Sheet open. Select the card again, or press Escape, to close it.' : 'Select a card to open its sheet.';
+    if (open && i>=0) live.textContent = items[i].querySelector('.pd-tile').textContent + ' opened.';
+    else if (!any) live.textContent = 'Sheets closed.';
+  }
+  items.forEach(function(it,i){
+    it.querySelector('.pd-card').addEventListener('click', function(e){
+      e.stopPropagation();
+      setOpen(i, !it.classList.contains('is-open'));
+    });
+  });
+  document.addEventListener('click', function(e){
+    if (e.target.closest && e.target.closest('.pd-item')) return;
+    setOpen(-1,false);
+  });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') setOpen(-1,false); });
+})();
+</script>
+</body>
+</html>

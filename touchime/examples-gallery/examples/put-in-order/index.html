@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Put the steps in order</title>
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1f2d3d; --muted:#5b6b78; --paper:#ffffff; --surface:#f6f8fa; --line:#dde3e8;
+  --accent:#1f6f8b; --accent-hover:#185a71; --accent-soft:#e6f2f6; --on-accent:#ffffff;
+  --ok:#1f7a4d; --ok-soft:#e5f4ec; --bad:#b3261e; --bad-soft:#fbeae8; --warn:#9a5a00; --warn-soft:#fbf0dd;
+  --radius:10px;
+  --font:"Atkinson Hyperlegible","Segoe UI",Tahoma,Verdana,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;overflow-x:clip;min-height:100vh;background:var(--surface);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.55;}
+h1,h2{line-height:1.3;margin:0 0 12px;}
+h1{font-size:clamp(24px,3.4vw,30px);}
+h2{font-size:20px;}
+p{margin:0 0 12px;}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}
+[hidden]{display:none !important;}
+.wrap{width:min(900px,100%);margin:0 auto;padding:32px 16px 64px;}
+.hero{margin-bottom:24px;}
+.hero p{color:var(--muted);max-width:66ch;}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:24px;}
+.btn{font:700 17px/1 var(--font);min-height:44px;min-width:44px;padding:0 24px;border-radius:var(--radius);border:2px solid transparent;cursor:pointer;}
+.btn-primary{background:var(--accent);color:var(--on-accent);}
+.btn-primary:hover:not([disabled]){background:var(--accent-hover);}
+.btn-secondary{background:var(--paper);color:var(--accent);border-color:var(--accent);}
+.btn-secondary:hover:not([disabled]){background:var(--accent-soft);}
+.btn[disabled]{background:var(--line);color:var(--muted);border-color:var(--line);cursor:not-allowed;}
+.list{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column;gap:12px;}
+.row{position:relative;display:grid;grid-template-columns:auto auto 1fr auto;gap:12px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:12px 16px;transition:background-color .3s ease,border-color .3s ease,box-shadow .2s ease,scale .18s ease;}
+.row.dragging{border-color:var(--accent);box-shadow:0 12px 26px rgba(31,45,61,.22);scale:1.025;z-index:2;}
+.row.ok{border-left:5px solid var(--ok);background:var(--ok-soft);}
+.row.no{border-left:5px solid var(--bad);background:var(--bad-soft);}
+.pos{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:var(--on-accent);font-weight:700;}
+.grip,.move{width:44px;height:44px;display:grid;place-items:center;border-radius:var(--radius);color:var(--accent);background:var(--paper);border:1px solid var(--line);cursor:pointer;padding:0;}
+.grip{border-color:transparent;background:transparent;color:var(--muted);cursor:grab;touch-action:none;}
+.grip:hover,.move:hover:not([disabled]){background:var(--accent-soft);color:var(--accent);}
+.grip:active{cursor:grabbing;}
+.move[disabled],.grip[disabled]{opacity:.4;cursor:default;}
+.grip svg{width:16px;height:16px;} .move svg{width:20px;height:20px;}
+.controls{display:flex;gap:6px;}
+.main{min-width:0;}
+.label{font-weight:700;font-size:18px;display:block;}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700;margin-bottom:2px;}
+.row.ok .status{color:var(--ok);} .row.no .status{color:var(--bad);}
+.status svg{width:16px;height:16px;}
+/* motion: all of it is switched off by the reduced-motion rule at the end */
+.row.deal{animation:deal .42s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc(var(--i,0)*70ms);}
+.row.pend{border-left:5px solid transparent;}
+.row.pend .status,.row.pend .why{opacity:0;}
+.row.ok{animation:okpop .5s ease-out;}
+.row.no.shake{animation:shake .45s ease-in-out;}
+.row.ok .status,.row.no .status{transform-origin:left center;animation:badge .42s cubic-bezier(.3,1.6,.5,1) backwards;}
+.row.ok .why,.row.no .why{animation:fadeUp .35s .1s ease-out backwards;}
+.result{animation:slideDown .38s cubic-bezier(.2,.8,.2,1) backwards;}
+.cnt{display:inline-block;min-width:.6em;}
+.burst{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50;}
+.burst i{position:absolute;display:block;border-radius:2px;}
+@keyframes deal{from{opacity:0;transform:translateY(-24px) rotate(-1.6deg) scale(.96);}}
+@keyframes okpop{0%{scale:1;}40%{scale:1.025;}100%{scale:1;}}
+@keyframes shake{0%,100%{transform:none;}20%{transform:translateX(-6px);}40%{transform:translateX(5px);}60%{transform:translateX(-3px);}80%{transform:translateX(2px);}}
+@keyframes badge{from{opacity:0;transform:scale(.4);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px);}}
+.why{margin:4px 0 0;font-size:15px;color:var(--ink);}
+.actions{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:24px;}
+.note-small{margin:0;color:var(--muted);font-size:15px;text-align:center;}
+.result{margin-top:24px;border-left:5px solid;border-radius:var(--radius);padding:12px 16px;}
+.result.ok{background:var(--ok-soft);border-color:var(--ok);}
+.result.mixed{background:var(--warn-soft);border-color:var(--warn);}
+.result strong{display:block;font-size:18px;margin-bottom:4px;}
+.result p{margin:0 0 12px;}
+.sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+@media (max-width:700px){
+  .wrap{padding:20px 12px 48px;}
+  .card{padding:16px;}
+  .row{grid-template-areas:"pos grip . ctl" "main main main main";row-gap:8px;}
+  .pos{grid-area:pos;} .grip{grid-area:grip;} .main{grid-area:main;} .controls{grid-area:ctl;}
+  .btn{width:100%;}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <h1>Put the steps in order</h1>
+    <p>A testing pathway has five steps. They are shown out of order. Arrange them in the order of the pathway, then check once to see how each step is marked.</p>
+  </header>
+
+  <section class="card" id="activity" aria-labelledby="act-title">
+    <h2 id="act-title">Arrange the five steps</h2>
+    <p class="note-small" style="text-align:left">Drag a step by its handle, or use the arrow buttons. With a step focused, the up and down arrow keys also move it.</p>
+    <ol class="list" id="list" aria-label="Steps to arrange in order"></ol>
+    <div class="actions">
+      <button class="btn btn-primary" id="check" type="button">Check order</button>
+      <p class="note-small" id="note">You can check once. Each step is then marked.</p>
+    </div>
+    <div id="result" hidden></div>
+  </section>
+  <p class="sr" id="announcer" aria-live="polite" aria-atomic="true"></p>
+</div>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = function () { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; };
+
+  /* CONTENT. Labels are the approved step titles without the "Step N:" prefix.
+     Per-item feedback lines are neutral and only restate the order. */
+  var ITEMS = {
+    1: "Who to test?",
+    2: "Which test?",
+    3: "What does the result mean?",
+    4: "What if blood and tissue results disagree?",
+    5: "Progression"
+  };
+  var CORRECT = [1, 2, 3, 4, 5];
+  var START_ORDER = [2, 4, 1, 5, 3];   // fixed: no item starts in its place, no correct pair adjacent
+  var NTH = ["first", "second", "third", "fourth", "fifth"];
+
+  function whyLine(id) {
+    var i = id - 1, s = "This step comes " + NTH[i] + " in the pathway";
+    if (i > 0) s += ", after “" + ITEMS[id - 1] + "”";
+    if (i < CORRECT.length - 1) s += (i > 0 ? " and" : ",") + " before “" + ITEMS[id + 1] + "”";
+    return s + ".";
+  }
+
+  var order = START_ORDER.slice();
+  var marks = null;       // snapshot taken when the learner commits
+  var committed = false;
+  var drag = null;
+
+  var list = $('list'), result = $('result'), checkBtn = $('check'), note = $('note'), announcer = $('announcer');
+  var IC_GRIP = '<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><circle cx="5" cy="4" r="1.5"/><circle cx="11" cy="4" r="1.5"/><circle cx="5" cy="8" r="1.5"/><circle cx="11" cy="8" r="1.5"/><circle cx="5" cy="12" r="1.5"/><circle cx="11" cy="12" r="1.5"/></svg>';
+  var IC_UP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>';
+  var IC_DOWN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+  var IC_TICK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+  var IC_CROSS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="M6 6l12 12"/></svg>';
+
+  function announce(m) { announcer.textContent = ''; setTimeout(function () { announcer.textContent = m; }, 20); }
+  function rowEl(id) { return list.querySelector('.row[data-id="' + id + '"]'); }
+  function inPlace() { var n = 0; order.forEach(function (id, i) { if (id === CORRECT[i]) n++; }); return n; }
+
+  function rowHTML(id, idx, o) {
+    var nm = ITEMS[id], lk = committed, mk = marks ? marks[id] : null;
+    o = o || {};
+    var cls = 'row' + (mk ? (o.pend ? ' pend' : ' ' + mk) : '') + (o.deal ? ' deal' : '');
+    return '<li class="' + cls + '" data-id="' + id + '"' + (o.deal ? ' style="--i:' + idx + '"' : '') + '>'
+      + '<span class="pos" aria-hidden="true">' + (idx + 1) + '</span>'
+      + '<button class="grip" type="button" aria-label="Reorder ' + nm + '. Drag it, or press the up and down arrow keys."' + (lk ? ' disabled' : '') + '>' + IC_GRIP + '</button>'
+      + '<div class="main">'
+      + (mk ? '<span class="status">' + (mk === 'ok' ? IC_TICK + 'In place' : IC_CROSS + 'Not in place') + '</span>' : '')
+      + '<span class="label">' + nm + '</span>'
+      + (mk ? '<p class="why">' + whyLine(id) + '</p>' : '')
+      + '</div>'
+      + '<div class="controls">'
+      + '<button class="move up" type="button" aria-label="Move ' + nm + ' up"' + ((idx === 0 || lk) ? ' disabled' : '') + '>' + IC_UP + '</button>'
+      + '<button class="move down" type="button" aria-label="Move ' + nm + ' down"' + ((idx === order.length - 1 || lk) ? ' disabled' : '') + '>' + IC_DOWN + '</button>'
+      + '</div></li>';
+  }
+  function snapshot() {
+    var m = {};
+    list.querySelectorAll('.row').forEach(function (r) { m[r.dataset.id] = r.getBoundingClientRect().top; });
+    return m;
+  }
+  function render(focusId, kind, o) {
+    o = o || {};
+    var before = (!o.noflip && !o.deal && !reduced() && list.children.length) ? snapshot() : null;
+    list.innerHTML = order.map(function (id, i) { return rowHTML(id, i, o); }).join('');
+    if (before) {
+      list.querySelectorAll('.row').forEach(function (r) {
+        var dy = before[r.dataset.id] - r.getBoundingClientRect().top;
+        if (Math.abs(dy) > 1 && r.animate) r.animate([{ transform: 'translateY(' + dy + 'px)' }, { transform: 'none' }], { duration: 260, easing: 'cubic-bezier(.2,.8,.2,1)' });
+      });
+    }
+    if (drag) { var d = rowEl(drag.id); if (d) d.classList.add('dragging'); }
+    if (focusId != null) {
+      var row = rowEl(focusId); if (!row) return;
+      var el = row.querySelector(kind === 'up' ? '.up' : kind === 'down' ? '.down' : '.grip');
+      if (el && el.disabled) el = row.querySelector(kind === 'up' ? '.down' : '.up');
+      if (el && !el.disabled) el.focus({ preventScroll: true }); else row.querySelector('.grip').focus({ preventScroll: true });
+      row.scrollIntoView({ block: 'nearest', behavior: reduced() ? 'auto' : 'smooth' });
+    }
+  }
+
+  function move(id, dir, kind) {
+    if (committed) return;
+    var i = order.indexOf(id), j = i + dir;
+    if (j < 0 || j >= order.length) return;
+    order[i] = order[j]; order[j] = id;
+    render(id, kind || (dir < 0 ? 'up' : 'down'));
+    announce(ITEMS[id] + ' moved to position ' + (j + 1) + ' of ' + order.length + '.');
+  }
+  list.addEventListener('click', function (e) {
+    var up = e.target.closest('.up'), down = e.target.closest('.down');
+    if (up) move(+up.closest('.row').dataset.id, -1);
+    else if (down) move(+down.closest('.row').dataset.id, 1);
+  });
+  list.addEventListener('keydown', function (e) {
+    if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+    var ctl = e.target.closest('.grip, .move');
+    if (!ctl || ctl.disabled || committed) return;
+    e.preventDefault();
+    var id = +ctl.closest('.row').dataset.id, dir = e.key === 'ArrowUp' ? -1 : 1;
+    var j = order.indexOf(id) + dir;
+    if (j < 0 || j >= order.length) { announce(ITEMS[id] + (dir < 0 ? ' is already first.' : ' is already last.')); return; }
+    move(id, dir, ctl.classList.contains('grip') ? 'grip' : ctl.classList.contains('up') ? 'up' : 'down');
+  });
+
+  /* pointer drag, an enhancement over the buttons */
+  list.addEventListener('pointerdown', function (e) {
+    var g = e.target.closest('.grip');
+    if (!g || g.disabled || committed) return;
+    e.preventDefault();
+    var id = +g.closest('.row').dataset.id;
+    drag = { id: id, start: order.indexOf(id) };
+    rowEl(id).classList.add('dragging');
+    document.addEventListener('pointermove', onMove);
+    document.addEventListener('pointerup', onUp);
+    document.addEventListener('pointercancel', onUp);
+  });
+  function onMove(e) {
+    if (!drag) return;
+    var rows = list.querySelectorAll('.row'), di = order.indexOf(drag.id);
+    for (var k = 0; k < rows.length; k++) {
+      if (k === di) continue;
+      var r = rows[k].getBoundingClientRect(), mid = r.top + r.height / 2;
+      if ((k < di && e.clientY < mid) || (k > di && e.clientY > mid)) {
+        order.splice(di, 1); order.splice(k, 0, drag.id); render(); break;
+      }
+    }
+  }
+  function onUp() {
+    if (!drag) return;
+    document.removeEventListener('pointermove', onMove);
+    document.removeEventListener('pointerup', onUp);
+    document.removeEventListener('pointercancel', onUp);
+    var id = drag.id, changed = order.indexOf(id) !== drag.start;
+    drag = null;
+    render(id, 'grip');
+    if (changed) announce(ITEMS[id] + ' moved to position ' + (order.indexOf(id) + 1) + ' of ' + order.length + '.');
+  }
+
+  /* small celebratory burst in the neutral palette; never runs under reduced motion */
+  function burst() {
+    if (reduced() || !document.body.animate) return;
+    var box = document.createElement('div');
+    box.className = 'burst'; box.setAttribute('aria-hidden', 'true');
+    var r = result.getBoundingClientRect();
+    var cx = Math.min(Math.max(r.left + r.width / 2, 40), window.innerWidth - 40);
+    var cy = Math.min(Math.max(r.top + 16, 70), window.innerHeight - 70);
+    var cols = ['#1f6f8b', '#1f7a4d', '#9a5a00', '#5b6b78', '#1f2d3d', '#185a71'];
+    for (var k = 0; k < 30; k++) {
+      var p = document.createElement('i'), sz = 6 + Math.random() * 6;
+      p.style.cssText = 'left:' + cx + 'px;top:' + cy + 'px;width:' + sz + 'px;height:' + (Math.random() < 0.5 ? sz : sz * 0.5) + 'px;background:' + cols[k % cols.length] + ';' + (k % 3 === 0 ? 'border-radius:50%;' : '');
+      box.appendChild(p);
+      var ang = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.5, dist = 70 + Math.random() * 130;
+      var dx = Math.cos(ang) * dist, dy = Math.sin(ang) * dist;
+      p.animate([
+        { transform: 'translate(0,0) rotate(0deg) scale(.4)', opacity: 1 },
+        { transform: 'translate(' + dx + 'px,' + dy + 'px) rotate(' + (Math.random() * 360) + 'deg) scale(1)', opacity: 1, offset: 0.55 },
+        { transform: 'translate(' + dx * 1.15 + 'px,' + (dy + 90) + 'px) rotate(' + (Math.random() * 540) + 'deg) scale(.9)', opacity: 0 }
+      ], { duration: 800 + Math.random() * 300, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' });
+    }
+    document.body.appendChild(box);
+    setTimeout(function () { box.remove(); }, 1250);
+  }
+  function countUp(el, to) {
+    if (reduced() || to < 1) { el.textContent = to; return; }
+    var t0 = performance.now(), d = 500;
+    (function f(t) {
+      var p = Math.min(1, (t - t0) / d);
+      el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(f);
+    })(t0);
+  }
+
+  var timers = [];
+  function showResult(n, all) {
+    result.hidden = false;
+    result.className = 'result ' + (all ? 'ok' : 'mixed');
+    result.setAttribute('tabindex', '-1');
+    /* the visible number counts up; the screen reader gets the final figure in .sr */
+    result.innerHTML = '<strong>' + (all ? 'All five steps are in place'
+        : '<span class="cnt" aria-hidden="true">' + (reduced() ? n : 0) + '</span><span class="sr">' + n + '</span> of ' + order.length + ' steps are in place') + '</strong>'
+      + '<p>' + (all ? 'The order matches the pathway.' : 'Each step above shows where it belongs in the pathway.') + '</p>'
+      + '<button class="btn btn-secondary" id="again" type="button">Start again</button>';
+    $('again').addEventListener('click', restart);
+    result.focus({ preventScroll: true });
+    result.scrollIntoView({ block: 'nearest', behavior: reduced() ? 'auto' : 'smooth' });
+    if (all) burst(); else countUp(result.querySelector('.cnt'), n);
+  }
+
+  /* commit once, mark per item */
+  checkBtn.addEventListener('click', function () {
+    if (committed) return;
+    committed = true;
+    marks = {};
+    order.forEach(function (id, i) { marks[id] = id === CORRECT[i] ? 'ok' : 'no'; });
+    var n = inPlace(), all = n === order.length, rm = reduced();
+    render(null, null, { noflip: true, pend: !rm });
+    checkBtn.disabled = true;
+    note.textContent = 'Checked.';
+    announce((all ? 'All five steps are in place.' : n + ' of ' + order.length + ' steps are in place.'));
+    if (rm) { showResult(n, all); return; }
+    /* rows are marked one after another */
+    var STEP = 170;
+    list.querySelectorAll('.row').forEach(function (r, i) {
+      timers.push(setTimeout(function () {
+        var mk = marks[+r.dataset.id];
+        r.classList.remove('pend'); r.classList.add(mk);
+        if (mk === 'no') r.classList.add('shake');
+      }, 150 + i * STEP));
+    });
+    timers.push(setTimeout(function () { showResult(n, all); }, 150 + order.length * STEP + 250));
+  });
+
+  function restart() {
+    timers.forEach(clearTimeout); timers = [];
+    order = START_ORDER.slice(); marks = null; committed = false; drag = null;
+    result.hidden = true; result.innerHTML = '';
+    checkBtn.disabled = false; note.textContent = 'You can check once. Each step is then marked.';
+    render(null, null, { deal: true });
+    var g = list.querySelector('.grip'); if (g) g.focus({ preventScroll: true });
+    announce('The steps are shuffled again.');
+  }
+
+  render(null, null, { deal: true });
+})();
+</script>
+</body>
+</html>

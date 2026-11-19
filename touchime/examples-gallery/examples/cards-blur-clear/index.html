@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Blurred answer cards: reading results</title>
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1f2d3d; --muted:#5b6b78; --paper:#ffffff; --surface:#f6f8fa; --line:#dde3e8;
+  --accent:#1f6f8b; --accent-hover:#185a71; --accent-soft:#e6f2f6; --on-accent:#ffffff;
+  --ok:#1f7a4d; --ok-soft:#e5f4ec; --bad:#b3261e; --bad-soft:#fbeae8; --warn:#9a5a00; --warn-soft:#fbf0dd;
+  --radius:10px; --gap:20px;
+  --shadow-rest:0 6px 18px rgba(31,45,61,.10);
+  --shadow-raised:0 12px 30px rgba(31,45,61,.16);
+  --dur-press:120ms; --dur-hover:200ms; --dur-move:300ms; --dur-reveal:500ms;
+  --ease-standard:cubic-bezier(0.4,0,0.2,1);
+  --ease-entrance:cubic-bezier(0.2,0.7,0.2,1);
+  --ease-overshoot:cubic-bezier(0.34,1.56,0.64,1);
+  --overlay-blur:6px; --dim-opacity:.6;
+}
+@media (prefers-reduced-motion: reduce){
+  :root{--dur-press:0ms;--dur-hover:0ms;--dur-move:0ms;--dur-reveal:0ms}
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;transition-delay:0ms !important}
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:'Atkinson Hyperlegible',system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--ink);
+  background:var(--surface);min-height:100vh;padding:28px 20px 80px;line-height:1.5;overflow-x:hidden}
+.wrap{max-width:1100px;margin:0 auto}
+.head{margin:0 auto 24px;max-width:1100px}
+h1{font-size:clamp(22px,2.4vw,30px);font-weight:700;margin:0 0 6px;letter-spacing:-.01em}
+.task{margin:0;font-size:17px}
+.status{margin:22px auto 0;font-size:15px;color:var(--muted);text-align:center}
+.status[data-done="true"]{color:var(--ok);font-weight:700}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.decknav{display:flex;gap:12px;align-items:center;justify-content:center;margin:22px 0 0}
+.navbtn{width:44px;height:44px;border-radius:999px;border:1px solid var(--accent);background:var(--accent);
+  color:var(--on-accent);font-size:22px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:var(--shadow-rest);transition:transform var(--dur-hover) var(--ease-standard),background var(--dur-hover)}
+.navbtn:hover{background:var(--accent-hover);transform:translateY(-2px)}
+.navbtn:focus-visible,.flip-card:focus-visible .card-inner,.pd-card:focus-visible,.bc-item:focus-visible{outline:3px solid var(--accent-hover);outline-offset:3px}
+.navlabel{font-size:15px;color:var(--muted)}
+
+.bc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;max-width:1100px;margin:0 auto;padding:14px 8px}
+.bc-item{position:relative;display:flex;flex-direction:column;text-align:left;font:inherit;color:var(--on-accent);min-height:260px;padding-bottom:48px !important;
+  border-radius:var(--radius);overflow:hidden;border:0;padding:20px;cursor:pointer;background:var(--accent);box-shadow:var(--shadow-rest);
+  transition:transform var(--dur-move) var(--ease-overshoot),box-shadow var(--dur-move) var(--ease-standard)}
+.bc-prompt{display:block;font-size:19px;font-weight:700;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.4)}
+.bc-body{display:block;margin-top:12px;font-size:16px;filter:blur(7px);
+  transition:filter var(--dur-reveal) var(--ease-standard)}
+.bc-hint{position:absolute;left:0;right:0;bottom:16px;text-align:center;font-size:14px;font-weight:700;color:var(--on-accent);pointer-events:none;
+  transition:opacity var(--dur-hover) var(--ease-standard)}
+.bc-item.revealed .bc-body{filter:blur(0)}
+.bc-item.revealed .bc-hint{opacity:0}
+@media (hover:hover) and (pointer:fine){
+  .bc-item:hover .bc-body{filter:blur(0)}
+  .bc-item:hover .bc-hint{opacity:0}
+}
+.bc-item:focus-visible .bc-body{filter:blur(0)}
+.bc-item:focus-visible .bc-hint{opacity:0}
+.bc-item.zoomed{transform:scale(1.06);z-index:5;box-shadow:var(--shadow-raised)}
+.bc-item:focus-visible{outline:3px solid var(--accent-hover);outline-offset:3px}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <h1>Bring the answer into focus</h1>
+    <p class="task">Each answer is blurred. Select a card, or move keyboard focus onto it, to bring the answer into focus. Selecting also enlarges the card.</p>
+  </div>
+  <section class="bc-grid" id="deck" aria-label="Four blurred answer cards">
+    <button class="bc-item" type="button" aria-pressed="false"><span class="bc-prompt">Blood negative, tissue positive</span><span class="bc-body">Act on the tissue result: a negative blood test does not rule out a mutation.</span><span class="bc-hint" aria-hidden="true">Select to bring into focus</span></button>
+    <button class="bc-item" type="button" aria-pressed="false"><span class="bc-prompt">Uncommon mutations</span><span class="bc-body">Mutations other than exon 19 deletions and L858R, such as G719X, L861Q and S768I, make up about 10% of EGFR mutations. Response varies by mutation and by drug.</span><span class="bc-hint" aria-hidden="true">Select to bring into focus</span></button>
+    <button class="bc-item" type="button" aria-pressed="false"><span class="bc-prompt">Reading the report</span><span class="bc-body">Check the tumor cell content: a sample with few tumor cells can give a false-negative result. If the sample was too small to test, try a ctDNA test or a repeat biopsy.</span><span class="bc-hint" aria-hidden="true">Select to bring into focus</span></button>
+    <button class="bc-item" type="button" aria-pressed="false"><span class="bc-prompt">Change to small cell</span><span class="bc-body">About 3-10% of EGFR-mutant tumors change into small cell lung cancer. A ctDNA test cannot confirm this change, so a repeat biopsy is needed.</span><span class="bc-hint" aria-hidden="true">Select to bring into focus</span></button>
+  </section>
+  <p class="status" id="status">0 of 4 answers opened.</p>
+</div>
+<div class="sr" id="live" role="status" aria-live="polite"></div>
+<script>
+(function(){
+  var live=document.getElementById('live'), status=document.getElementById('status');
+  var items=[].slice.call(document.querySelectorAll('.bc-item')), seen={};
+  items.forEach(function(el,i){
+    el.addEventListener('click', function(){
+      var z = el.classList.contains('zoomed');
+      items.forEach(function(o){ o.classList.remove('zoomed'); o.classList.remove('revealed'); o.setAttribute('aria-pressed','false'); });
+      if(!z){ el.classList.add('zoomed','revealed'); el.setAttribute('aria-pressed','true'); seen[i]=true; live.textContent = el.querySelector('.bc-body').textContent; }
+      else { live.textContent = 'Returned to size.'; }
+      var n = Object.keys(seen).length;
+      status.textContent = n === items.length ? 'All ' + n + ' answers opened.' : n + ' of ' + items.length + ' answers opened.';
+      if (n === items.length) status.setAttribute('data-done','true');
+    });
+    el.addEventListener('keydown', function(e){ if(e.key==='Escape'){ el.classList.remove('zoomed'); el.classList.remove('revealed'); el.setAttribute('aria-pressed','false'); } });
+  });
+})();
+</script>
+</body>
+</html>

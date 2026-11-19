@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ways to convey information and check understanding: examples</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+:root {
+  --paper: #fcfbf9; --warm: #f5ede6; --surface: #ffffff; --ink: #2c3e50; --muted: #5f6e6f; --line: #e4ddd5;
+  --copper: #bc6c3c; --copper-hot: #a05b32; --copper-deep: #8a4e2b; --on-copper: #ffffff;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--paper); color: var(--ink); font: 17px/1.55 "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 32px 24px 64px; }
+header { display: flex; gap: 20px; align-items: flex-start; padding-bottom: 18px; border-bottom: 3px solid var(--copper); }
+header img { width: 44px; height: auto; flex: none; margin-top: 4px; }
+.label { margin: 0 0 6px; font-size: 13px; font-weight: 700; color: var(--muted); }
+h1 { margin: 0; font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.1; }
+.intro { max-width: 760px; margin: 16px 0 0; color: var(--ink); }
+.intro li { margin: 4px 0; }
+h2 { margin: 40px 0 6px; font-size: 1.35rem; }
+.gdesc { margin: 0 0 16px; color: var(--muted); max-width: 760px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 18px; }
+.card { display: flex; flex-direction: column; text-align: left; padding: 0; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: inherit; font: inherit; cursor: pointer; overflow: hidden; transition: border-color .15s, box-shadow .15s, transform .15s; }
+.card:hover { border-color: var(--copper); box-shadow: 0 6px 18px rgba(44,62,80,.12); transform: translateY(-2px); }
+.card:focus-visible, .btn:focus-visible, .x:focus-visible { outline: 3px solid var(--copper); outline-offset: 3px; }
+.thumb { aspect-ratio: 16 / 10; background: var(--warm); border-bottom: 1px solid var(--line); overflow: hidden; }
+.thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block; }
+.card .t { padding: 12px 14px 2px; font-weight: 700; font-size: 1.05rem; }
+.card .d { padding: 0 14px 14px; color: var(--muted); font-size: 15px; }
+dialog { width: min(920px, calc(100vw - 32px)); max-height: calc(100vh - 32px); padding: 0; border: 0; border-radius: 14px; background: var(--surface); color: var(--ink); box-shadow: 0 24px 60px rgba(0,0,0,.3); }
+dialog::backdrop { background: rgba(28,36,46,.55); }
+.dlg { display: grid; grid-template-columns: 1.2fr 1fr; gap: 0; }
+.dlg .shot { background: var(--warm); min-height: 260px; }
+.dlg .shot img { width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block; }
+.dlg .body { padding: 22px 24px 24px; position: relative; }
+.dlg h3 { margin: 0 44px 10px 0; font-size: 1.45rem; line-height: 1.2; }
+.dlg h4 { margin: 14px 0 4px; font-size: 14px; color: var(--muted); }
+.dlg p { margin: 0; }
+.x { position: absolute; top: 10px; right: 10px; width: 44px; height: 44px; border: 0; border-radius: 10px; background: none; font-size: 26px; line-height: 1; color: var(--ink); cursor: pointer; }
+.btn { display: inline-flex; align-items: center; gap: 8px; min-height: 48px; margin-top: 20px; padding: 10px 20px; border-radius: 10px; background: var(--copper-hot); color: var(--on-copper); font-weight: 700; text-decoration: none; }
+.btn:hover { background: var(--copper-deep); }
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 28px 0 8px; }
+.tab { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 8px 16px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink); font: inherit; font-weight: 700; cursor: pointer; transition: background .15s, color .15s, border-color .15s; }
+.tab .n { display: inline-grid; place-items: center; min-width: 26px; height: 26px; padding: 0 6px; border-radius: 999px; background: var(--warm); color: var(--copper-deep); font-size: 14px; }
+.tab:hover { border-color: var(--copper); }
+.tab[aria-selected="true"] { background: var(--copper-hot); border-color: var(--copper-hot); color: var(--on-copper); }
+.tab[aria-selected="true"] .n { background: rgba(255,255,255,.22); color: var(--on-copper); }
+.tab:focus-visible, .panel:focus-visible { outline: 3px solid var(--copper); outline-offset: 3px; }
+.panel { padding-top: 6px; }
+.panel .gdesc { margin: 10px 0 18px; }
+.panel.in .card { animation: cardIn .35s cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--i) * 45ms); }
+@keyframes cardIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+@media (max-width: 720px) { .dlg { grid-template-columns: 1fr; } .dlg .shot { min-height: 0; aspect-ratio: 16 / 10; } .wrap { padding: 20px 16px 48px; } }
+@media (prefers-reduced-motion: reduce) { .card, .tab { transition: none; } .card:hover { transform: none; } .panel.in .card { animation: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="assets/forge-mark.png" alt="Forged Frameworks">
+    <div>
+      <p class="label">Forged Frameworks · examples for touchIME</p>
+      <h1>Ways to convey information and check understanding</h1>
+      <ul class="intro">
+        <li>A gallery of interaction types that could be used in future modules.</li>
+        <li>Select a card to see what the learner does and when it works best, then open the example full size to try it.</li>
+        <li>These are examples only. Where they show clinical content, they reuse wording already approved for the EGFR testing pilot.</li>
+      </ul>
+    </div>
+  </header>
+  <main id="groups"></main>
+  <footer>Forged Frameworks · examples prepared November 2026 · dan.boyland@forgedframeworks.co.uk</footer>
+</div>
+
+<dialog id="dlg" aria-labelledby="dT">
+  <div class="dlg">
+    <div class="shot"><img id="dI" alt=""></div>
+    <div class="body">
+      <button class="x" type="button" id="dX" aria-label="Close">&times;</button>
+      <h3 id="dT"></h3>
+      <h4>What the learner does</h4><p id="dDo"></p>
+      <h4>Works best for</h4><p id="dFor"></p>
+      <a class="btn" id="dGo" target="_blank" rel="noopener">Open full size <span aria-hidden="true">&#8599;</span></a>
+    </div>
+  </div>
+</dialog>
+
+<script>
+var GROUPS = [
+  { name: "Conveying information", desc: "Ways to present key facts so they land, rather than a page of text.", items: [
+    { s: "stat-reveal", t: "Stat reveal", d: "One headline figure, counted up, then what sits behind it.",
+      does: "Watches a single figure build up, then opens short panels that explain it.", for: "One number the learner must remember, such as a gap in practice." },
+    { s: "pictogram", t: "Predict, then see", d: "Guess a figure, then watch 100 people fill to the answer.",
+      does: "Sets a guess first, then sees the real figure as a pictogram, with the gap between the two.", for: "Figures that people tend to over- or underestimate. A wrong guess makes the real figure memorable." },
+    { s: "key-points", t: "Key points reveal", d: "Takeaway cards unlocked one by one.",
+      does: "Opens each takeaway in turn until all are revealed.", for: "Closing a section with the few points that matter most." },
+    { s: "timeline", t: "Pathway timeline", d: "Walk a process step by step, in order.",
+      does: "Moves through the stages of a process, opening each one in turn.", for: "Any process with a fixed order, such as a testing pathway." },
+    { s: "layered-hub", t: "Layered cards", d: "Cards that open in place, with tabs for the detail.",
+      does: "Chooses a card, which opens in place with tabs for more depth.", for: "Several parallel cases or scenarios explored in any order." },
+    { s: "three-way-comparison", t: "Three-way comparison", d: "Compare three options side by side.",
+      does: "Switches between three columns to compare the same points across each.", for: "Weighing three approaches or scenarios against the same criteria." }
+  ]},
+  { name: "Think-first prompts", desc: "Ways to hide an answer behind a prompt, so the learner thinks before the reveal.", items: [
+    { s: "cards-compare-pair", t: "Compare pair", d: "Two cards side by side, turned to compare.",
+      does: "Turns two related cards to compare what each holds.", for: "Two approaches or results that are easy to confuse." },
+    { s: "cards-fan", t: "Fan deck", d: "A fanned hand of cards, picked and turned.",
+      does: "Picks a card from a fanned deck and turns it to see the answer.", for: "A small set of question and answer pairs, with a playful feel." },
+    { s: "cards-hover-flip", t: "Flip cards", d: "Simple cards that flip to show the answer.",
+      does: "Selects a card to flip it from question to answer.", for: "Quick recall of facts, the simplest reveal to build and review." },
+    { s: "cards-pull-down", t: "Pull-down sheet", d: "A sheet pulled down to uncover the answer.",
+      does: "Pulls down a cover to uncover what sits beneath it.", for: "A single reveal with a moment of suspense." },
+    { s: "cards-blur-clear", t: "Blur to clear", d: "Blurred text that comes into focus when chosen.",
+      does: "Brings a blurred answer into focus after thinking about it first.", for: "Encouraging a mental answer before the reveal." }
+  ]},
+  { name: "Checking understanding", desc: "Knowledge checks that ask for a decision, with feedback that explains why.", items: [
+    { s: "odd-one-out", t: "Odd one out", d: "Spot the statement that does not hold.",
+      does: "Reads a short set of statements and picks the one that is wrong, then sees why.", for: "Quick checks of key facts and common misunderstandings." },
+    { s: "swipe-decision", t: "Swipe decision", d: "Keep or reconsider each scenario.",
+      does: "Makes a fast call on each scenario and gets feedback on each one.", for: "Rapid judgement across several short cases." },
+    { s: "myth-or-fact", t: "Myth or fact", d: "Call it, then read why.",
+      does: "Decides whether a statement is a myth or a fact, then reads the explanation.", for: "Correcting beliefs that are common but wrong." },
+    { s: "put-in-order", t: "Put in order, then mark", d: "Arrange the steps, commit once, get marked.",
+      does: "Arranges items into an order, commits once, and is marked item by item with feedback.", for: "Processes with one correct order, such as a pathway." },
+    { s: "branching-scenario", t: "Branching scenario", d: "Decisions on one patient, with consequences.",
+      does: "Makes decisions on a case, sees the consequence of each, and can go back and recover.", for: "Applying knowledge to a patient journey, safely." }
+  ]},
+  { name: "Reflection and self-assessment", desc: "Ways for learners to connect the content to their own practice.", items: [
+    { s: "writing-reflection", t: "Short reflection", d: "Two or three prompts, with a model answer to compare.",
+      does: "Writes a short answer to each prompt, compares it with a model answer, and keeps a copy.", for: "Linking content to the learner's own practice, and evidence for CPD." },
+    { s: "confidence-check", t: "Confidence check", d: "Rate confidence, then see a profile.",
+      does: "Rates confidence on a few practice statements and sees a simple profile.", for: "Before and after measures, and showing a shift in confidence." },
+    { s: "reflection-notepad", t: "Reflection notepad", d: "A notepad that stays to hand throughout.",
+      does: "Opens a notepad at any point, writes or sketches notes, and exports them.", for: "Longer modules where learners want to capture their own thoughts as they go." }
+  ]}
+];
+
+/* One tab per group (Daniel 19 Nov: tabs rather than one long page). Arrow keys, Home and End move between tabs;
+   the address remembers the open tab (#information, #think-first, #checking, #reflection). */
+var KEYS = ["information", "think-first", "checking", "reflection"];
+var main = document.getElementById("groups"), dlg = document.getElementById("dlg"), last = null;
+var list = document.createElement("div"); list.className = "tabs"; list.setAttribute("role", "tablist"); list.setAttribute("aria-label", "Example groups");
+main.appendChild(list);
+var tabs = [], panels = [];
+GROUPS.forEach(function (g, k) {
+  var tab = document.createElement("button"); tab.type = "button"; tab.className = "tab"; tab.id = "tab-" + KEYS[k];
+  tab.setAttribute("role", "tab"); tab.setAttribute("aria-controls", "panel-" + KEYS[k]);
+  tab.innerHTML = "<span>" + g.name + "</span><span class='n'>" + g.items.length + "</span>";
+  tab.addEventListener("click", function () { show(k, true); });
+  tab.addEventListener("keydown", function (e) {
+    var to = e.key === "ArrowRight" ? (k + 1) % tabs.length : e.key === "ArrowLeft" ? (k + tabs.length - 1) % tabs.length : e.key === "Home" ? 0 : e.key === "End" ? tabs.length - 1 : -1;
+    if (to >= 0) { e.preventDefault(); show(to, true); tabs[to].focus(); } });
+  list.appendChild(tab); tabs.push(tab);
+  var sec = document.createElement("section"); sec.className = "panel"; sec.id = "panel-" + KEYS[k];
+  sec.setAttribute("role", "tabpanel"); sec.setAttribute("aria-labelledby", tab.id); sec.tabIndex = 0;
+  sec.innerHTML = "<p class='gdesc'>" + g.desc + "</p>";
+  var grid = document.createElement("div"); grid.className = "grid";
+  g.items.forEach(function (it, i) {
+    var b = document.createElement("button"); b.type = "button"; b.className = "card"; b.dataset.s = it.s; b.style.setProperty("--i", i);
+    b.innerHTML = "<span class='thumb'><img loading='lazy' alt='' src='examples/" + it.s + "/_shots/desktop.png'></span><span class='t'>" + it.t + "</span><span class='d'>" + it.d + "</span>";
+    b.addEventListener("click", function () { open(it, b); });
+    grid.appendChild(b);
+  });
+  sec.appendChild(grid); main.appendChild(sec); panels.push(sec);
+});
+function show(k, remember) {
+  tabs.forEach(function (t, j) { var on = j === k; t.setAttribute("aria-selected", String(on)); t.tabIndex = on ? 0 : -1; panels[j].hidden = !on; });
+  panels[k].classList.remove("in"); void panels[k].offsetWidth; panels[k].classList.add("in");
+  if (remember) history.replaceState(null, "", "#" + KEYS[k]);
+}
+show(Math.max(0, KEYS.indexOf(location.hash.slice(1))), false);
+function open(it, from) {
+  last = from;
+  document.getElementById("dT").textContent = it.t;
+  document.getElementById("dDo").textContent = it.does;
+  document.getElementById("dFor").textContent = it.for;
+  var img = document.getElementById("dI"); img.src = "examples/" + it.s + "/_shots/desktop.png"; img.alt = "Screenshot of the " + it.t + " example";
+  document.getElementById("dGo").href = "examples/" + it.s + "/index.html";
+  dlg.showModal();
+}
+document.getElementById("dX").addEventListener("click", function () { dlg.close(); });
+dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
+dlg.addEventListener("close", function () { if (last) last.focus(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Example: three-way comparison</title>
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1f2d3d;--muted:#5b6b78;--paper:#fff;--surface:#f6f8fa;--line:#dde3e8;--accent:#1f6f8b;--accent-hover:#185a71;--accent-soft:#e6f2f6;--on-accent:#fff;--ok:#1f7a4d;--ok-soft:#e5f4ec;--bad:#b3261e;--bad-soft:#fbeae8;--warn:#9a5a00;--warn-soft:#fbf0dd;--radius:10px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface);color:var(--ink);font-family:"Atkinson Hyperlegible","Segoe UI",Arial,sans-serif;font-size:1.0625rem;line-height:1.55}
+.wrap{max-width:1100px;margin:0 auto;padding:28px 20px 48px}
+h1{font-size:1.75rem;line-height:1.2;margin:0 0 8px}
+.lead{color:var(--muted);margin:0 0 22px;max-width:70ch}
+.frame{display:flex;width:100%;height:600px;overflow:hidden;border-radius:var(--radius);background:#16222e}
+.pp{position:relative;display:flex;flex:1;min-width:0;align-items:center;justify-content:center;border-right:2px solid rgba(255,255,255,.12);cursor:pointer;transition:flex-grow .6s cubic-bezier(.4,0,.2,1),opacity .6s}
+.pp:last-child{border-right:0}
+.pp::before{content:"";position:absolute;inset:0;background:var(--bg);opacity:.55;transition:opacity .6s}
+.pp:focus{outline:none}
+.pp:focus-visible{outline:3px solid #fff;outline-offset:-3px}
+.pp:focus-visible::before{inset:6px}
+.frame.has-open .pp:not(.is-open){opacity:.85}
+.pp.is-open::before{opacity:1}
+@media (min-width:769px){
+ .frame.has-open .pp:not(.is-open){flex:.75}
+ .pp.is-open{flex:2.8}
+}
+.card{position:relative;z-index:2;width:90%;max-width:470px;padding:18px 20px;border-radius:var(--radius);background:#fff;box-shadow:0 10px 22px rgba(0,0,0,.25);pointer-events:none;container-type:inline-size}
+.pp.is-open .card{pointer-events:auto}
+.lab{margin:0;font-size:1.1rem;line-height:1.25;color:var(--accent-hover);text-align:center}
+.det{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .45s cubic-bezier(.4,0,.2,1),opacity .3s ease .15s}
+.det>div{min-height:0;overflow:hidden}
+.pp.is-open .det{grid-template-rows:1fr;opacity:1}
+.pp.is-open .lab{padding-bottom:8px;border-bottom:3px solid var(--accent);margin-bottom:6px}
+.det p{margin:10px 0 0;font-size:.95rem;line-height:1.5}
+.det strong{display:block;color:var(--accent-hover)}
+.mark{display:block;text-align:center;margin-top:6px;color:var(--muted);font-size:.85rem}
+.pp.is-open .mark{display:none}
+@media (max-width:768px){
+ .wrap{padding:20px 14px 40px}
+ .frame{flex-direction:column;height:auto}
+ .pp{flex:none;min-height:130px;padding:14px 0;border-right:0;border-bottom:2px solid rgba(255,255,255,.12)}
+ .pp:last-child{border-bottom:0}
+}
+@media (prefers-reduced-motion:reduce){.pp,.pp::before,.det{transition:none}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>Compare three testing approaches</h1>
+  <p class="lead">Each panel uses the same three headings, so the approaches can be read side by side. Select a panel, or press Tab to reach it. The panel opens and its detail appears. Press Escape to close the one you opened.</p>
+  <section class="frame" id="frame" tabindex="-1" aria-label="Three testing approaches">
+    <article class="pp" tabindex="0" role="button" aria-expanded="false" aria-labelledby="h1" style="--bg:linear-gradient(135deg,#1f6f8b,#12475a)">
+      <div class="card">
+        <h2 class="lab" id="h1">Tissue sample</h2>
+        <span class="mark" aria-hidden="true">Select to compare</span>
+        <div class="det"><div>
+          <p><strong>What it offers</strong>Tissue is the standard sample. It confirms the type of lung cancer, can be used to test for other markers and shows changes such as transformation to small cell.</p>
+          <p><strong>When to use it</strong>A broad panel is preferred. It tests EGFR and other targetable genes at the same time, which saves tissue and time.</p>
+          <p><strong>What it can miss</strong>Biopsies are often small, and a repeat biopsy adds risk and delay.</p>
+        </div></div>
+      </div>
+    </article>
+    <article class="pp" tabindex="0" role="button" aria-expanded="false" aria-labelledby="h2" style="--bg:linear-gradient(135deg,#2f7d5b,#174d36)">
+      <div class="card">
+        <h2 class="lab" id="h2">Blood test (ctDNA)</h2>
+        <span class="mark" aria-hidden="true">Select to compare</span>
+        <div class="det"><div>
+          <p><strong>What it offers</strong>A blood test looks for tumor DNA in the bloodstream (ctDNA).</p>
+          <p><strong>When to use it</strong>It is useful when tissue is limited or a biopsy is not possible, or alongside tissue to speed up results.</p>
+          <p><strong>What it can miss</strong>A ctDNA test is less reliable for gene fusions and copy number changes, and cannot assess PD-L1 or tissue type.</p>
+        </div></div>
+      </div>
+    </article>
+    <article class="pp" tabindex="0" role="button" aria-expanded="false" aria-labelledby="h3" style="--bg:linear-gradient(135deg,#4a5d70,#26323f)">
+      <div class="card">
+        <h2 class="lab" id="h3">Rapid PCR</h2>
+        <span class="mark" aria-hidden="true">Select to compare</span>
+        <div class="det"><div>
+          <p><strong>What it offers</strong>PCR gives a fast result, so it can run alongside the panel.</p>
+          <p><strong>When to use it</strong>Results needed fast</p>
+          <p><strong>What it can miss</strong>PCR finds only the mutations it is designed to detect. In real-world data, about half of exon 20 insertions found by sequencing would have been missed by PCR.</p>
+        </div></div>
+      </div>
+    </article>
+  </section>
+</main>
+<script>
+(function(){
+ var frame=document.getElementById('frame');
+ var panels=[].slice.call(frame.querySelectorAll('.pp'));
+ var hoverOk=window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+ function set(p){
+  panels.forEach(function(x){var o=x===p;x.classList.toggle('is-open',o);x.setAttribute('aria-expanded',o)});
+  frame.classList.toggle('has-open',!!p);
+ }
+ var closed=null;
+ panels.forEach(function(p){
+  p.addEventListener('click',function(){set(p)});
+  p.addEventListener('keydown',function(e){
+   if(e.key==='Enter'||e.key===' '){e.preventDefault();set(p)}
+  });
+  p.addEventListener('focus',function(){set(p)});
+  if(hoverOk)p.addEventListener('mouseenter',function(){set(p)});
+ });
+ frame.addEventListener('keydown',function(e){
+  if(e.key==='Escape'&&document.activeElement.classList.contains('pp')){
+   e.preventDefault();closed=document.activeElement;set(null);frame.focus({preventScroll:true});
+  }else if(e.key==='Tab'&&closed&&document.activeElement===frame){
+   var f=closed;closed=null;f.focus({preventScroll:true});
+  }
+ });
+ frame.addEventListener('focusout',function(e){if(e.target===frame)closed=null});
+ if(hoverOk)frame.addEventListener('mouseleave',function(){if(!frame.contains(document.activeElement)||document.activeElement===frame)set(null)});
+})();
+</script>
+</body>
+</html>

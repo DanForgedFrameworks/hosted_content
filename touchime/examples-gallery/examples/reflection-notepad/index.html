@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reflection notepad</title>
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1f2d3d;--muted:#5b6b78;--paper:#fff;--surface:#f6f8fa;--line:#dde3e8;--accent:#1f6f8b;--accent-soft:#e6f2f6;--r:10px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface);color:var(--ink);font:17px/1.6 "Atkinson Hyperlegible",Arial,Helvetica,sans-serif}
+.page{max-width:1100px;margin:0 auto;padding:24px 16px 64px}
+h1{font-size:1.9rem;line-height:1.25;margin:0 0 8px}
+h2{font-size:1.3rem;margin:0 0 8px}
+.lead{color:var(--muted);margin:0 0 20px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:20px;margin:0 0 20px}
+.card p{margin:0 0 10px}.card p:last-child{margin:0}
+.quote{margin:0 0 12px;padding:12px 16px;border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:0 var(--r) var(--r) 0}
+.prompt{background:var(--accent-soft);border-color:#c5dfe8}
+html,body{background:var(--surface)}
+.np-page{padding:0}
+#np_frame{position:relative;height:640px;overflow:hidden;display:grid;place-items:center;border-radius:20px;background:#fff;border:1px solid var(--line)}
+@media(max-width:760px){h1{font-size:1.5rem}#np_frame{height:620px}}
+</style>
+<script>
+  // Settings for the notepad (all optional).
+  window.NotepadConfig = { AccentHex: '#1f6f8b', AccentTextHex: '#ffffff', CourseKey: 'examples-gallery' };
+</script>
+</head>
+<body>
+<main class="page">
+<h1>Testing as a team</h1>
+<p class="lead">Read the points below, then open the notepad to write your own thoughts. You can export your notes when you finish.</p>
+
+<section class="card" aria-labelledby="k1">
+<h2 id="k1">Key points</h2>
+<p class="quote">Every patient with advanced nonsquamous lung cancer should have EGFR testing at diagnosis, as part of broad biomarker testing.</p>
+<p><strong>Testing works best as a team</strong></p>
+<p>The pulmonologist or radiologist aims to take enough tissue for diagnosis and molecular testing. The pathologist saves tissue and, where policy allows, sends it automatically (reflex testing). The oncologist checks results are back before starting treatment.</p>
+</section>
+
+<section class="card prompt" aria-labelledby="k2">
+<h2 id="k2">Your turn</h2>
+<p>Open the notepad. Write down how this works in your own team, one question you want to explore, and who you could ask. Your notes stay on this device.</p>
+</section>
+
+<div class="np-page"><div id="np_frame"></div></div>
+</main>
+<script src="notepad.js"></script>
+</body>
+</html>

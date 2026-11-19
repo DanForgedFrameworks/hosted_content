@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Example: layered hub</title>
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1f2d3d;--muted:#5b6b78;--paper:#fff;--surface:#f6f8fa;--line:#dde3e8;--accent:#1f6f8b;--accent-hover:#185a71;--accent-soft:#e6f2f6;--on-accent:#fff;--ok:#1f7a4d;--ok-soft:#e5f4ec;--bad:#b3261e;--bad-soft:#fbeae8;--warn:#9a5a00;--warn-soft:#fbf0dd;--radius:10px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface);color:var(--ink);font-family:"Atkinson Hyperlegible","Segoe UI",Arial,sans-serif;font-size:1.0625rem;line-height:1.55}
+.wrap{max-width:1100px;margin:0 auto;padding:28px 20px 48px}
+h1{font-size:1.75rem;line-height:1.2;margin:0 0 8px}
+.lead{color:var(--muted);margin:0 0 6px;max-width:62ch}
+.hint{color:var(--muted);margin:0 0 22px;font-size:.95rem}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:box-shadow .25s,border-color .25s}
+.card.open{border-color:var(--accent);box-shadow:0 8px 22px rgba(31,45,61,.12)}
+.head{all:unset;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:88px;padding:16px 18px;cursor:pointer}
+.head:hover{background:var(--accent-soft)}
+.head:focus-visible,.tab:focus-visible{outline:3px solid var(--accent);outline-offset:-3px}
+.head .k{display:block;color:var(--accent);font-weight:700;font-size:.85rem}
+.head .t{display:block;font-weight:700;font-size:1.1rem;line-height:1.3}
+.chev{flex:none;width:28px;height:28px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:700;transition:transform .25s}
+.card.open .chev{transform:rotate(180deg)}
+.body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s ease}
+.card.open .body{grid-template-rows:1fr}
+.body>div{min-height:0;overflow:hidden}
+.tabs{display:flex;gap:4px;padding:0 12px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.tab{all:unset;box-sizing:border-box;min-height:44px;padding:8px 12px;cursor:pointer;font-weight:700;font-size:.95rem;color:var(--muted);border-bottom:3px solid transparent}
+.tab[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.tab:hover{color:var(--accent-hover)}
+.tp{padding:16px 18px 20px}
+.tp[hidden]{display:none}
+.tp p{margin:0}
+.tag{display:inline-block;margin-bottom:8px;padding:2px 10px;border-radius:99px;background:var(--accent-soft);color:var(--accent-hover);font-weight:700;font-size:.85rem}
+@media (max-width:900px){.grid{grid-template-columns:1fr}}
+@media (max-width:640px){.wrap{padding:20px 14px 40px}}
+@media (prefers-reduced-motion:reduce){.body,.chev,.card{transition:none}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>Three results, three actions</h1>
+  <p class="lead">Many centers send blood and tissue tests together, so results can differ. If both show the same mutation, act on it.</p>
+  <p class="hint">Open each scenario to see which result to act on. Each scenario has three tabs.</p>
+  <div class="grid" id="grid"></div>
+</main>
+<script>
+"use strict";
+var BEFORE="Before acting, check how reliable each sample is. If the results still do not fit, discuss them at the multidisciplinary team meeting or molecular tumor board.";
+var CARDS=[
+ {sit:"Blood positive, tissue negative",act:"act on the blood result; check the tissue report",why:"A positive ctDNA result for an EGFR mutation can guide treatment. Check the tissue report: a sample with low tumor cell content (ideally at least 20%) can give a false-negative result, and the report should say \"inconclusive\" rather than \"negative\"."},
+ {sit:"Blood negative, tissue positive",act:"act on the tissue result",why:"Act on the tissue result: a negative blood test does not rule out a mutation."},
+ {sit:"Blood negative, tissue negative",act:"if suspicion remains, repeat tissue testing",why:"Two negative results make an EGFR mutation less likely, but do not rule one out. A false negative can come from low tumor cell content in the tissue, little tumor DNA in the blood, or a test that does not cover the mutation, such as PCR for some exon 20 insertions. If suspicion remains, consider repeat tissue testing with a broad panel."}
+];
+var TABS=["What to do","Why","Before you act"];
+var grid=document.getElementById('grid');
+CARDS.forEach(function(c,ci){
+ var id='c'+ci;
+ var card=document.createElement('article');card.className='card';
+ var tabs=TABS.map(function(t,ti){return '<button class="tab" role="tab" type="button" id="'+id+'t'+ti+'" aria-controls="'+id+'p'+ti+'" aria-selected="'+(ti===0)+'" tabindex="'+(ti===0?0:-1)+'">'+t+'</button>'}).join('');
+ var panes=[
+  '<span class="tag">Recommended</span><p>In this case: '+c.act+'.</p>',
+  '<p>'+c.why+'</p>',
+  '<p>'+BEFORE+'</p>'
+ ].map(function(h,ti){return '<div class="tp" role="tabpanel" id="'+id+'p'+ti+'" aria-labelledby="'+id+'t'+ti+'"'+(ti?' hidden':'')+'>'+h+'</div>'}).join('');
+ card.innerHTML='<h2 style="margin:0;font-size:inherit"><button class="head" type="button" aria-expanded="false" aria-controls="'+id+'b"><span><span class="k">Scenario '+(ci+1)+'</span><span class="t"></span></span><span class="chev" aria-hidden="true">v</span></button></h2>'+
+  '<div class="body" id="'+id+'b"><div><div class="tabs" role="tablist" aria-label="Scenario '+(ci+1)+' detail">'+tabs+'</div>'+panes+'</div></div>';
+ card.querySelector('.t').textContent=c.sit;
+ var head=card.querySelector('.head');
+ var body=card.querySelector('.body');
+ body.setAttribute('inert','');
+ head.addEventListener('click',function(){
+  var open=!card.classList.contains('open');
+  card.classList.toggle('open',open);
+  head.setAttribute('aria-expanded',open);
+  if(open)body.removeAttribute('inert');else body.setAttribute('inert','');
+ });
+ var tl=[].slice.call(card.querySelectorAll('.tab'));
+ function pick(i,f){
+  tl.forEach(function(t,k){t.setAttribute('aria-selected',k===i);t.tabIndex=k===i?0:-1;card.querySelector('#'+id+'p'+k).hidden=k!==i});
+  if(f)tl[i].focus();
+ }
+ tl.forEach(function(t,i){
+  t.addEventListener('click',function(){pick(i,false)});
+  t.addEventListener('keydown',function(e){
+   var n=null;
+   if(e.key==='ArrowRight')n=(i+1)%3;else if(e.key==='ArrowLeft')n=(i+2)%3;else if(e.key==='Home')n=0;else if(e.key==='End')n=2;
+   if(n!==null){e.preventDefault();pick(n,true)}
+  });
+ });
+ grid.appendChild(card);
+});
+</script>
+</body>
+</html>

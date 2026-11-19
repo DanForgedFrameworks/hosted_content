@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One patient, three decisions</title>
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1f2d3d; --muted:#5b6b78; --paper:#ffffff; --surface:#f6f8fa; --line:#dde3e8;
+  --accent:#1f6f8b; --accent-hover:#185a71; --accent-soft:#e6f2f6; --on-accent:#ffffff;
+  --ok:#1f7a4d; --ok-soft:#e5f4ec; --bad:#b3261e; --bad-soft:#fbeae8; --warn:#9a5a00; --warn-soft:#fbf0dd;
+  --radius:10px;
+  --font:"Atkinson Hyperlegible","Segoe UI",Tahoma,Verdana,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0;overflow-x:clip;min-height:100vh;background:var(--surface);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.55;}
+h1,h2,h3{line-height:1.3;margin:0 0 12px;}
+h1{font-size:clamp(24px,3.4vw,30px);}
+h2{font-size:22px;} h3{font-size:18px;}
+p{margin:0 0 12px;}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}
+[tabindex="-1"]:focus{outline:none;}
+[hidden]{display:none !important;}
+.wrap{width:min(900px,100%);margin:0 auto;padding:32px 16px 64px;}
+.hero{margin-bottom:24px;}
+.hero p{color:var(--muted);max-width:66ch;}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:24px;margin-bottom:16px;}
+.btn{font:700 17px/1.2 var(--font);min-height:44px;min-width:44px;padding:10px 24px;border-radius:var(--radius);border:2px solid transparent;cursor:pointer;}
+.btn-primary{background:var(--accent);color:var(--on-accent);}
+.btn-primary:hover{background:var(--accent-hover);}
+.btn-secondary{background:var(--paper);color:var(--accent);border-color:var(--accent);}
+.btn-secondary:hover{background:var(--accent-soft);}
+.bar{display:flex;align-items:center;gap:16px;margin-bottom:16px;}
+.bar-text{margin:0;font-size:15px;color:var(--muted);white-space:nowrap;}
+.track{flex:1;height:8px;background:var(--line);border-radius:999px;overflow:hidden;}
+.fill{height:100%;background:var(--accent);width:0;transition:width .6s cubic-bezier(.2,.8,.2,1);}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700;margin-bottom:8px;}
+.tag svg{width:18px;height:18px;}
+.situation{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:16px;}
+.situation p{margin:0;}
+.question{font-weight:700;margin-bottom:12px;}
+.options{display:flex;flex-direction:column;gap:12px;}
+.opt{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;text-align:left;width:100%;font:400 17px/1.5 var(--font);color:var(--ink);background:var(--paper);border:2px solid var(--line);border-radius:var(--radius);padding:12px 16px;min-height:44px;cursor:pointer;}
+.opt{transition:transform .18s ease,box-shadow .18s ease,border-color .15s ease,background-color .15s ease;animation:optIn .36s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc(var(--i,0)*70ms + 120ms);}
+.opt:hover:not([disabled]),.opt:focus-visible:not([disabled]){border-color:var(--accent);background:var(--accent-soft);transform:translateY(-2px);box-shadow:0 6px 14px rgba(31,45,61,.12);}
+.letter{transition:transform .18s ease;}
+.opt:hover:not([disabled]) .letter,.opt:focus-visible:not([disabled]) .letter{transform:scale(1.12);}
+.opt[disabled]{cursor:default;}
+.opt.rewind{animation:rewindIn .3s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc(var(--i,0)*50ms);}
+.opt.chosen{border-color:var(--accent);background:var(--accent-soft);animation:pulse .5s ease-out;}
+.letter{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:var(--on-accent);font-weight:700;font-size:15px;}
+.panel{border-left:5px solid;border-radius:var(--radius);padding:12px 16px;margin-top:16px;}
+.panel p{margin:0 0 8px;}
+.panel.rec{background:var(--ok-soft);border-color:var(--ok);}
+.panel.rec .tag{color:var(--ok);}
+.panel.con{background:var(--warn-soft);border-color:var(--warn);}
+.panel.con .tag{color:var(--warn);}
+.panel.better{background:var(--ok-soft);border-color:var(--ok);}
+.panel.better .tag{color:var(--ok);}
+.panel .opt-text{font-weight:700;}
+.panel{animation:panelIn .4s cubic-bezier(.2,.8,.2,1) backwards;}
+.panel.better{animation-delay:.3s;}
+.panel.out,.actions.out{animation:panelOut .2s ease-in forwards;}
+.actions.fb{animation:panelIn .35s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:var(--d,.3s);}
+.tag svg{animation:tickPop .45s .2s cubic-bezier(.3,1.6,.5,1) backwards;}
+.panel.better .tag svg{animation-delay:.5s;}
+.card.enter{animation:slideIn .36s cubic-bezier(.2,.8,.2,1) backwards;}
+#end.enter{animation:endIn .5s cubic-bezier(.2,.9,.3,1.2) backwards;}
+.seal{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--ok-soft);color:var(--ok);margin-right:10px;vertical-align:-7px;animation:tickPop .55s .15s cubic-bezier(.3,1.6,.5,1) backwards;}
+.seal svg{width:20px;height:20px;}
+.seal path{stroke-dasharray:26;animation:draw .45s .4s ease-out backwards;}
+.recap li{animation:optIn .4s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc(.35s + var(--i,0)*110ms);}
+.burst{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50;}
+.burst i{position:absolute;display:block;border-radius:2px;}
+@keyframes optIn{from{opacity:0;transform:translateY(10px);}}
+@keyframes rewindIn{from{opacity:0;transform:translateX(-18px);}}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(31,111,139,.5);transform:scale(1);}40%{transform:scale(1.02);}100%{box-shadow:0 0 0 12px rgba(31,111,139,0);transform:scale(1);}}
+@keyframes panelIn{from{opacity:0;transform:translateY(-14px);}}
+@keyframes panelOut{to{opacity:0;transform:translateY(-10px);}}
+@keyframes tickPop{from{opacity:0;transform:scale(.3);}}
+@keyframes slideIn{from{opacity:0;transform:translateX(32px);}}
+@keyframes endIn{from{opacity:0;transform:scale(.96);}}
+@keyframes draw{from{stroke-dashoffset:26;}}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px;}
+.recap{list-style:none;margin:16px 0;padding:0;display:flex;flex-direction:column;gap:8px;}
+.recap li{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:10px 14px;}
+.recap strong{display:block;}
+.dialog{width:min(440px,calc(100% - 32px));padding:24px;border:0;border-top:4px solid var(--accent);border-radius:var(--radius);color:var(--ink);}
+.dialog::backdrop{background:rgba(31,45,61,.5);}
+.dialog h2{margin:0 0 8px;} .dialog p{color:var(--muted);}
+.dialog .actions{justify-content:flex-end;}
+.sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+.top-actions{display:flex;justify-content:flex-end;margin-bottom:8px;}
+@media (max-width:700px){
+  .wrap{padding:20px 12px 48px;}
+  .card{padding:16px;}
+  .btn{width:100%;}
+  .actions{flex-direction:column;}
+  .bar{flex-wrap:wrap;gap:8px;} .track{flex-basis:100%;order:3;}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <h1>One patient, three decisions</h1>
+    <p>Follow one case and decide what you would do at each point. Every choice is explained. No choice ends the case: you can redo a decision at any time, or continue with the recommended action.</p>
+  </header>
+
+  <section class="card" id="start" aria-labelledby="start-title">
+    <h2 id="start-title">Before you begin</h2>
+    <p>There are three decisions, each with three options. Choose the one you think is best. This is a case study, not a test.</p>
+    <button class="btn btn-primary" id="start-btn" type="button">Start the case</button>
+  </section>
+
+  <section id="case" hidden>
+    <div class="top-actions"><button class="btn btn-secondary" id="restart-btn" type="button">Restart</button></div>
+    <div class="bar">
+      <p class="bar-text" id="bar-text"></p>
+      <div class="track" role="progressbar" aria-label="Decisions completed" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0" id="track"><div class="fill" id="fill"></div></div>
+    </div>
+    <article class="card" id="stage" aria-live="off"></article>
+  </section>
+
+  <section class="card" id="end" hidden aria-labelledby="end-title"></section>
+  <p class="sr" id="announcer" aria-live="polite" aria-atomic="true"></p>
+</div>
+
+<dialog class="dialog" id="dialog" aria-labelledby="dialog-title">
+  <h2 id="dialog-title">Restart the case?</h2>
+  <p>This clears your progress and returns to the start.</p>
+  <div class="actions">
+    <button class="btn btn-secondary" id="dlg-cancel" type="button">Cancel</button>
+    <button class="btn btn-primary" id="dlg-ok" type="button">Restart</button>
+  </div>
+</dialog>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var reduced = function () { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; };
+
+  /* CONTENT. Stems, options, lead lines and "why" lines are approved wording, verbatim.
+     Interface text and narration lines are new, neutral and add no clinical fact. */
+  var DECISIONS = [
+    {
+      stem: "A 52-year-old woman who has never smoked has advanced lung cancer. A small biopsy shows squamous features, and little tissue is left. What do you do?",
+      lead: "Squamous features on a small biopsy do not rule out a targetable change, especially in someone who has never smoked.",
+      options: [
+        { text: "Start chemoimmunotherapy, because EGFR mutations are rare in squamous disease",
+          why: "Starting immunotherapy first risks severe side effects if an EGFR mutation is found later.", rec: false },
+        { text: "Send the remaining tissue for a broad panel and PD-L1, and a ctDNA blood test at the same time",
+          why: "Testing blood at the same time can give a faster result, and gives a second chance of finding a mutation if the tissue sample is too small.", rec: true },
+        { text: "Test PD-L1 only, to save tissue",
+          why: "Testing PD-L1 alone would miss a targetable change.", rec: false }
+      ]
+    },
+    {
+      stem: "A biopsy gives a small sample. The local lab's first test is a single-gene EGFR PCR, followed by other single-gene tests if it is negative. The patient is symptomatic. What makes the best use of the tissue?",
+      lead: "",
+      options: [
+        { text: "Run the single-gene tests one after another as usual, to keep costs down",
+          why: "Running single-gene tests one after another uses up tissue and delays results.", rec: false },
+        { text: "Request a repeat biopsy before any testing, to make sure there is enough tissue",
+          why: "A repeat biopsy adds risk and delay before you know whether you need it.", rec: false },
+        { text: "Ask for a broad panel instead, and send a ctDNA test at the same time",
+          why: "A broad panel tests everything at once, and a ctDNA test can give an answer sooner.", rec: true }
+      ]
+    },
+    {
+      stem: "A tumor has an exon 19 deletion, and PD-L1 expression is 80%. What is the first-line approach?",
+      lead: "High PD-L1 does not predict a response to immunotherapy in EGFR-mutant disease.",
+      options: [
+        { text: "Immunotherapy alone, because PD-L1 is high",
+          why: "In a phase II trial, immunotherapy alone was stopped early for lack of benefit, even with high PD-L1.", rec: false },
+        { text: "EGFR-targeted treatment",
+          why: "An exon 19 deletion is a common mutation that responds to EGFR-targeted treatment, so this comes first, regardless of the PD-L1 level.", rec: true },
+        { text: "Immunotherapy first, then EGFR-targeted treatment at progression",
+          why: "Immunotherapy, with or without chemotherapy, given before EGFR-targeted treatment also increases the risk of severe side effects.", rec: false }
+      ]
+    }
+  ];
+  var BRIDGE = "The case moves on to the next decision.";      // narration, no clinical fact
+  var NARRATION_END = "The team reviews the case.";            // narration, no clinical fact
+  var LETTERS = ["A", "B", "C"];
+
+  var step = 0;
+  var gen = 0;           // bumped on every render so a late rewind timer can tell it is stale
+  var journey = [];      // per decision: { first: 'rec'|'con', explored: bool }
+  var chosen = null;     // option index chosen on the current decision
+
+  var stage = $('stage'), announcer = $('announcer');
+  var IC_TICK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+  var IC_WARN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 21h20L12 3z"/><path d="M12 10v5"/><path d="M12 18h.01"/></svg>';
+
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function announce(m) { announcer.textContent = ''; setTimeout(function () { announcer.textContent = m; }, 20); }
+  function land(el) {
+    if (!el) return;
+    el.focus({ preventScroll: true });
+    el.scrollIntoView({ block: 'start', behavior: reduced() ? 'auto' : 'smooth' });
+  }
+  function progress(done) {
+    $('bar-text').textContent = 'Decision ' + Math.min(step + 1, DECISIONS.length) + ' of ' + DECISIONS.length;
+    $('track').setAttribute('aria-valuenow', String(done));
+    $('fill').style.width = (done / DECISIONS.length * 100) + '%';
+  }
+
+  function slideInto(el) {
+    if (reduced()) return;
+    el.classList.remove('enter'); void el.offsetWidth; el.classList.add('enter');
+  }
+  /* small burst in the neutral palette; never runs under reduced motion */
+  function burst(el, count) {
+    if (reduced() || !document.body.animate) return;
+    var box = document.createElement('div');
+    box.className = 'burst'; box.setAttribute('aria-hidden', 'true');
+    var r = el.getBoundingClientRect();
+    var cx = Math.min(Math.max(r.left + Math.min(r.width, 200) / 2 + 40, 40), window.innerWidth - 40);
+    var cy = Math.min(Math.max(r.top + r.height / 2, 70), window.innerHeight - 70);
+    var cols = ['#1f6f8b', '#1f7a4d', '#9a5a00', '#5b6b78', '#1f2d3d', '#185a71'];
+    for (var k = 0; k < count; k++) {
+      var p = document.createElement('i'), sz = 5 + Math.random() * 5;
+      p.style.cssText = 'left:' + cx + 'px;top:' + cy + 'px;width:' + sz + 'px;height:' + sz + 'px;background:' + cols[k % cols.length] + ';' + (k % 2 ? 'border-radius:50%;' : '');
+      box.appendChild(p);
+      var ang = Math.random() * Math.PI * 2, dist = 50 + Math.random() * 90;
+      var dx = Math.cos(ang) * dist, dy = Math.sin(ang) * dist;
+      p.animate([
+        { transform: 'translate(0,0) scale(.3)', opacity: 1 },
+        { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(1)', opacity: 1, offset: 0.6 },
+        { transform: 'translate(' + dx * 1.1 + 'px,' + (dy + 40) + 'px) scale(.8)', opacity: 0 }
+      ], { duration: 700 + Math.random() * 200, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' });
+    }
+    document.body.appendChild(box);
+    setTimeout(function () { box.remove(); }, 1000);
+  }
+
+  function render() {
+    var d = DECISIONS[step];
+    chosen = null; gen++;
+    progress(step);
+    var html = '<h2 id="dec-title" tabindex="-1">Decision ' + (step + 1) + ' of ' + DECISIONS.length + '</h2>';
+    if (step > 0) html += '<p class="bar-text" style="white-space:normal;margin-bottom:12px">' + esc(BRIDGE) + '</p>';
+    html += '<div class="situation"><p>' + esc(d.stem) + '</p></div>'
+      + '<p class="question" id="q">Choose one option.</p>'
+      + '<div class="options" role="group" aria-labelledby="q">';
+    d.options.forEach(function (o, i) {
+      html += '<button class="opt" type="button" data-i="' + i + '" style="--i:' + i + '"><span class="letter" aria-hidden="true">' + LETTERS[i] + '</span><span>' + esc(o.text) + '</span></button>';
+    });
+    html += '</div><div id="feedback"></div>';
+    stage.innerHTML = html;
+    stage.querySelectorAll('.opt').forEach(function (b) {
+      b.addEventListener('click', function () { choose(+b.dataset.i); });
+    });
+    slideInto(stage);
+    land($('dec-title'));
+    announce('Decision ' + (step + 1) + ' of ' + DECISIONS.length + '. ' + d.stem);
+  }
+
+  function recIndex(d) { for (var i = 0; i < d.options.length; i++) if (d.options[i].rec) return i; return 0; }
+
+  function choose(i) {
+    if (chosen !== null) return;
+    var d = DECISIONS[step], o = d.options[i], r = recIndex(d);
+    chosen = i;
+    var j = journey[step] || (journey[step] = { first: o.rec ? 'rec' : 'con', explored: false });
+    if (!o.rec) j.explored = true;
+    stage.querySelectorAll('.opt').forEach(function (b, k) {
+      b.disabled = true;
+      if (k === i) b.classList.add('chosen');
+    });
+    var html, last = step === DECISIONS.length - 1, nextLabel = last ? 'Finish the case' : 'Continue';
+    if (o.rec) {
+      html = '<div class="panel rec" id="fb-panel" tabindex="-1"><span class="tag">' + IC_TICK + 'Recommended response</span>'
+        + (d.lead ? '<p>' + esc(d.lead) + '</p>' : '')
+        + '<p>' + esc(o.why) + '</p></div>'
+        + '<div class="actions fb" style="--d:.35s"><button class="btn btn-primary" id="go" type="button">' + nextLabel + '</button>'
+        + '<button class="btn btn-secondary" id="redo" type="button">Redo this decision</button></div>';
+    } else {
+      var rec = d.options[r];
+      html = '<div class="panel con" id="fb-panel" tabindex="-1"><span class="tag">' + IC_WARN + 'Consequence of this choice</span>'
+        + '<p>' + esc(o.why) + '</p></div>'
+        + '<div class="panel better"><span class="tag">' + IC_TICK + 'The more appropriate response, and why</span>'
+        + '<p class="opt-text">' + esc(rec.text) + '</p>'
+        + (d.lead ? '<p>' + esc(d.lead) + '</p>' : '')
+        + '<p>' + esc(rec.why) + '</p></div>'
+        + '<div class="actions fb" style="--d:.6s"><button class="btn btn-primary" id="go" type="button">Take the recommended action and ' + (last ? 'finish' : 'continue') + '</button>'
+        + '<button class="btn btn-secondary" id="redo" type="button">Redo this decision</button></div>';
+    }
+    $('feedback').innerHTML = html;
+    $('go').addEventListener('click', next);
+    $('redo').addEventListener('click', redo);
+    land($('fb-panel'));
+    announce((o.rec ? 'Recommended response. ' + (d.lead ? d.lead + ' ' : '') + o.why
+      : 'Consequence of this choice. ' + o.why + ' The more appropriate response: ' + d.options[r].text + ' ' + d.options[r].why));
+  }
+
+  function redo() {
+    var g = gen, fb = $('feedback');
+    /* a short reverse slide: the panels lift away, then the options slide back in from the left */
+    if (!reduced()) {
+      fb.querySelectorAll('.panel, .actions').forEach(function (el) { el.classList.add('out'); });
+      fb.querySelectorAll('button').forEach(function (b) { b.disabled = true; });
+    }
+    setTimeout(function () {
+      if (g !== gen) return;
+      chosen = null;
+      stage.querySelectorAll('.opt').forEach(function (b) {
+        b.disabled = false; b.classList.remove('chosen');
+        if (!reduced()) { b.classList.remove('rewind'); void b.offsetWidth; b.classList.add('rewind'); }
+      });
+      fb.innerHTML = '';
+      var first = stage.querySelector('.opt'); if (first) first.focus({ preventScroll: true });
+      stage.scrollIntoView({ block: 'start', behavior: reduced() ? 'auto' : 'smooth' });
+      announce('Decision reset. Choose again.');
+    }, reduced() ? 0 : 200);
+  }
+
+  function next() {
+    step++;
+    if (step >= DECISIONS.length) { finish(); return; }
+    render();
+  }
+
+  function finish() {
+    $('case').hidden = true;
+    var e = $('end');
+    e.hidden = false;
+    var items = DECISIONS.map(function (d, i) {
+      var j = journey[i] || { first: 'rec', explored: false };
+      var txt = j.first === 'rec' ? 'You chose the recommended response first.' : 'You explored a consequence, then took the recommended response.';
+      return '<li style="--i:' + i + '"><strong>Decision ' + (i + 1) + '</strong>' + esc(txt) + '</li>';
+    }).join('');
+    e.innerHTML = '<h2 id="end-title" tabindex="-1"><span class="seal" aria-hidden="true">' + IC_TICK + '</span>Case complete</h2>'
+      + '<p>' + esc(NARRATION_END) + '</p>'
+      + '<ul class="recap">' + items + '</ul>'
+      + '<div class="actions"><button class="btn btn-secondary" id="again" type="button">Start again</button></div>';
+    $('again').addEventListener('click', hardReset);
+    progress(DECISIONS.length);
+    slideInto(e);
+    land($('end-title'));
+    setTimeout(function () { burst($('end-title'), 22); }, 250);
+    announce('Case complete. ' + NARRATION_END);
+  }
+
+  function hardReset() {
+    step = 0; journey = []; chosen = null;
+    $('end').hidden = true; $('end').innerHTML = '';
+    $('case').hidden = false;
+    render();
+  }
+
+  $('start-btn').addEventListener('click', function () {
+    $('start').hidden = true; $('case').hidden = false;
+    render();
+  });
+  $('restart-btn').addEventListener('click', function () {
+    var dlg = $('dialog');
+    if (step === 0 && !journey.length) { announce('Nothing to restart yet.'); return; }
+    dlg.showModal(); $('dlg-cancel').focus({ preventScroll: true });
+  });
+  $('dlg-cancel').addEventListener('click', function () { $('dialog').close(); $('restart-btn').focus({ preventScroll: true }); });
+  $('dlg-ok').addEventListener('click', function () { $('dialog').close(); hardReset(); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Predict, then see: a pictogram</title>
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+:root {
+  --ink: #1f2d3d; --muted: #5b6b78; --paper: #ffffff; --surface: #f6f8fa; --line: #dde3e8;
+  --accent: #1f6f8b; --accent-hover: #185a71; --accent-soft: #e6f2f6; --on-accent: #ffffff;
+  --ok: #1f7a4d; --ok-soft: #e5f4ec; --warn: #9a5a00; --warn-soft: #fbf0dd;
+  --empty: #cfd8df;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--paper); color: var(--ink); font: 18px/1.5 "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif; }
+main { max-width: 1100px; margin: 0 auto; padding: 32px 24px 48px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 40px; align-items: start; }
+h1 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); line-height: 1.15; margin: 0 0 12px; }
+.kicker { font-size: 14px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; font-weight: 700; }
+p { margin: 0 0 14px; }
+.q { font-size: 1.15rem; font-weight: 700; }
+.guess { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin-top: 18px; }
+.guess label { display: block; font-weight: 700; margin-bottom: 10px; }
+.row { display: flex; align-items: center; gap: 14px; }
+input[type=range] { flex: 1; accent-color: var(--accent); min-height: 44px; }
+output { min-width: 4ch; font-size: 1.6rem; font-weight: 700; color: var(--accent); text-align: right; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 10px 20px; margin-top: 14px; border: 0; border-radius: 10px; background: var(--accent); color: var(--on-accent); font: inherit; font-weight: 700; cursor: pointer; }
+.btn:hover { background: var(--accent-hover); }
+.btn.ghost { background: var(--paper); color: var(--accent); border: 2px solid var(--accent); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.result { margin-top: 18px; padding: 16px 18px; border-radius: 10px; border-left: 5px solid var(--accent); background: var(--accent-soft); }
+.result[hidden] { display: none; }
+.result .cmp { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+.grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; padding: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.p { aspect-ratio: 3 / 4; color: var(--empty); transition: color .25s ease, transform .25s ease; }
+.p svg { width: 100%; height: 100%; display: block; fill: currentColor; }
+.p.on { color: var(--accent); }
+.p.guessed { color: #9fc5d3; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; font-size: 15px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
+.big { font-size: clamp(2.6rem, 7vw, 4rem); font-weight: 700; line-height: 1; color: var(--accent); }
+@media (max-width: 760px) { main { grid-template-columns: 1fr; gap: 24px; padding: 20px 16px 36px; } .grid { gap: 4px; padding: 12px; } }
+@media (prefers-reduced-motion: reduce) { .p { transition: none; } }
+</style>
+</head>
+<body>
+<main>
+  <section>
+    <p class="kicker">Predict, then see</p>
+    <h1>How often is there enough tissue?</h1>
+    <p class="q">Out of 100 patients, how many had enough tissue to test for every recommended biomarker?</p>
+    <p>Make your guess first. The figures on the right then show the answer from one report.</p>
+    <div class="guess">
+      <label for="g">Your guess: patients out of 100</label>
+      <div class="row"><input id="g" type="range" min="0" max="100" step="1" value="50" aria-describedby="gv"><output id="gv" for="g">50</output></div>
+      <button class="btn" id="go" type="button">Show the answer</button>
+    </div>
+    <div class="result" id="res" hidden aria-live="polite" tabindex="-1">
+      <p class="big" id="big">18%</p>
+      <p class="cmp" id="cmp"></p>
+      <p>Getting enough tissue can be hard: in one report, as few as 18% of patients had enough tissue to test for every recommended biomarker. Biopsies are often small, and a repeat biopsy adds risk and delay.</p>
+      <button class="btn ghost" id="again" type="button">Try again</button>
+    </div>
+  </section>
+  <section aria-label="100 patients">
+    <div class="grid" id="grid" role="img" aria-label="100 figures, none filled yet"></div>
+    <div class="legend" id="legend" hidden>
+      <span><i style="background:var(--accent)"></i>Enough tissue (18)</span>
+      <span><i style="background:#9fc5d3"></i>Your guess beyond the answer</span>
+      <span><i style="background:var(--empty)"></i>Not enough tissue</span>
+    </div>
+  </section>
+</main>
+<script>
+(function () {
+  var ANSWER = 18;
+  var PERSON = '<svg viewBox="0 0 30 40" aria-hidden="true"><circle cx="15" cy="8" r="7"/><path d="M3 40V25a12 12 0 0 1 24 0v15z"/></svg>';
+  var grid = document.getElementById("grid"), g = document.getElementById("g"), gv = document.getElementById("gv"),
+      go = document.getElementById("go"), res = document.getElementById("res"), cmp = document.getElementById("cmp"),
+      again = document.getElementById("again"), legend = document.getElementById("legend");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var people = [], timers = [];
+  for (var i = 0; i < 100; i++) { var d = document.createElement("div"); d.className = "p"; d.innerHTML = PERSON; grid.appendChild(d); people.push(d); }
+  g.addEventListener("input", function () { gv.textContent = g.value; });
+  function clear() { timers.forEach(clearTimeout); timers = []; people.forEach(function (p) { p.className = "p"; }); }
+  function show() {
+    var guess = +g.value; clear();
+    people.forEach(function (p, i) {
+      var cls = i < ANSWER ? "p on" : (i < guess ? "p guessed" : "p");
+      if (reduce.matches) p.className = cls;
+      else timers.push(setTimeout(function () { p.className = cls; }, i * 14));
+    });
+    var diff = guess - ANSWER;
+    cmp.textContent = "You guessed " + guess + ". " + (diff === 0 ? "Exactly right." : "That is " + Math.abs(diff) + (diff > 0 ? " higher" : " lower") + " than the report.");
+    grid.setAttribute("aria-label", "100 figures: 18 filled for enough tissue" + (guess > ANSWER ? ", and " + (guess - ANSWER) + " more shaded for your guess" : ""));
+    res.hidden = false; legend.hidden = false; go.disabled = true; g.disabled = true;
+    res.focus();
+  }
+  go.addEventListener("click", show);
+  again.addEventListener("click", function () { clear(); res.hidden = true; legend.hidden = true; go.disabled = false; g.disabled = false; g.value = 50; gv.textContent = "50";
+    grid.setAttribute("aria-label", "100 figures, none filled yet"); g.focus(); });
+})();
+</script>
+</body>
+</html>

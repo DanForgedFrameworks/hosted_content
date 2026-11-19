@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stat reveal: one number, then what sits behind it</title>
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+  :root {
+    --ink: #1f2d3d; --muted: #5b6b78; --paper: #ffffff; --surface: #f6f8fa; --line: #dde3e8;
+    --accent: #1f6f8b; --accent-hover: #185a71; --accent-soft: #e6f2f6; --on-accent: #ffffff;
+    --radius: 10px;
+    --font: "Atkinson Hyperlegible", "Segoe UI", Tahoma, Verdana, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body { background: var(--surface); color: var(--ink); font-family: var(--font); }
+  button { font: inherit; }
+  [hidden] { display: none !important; }
+
+  .scene {
+    position: relative; overflow: hidden; min-height: 100vh;
+    background: var(--ink); color: var(--paper);
+    padding: 40px 18px 40px;
+  }
+  .wrap { width: min(100%, 1000px); margin: 0 auto; }
+
+  .title-card { min-height: calc(100vh - 80px); display: grid; place-items: center; text-align: center; transition: opacity 500ms ease; }
+  .title-card.is-leaving { opacity: 0; pointer-events: none; }
+  .title-inner { max-width: 720px; }
+  .eyebrow { margin: 0; font-size: 1rem; font-weight: 700; color: var(--line); }
+  .title { margin: 16px 0 0; font-size: clamp(2.4rem, 8vw, 4.5rem); font-weight: 700; line-height: 1.05; }
+  .rule { width: 88px; height: 4px; margin: 24px auto; background: var(--accent-soft); border-radius: 2px; }
+  .instruction { max-width: 580px; margin: 0 auto; color: var(--line); font-size: 1.1rem; line-height: 1.6; }
+
+  .btn {
+    min-height: 44px; min-width: 44px; padding: 10px 24px;
+    border: 2px solid var(--accent-soft); border-radius: var(--radius);
+    background: transparent; color: var(--paper); cursor: pointer;
+    font-size: 1rem; font-weight: 700; transition: background 180ms ease, color 180ms ease;
+  }
+  .btn:hover, .btn[aria-expanded="true"] { background: var(--accent-soft); color: var(--ink); }
+  .btn:focus-visible { outline: 3px solid #ffffff; outline-offset: 3px; }
+  .btn:disabled { opacity: 0.6; cursor: default; }
+  .start { margin-top: 28px; }
+
+  .scanline {
+    position: absolute; z-index: 3; top: 0; left: 0; right: 0; height: 3px; opacity: 0;
+    background: var(--accent-soft); box-shadow: 0 0 18px rgba(230, 242, 246, 0.8); pointer-events: none;
+  }
+  .scanline.is-running { animation: scan 900ms ease-in-out forwards; }
+  @keyframes scan { 0% { opacity: 0; transform: translateY(0); } 10% { opacity: 1; } 90% { opacity: 1; } 100% { opacity: 0; transform: translateY(100vh); } }
+
+  .status { margin: 0 0 16px; color: var(--line); font-size: 0.95rem; min-height: 1.4em; }
+
+  .headline {
+    display: grid; grid-template-columns: minmax(230px, 0.8fr) minmax(0, 1.5fr);
+    border-radius: var(--radius); background: #2a3b4d; overflow: hidden; position: relative;
+    opacity: 0; transform: translateX(-20px);
+  }
+  .headline::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 6px; background: var(--accent-soft); }
+  .headline.is-visible { opacity: 1; transform: none; animation: row-in 480ms ease; }
+  @keyframes row-in { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: none; } }
+  .number-block { display: flex; align-items: flex-start; justify-content: center; gap: 6px; padding: 32px 24px; border-right: 1px solid rgba(255,255,255,0.12); }
+  .number { font-size: clamp(4.5rem, 12vw, 7.5rem); font-weight: 700; line-height: 0.9; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .suffix { padding-top: 6px; color: var(--accent-soft); font-size: clamp(1.8rem, 5vw, 3rem); font-weight: 700; line-height: 1; }
+  .details { padding: 30px 28px; display: flex; align-items: center; }
+  .details p { margin: 0; color: #ffffff; font-size: 1.15rem; line-height: 1.6; max-width: 56ch; }
+
+  .behind { margin-top: 32px; }
+  .behind h2 { margin: 0 0 6px; font-size: 1.5rem; }
+  .behind > p { margin: 0 0 14px; color: var(--line); }
+  .panels { display: grid; gap: 10px; }
+  .panel { border: 1px solid rgba(255,255,255,0.25); border-radius: var(--radius); background: #2a3b4d; }
+  .panel > button.toggle {
+    width: 100%; min-height: 56px; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    background: transparent; color: #ffffff; border: 0; border-radius: var(--radius); cursor: pointer; text-align: left; font-size: 1.05rem; font-weight: 700;
+  }
+  .panel > button.toggle:hover { background: rgba(230,242,246,0.12); }
+  .panel > button.toggle:focus-visible { outline: 3px solid #ffffff; outline-offset: -3px; }
+  .chev { flex: 0 0 auto; transition: transform 200ms ease; }
+  .toggle[aria-expanded="true"] .chev { transform: rotate(180deg); }
+  .panel-body { padding: 0 18px 18px; color: #ffffff; font-size: 1.05rem; line-height: 1.65; max-width: 70ch; }
+  .panel-body p { margin: 0; }
+
+  .footer { margin-top: 28px; }
+
+  @media (max-width: 620px) {
+    .scene { padding: 28px 12px; }
+    .title-card { min-height: calc(100vh - 56px); }
+    .headline { grid-template-columns: 1fr; }
+    .number-block { justify-content: flex-start; padding: 24px 22px 18px; border-right: 0; border-bottom: 1px solid rgba(255,255,255,0.12); }
+    .details { padding: 20px 22px 24px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+    .scanline { display: none; }
+    .headline { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+<main class="scene" id="scene">
+  <section class="title-card" id="title-card" aria-labelledby="title">
+    <div class="title-inner">
+      <p class="eyebrow">Which test?</p>
+      <h1 class="title" id="title">One number to remember</h1>
+      <div class="rule" aria-hidden="true"></div>
+      <p class="instruction">Select Begin to reveal the figure. Then open each panel to see what sits behind it. You can replay the sequence at the end.</p>
+      <button class="btn start" id="start" type="button">Begin</button>
+    </div>
+  </section>
+
+  <div class="scanline" id="scanline" aria-hidden="true"></div>
+
+  <section class="wrap" id="content" aria-labelledby="results-title" hidden inert>
+    <h2 id="results-title" hidden>The figure</h2>
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+
+    <article class="headline" id="headline">
+      <div class="number-block" role="img" aria-label="18 percent">
+        <span class="number" id="number" data-count-to="18">18</span>
+        <span class="suffix" aria-hidden="true">%</span>
+      </div>
+      <div class="details">
+        <p>Getting enough tissue can be hard: in one report, as few as 18% of patients had enough tissue to test for every recommended biomarker.</p>
+      </div>
+    </article>
+
+    <section class="behind" aria-labelledby="behind-title">
+      <h2 id="behind-title">What sits behind it?</h2>
+      <p>Select a heading to open it.</p>
+      <div class="panels">
+        <div class="panel">
+          <button class="toggle" type="button" aria-expanded="false" aria-controls="p1" id="b1"><span>Small biopsies</span><span class="chev" aria-hidden="true">&#9662;</span></button>
+          <div class="panel-body" id="p1" role="region" aria-labelledby="b1" hidden><p>Biopsies are often small, and a repeat biopsy adds risk and delay.</p></div>
+        </div>
+        <div class="panel">
+          <button class="toggle" type="button" aria-expanded="false" aria-controls="p2" id="b2"><span>Enough tissue</span><span class="chev" aria-hidden="true">&#9662;</span></button>
+          <div class="panel-body" id="p2" role="region" aria-labelledby="b2" hidden><p>A broad panel is preferred. It tests EGFR and other targetable genes at the same time, which saves tissue and time.</p></div>
+        </div>
+        <div class="panel">
+          <button class="toggle" type="button" aria-expanded="false" aria-controls="p3" id="b3"><span>Little or no tissue, or a biopsy is difficult or risky</span><span class="chev" aria-hidden="true">&#9662;</span></button>
+          <div class="panel-body" id="p3" role="region" aria-labelledby="b3" hidden><p>A blood test looks for tumor DNA in the bloodstream (ctDNA). It is useful when tissue is limited or a biopsy is not possible, or alongside tissue to speed up results.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer"><button class="btn" id="replay" type="button">Replay</button></div>
+  </section>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var startBtn = document.getElementById("start");
+  var replayBtn = document.getElementById("replay");
+  var titleCard = document.getElementById("title-card");
+  var content = document.getElementById("content");
+  var status = document.getElementById("status");
+  var scanline = document.getElementById("scanline");
+  var headline = document.getElementById("headline");
+  var number = document.getElementById("number");
+  var target = Number(number.getAttribute("data-count-to"));
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var timers = [];
+
+  function later(fn, d) { timers.push(setTimeout(fn, d)); }
+  function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+
+  function setPanel(btn, open) {
+    btn.setAttribute("aria-expanded", String(open));
+    document.getElementById(btn.getAttribute("aria-controls")).hidden = !open;
+  }
+
+  function count() {
+    if (reduce) { number.textContent = target; return; }
+    var start = performance.now(), dur = 1400, over = Math.ceil(target * 1.06);
+    function tick(now) {
+      var p = Math.min((now - start) / dur, 1), e = 1 - Math.pow(1 - p, 3), v;
+      if (p < 0.84) { v = Math.round(over * (e / 0.995)); }
+      else { v = Math.round(over - (over - target) * ((p - 0.84) / 0.16)); }
+      number.textContent = Math.max(0, v);
+      if (p < 1) { requestAnimationFrame(tick); } else { number.textContent = target; }
+    }
+    number.textContent = "0";
+    requestAnimationFrame(tick);
+    // Safety net if animation frames are paused: the final value always lands.
+    later(function () { number.textContent = target; }, dur + 300);
+  }
+
+  function reveal() {
+    if (reduce) {
+      headline.classList.add("is-visible"); number.textContent = target;
+      status.textContent = "The figure is shown. Open each panel to see what sits behind it.";
+      return;
+    }
+    later(function () {
+      headline.classList.add("is-visible");
+      count();
+      status.textContent = "The figure is shown. Open each panel to see what sits behind it.";
+      later(function () { headline.style.animation = "none"; }, 520);
+    }, 350);
+  }
+
+  function begin() {
+    startBtn.disabled = true;
+    titleCard.classList.add("is-leaving");
+    if (!reduce) { scanline.classList.add("is-running"); }
+    later(function () {
+      titleCard.hidden = true; content.hidden = false; content.removeAttribute("inert");
+      window.scrollTo(0, 0);
+      reveal();
+    }, reduce ? 0 : 520);
+  }
+
+  function reset() {
+    clearTimers();
+    content.hidden = true; content.setAttribute("inert", "");
+    titleCard.hidden = false; titleCard.classList.remove("is-leaving");
+    scanline.classList.remove("is-running");
+    status.textContent = "";
+    headline.classList.remove("is-visible"); headline.style.animation = "";
+    number.textContent = target;
+    document.querySelectorAll(".toggle").forEach(function (b) { setPanel(b, false); });
+    startBtn.disabled = false; startBtn.focus();
+  }
+
+  startBtn.addEventListener("click", begin);
+  replayBtn.addEventListener("click", reset);
+  document.querySelectorAll(".toggle").forEach(function (b) {
+    b.addEventListener("click", function () { setPanel(b, b.getAttribute("aria-expanded") !== "true"); });
+  });
+}());
+</script>
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keep or reconsider</title>
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1f2d3d; --muted:#5b6b78; --paper:#ffffff; --surface:#f6f8fa; --line:#dde3e8;
+  --accent:#1f6f8b; --accent-hover:#185a71; --accent-soft:#e6f2f6; --on-accent:#ffffff;
+  --ok:#1f7a4d; --ok-soft:#e5f4ec; --bad:#b3261e; --bad-soft:#fbeae8; --warn:#9a5a00; --warn-soft:#fbf0dd;
+  --radius:10px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--surface);line-height:1.5;font-size:18px}
+.wrap{max-width:1100px;margin:0 auto;padding:32px 20px 48px;overflow-x:clip}
+.eyebrow{color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:.8rem;margin:0 0 8px}
+h1{font-size:clamp(1.6rem,4vw,2.3rem);line-height:1.2;margin:0 0 12px}
+.lead{color:var(--muted);max-width:780px;margin:0 0 24px}
+.pill{display:inline-block;padding:2px 12px;border-radius:999px;font-weight:700;font-size:.9rem;white-space:nowrap}
+.pill.keep{background:var(--ok-soft);color:var(--ok)} .pill.rec{background:var(--bad-soft);color:var(--bad)}
+.stage{max-width:640px;margin:0 auto}
+.card-zone{position:relative;min-height:380px;margin-bottom:20px}
+.deck{position:relative;margin-bottom:32px}
+.peek{position:absolute;left:0;right:0;top:0;bottom:0;background:var(--paper);border:1px solid var(--line);border-top:5px solid var(--accent);border-radius:var(--radius);box-shadow:0 4px 12px rgba(31,45,61,.08);pointer-events:none;transform-origin:50% 100%}
+.peek.g1{transform:translateY(14px) scale(.95)}
+.peek.g2{transform:translateY(26px) scale(.9);opacity:.75}
+.card{position:relative;background:var(--paper);border:1px solid var(--line);border-top:5px solid var(--accent);border-radius:var(--radius);padding:24px 24px 22px;box-shadow:0 8px 24px rgba(31,45,61,.1);cursor:grab;touch-action:pan-y;user-select:none;transition:transform .4s cubic-bezier(.2,1.3,.4,1),box-shadow .3s ease;animation:rise .38s cubic-bezier(.2,.8,.3,1)}
+@keyframes rise{from{transform:translateY(14px) scale(.95);opacity:.8}to{transform:none;opacity:1}}
+.card:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+.card:active{cursor:grabbing}
+.card .num{font-weight:700;color:var(--accent);font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px}
+.card .stem{margin:0 0 16px}
+.call{background:var(--accent-soft);border-radius:var(--radius);padding:12px 16px}
+.call b{display:block;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent-hover);margin-bottom:2px}
+.stamp{position:absolute;top:18px;padding:2px 12px;border:3px solid;border-radius:8px;font-weight:700;letter-spacing:.06em;opacity:0;pointer-events:none;background:var(--paper);transform:rotate(var(--r)) scale(var(--s,.5));transition:transform .15s ease}
+.stamp.hit{animation:stampPop .32s ease}
+@keyframes stampPop{50%{transform:rotate(var(--r)) scale(1.4)}}
+.stamp.k{right:18px;color:var(--ok);border-color:var(--ok);--r:8deg}
+.stamp.r{left:18px;color:var(--bad);border-color:var(--bad);--r:-8deg}
+.btns{display:flex;gap:12px;justify-content:center;margin-bottom:8px}
+.btn{font:inherit;font-weight:700;border:0;border-radius:var(--radius);min-height:52px;min-width:44px;padding:12px 24px;cursor:pointer;color:#fff;background:var(--accent)}
+.btn:hover:not(:disabled){background:var(--accent-hover)}
+.btn:disabled{background:#c5ced6;color:#4a5864;cursor:not-allowed}
+.btn:focus-visible,.chip:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.btn.keep{background:var(--ok);flex:1;max-width:240px} .btn.keep:hover:not(:disabled){background:#176040}
+.btn.rec{background:var(--bad);flex:1;max-width:240px} .btn.rec:hover:not(:disabled){background:#8f1d17}
+.btn.ghost{background:var(--paper);color:var(--accent);border:2px solid var(--accent)}
+.hint{text-align:center;color:var(--muted);font-size:.9rem;margin:0 0 24px}
+.lanes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.lane{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;min-height:120px}
+.lane h2{display:flex;justify-content:space-between;align-items:center;font-size:1rem;margin:0 0 8px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.lane.l h2{color:var(--bad)} .lane.r h2{color:var(--ok)}
+.count{background:var(--surface);border:1px solid var(--line);border-radius:999px;min-width:28px;text-align:center;font-size:.85rem;color:var(--ink);padding:0 8px}
+.empty{color:var(--muted);font-size:.9rem;margin:0}
+.chip{display:flex;justify-content:space-between;gap:8px;align-items:center;width:100%;font:inherit;font-size:.95rem;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);min-height:44px;padding:8px 12px;margin:0 0 8px;cursor:pointer;color:var(--ink)}
+.chip:hover{border-color:var(--accent)}
+.chip.drop{animation:drop .5s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes drop{0%{opacity:0;transform:translateY(-40px) scale(1.08);box-shadow:0 0 0 0 rgba(31,111,139,.5)}60%{opacity:1;transform:translateY(3px) scale(.98);box-shadow:0 0 0 8px rgba(31,111,139,.18)}100%{transform:none;box-shadow:0 0 0 0 rgba(31,111,139,0)}}
+.count.bump{animation:bump .4s ease}
+@keyframes bump{40%{transform:scale(1.4);background:var(--accent-soft)}}
+.chip small{color:var(--accent-hover);font-weight:700}
+.center{text-align:center}
+.note{color:var(--muted);margin:0 0 12px}
+.ready{animation:rise .45s cubic-bezier(.2,.8,.3,1);background:var(--ok-soft);border:1px solid var(--ok);border-radius:var(--radius);padding:24px;text-align:center}
+.ready h2{margin:0 0 8px;color:var(--ok);font-size:1.3rem}
+.score{display:flex;align-items:center;justify-content:center;width:96px;height:96px;margin:0 auto 12px;border-radius:50%;border:5px solid var(--accent);font-size:1.6rem;font-weight:700;color:var(--accent);background:var(--paper)}
+.item{animation:itemIn .45s ease both;animation-delay:calc(var(--i,0) * 70ms);background:var(--paper);border:1px solid var(--line);border-left:6px solid var(--line);border-radius:var(--radius);padding:16px 20px;margin:0 0 12px}
+@keyframes itemIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.score.pop{animation:scorePop .6s cubic-bezier(.2,1.4,.4,1)}
+@keyframes scorePop{0%{transform:scale(.6);opacity:0}100%{transform:none;opacity:1}}
+.item.ok{border-left-color:var(--ok);background:var(--ok-soft)} .item.bad{border-left-color:var(--bad);background:var(--bad-soft)}
+.item h3{margin:0 0 4px;font-size:1.05rem}
+.item .tag{font-weight:700;text-transform:uppercase;font-size:.8rem;letter-spacing:.08em}
+.item.ok .tag{color:var(--ok)} .item.bad .tag{color:var(--bad)}
+.item p{margin:6px 0 0}
+.item .kp{background:var(--paper);border-radius:8px;padding:8px 12px}
+.results{max-width:820px;margin:0 auto}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+[hidden]{display:none!important}
+@media (max-width:700px){
+  body{font-size:17px}
+  .wrap{padding:20px 14px 36px}
+  .card-zone{min-height:0}
+  .card{padding:18px 16px}
+  .lanes{grid-template-columns:1fr}
+  .btn{padding:12px 14px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+<div id="play">
+  <p class="eyebrow" id="prog">Scenario 1 of 5</p>
+  <h1>Keep or reconsider</h1>
+  <p class="lead">Read each case and the call proposed for it. Select <span class="pill keep">Keep</span> if the call is sound, or <span class="pill rec">Reconsider</span> if it is not. You can also drag the card to the right to keep it or to the left to reconsider it.</p>
+
+  <div class="stage">
+    <div class="card-zone" id="zone" aria-live="polite"></div>
+    <div class="btns" id="btns">
+      <button class="btn rec" id="b-rec" type="button">Reconsider</button>
+      <button class="btn keep" id="b-keep" type="button">Keep</button>
+    </div>
+    <p class="hint" id="hint">Keyboard: focus the card, then use the left arrow to reconsider or the right arrow to keep.</p>
+    <p class="sr" id="live" role="status"></p>
+  </div>
+
+  <div class="lanes">
+    <section class="lane l" aria-labelledby="lh-l"><h2 id="lh-l">Reconsider <span class="count" id="c-l">0</span></h2><div id="l-list"><p class="empty">Cards you reconsider appear here.</p></div></section>
+    <section class="lane r" aria-labelledby="lh-r"><h2 id="lh-r">Keep <span class="count" id="c-r">0</span></h2><div id="r-list"><p class="empty">Cards you keep appear here.</p></div></section>
+  </div>
+  <div class="center">
+    <p class="note" id="sub-note">Sort all the cards first. Then you can check your choices, change any of them, and confirm.</p>
+    <button class="btn" id="confirm" type="button" disabled>Confirm decisions</button>
+  </div>
+</div>
+
+<div id="res" class="results" hidden>
+  <p class="eyebrow">Review</p>
+  <h1 id="res-title" tabindex="-1">Your decisions</h1>
+  <div class="score" id="score"></div>
+  <p class="lead center" id="res-msg" style="margin-left:auto;margin-right:auto"></p>
+  <div id="items"></div>
+  <div class="center"><button class="btn ghost" id="retry" type="button">Try again</button></div>
+</div>
+</main>
+
+<script>
+const CARDS = [
+  { n:1,
+    stem:"A 52-year-old woman who has never smoked has advanced lung cancer. A small biopsy shows squamous features, and little tissue is left. What do you do?",
+    call:"Send the remaining tissue for a broad panel and PD-L1, and a ctDNA blood test at the same time",
+    type:"keep",
+    why:"Testing blood at the same time can give a faster result, and gives a second chance of finding a mutation if the tissue sample is too small.",
+    kp:"Squamous features on a small biopsy do not rule out a targetable change, especially in someone who has never smoked." },
+  { n:2,
+    stem:"A biopsy gives a small sample. The local lab's first test is a single-gene EGFR PCR, followed by other single-gene tests if it is negative. The patient is symptomatic. What makes the best use of the tissue?",
+    call:"Request a repeat biopsy before any testing, to make sure there is enough tissue",
+    type:"rec",
+    why:"A repeat biopsy adds risk and delay before you know whether you need it.", kp:"" },
+  { n:3,
+    stem:"A tumor has an exon 19 deletion, and PD-L1 expression is 80%. What is the first-line approach?",
+    call:"EGFR-targeted treatment",
+    type:"keep",
+    why:"An exon 19 deletion is a common mutation that responds to EGFR-targeted treatment, so this comes first, regardless of the PD-L1 level.",
+    kp:"High PD-L1 does not predict a response to immunotherapy in EGFR-mutant disease." },
+  { n:4,
+    stem:"A 70-year-old has advanced adenocarcinoma. The tissue panel reports \"no EGFR mutation detected\", with a tumor cell content of 10%. A ctDNA test shows an EGFR L858R mutation, and a KRAS mutation at a low level. What do you do?",
+    call:"Treat as KRAS-mutant disease, because the tissue result was negative for EGFR",
+    type:"rec",
+    why:"EGFR and KRAS mutations usually occur in different tumors. A low-level KRAS result in an older patient may reflect age-related changes in blood cells rather than the tumor.",
+    kp:"A positive ctDNA result for an EGFR mutation can guide treatment, and a tissue sample with 10% tumor cells can miss a mutation." },
+  { n:5,
+    stem:"A patient progresses on first-line third-generation EGFR-targeted treatment. A ctDNA test shows the original EGFR mutation and MET amplification. New liver lesions are growing quickly, much faster than the rest of the disease. What next?",
+    call:"Biopsy a liver lesion",
+    type:"keep",
+    why:"Rapid progression in a new site can mean a change to small cell, which a blood test may not show.", kp:"" }
+];
+const $ = id => document.getElementById(id);
+const RM = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const PAL = ["#1f6f8b","#1f7a4d","#e8a33d"];
+function confetti(x,y,n){
+  if(RM) return;
+  const cv=document.createElement("canvas"); cv.setAttribute("aria-hidden","true");
+  cv.style.cssText="position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:50";
+  cv.width=innerWidth; cv.height=innerHeight; document.body.appendChild(cv);
+  const g=cv.getContext("2d"), t0=performance.now();
+  const ps=Array.from({length:n||36},()=>{const a=Math.random()*Math.PI*2,v=3+Math.random()*6;return{x:x,y:y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-4,w:5+Math.random()*5,h:3+Math.random()*4,r:Math.random()*6,vr:(Math.random()-.5)*.4,c:PAL[Math.floor(Math.random()*3)]};});
+  (function f(t){const k=t-t0; g.clearRect(0,0,cv.width,cv.height);
+    ps.forEach(p=>{p.vy+=.28;p.vx*=.985;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;g.save();g.globalAlpha=Math.max(0,1-k/1100);g.translate(p.x,p.y);g.rotate(p.r);g.fillStyle=p.c;g.fillRect(-p.w/2,-p.h/2,p.w,p.h);g.restore();});
+    if(k<1100) requestAnimationFrame(f); else cv.remove();})(t0);
+}
+function countUp(el,to,done){
+  if(RM||to===0){ el.textContent=to; if(done) done(); return; }
+  const t0=performance.now(), D=700;
+  (function f(t){const k=Math.min((t-t0)/D,1); el.textContent=Math.round(to*(1-Math.pow(1-k,3))); if(k<1) requestAnimationFrame(f); else if(done) done();})(t0);
+}
+let fresh=null;
+let idx, placed, busy, done;
+const zone = $("zone");
+function say(t){ $("live").textContent=""; setTimeout(()=>{$("live").textContent=t;},20); }
+function init(){
+  idx=0; placed=[]; busy=false; done=false;
+  $("res").hidden=true; $("play").hidden=false;
+  $("confirm").disabled=true;
+  lanes(); renderCard();
+}
+function renderCard(){
+  zone.innerHTML="";
+  $("prog").textContent = done ? "All scenarios sorted" : "Scenario "+(idx+1)+" of "+CARDS.length;
+  if(idx>=CARDS.length){
+    done=true; $("prog").textContent="All scenarios sorted";
+    $("btns").hidden=true; $("hint").hidden=true;
+    zone.innerHTML='<div class="ready"><h2>All '+CARDS.length+' scenarios sorted</h2><p>Check the Reconsider and Keep lists below. Select any card in a list to move it to the other list, then confirm your decisions.</p></div>';
+    $("confirm").disabled=false;
+    $("sub-note").textContent="Ready when you are.";
+    return;
+  }
+  $("btns").hidden=false; $("hint").hidden=false;
+  const c=CARDS[idx];
+  const deck=document.createElement("div"); deck.className="deck";
+  const left=CARDS.length-idx-1;
+  if(left>1){const g=document.createElement("div"); g.className="peek g2"; g.setAttribute("aria-hidden","true"); deck.appendChild(g);}
+  if(left>0){const g=document.createElement("div"); g.className="peek g1"; g.setAttribute("aria-hidden","true"); deck.appendChild(g);}
+  const el=document.createElement("div");
+  el.className="card"; el.tabIndex=0; el.setAttribute("role","group"); el.setAttribute("aria-label","Scenario "+c.n);
+  const sk=document.createElement("span"); sk.className="stamp k"; sk.textContent="KEEP"; sk.setAttribute("aria-hidden","true");
+  const sr=document.createElement("span"); sr.className="stamp r"; sr.textContent="RECONSIDER"; sr.setAttribute("aria-hidden","true");
+  const n=document.createElement("p"); n.className="num"; n.textContent="Scenario "+c.n;
+  const s=document.createElement("p"); s.className="stem"; s.textContent=c.stem;
+  const call=document.createElement("div"); call.className="call";
+  const b=document.createElement("b"); b.textContent="Proposed call";
+  const t=document.createElement("span"); t.textContent=c.call;
+  call.append(b,t);
+  el.append(sk,sr,n,s,call);
+  deck.appendChild(el); zone.appendChild(deck);
+  drag(el,sk,sr);
+  el.addEventListener("keydown",e=>{
+    if(e.key==="ArrowLeft"){e.preventDefault();place("rec");}
+    if(e.key==="ArrowRight"){e.preventDefault();place("keep");}
+  });
+}
+function lean(el,sk,sr,dx){
+  const o=Math.min(Math.abs(dx)/100,1), sc=(.5+.6*o).toFixed(2);
+  sk.style.opacity=dx>0?o:0; sr.style.opacity=dx<0?o:0;
+  sk.style.setProperty("--s",sc); sr.style.setProperty("--s",sc);
+  sk.classList.toggle("hit",dx>100); sr.classList.toggle("hit",dx<-100);
+  el.style.boxShadow=o>0?"0 16px 34px "+(dx>0?"rgba(31,122,77,":"rgba(179,38,30,")+(.12+.28*o).toFixed(2)+")":"";
+}
+function drag(el,sk,sr){
+  let x0=0,on=false,dx=0;
+  el.addEventListener("pointerdown",e=>{ if(busy) return; on=true; x0=e.clientX; dx=0; el.style.transition="none"; el.style.animation="none"; el.setPointerCapture(e.pointerId); });
+  el.addEventListener("pointermove",e=>{
+    if(!on) return; dx=e.clientX-x0;
+    el.style.transform="translateX("+dx+"px) translateY(-"+Math.min(Math.abs(dx)*.04,8)+"px) rotate("+(dx*0.06)+"deg)";
+    lean(el,sk,sr,dx);
+  });
+  const end=()=>{
+    if(!on) return; on=false; el.style.transition="";
+    if(Math.abs(dx)>100){ place(dx>0?"keep":"rec"); }
+    else{ el.style.transform=""; lean(el,sk,sr,0); }
+  };
+  el.addEventListener("pointerup",end); el.addEventListener("pointercancel",end);
+}
+function place(dir){
+  if(busy||done||idx>=CARDS.length) return; busy=true;
+  const el=zone.querySelector(".card");
+  if(el){
+    const st=el.querySelector(dir==="keep"?".stamp.k":".stamp.r");
+    st.style.opacity=1; st.style.setProperty("--s","1.1"); st.classList.add("hit");
+    el.style.boxShadow="0 16px 34px "+(dir==="keep"?"rgba(31,122,77,.4)":"rgba(179,38,30,.4)");
+    el.style.animation="none";
+    el.style.transition="transform .42s cubic-bezier(.5,0,.9,.5), opacity .42s ease .08s";
+    el.style.transform="translateX("+(dir==="keep"?"":"-")+"680px) translateY(-30px) rotate("+(dir==="keep"?"26":"-26")+"deg)"; el.style.opacity="0";
+  }
+  fresh=CARDS[idx].n;
+  placed.push({n:CARDS[idx].n, side:dir});
+  say("Scenario "+CARDS[idx].n+" placed in "+(dir==="keep"?"Keep":"Reconsider")+".");
+  setTimeout(()=>{ idx++; lanes(); renderCard(); busy=false; if(!done){const c=zone.querySelector(".card"); if(c) c.focus({preventScroll:true});} },RM?0:430);
+}
+function lanes(){
+  const L=$("l-list"), R=$("r-list"); L.innerHTML=""; R.innerHTML="";
+  const l=placed.filter(p=>p.side==="rec"), r=placed.filter(p=>p.side==="keep");
+  [["c-l",l.length],["c-r",r.length]].forEach(([id,n])=>{ const c=$(id); if(c.textContent!==String(n)){ c.textContent=n; c.classList.remove("bump"); void c.offsetWidth; c.classList.add("bump"); } });
+  if(!l.length) L.innerHTML='<p class="empty">Cards you reconsider appear here.</p>';
+  if(!r.length) R.innerHTML='<p class="empty">Cards you keep appear here.</p>';
+  const mk=(p,to)=>{
+    const b=document.createElement("button"); b.type="button"; b.className="chip";
+    b.setAttribute("aria-label","Scenario "+p.n+", in "+(p.side==="keep"?"Keep":"Reconsider")+". Select to move to "+to+".");
+    const a=document.createElement("span"); a.textContent="Scenario "+p.n;
+    const m=document.createElement("small"); m.textContent="Move to "+to;
+    b.append(a,m);
+    if(p.n===fresh) b.classList.add("drop");
+    b.addEventListener("click",()=>{ fresh=p.n; p.side=(p.side==="keep"?"rec":"keep"); lanes(); say("Scenario "+p.n+" moved to "+(p.side==="keep"?"Keep":"Reconsider")+"."); });
+    return b;
+  };
+  l.forEach(p=>L.appendChild(mk(p,"Keep"))); r.forEach(p=>R.appendChild(mk(p,"Reconsider")));
+  fresh=null;
+}
+function confirmAll(){
+  if(placed.length!==CARDS.length) return;
+  let ok=0; const items=$("items"); items.innerHTML="";
+  CARDS.forEach(c=>{
+    const p=placed.find(q=>q.n===c.n); const good=p.side===c.type; if(good) ok++;
+    const d=document.createElement("div"); d.className="item "+(good?"ok":"bad");
+    const h=document.createElement("h3"); h.textContent="Scenario "+c.n+": "+c.call;
+    const tag=document.createElement("div"); tag.className="tag";
+    tag.textContent=(good?"Correct":"Not quite")+". Your decision: "+(p.side==="keep"?"Keep":"Reconsider")+".";
+    const w=document.createElement("p"); w.textContent=(c.type==="keep"?"This call should be kept. ":"This call should be reconsidered. ")+c.why;
+    d.style.setProperty("--i",CARDS.indexOf(c));
+    d.append(h,tag,w);
+    if(c.kp){ const k=document.createElement("p"); k.className="kp"; const kb=document.createElement("strong"); kb.textContent="Key point: "; k.append(kb,c.kp); d.appendChild(k); }
+    items.appendChild(d);
+  });
+  const sc=$("score"); sc.innerHTML=""; sc.classList.remove("pop"); void sc.offsetWidth; sc.classList.add("pop");
+  const live=document.createElement("span"); live.setAttribute("aria-hidden","true"); live.textContent=RM?ok:0;
+  const tail=document.createElement("span"); tail.setAttribute("aria-hidden","true"); tail.textContent="/"+CARDS.length;
+  const srt=document.createElement("span"); srt.className="sr"; srt.textContent=ok+"/"+CARDS.length;
+  sc.append(live,tail,srt);
+  $("res-msg").textContent = ok===CARDS.length ? "Every call was judged correctly." : "Review the feedback for each decision below.";
+  $("play").hidden=true; $("res").hidden=false; $("res-title").focus({preventScroll:true}); window.scrollTo(0,0);
+  countUp(live,ok,()=>{ if(ok===CARDS.length){ const r=sc.getBoundingClientRect(); confetti(r.left+r.width/2,r.top+r.height/2,44); } });
+}
+$("b-keep").addEventListener("click",()=>place("keep"));
+$("b-rec").addEventListener("click",()=>place("rec"));
+$("confirm").addEventListener("click",confirmAll);
+$("retry").addEventListener("click",init);
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fan of cards: patient presentations</title>
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1f2d3d; --muted:#5b6b78; --paper:#ffffff; --surface:#f6f8fa; --line:#dde3e8;
+  --accent:#1f6f8b; --accent-hover:#185a71; --accent-soft:#e6f2f6; --on-accent:#ffffff;
+  --ok:#1f7a4d; --ok-soft:#e5f4ec; --bad:#b3261e; --bad-soft:#fbeae8; --warn:#9a5a00; --warn-soft:#fbf0dd;
+  --radius:10px; --gap:20px;
+  --shadow-rest:0 6px 18px rgba(31,45,61,.10);
+  --shadow-raised:0 12px 30px rgba(31,45,61,.16);
+  --dur-press:120ms; --dur-hover:200ms; --dur-move:300ms; --dur-reveal:500ms;
+  --ease-standard:cubic-bezier(0.4,0,0.2,1);
+  --ease-entrance:cubic-bezier(0.2,0.7,0.2,1);
+  --ease-overshoot:cubic-bezier(0.34,1.56,0.64,1);
+  --overlay-blur:6px; --dim-opacity:.6;
+}
+@media (prefers-reduced-motion: reduce){
+  :root{--dur-press:0ms;--dur-hover:0ms;--dur-move:0ms;--dur-reveal:0ms}
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;transition-delay:0ms !important}
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:'Atkinson Hyperlegible',system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--ink);
+  background:var(--surface);min-height:100vh;padding:28px 20px 80px;line-height:1.5;overflow-x:hidden}
+.wrap{max-width:1100px;margin:0 auto}
+.head{margin:0 auto 24px;max-width:1100px}
+h1{font-size:clamp(22px,2.4vw,30px);font-weight:700;margin:0 0 6px;letter-spacing:-.01em}
+.task{margin:0;font-size:17px}
+.status{margin:22px auto 0;font-size:15px;color:var(--muted);text-align:center}
+.status[data-done="true"]{color:var(--ok);font-weight:700}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.decknav{display:flex;gap:12px;align-items:center;justify-content:center;margin:22px 0 0}
+.navbtn{width:44px;height:44px;border-radius:999px;border:1px solid var(--accent);background:var(--accent);
+  color:var(--on-accent);font-size:22px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:var(--shadow-rest);transition:transform var(--dur-hover) var(--ease-standard),background var(--dur-hover)}
+.navbtn:hover{background:var(--accent-hover);transform:translateY(-2px)}
+.navbtn:focus-visible,.flip-card:focus-visible .card-inner,.pd-card:focus-visible,.bc-item:focus-visible{outline:3px solid var(--accent-hover);outline-offset:3px}
+.navlabel{font-size:15px;color:var(--muted)}
+
+.flip-card{display:grid;position:relative;padding:0;border:0;background:none;font:inherit;color:inherit;
+  text-align:left;cursor:pointer;perspective:1200px;border-radius:var(--radius);
+  transition:filter var(--dur-move) var(--ease-standard),opacity var(--dur-move) var(--ease-standard),transform var(--dur-move) var(--ease-overshoot)}
+.card-inner{display:grid;border-radius:inherit;height:100%;transform-style:preserve-3d;box-shadow:var(--shadow-rest);
+  transition:transform var(--dur-reveal) var(--ease-entrance),box-shadow var(--dur-hover) var(--ease-standard)}
+.face{grid-area:1 / 1;display:flex;flex-direction:column;min-width:0;border-radius:inherit;overflow:hidden;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;padding:22px 22px 18px;border:1px solid var(--line)}
+.front{background:var(--paper)}
+.back{background:var(--accent);color:var(--on-accent);transform:rotateY(180deg);border-color:var(--accent)}
+.flip-card.flipped .card-inner{transform:rotateY(180deg)}
+.flip-card:not(.flipped):hover .card-inner{box-shadow:var(--shadow-raised)}
+.flip-card:focus-visible{outline:none}
+.term{font-size:clamp(18px,1.6vw,21px);font-weight:700;display:block;margin:0 0 8px}
+.lede{display:block;color:var(--muted);font-size:16px;flex:1}
+.action{display:block;margin-top:14px;font-size:14px;font-weight:700;color:var(--accent-hover)}
+.back-head{display:block;font-weight:700;font-size:17px;margin:0 0 10px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.4)}
+.part-label{display:block;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin:10px 0 3px;color:var(--accent-soft)}
+.part-body{display:block;font-size:16px}
+.back-scroll{display:block;flex:1}
+.close-hint{display:block;margin-top:12px;font-size:13px;color:var(--accent-soft)}
+.badge{position:absolute;top:10px;right:10px;z-index:3;display:none;background:var(--ok);color:#fff;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px}
+.flip-card.seen .badge{display:block}
+
+.deck.has-open .flip-card:not(.is-active){filter:blur(var(--overlay-blur));opacity:var(--dim-opacity)}
+
+.deck{position:relative;height:var(--deck-h,460px);max-width:1100px;margin:56px auto 0;display:block}
+.flip-card{position:absolute;left:50%;top:var(--y,0px);width:230px;height:var(--card-height,auto);min-height:329px;
+  transform:translateX(calc(-50% + var(--x,0px))) rotate(var(--r,0deg)) scale(var(--s,1));transform-origin:center center}
+.flip-card:not(.flipped):hover,.flip-card:not(.flipped):focus-visible{
+  transform:translateX(calc(-50% + var(--x,0px))) rotate(var(--r,0deg)) scale(1.04) translateY(-8px);z-index:40}
+.flip-card.is-active{--x:0px !important;--r:0deg !important;--s:1.2 !important;z-index:60}
+@media (max-width:899px){
+  .deck{position:static;height:auto;display:flex;flex-direction:column;gap:var(--gap);max-width:420px;margin-top:0}
+  .head{max-width:420px}
+  .flip-card{position:static;width:auto;height:auto;transform:none}
+  .flip-card.is-active{--s:1 !important;transform:none}
+  .flip-card:not(.flipped):hover,.flip-card:not(.flipped):focus-visible{transform:translateY(-4px)}
+}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <h1>Patient presentations</h1>
+    <p class="task">Five cards are spread like a hand. Select a card, or step through with the arrows, to see what to know.</p>
+  </div>
+  <section class="deck" id="deck" aria-label="Five fanned flip cards"></section>
+  <p class="status" id="status">0 of 5 cards opened.</p>
+    <div class="decknav">
+      <button class="navbtn" id="prev" type="button" aria-label="Previous card">&#8249;</button>
+      <span class="navlabel">Step through the deck</span>
+      <button class="navbtn" id="next" type="button" aria-label="Next card">&#8250;</button>
+    </div>
+</div>
+<div class="sr" id="live" role="status" aria-live="polite"></div>
+<script>
+(function(){
+  var DATA = [{"term": "Advanced nonsquamous disease", "lede": "What should you know about this presentation?", "action": "Select to reveal", "parts": [{"label": "What to know", "body": "Every patient with advanced nonsquamous lung cancer should have EGFR testing at diagnosis, as part of broad biomarker testing."}]}, {"term": "Advanced squamous disease", "lede": "What should you know about this presentation?", "action": "Select to reveal", "parts": [{"label": "What to know", "body": "EGFR mutations are uncommon in squamous disease. Consider testing when clinical features suggest a higher chance of a targetable change, such as never or light smoking."}]}, {"term": "Resectable stage II-IIIB", "lede": "What should you know about this presentation?", "action": "Select to reveal", "parts": [{"label": "What to know", "body": "In a phase III trial, EGFR-targeted treatment before surgery, with or without chemotherapy, improved major pathologic response compared with chemotherapy alone (26% and 25% versus 2%). Event-free survival data are not yet mature."}]}, {"term": "After complete resection, stage IB-IIIA", "lede": "What should you know about this presentation?", "action": "Select to reveal", "parts": [{"label": "What to know", "body": "Adjuvant EGFR-targeted treatment improved disease-free survival compared with placebo in a phase III trial."}]}, {"term": "Unresectable stage III", "lede": "What should you know about this presentation?", "action": "Select to reveal", "parts": [{"label": "What to know", "body": "EGFR-targeted treatment after chemoradiation improved progression-free survival compared with placebo in a phase III trial."}]}];
+  var INDEPENDENT = false;
+  var HOVER_FLIP = false;
+  var deck = document.getElementById('deck');
+  var live = document.getElementById('live');
+  var status = document.getElementById('status');
+  var cards = [], seen = 0, activeIndex = -1, hoverOpen = {};
+  function fine(){ return window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches; }
+
+  DATA.forEach(function (dd, i) {
+    var b = document.createElement('button');
+    b.className = 'flip-card';
+    b.type = 'button';
+    b.setAttribute('aria-expanded','false');
+    b.innerHTML =
+      '<span class="badge">Opened</span>' +
+      '<span class="card-inner">' +
+        '<span class="face front">' +
+          '<span class="term">' + dd.term + '</span>' +
+          '<span class="lede">' + dd.lede + '</span>' +
+          '<span class="action">' + dd.action + '</span>' +
+        '</span>' +
+        '<span class="face back" aria-hidden="true">' +
+          '<span class="back-head">' + dd.term + '</span>' +
+          '<span class="back-scroll">' +
+            dd.parts.map(function(p){
+              return '<span class="part-label">'+p.label+'</span><span class="part-body">'+p.body+'</span>';
+            }).join('') +
+          '</span>' +
+          '<span class="close-hint">Select again or press Escape to return</span>' +
+        '</span>' +
+      '</span>';
+
+    b.addEventListener('click', function(){
+      if (hoverOpen[i]) { hoverOpen[i] = false; return; } /* opened by pointer: this selection keeps it open */
+      toggle(i);
+    });
+    b.addEventListener('keydown', function(e){
+      if (e.key === 'Escape' && b.classList.contains('flipped')) { e.preventDefault(); hoverOpen[i] = false; toggle(i); }
+    });
+    if (HOVER_FLIP) {
+      b.addEventListener('mouseenter', function(){
+        if (fine() && !b.classList.contains('flipped')) { hoverOpen[i] = true; setFace(i, true); }
+      });
+      b.addEventListener('mouseleave', function(){
+        if (fine() && hoverOpen[i]) { hoverOpen[i] = false; setFace(i, false); }
+      });
+    }
+    deck.appendChild(b);
+    cards.push(b);
+  });
+
+  function paintFace(card, flipped){
+    card.classList.toggle('flipped', flipped);
+    card.setAttribute('aria-expanded', flipped ? 'true' : 'false');
+    card.querySelector('.front').setAttribute('aria-hidden', flipped ? 'true' : 'false');
+    card.querySelector('.back').setAttribute('aria-hidden', flipped ? 'false' : 'true');
+  }
+  function setFace(i, open){
+    var card = cards[i];
+    if (open && !INDEPENDENT) cards.forEach(function(c,j){ if (j!==i) paintFace(c,false); });
+    paintFace(card, open);
+    markActive(open ? i : -1);
+    if (open) {
+      if (!card.classList.contains('seen')) {
+        card.classList.add('seen'); seen++;
+        status.textContent = seen === cards.length ? 'All ' + cards.length + ' cards opened.' : seen + ' of ' + cards.length + ' cards opened.';
+        if (seen === cards.length) status.setAttribute('data-done','true');
+      }
+      live.textContent = DATA[i].term + '. ' + DATA[i].parts.map(function(p){ return p.label + ': ' + p.body; }).join(' ');
+    } else {
+      live.textContent = DATA[i].term + '. Returned to the front.';
+    }
+  }
+  function markActive(i){
+    activeIndex = i;
+    cards.forEach(function(c,j){
+      c.classList.toggle('is-active', j === i);
+      if (c.dataset.baseZ) c.style.zIndex = (j === i) ? '60' : c.dataset.baseZ;
+    });
+    var anyOpen = INDEPENDENT ? cards.some(function(c){ return c.classList.contains('flipped'); }) : i >= 0;
+    deck.classList.toggle('has-open', anyOpen && true);
+    if (INDEPENDENT) cards.forEach(function(c){ c.classList.toggle('is-active', c.classList.contains('flipped')); });
+  }
+  function toggle(i){ setFace(i, !cards[i].classList.contains('flipped')); }
+  function closeAll(){
+    var any = false;
+    cards.forEach(function(c){ if (c.classList.contains('flipped')){ paintFace(c,false); any = true; } });
+    hoverOpen = {};
+    markActive(-1);
+    if (any) live.textContent = 'Returned to the deck.';
+  }
+  document.addEventListener('click', function(e){
+    if (e.target.closest && (e.target.closest('.flip-card') || e.target.closest('.decknav'))) return;
+    closeAll();
+  });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeAll(); });
+
+  function step(delta){
+    var idx = ((activeIndex >= 0 ? activeIndex : (delta > 0 ? -1 : 0)) + delta + cards.length) % cards.length;
+    setFace(idx, true);
+    cards[idx].focus({preventScroll:true});
+  }
+  document.getElementById('prev').addEventListener('click', function(){ step(-1); });
+  document.getElementById('next').addEventListener('click', function(){ step(1); });
+
+  function layoutDeck(){
+    var vw = window.innerWidth || document.documentElement.clientWidth || 0;
+    var dw = deck.clientWidth || 0;
+    if (vw === 0 || dw === 0) return;
+    var mobile = vw <= 899;
+    deck.style.removeProperty('--deck-h');
+    cards.forEach(function(c){
+      c.style.removeProperty('--card-height');
+      if (mobile){ c.style.removeProperty('--r'); c.style.removeProperty('--x'); c.style.removeProperty('--y'); c.style.zIndex=''; delete c.dataset.baseZ; }
+    });
+    if (mobile) return;
+    var tallest = 0;
+    cards.forEach(function(c){
+      c.style.setProperty('--card-height','auto');
+      tallest = Math.max(tallest, c.querySelector('.card-inner').scrollHeight);
+    });
+    cards.forEach(function(c){ c.style.setProperty('--card-height', tallest + 'px'); });
+
+    var n = cards.length, cw = 230, stp = cw * 0.75, maxRot = 16;
+    cards.forEach(function(c,i){
+      var t = n === 1 ? 0 : (i/(n-1))*2 - 1;
+      c.style.setProperty('--x', ((i - (n-1)/2) * stp).toFixed(1) + 'px');
+      c.style.setProperty('--r', (t * maxRot).toFixed(2) + 'deg');
+      c.style.setProperty('--y', (Math.abs(t) * 16).toFixed(1) + 'px');
+      c.style.zIndex = String(10 + i); c.dataset.baseZ = String(10 + i);
+    });
+    deck.style.setProperty('--deck-h', (tallest + 90) + 'px');
+  }
+  layoutDeck();
+  window.addEventListener('resize', layoutDeck);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(layoutDeck);
+  if (window.ResizeObserver) new ResizeObserver(layoutDeck).observe(deck);
+
+})();
+</script>
+</body>
+</html>

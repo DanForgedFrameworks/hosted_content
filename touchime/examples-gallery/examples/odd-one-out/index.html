@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Odd one out</title>
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1f2d3d; --muted:#5b6b78; --paper:#ffffff; --surface:#f6f8fa; --line:#dde3e8;
+  --accent:#1f6f8b; --accent-hover:#185a71; --accent-soft:#e6f2f6; --on-accent:#ffffff;
+  --ok:#1f7a4d; --ok-soft:#e5f4ec; --bad:#b3261e; --bad-soft:#fbeae8; --warn:#9a5a00; --warn-soft:#fbf0dd;
+  --radius:10px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--surface);line-height:1.5;font-size:18px}
+.wrap{max-width:1100px;margin:0 auto;padding:32px 20px 48px}
+.screen[hidden]{display:none}
+.screen{animation:fadeIn .4s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.eyebrow{color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:.8rem;margin:0 0 8px}
+h1{font-size:clamp(1.6rem,4vw,2.3rem);line-height:1.2;margin:0 0 16px}
+.lead{color:var(--muted);max-width:760px;margin:0 0 20px}
+.case{background:var(--paper);border:1px solid var(--line);border-left:6px solid var(--accent);border-radius:var(--radius);padding:16px 20px;margin:0 0 24px;max-width:860px}
+.case b{display:block;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:4px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:0 0 24px}
+.card{position:relative;text-align:left;font:inherit;color:var(--ink);background:var(--paper);border:2px solid var(--line);border-radius:var(--radius);padding:20px 20px 20px 64px;min-height:120px;cursor:pointer;transition:border-color .2s,box-shadow .2s,transform .2s}
+.card:hover,.card:focus-visible{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 10px 22px rgba(31,45,61,.13)}
+.card.pulse{animation:pulse .38s ease}
+@keyframes pulse{40%{transform:scale(1.035)}}
+.card:focus-visible,.btn:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.card .mark{position:absolute;left:16px;top:16px;width:36px;height:36px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-weight:700;display:flex;align-items:center;justify-content:center}
+.card[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);box-shadow:0 0 0 3px rgba(31,111,139,.2)}
+.card.is-odd{border-color:var(--ok);background:var(--ok-soft);animation:popGlow .7s cubic-bezier(.2,1.3,.4,1) both}
+.card.is-wrong{border-color:var(--bad);background:var(--bad-soft);animation:shake .5s ease both}
+.card.is-odd .mark{background:var(--ok);color:#fff}
+.card.is-wrong .mark{background:var(--bad);color:#fff}
+@keyframes popGlow{0%{transform:scale(1);box-shadow:0 0 0 0 rgba(31,122,77,.5)}45%{transform:scale(1.05);box-shadow:0 0 0 10px rgba(31,122,77,.25),0 0 30px rgba(31,122,77,.5)}100%{transform:scale(1);box-shadow:0 0 0 3px rgba(31,122,77,.25),0 0 18px rgba(31,122,77,.35)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.btn{font:inherit;font-weight:700;background:var(--accent);color:var(--on-accent);border:0;border-radius:var(--radius);min-height:48px;min-width:44px;padding:12px 28px;cursor:pointer}
+.btn:hover:not(:disabled){background:var(--accent-hover)}
+.btn:disabled{background:#c5ced6;color:#4a5864;cursor:not-allowed}
+.btn.ghost{background:var(--paper);color:var(--accent);border:2px solid var(--accent)}
+.panel{animation:slideUp .5s cubic-bezier(.2,.8,.3,1) both;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:24px 28px;max-width:860px;margin:0 0 24px}
+.status{font-size:1.5rem;font-weight:700;margin:0 0 12px}
+.status.ok{animation:statusPop .55s cubic-bezier(.2,1.4,.4,1) .15s both}
+@keyframes statusPop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+@keyframes slideUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-22px)}to{opacity:1;transform:none}}
+.status.ok{color:var(--ok)} .status.bad{color:var(--bad)}
+.block{animation:slideIn .45s cubic-bezier(.2,.8,.3,1) both;border-radius:var(--radius);padding:14px 18px;margin:16px 0 0}
+.block h2{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;margin:0 0 6px}
+.block p{margin:0}
+.block.odd{animation-delay:.1s;background:var(--bad-soft);border-left:6px solid var(--bad)} .block.odd h2{color:var(--bad)}
+.block.why{animation-delay:.2s;background:var(--accent-soft);border-left:6px solid var(--accent)} .block.why h2{color:var(--accent-hover)}
+.dots{display:flex;gap:8px;margin:0 0 20px}
+.dots span{position:relative;overflow:hidden;width:28px;height:6px;border-radius:3px;background:var(--line);transition:transform .4s cubic-bezier(.2,1.4,.4,1)}
+.dots span::after{content:"";position:absolute;left:0;top:0;right:0;bottom:0;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.2,.8,.3,1)}
+.dots span.on::after{transform:none}
+.dots span.cur{transform:scaleY(1.6)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+@media (max-width:700px){
+  body{font-size:17px}
+  .wrap{padding:20px 14px 36px}
+  .grid{grid-template-columns:1fr}
+  .card{min-height:96px}
+  .btn{width:100%}
+  .panel{padding:18px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<main class="wrap" id="app">
+
+<section class="screen" id="quiz" aria-labelledby="q-title">
+  <div class="dots" id="dots" aria-hidden="true"></div>
+  <p class="eyebrow" id="q-eyebrow"></p>
+  <h1 id="q-title" tabindex="-1"></h1>
+  <div class="case"><b>Case</b><span id="q-case"></span></div>
+  <p class="lead" id="q-inst">Three of these statements hold up. One does not. Select the statement that does not hold up, then lock in your selection.</p>
+  <div class="grid" id="grid" role="group" aria-labelledby="q-inst"></div>
+  <button class="btn" id="lock" disabled>Lock in selection</button>
+</section>
+
+<section class="screen" id="fb" hidden aria-labelledby="fb-title">
+  <p class="eyebrow" id="fb-eyebrow"></p>
+  <h1 id="fb-title" tabindex="-1">Feedback</h1>
+  <div class="panel">
+    <p class="status" id="fb-status" role="status"></p>
+    <div class="block odd"><h2>The statement that does not hold up</h2><p id="fb-odd"></p></div>
+    <div class="block why"><h2>Why</h2><p id="fb-why"></p></div>
+  </div>
+  <button class="btn" id="next"></button>
+</section>
+
+<section class="screen" id="end" hidden aria-labelledby="end-title">
+  <p class="eyebrow">Finished</p>
+  <h1 id="end-title" tabindex="-1">Knowledge check complete</h1>
+  <p class="lead" id="score"></p>
+  <button class="btn" id="again">Try again</button>
+</section>
+
+</main>
+
+<script>
+const ROUNDS = [
+  {
+    title: "Making the most of a small sample",
+    case: "A biopsy gives a small sample. The local lab's first test is a single-gene EGFR PCR, followed by other single-gene tests if it is negative. The patient is symptomatic. What makes the best use of the tissue?",
+    cards: [
+      "A broad panel tests everything at once, and a ctDNA test can give an answer sooner.",
+      "Biopsies are often small, and a repeat biopsy adds risk and delay.",
+      "Run the single-gene tests one after another as usual, to keep costs down.",
+      "Testing blood at the same time can give a faster result, and gives a second chance of finding a mutation if the tissue sample is too small."
+    ],
+    odd: 2,
+    why: "Running single-gene tests one after another uses up tissue and delays results."
+  },
+  {
+    title: "First-line treatment with a common mutation",
+    case: "A tumor has an exon 19 deletion, and PD-L1 expression is 80%. What is the first-line approach?",
+    cards: [
+      "Exon 19 deletions and the exon 21 L858R point mutation are the common EGFR mutations, and together make up most EGFR mutations.",
+      "Immunotherapy alone, because PD-L1 is high.",
+      "An exon 19 deletion is a common mutation that responds to EGFR-targeted treatment, regardless of the PD-L1 level.",
+      "Immunotherapy, with or without chemotherapy, given before EGFR-targeted treatment also increases the risk of severe side effects."
+    ],
+    odd: 1,
+    why: "In a phase II trial, immunotherapy alone was stopped early for lack of benefit, even with high PD-L1."
+  },
+  {
+    title: "When blood and tissue results disagree",
+    case: "A 70-year-old has advanced adenocarcinoma. The tissue panel reports \"no EGFR mutation detected\", with a tumor cell content of 10%. A ctDNA test shows an EGFR L858R mutation, and a KRAS mutation at a low level. What do you do?",
+    cards: [
+      "A positive ctDNA result for an EGFR mutation can guide treatment.",
+      "A negative ctDNA result does not rule out a mutation: up to 30% of results are falsely negative.",
+      "Some mutations found in blood come from age-related changes in blood cells (clonal hematopoiesis), not from the tumor.",
+      "Treat as KRAS-mutant disease, because the tissue result was negative for EGFR."
+    ],
+    odd: 3,
+    why: "EGFR and KRAS mutations usually occur in different tumors. A low-level KRAS result in an older patient may reflect age-related changes in blood cells rather than the tumor."
+  }
+];
+const $ = id => document.getElementById(id);
+const RM = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const PAL = ["#1f6f8b","#1f7a4d","#e8a33d"];
+function confetti(x,y,n){
+  if(RM) return;
+  const cv=document.createElement("canvas"); cv.setAttribute("aria-hidden","true");
+  cv.style.cssText="position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:50";
+  cv.width=innerWidth; cv.height=innerHeight; document.body.appendChild(cv);
+  const g=cv.getContext("2d"), t0=performance.now();
+  const ps=Array.from({length:n||36},()=>{const a=Math.random()*Math.PI*2,v=3+Math.random()*6;return{x:x,y:y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-4,w:5+Math.random()*5,h:3+Math.random()*4,r:Math.random()*6,vr:(Math.random()-.5)*.4,c:PAL[Math.floor(Math.random()*3)]};});
+  (function f(t){const k=t-t0; g.clearRect(0,0,cv.width,cv.height);
+    ps.forEach(p=>{p.vy+=.28;p.vx*=.985;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;g.save();g.globalAlpha=Math.max(0,1-k/1100);g.translate(p.x,p.y);g.rotate(p.r);g.fillStyle=p.c;g.fillRect(-p.w/2,-p.h/2,p.w,p.h);g.restore();});
+    if(k<1100) requestAnimationFrame(f); else cv.remove();})(t0);
+}
+function countUp(el,to,done){
+  if(RM||to===0){ el.textContent=to; if(done) done(); return; }
+  const t0=performance.now(), D=700;
+  (function f(t){const k=Math.min((t-t0)/D,1); el.textContent=Math.round(to*(1-Math.pow(1-k,3))); if(k<1) requestAnimationFrame(f); else if(done) done();})(t0);
+}
+
+let r = 0, sel = null, score = 0, busy = false;
+
+function show(id){ ["quiz","fb","end"].forEach(s => $(s).hidden = (s !== id)); const h = $(id).querySelector("h1"); if(h) h.focus({preventScroll:true}); window.scrollTo(0,0); }
+
+function render(){
+  const R = ROUNDS[r]; sel = null; busy = false;
+  $("q-eyebrow").textContent = "Round " + (r+1) + " of " + ROUNDS.length;
+  $("q-title").textContent = R.title;
+  $("q-case").textContent = " " + R.case;
+  const dd = $("dots"); if(dd.children.length !== ROUNDS.length) dd.innerHTML = ROUNDS.map(()=>'<span></span>').join("");
+  const setDots = ()=>[...dd.children].forEach((d,i)=>{ d.classList.toggle("on", i<=r); d.classList.toggle("cur", i===r); });
+  if(RM) setDots(); else setTimeout(setDots, 140);
+  const g = $("grid"); g.innerHTML = "";
+  R.cards.forEach((t,i)=>{
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "card"; b.setAttribute("aria-pressed","false");
+    const m = document.createElement("span"); m.className = "mark"; m.textContent = "ABCD"[i]; m.setAttribute("aria-hidden","true");
+    const s = document.createElement("span"); s.className = "sr"; s.textContent = "Statement " + "ABCD"[i] + ". ";
+    const x = document.createElement("span"); x.textContent = t;
+    b.append(m,s,x);
+    b.addEventListener("click",()=>pick(i));
+    g.appendChild(b);
+  });
+  $("lock").disabled = true;
+}
+function pick(i){
+  if(busy) return;
+  const cards = $("grid").children;
+  if(sel === i){ sel = null; } else { sel = i; }
+  [...cards].forEach((c,k)=>c.setAttribute("aria-pressed", String(sel === k)));
+  $("lock").disabled = (sel === null);
+  if(sel !== null){ const c = cards[sel]; c.classList.remove("pulse"); void c.offsetWidth; c.classList.add("pulse"); }
+}
+function lock(){
+  if(sel === null || busy) return; busy = true; $("lock").disabled = true;
+  const R = ROUNDS[r], cards = [...$("grid").children], ok = sel === R.odd;
+  if(ok) score++;
+  cards[sel].classList.add(ok ? "is-odd" : "is-wrong");
+  if(!ok) cards[R.odd].classList.add("is-odd");
+  cards.forEach(c=>c.classList.remove("pulse"));
+  if(ok){ const rc = cards[sel].getBoundingClientRect(); confetti(rc.left+rc.width/2, rc.top+rc.height/2, 34); }
+  setTimeout(()=>{
+    $("fb-eyebrow").textContent = "Round " + (r+1) + " of " + ROUNDS.length;
+    const st = $("fb-status");
+    st.textContent = ok ? "Correct. You found the statement that does not hold up." : "Not quite. The statement you selected holds up.";
+    st.className = "status " + (ok ? "ok" : "bad");
+    $("fb-odd").textContent = R.cards[R.odd];
+    $("fb-why").textContent = R.why;
+    $("next").textContent = (r === ROUNDS.length-1) ? "See your result" : "Next round";
+    show("fb");
+  }, RM ? 600 : 1150);
+}
+$("lock").addEventListener("click", lock);
+$("next").addEventListener("click", ()=>{
+  if(r < ROUNDS.length-1){ r++; render(); show("quiz"); }
+  else { const sc = $("score"); sc.innerHTML = "";
+    const lv = document.createElement("strong"); lv.setAttribute("aria-hidden","true"); lv.textContent = RM ? score : 0;
+    const sv = document.createElement("span"); sv.className = "sr"; sv.textContent = score;
+    sc.append("You found the statement that does not hold up in ", lv, sv, " of " + ROUNDS.length + " rounds.");
+    show("end");
+    countUp(lv, score, ()=>{ if(score === ROUNDS.length) confetti(innerWidth/2, 160, 44); }); }
+});
+$("again").addEventListener("click", ()=>{ r = 0; score = 0; render(); show("quiz"); });
+render();
+</script>
+</body>
+</html>

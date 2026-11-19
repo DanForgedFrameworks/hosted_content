@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Key points: unlock the takeaways</title>
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+  :root {
+    --ink: #1f2d3d; --muted: #5b6b78; --paper: #ffffff; --surface: #f6f8fa; --line: #dde3e8;
+    --accent: #1f6f8b; --accent-hover: #185a71; --accent-soft: #e6f2f6; --on-accent: #ffffff;
+    --radius: 10px;
+    --font: "Atkinson Hyperlegible", "Segoe UI", Tahoma, Verdana, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body { background: var(--surface); color: var(--ink); font-family: var(--font); line-height: 1.5; }
+  button { font: inherit; }
+  [hidden] { display: none !important; }
+
+  main { width: min(100%, 1100px); margin: 0 auto; padding: 40px 20px 56px; min-height: 100vh; }
+  h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 5vw, 2.6rem); text-align: center; }
+  .intro { margin: 0 auto 28px; max-width: 60ch; text-align: center; color: var(--muted); font-size: 1.1rem; }
+
+  .stage { position: relative; display: flex; flex-direction: column; align-items: center; }
+  .stage:has(.unlock-pill[hidden]) { display: none; }
+  .stage { margin-bottom: 24px; }
+
+  .unlock-pill {
+    display: inline-flex; align-items: center; justify-content: center; gap: 20px;
+    min-height: 64px; padding: 14px 40px; border: 0; border-radius: 50px; cursor: pointer;
+    background: var(--accent); color: var(--on-accent); font-size: 1.15rem; font-weight: 700;
+    box-shadow: 0 4px 10px rgba(31, 111, 139, 0.25);
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.3s, opacity 0.5s, box-shadow 0.3s;
+  }
+  .unlock-pill:hover, .unlock-pill:focus-visible { background: var(--accent-hover); transform: translateY(-2px) scale(1.02); box-shadow: 0 14px 24px rgba(31, 111, 139, 0.3); }
+  .unlock-pill:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .unlock-pill.fade-out { opacity: 0; transform: translateY(10px) scale(0.9); pointer-events: none; }
+
+  .icon-container { position: relative; display: flex; align-items: center; width: 100px; height: 48px; perspective: 400px; }
+  .icon-container::after {
+    content: ""; position: absolute; top: 50%; left: 75%; width: 60px; height: 60px; border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5); opacity: 0; transform: translate(-50%, -50%) scale(0); pointer-events: none;
+  }
+  .unlock-pill.unlocked .icon-container::after { animation: ripple 0.8s ease-out 0.4s forwards; }
+  @keyframes ripple { 0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; } }
+
+  .key-wrap { position: absolute; left: -15px; width: 44px; height: 44px; z-index: 3; transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+  .key-svg { width: 100%; height: 100%; fill: var(--accent-soft); transform-origin: center right; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+  .lock-icon { position: absolute; right: 0; width: 48px; height: 48px; fill: #ffffff; overflow: visible; z-index: 2; transition: transform 0.3s ease; }
+  .shackle { transform-origin: 16px 10px; transform-box: view-box; transition: transform 0.6s cubic-bezier(0.5, 2.5, 0.4, 1); }
+  .unlock-pill:hover .key-wrap, .unlock-pill:focus-visible .key-wrap, .unlock-pill.unlocked .key-wrap { transform: translateX(40px); }
+  .unlock-pill.unlocked .key-svg { transform: rotateX(180deg) scale(0.92); }
+  .unlock-pill.unlocked .lock-icon { transform: translateY(2px); transition-delay: 0.4s; }
+  .unlock-pill.unlocked .shackle { transition-delay: 0.4s; transform: translateY(-5px) rotate(35deg); }
+
+  .cards { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; width: 100%; }
+  .card {
+    flex: 1 1 230px; max-width: 520px; background: var(--paper); border: 1px solid var(--line); border-top: 5px solid var(--accent);
+    border-radius: var(--radius); overflow: hidden; box-shadow: 0 6px 14px rgba(31, 45, 61, 0.07);
+    opacity: 0; transform: translateY(30px) scale(0.95);
+    transition: opacity 0.7s cubic-bezier(0.25, 1, 0.5, 1), transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .card.visible { opacity: 1; transform: none; }
+  .card-header { padding: 20px; background: var(--accent-soft); border-bottom: 1px solid var(--line); text-align: center; }
+  .card-header h2 { margin: 0; font-size: 1.15rem; font-weight: 700; color: var(--ink); }
+  .card-body { max-height: 0; overflow: hidden; padding: 0 22px; transition: max-height 0.8s cubic-bezier(0.25, 1, 0.5, 1), padding 0.8s ease; }
+  .card.expanded .card-body { max-height: 600px; padding: 22px; }
+  .card-body p { margin: 0; font-size: 1.05rem; line-height: 1.65; color: var(--ink); }
+
+  .done { margin-top: 28px; text-align: center; }
+  .again { min-height: 44px; min-width: 44px; padding: 10px 24px; border: 2px solid var(--accent); border-radius: var(--radius); background: var(--paper); color: var(--accent); font-weight: 700; cursor: pointer; }
+  .again:hover { background: var(--accent-soft); }
+  .again:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+
+  @media (max-width: 480px) { main { padding: 28px 14px 40px; } .unlock-pill { padding: 14px 24px; gap: 12px; font-size: 1.05rem; } }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Key points</h1>
+  <p class="intro" id="intro">Select the button to unlock four key points.</p>
+
+  <div class="stage">
+    <button class="unlock-pill" id="pill" type="button">
+      <span>Reveal key points</span>
+      <span class="icon-container" aria-hidden="true">
+        <span class="key-wrap">
+          <svg class="key-svg" viewBox="0 0 24 24"><path d="M12.65 10A5.99 5.99 0 0 0 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6a5.99 5.99 0 0 0 5.65-4H17v4h4v-4h2v-4h-10.35zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+        </span>
+        <svg class="lock-icon" viewBox="0 0 24 24">
+          <path class="shackle" d="M7 10V6c0-2.76 2.24-5 5-5s5 2.24 5 5v4h-2V6c0-1.66-1.34-3-3-3S9 4.34 9 6v4H7z"/>
+          <path d="M4 10h16v12H4V10zm8 3c-.83 0-1.5.67-1.5 1.5 0 .53.28 1 .7 1.28l-.7 2.72h3l-.7-2.72c.42-.28.7-.75.7-1.28 0-.83-.67-1.5-1.5-1.5z" fill-rule="evenodd"/>
+        </svg>
+      </span>
+    </button>
+  </div>
+
+  <div class="cards" id="cards" aria-live="polite"></div>
+  <div class="done" id="done" hidden><button class="again" id="again" type="button">Lock again</button></div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var cards = [
+    { h: "Advanced nonsquamous disease", b: "Every patient with advanced nonsquamous lung cancer should have EGFR testing at diagnosis, as part of broad biomarker testing." },
+    { h: "Advanced squamous disease", b: "EGFR mutations are uncommon in squamous disease. Consider testing when clinical features suggest a higher chance of a targetable change, such as never or light smoking." },
+    { h: "Negative blood test", b: "A negative ctDNA result does not rule out a mutation: up to 30% of results are falsely negative. This is more likely with little disease, little spread outside the chest, or disease only in the brain. Follow up with tissue testing." },
+    { h: "Change to small cell", b: "About 3-10% of EGFR-mutant tumors change into small cell lung cancer. A ctDNA test cannot confirm this change, so a repeat biopsy is needed." }
+  ];
+  var pill = document.getElementById("pill");
+  var area = document.getElementById("cards");
+  var done = document.getElementById("done");
+  var intro = document.getElementById("intro");
+  var again = document.getElementById("again");
+  var timers = [];
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function later(fn, d) { timers.push(setTimeout(fn, d)); }
+
+  function build() {
+    area.innerHTML = "";
+    cards.forEach(function (c) {
+      var el = document.createElement("section");
+      el.className = "card";
+      el.setAttribute("aria-label", c.h);
+      var hd = document.createElement("div"); hd.className = "card-header";
+      var h2 = document.createElement("h2"); h2.textContent = c.h; hd.appendChild(h2);
+      var bd = document.createElement("div"); bd.className = "card-body";
+      var p = document.createElement("p"); p.textContent = c.b; bd.appendChild(p);
+      el.appendChild(hd); el.appendChild(bd);
+      area.appendChild(el);
+    });
+  }
+
+  function showCards() {
+    var els = area.querySelectorAll(".card");
+    els.forEach(function (el, i) {
+      later(function () { el.classList.add("visible", "expanded"); }, reduce ? 0 : i * 200);
+    });
+    later(function () {
+      done.hidden = false;
+      intro.textContent = "All four key points are unlocked.";
+    }, reduce ? 0 : els.length * 200 + 300);
+  }
+
+  function unlock() {
+    if (pill.classList.contains("unlocked")) return;
+    pill.classList.add("unlocked");
+    pill.setAttribute("aria-disabled", "true");
+    later(function () {
+      pill.classList.add("fade-out");
+      later(function () { pill.hidden = true; showCards(); }, reduce ? 0 : 500);
+    }, reduce ? 0 : 1400);
+  }
+
+  function lockAgain() {
+    timers.forEach(clearTimeout); timers = [];
+    build();
+    done.hidden = true;
+    intro.textContent = "Select the button to unlock four key points.";
+    pill.hidden = false;
+    pill.classList.remove("unlocked", "fade-out");
+    pill.removeAttribute("aria-disabled");
+    pill.focus();
+  }
+
+  pill.addEventListener("click", unlock);
+  again.addEventListener("click", lockAgain);
+  build();
+}());
+</script>
+</body>
+</html>

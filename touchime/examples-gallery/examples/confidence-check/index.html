@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Confidence check</title>
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1f2d3d;--muted:#5b6b78;--paper:#fff;--surface:#f6f8fa;--line:#dde3e8;--accent:#1f6f8b;--accent-hover:#185a71;--accent-soft:#e6f2f6;--on-accent:#fff;--ok:#1f7a4d;--ok-soft:#e5f4ec;--bad:#b3261e;--bad-soft:#fbeae8;--warn:#9a5a00;--warn-soft:#fbf0dd;--r:10px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface);color:var(--ink);font:17px/1.6 "Atkinson Hyperlegible",Arial,Helvetica,sans-serif}
+.page{max-width:1100px;margin:0 auto;padding:24px 16px 64px}
+h1{font-size:1.9rem;line-height:1.25;margin:0 0 8px}
+h2{font-size:1.3rem;margin:0 0 8px}
+.lead{color:var(--muted);margin:0 0 20px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:20px;margin:0 0 16px}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+legend{font-weight:700;padding:0;margin:0 0 10px;font-size:1.05rem}
+.scale{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.opt span{display:flex;align-items:center;justify-content:center;text-align:center;min-height:52px;padding:8px 10px;border:2px solid var(--line);border-radius:var(--r);background:var(--paper);font-weight:700;color:var(--ink);line-height:1.25}
+.opt input:hover+span{border-color:var(--accent)}
+.opt input:checked+span{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.opt input:focus-visible+span{outline:3px solid var(--ink);outline-offset:2px}
+@media(max-width:760px){.scale{grid-template-columns:1fr 1fr}h1{font-size:1.5rem}}
+button{font:inherit;font-weight:700;min-height:44px;min-width:44px;padding:10px 22px;border-radius:var(--r);border:2px solid var(--accent);background:var(--accent);color:var(--on-accent);cursor:pointer}
+button:hover:not(:disabled){background:var(--accent-hover);border-color:var(--accent-hover)}
+button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+button:disabled{background:var(--surface);border-color:var(--line);color:var(--muted);cursor:not-allowed}
+button.alt{background:var(--paper);color:var(--accent-hover)}
+button.alt:hover:not(:disabled){background:var(--accent-soft)}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:8px}
+.hint{color:var(--muted)}
+.group{border-radius:var(--r);padding:16px;margin:0 0 14px;border:2px solid}
+.group h3{margin:0 0 4px;font-size:1.1rem}
+.group p{margin:0 0 8px}
+.group ul{margin:0;padding-left:1.2em}
+.g4{background:var(--ok-soft);border-color:var(--ok)}
+.g3{background:var(--accent-soft);border-color:var(--accent)}
+.g12{background:var(--warn-soft);border-color:var(--warn)}
+.bar{display:flex;height:22px;border-radius:999px;overflow:hidden;border:1px solid var(--line);margin:8px 0 6px}
+.bar i{display:block;height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.95rem;color:var(--muted)}
+.legend b{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:-2px;margin-right:6px}
+#result[hidden],#quiz[hidden]{display:none}
+#status{color:var(--ok);font-weight:700}
+.prog{color:var(--muted);margin:0 0 12px}
+@media(prefers-reduced-motion:no-preference){#result:not([hidden]){animation:in .35s ease}@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}}
+</style>
+</head>
+<body>
+<main class="page">
+<h1>Confidence check</h1>
+<p class="lead">Six statements about your practice. For each one, choose the option that fits you today. There are no right or wrong answers: the profile at the end is for you.</p>
+
+<div id="quiz">
+<p class="prog" id="prog" aria-live="polite">Answered 0 of 6</p>
+<form id="form" novalidate></form>
+<div class="row"><button type="button" id="showBtn" disabled>See my profile</button><span class="hint" id="need">Answer all six statements to see your profile.</span></div>
+</div>
+
+<section id="result" hidden aria-labelledby="rh" tabindex="-1">
+<h2 id="rh">Your profile</h2>
+<div class="card">
+<p id="headline" style="margin-top:0;font-weight:700"></p>
+<div class="bar" id="bar" role="img" aria-label="Your answers by confidence level"></div>
+<div class="legend" id="legend"></div>
+</div>
+<div id="groups"></div>
+<div class="row">
+<button type="button" id="copyBtn" class="alt">Copy my profile</button>
+<button type="button" id="againBtn" class="alt">Start again</button>
+<span id="status" role="status" aria-live="polite"></span>
+</div>
+</section>
+</main>
+
+<script>
+(function(){
+  var statements=[
+    "I can explain to a patient why a blood test may be done alongside a biopsy.",
+    "I can describe who in my team does what when a test is requested.",
+    "I can check that a test request includes everything the laboratory needs.",
+    "I can explain a test result to a patient in plain words.",
+    "I can tell a patient what happens next while they wait for results.",
+    "I can raise a question about a result at a team meeting."
+  ];
+  var labels=["Not yet confident","A little confident","Fairly confident","Very confident"];
+  var colors=["#b3261e","#9a5a00","#1f6f8b","#1f7a4d"];
+  var form=document.getElementById('form');
+  statements.forEach(function(s,i){
+    var f=document.createElement('fieldset');f.className='card';
+    var h='<legend>'+(i+1)+'. '+s+'</legend><div class="scale">';
+    labels.forEach(function(l,v){h+='<label class="opt"><input type="radio" name="s'+i+'" value="'+(v+1)+'"><span>'+l+'</span></label>';});
+    f.innerHTML=h+'</div>';form.appendChild(f);
+  });
+  var showBtn=document.getElementById('showBtn'),prog=document.getElementById('prog'),need=document.getElementById('need');
+  function answers(){return statements.map(function(_,i){var c=form.querySelector('input[name=s'+i+']:checked');return c?+c.value:0;});}
+  form.addEventListener('change',function(){
+    var n=answers().filter(Boolean).length;
+    prog.textContent='Answered '+n+' of 6';
+    showBtn.disabled=n<6;need.style.display=n<6?'':'none';
+  });
+  var result=document.getElementById('result'),quiz=document.getElementById('quiz');
+  var summaryText='';
+  showBtn.addEventListener('click',function(){
+    var a=answers(),counts=[0,0,0,0];a.forEach(function(v){counts[v-1]++;});
+    var strong=[],mid=[],start=[];
+    a.forEach(function(v,i){(v===4?strong:v===3?mid:start).push(statements[i]);});
+    var head;
+    if(start.length===0)head=strong.length===6?"You feel very confident about all six statements.":"You feel fairly or very confident about all six statements.";
+    else if(strong.length===0&&mid.length===0)head="You feel not yet or only a little confident about all six statements. That is a clear place to begin.";
+    else head="You feel very confident about "+strong.length+" of the six statements, and less confident about "+start.length+".";
+    document.getElementById('headline').textContent=head;
+    var bar=document.getElementById('bar'),leg=document.getElementById('legend');bar.innerHTML='';leg.innerHTML='';
+    counts.forEach(function(c,k){
+      if(c){var d=document.createElement('i');d.style.width=(c/6*100)+'%';d.style.background=colors[k];bar.appendChild(d);}
+      var sp=document.createElement('span');sp.innerHTML='<b style="background:'+colors[k]+'"></b>'+labels[k]+': '+c;leg.appendChild(sp);
+    });
+    var g=document.getElementById('groups');g.innerHTML='';
+    function grp(cls,title,intro,list){
+      if(!list.length)return;
+      var d=document.createElement('div');d.className='group '+cls;
+      d.innerHTML='<h3>'+title+'</h3><p>'+intro+'</p><ul>'+list.map(function(x){return'<li>'+x+'</li>';}).join('')+'</ul>';g.appendChild(d);
+    }
+    grp('g4','Your strengths','You feel very confident about these. Think about how you could help a colleague with them.',strong);
+    grp('g3','Nearly there','You feel fairly confident about these. A little more practice could make them feel secure.',mid);
+    grp('g12','Good places to start','You feel less confident about these. Choose one and talk it through with a colleague or mentor.',start);
+    summaryText="My confidence profile\n\n"+statements.map(function(s,i){return s+" "+labels[a[i]-1];}).join("\n");
+    quiz.hidden=true;result.hidden=false;result.focus();
+    window.scrollTo(0,0);
+  });
+  document.getElementById('againBtn').addEventListener('click',function(){
+    form.reset();prog.textContent='Answered 0 of 6';showBtn.disabled=true;need.style.display='';
+    result.hidden=true;quiz.hidden=false;document.getElementById('status').textContent='';window.scrollTo(0,0);
+  });
+  document.getElementById('copyBtn').addEventListener('click',function(){
+    var st=document.getElementById('status');
+    function ok(){st.textContent='Copied.';}
+    function fb(){var t=document.createElement('textarea');t.value=summaryText;document.body.appendChild(t);t.select();var d=false;try{d=document.execCommand('copy')}catch(e){}t.remove();st.textContent=d?'Copied.':'Copying is blocked here.';}
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(summaryText).then(ok,fb);else fb();
+  });
+})();
+</script>
+</body>
+</html>
