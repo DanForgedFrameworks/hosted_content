@@ -350,9 +350,9 @@ const SECTIONS = [
   intro: "Once the module is live and tested.",
   groups: [
   { title: "Release email", items: [
-    { t: "HE: Benn, Nathan, Inna, Bridget, the SME and the LCD (if different)", note: "Confirm it is live, what was released, and any notes. At least two weeks before the module start date." },
+    { t: "HE: Benn, Nathan, Nathalie, Student Services, Elizabeth Miller, Kirsty Hurley, the SME and the LCD (if different)", note: "Confirm it is live, what was released, and any notes. At least two weeks before the module start date." },
     { t: "Serial release: say which sessions are now live and which are due next", note: "Match the dates in the module's Next steps session.", rel: "serial" },
-    { t: "Level 3: Inna (Student Services, including Danielle), Sarah Boyd, the programme lead, and the SMEs and LCDs involved", note: "Programme leads: Gemma Hill (SMT), Aaron Dunne (Lab Technician). Same-day release is possible, but earlier reduces learner anxiety." }
+    { t: "Level 3: Nathalie, Student Services, Sarah Boyd, the programme lead, and the SMEs and LCDs involved", note: "Programme leads: Gemma Hill (SMT), Aaron Dunne (Lab Technician). Same-day release is possible, but earlier reduces learner anxiety." }
   ]},
   { title: "Asset follow-up", items: [
     { t: "All SCORM files and digital assets confirmed in the shared VLE folders" },
