@@ -50,9 +50,11 @@ foreach ($r in $rows | Where-Object { $_.class -eq 'production' }) {
   if (-not $r.codex_build -or $r.codex_build -like 'n/a*') { Warn "no snapshot recorded: $($r.slug)"; continue }
   $snap = Join-Path $CodexRoot $r.codex_build
   if (-not (Test-Path "$snap\index.html")) { Bad "snapshot folder missing: $($r.codex_build)"; continue }
-  $a = (Get-FileHash "$snap\index.html" -Algorithm MD5).Hash
-  $b = (Get-FileHash "$here\$($r.slug)\index.html" -Algorithm MD5).Hash
-  if ($a -ne $b) { Warn "snapshot is behind live (re-snapshot at next sign-off): $($r.slug)" }
+  # Line endings normalised before comparing (rule 6: Codex stores CRLF, hosted_content LF; a raw
+  # hash reported every snapshot as behind live, 2026-11-23).
+  $a = [IO.File]::ReadAllText("$snap\index.html") -replace "`r`n", "`n"
+  $b = [IO.File]::ReadAllText("$here\$($r.slug)\index.html") -replace "`r`n", "`n"
+  if (-not [string]::Equals($a, $b, [StringComparison]::Ordinal)) { Warn "snapshot is behind live (re-snapshot at next sign-off): $($r.slug)" }
 }
 if ($fail -eq $mark) { Ok "snapshot references resolve" }
 
